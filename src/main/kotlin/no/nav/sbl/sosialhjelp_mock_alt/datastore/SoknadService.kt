@@ -1,10 +1,10 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore
 
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.domain.DigisosSak
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.domain.DigisosSoker
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.domain.DokumentInfo
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.domain.EttersendtInfoNAV
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.domain.OriginalSoknadNAV
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosSak
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosSoker
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DokumentInfo
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.EttersendtInfoNAV
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.OriginalSoknadNAV
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -27,7 +27,8 @@ class SoknadService {
 
     fun hentSoknad(fiksDigisosId: String): String? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
-        return objectMapper.writeValueAsString(soknadsliste.get(fiksDigisosId))
+        val soknad = soknadsliste.get(fiksDigisosId) ?: return null
+        return objectMapper.writeValueAsString(soknad)
     }
 
     fun listSoknader(): String {

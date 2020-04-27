@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.datastore.domain
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.model
 
 
 data class DigisosSak(

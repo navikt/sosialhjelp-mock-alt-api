@@ -1,5 +1,8 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten
 
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.IdPortenAccessTokenResponse
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.IdPortenOidcConfiguration
+import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,15 +17,22 @@ class IdPortenController {
 
     @RequestMapping("/idporten/idporten-oidc-provider/token")
     fun getToken(@RequestParam parameters:MultiValueMap<String, String>): String {
-        val token = "{\"access_token\": \"accessTokenString\", \"expires_in\": 999999, \"scope\": \"ks:fiks\"}"
+        val token = IdPortenAccessTokenResponse(
+                accessToken = "",
+                expiresIn = 999999,
+                scope = "ks:fiks"
+        )
         log.info("Henter token: $token")
-        return token
+        return objectMapper.writeValueAsString(token)
     }
 
     @RequestMapping("/idporten/idporten-oidc-provider/.well-known/openid-configuration")
     fun getConfig(@RequestParam parameters:MultiValueMap<String, String>): String {
-        val config = "{\"issuer\": \"digisos-mock-alt\", \"token_endpoint\":\"http://127.0.0.1:8989/idporten/idporten-oidc-provider/token\"}"
+        val config = IdPortenOidcConfiguration(
+                issuer = "digisos-mock-alt",
+                tokenEndpoint = "http://127.0.0.1:8989/idporten/idporten-oidc-provider/token"
+        )
         log.info("Henter konfigurasjon: $config")
-        return config
+        return objectMapper.writeValueAsString(config)
     }
 }
