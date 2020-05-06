@@ -57,3 +57,9 @@ data class Kontaktpersoner(
         val fagansvarligEpost: List<String>,
         val tekniskAnsvarligEpost: List<String>
 )
+
+data class VedleggMetadata(
+        val filnavn: String?,
+        val mimetype: String?,
+        val storrelse: Long
+)

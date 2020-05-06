@@ -44,10 +44,17 @@ class FiksController(private val soknadService: SoknadService, private val dokum
         return ResponseEntity.ok(soknad)
     }
 
+    // TODO: Modia versjon. Finn riktige URLer 2020-04-22
+    @RequestMapping("/fiks/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}")
+    fun hentDokument2(@PathVariable digisosId: String,@PathVariable dokumentlagerId: String): ResponseEntity<String> {
+        val dokumentString = soknadService.hentDokument(digisosId, dokumentlagerId) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(dokumentString)
+    }
+
     @RequestMapping("/fiks/digisos/api/v1/soknader/{digisosId}/dokumenter")
-    fun hentDokumenter(@PathVariable digisosId: String): ResponseEntity<String> {
-        val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(soknad)
+    fun hentDokumenterFraLager2(@PathVariable digisosId: String): ResponseEntity<String> {
+        val dokumentString = soknadService.hentDokumenter(digisosId) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(dokumentString)
     }
 
     @RequestMapping("/fiks/digisos/api/v1/soknader/{digisosId}/dokumenter/{dokumentlagerId}")

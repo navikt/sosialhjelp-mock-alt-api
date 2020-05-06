@@ -5,6 +5,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosSoker
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DokumentInfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.EttersendtInfoNAV
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.OriginalSoknadNAV
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -24,6 +25,7 @@ class SoknadService {
     }
 
     val soknadsliste: HashMap<String, DigisosSak> = HashMap()
+    val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
 
     fun hentSoknad(fiksDigisosId: String): String? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
@@ -37,16 +39,16 @@ class SoknadService {
     }
 
     fun oppdaterDigisosSak(fiksDigisosId: String?, digisosApiWrapper: DigisosApiWrapper): String? {
-        val dokumentlagerId = UUID.randomUUID().toString()
-        //fiksClientMock.postDokument(dokumentlagerId, digisosApiWrapper.sak.soker)
         var id = fiksDigisosId
         if (id == null) {
             id = UUID.randomUUID().toString()
         }
 
-        if (soknadsliste.get(id) == null) {
+        val oldSoknad = soknadsliste.get(id)
+        if (oldSoknad == null) {
             log.info("Oppretter søknad med id: $id")
-            soknadsliste.put(id, DigisosSak(
+            val vedleggMetadataId = UUID.randomUUID().toString()
+            val digisosSak = DigisosSak(
                     fiksDigisosId = id,
                     sokerFnr = "01234567890",
                     fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
@@ -54,28 +56,50 @@ class SoknadService {
                     sistEndret = System.currentTimeMillis(),
                     originalSoknadNAV = OriginalSoknadNAV(
                             navEksternRefId = "110000000",
-                            metadata = "",
-                            vedleggMetadata = "mock-soknad-vedlegg-metadata",
+                            metadata = id,
+                            vedleggMetadata = vedleggMetadataId,
                             soknadDokument = DokumentInfo("", "", 0L),
                             vedlegg = Collections.emptyList(),
                             timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper)),
                     ettersendtInfoNAV = EttersendtInfoNAV(Collections.emptyList()),
-                    digisosSoker = null))
+                    digisosSoker = null)
+            val dokumentlagerId = UUID.randomUUID().toString()
+            log.info("Lagrer søker dokument med dokumentlagerId: $dokumentlagerId")
+            dokumentLager.put(dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
+            val updatedDigisosSak = digisosSak.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
+            soknadsliste.put(id, updatedDigisosSak)
+            log.info("Lagrer orginalsøknad med dokumentlagerId: $id")
+            val orginalSoknad = objectMapper.writeValueAsString(digisosSak)
+            dokumentLager.put(id, orginalSoknad)
+            log.info("Lagrer vedleggs metadata med dokumentlagerId: $vedleggMetadataId")
+            val vedleggMetadata = VedleggMetadata("soknad.json", "application/json", orginalSoknad.length.toLong())
+            dokumentLager.put(vedleggMetadataId, objectMapper.writeValueAsString(vedleggMetadata))
         } else {
             log.info("Oppdaterer søknad med id: $id")
             oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(id, digisosApiWrapper)
+            val dokumentlagerId = UUID.randomUUID().toString()
+            log.info("Lagrer/oppdaterer søker dokument med dokumentlagerId: ${dokumentlagerId}")
+            dokumentLager.put(dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
+            val updatedDigisosSak = oldSoknad.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
+            soknadsliste.replace(id, updatedDigisosSak)
         }
-
-        val digisosSak = hentSak(id)
-        val updatedDigisosSak = digisosSak.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
-        soknadsliste.put(id, updatedDigisosSak)
-        log.debug("Lagret søknad med id: $id sak: {${updatedDigisosSak}}")
         return id
     }
 
     private fun hentSak(id: String?): DigisosSak {
-        log.debug("Henter søknad med id: $id")
-        return soknadsliste.get(id) ?: throw RuntimeException("Umulig exception! Finner ikke sak med id: $id")
+        log.debug("Henter sak med id: $id")
+        return soknadsliste.get(id) ?: throw RuntimeException("Finner ikke sak med id: $id")
+    }
+
+    fun hentDokumenter(digisosId: String): String? {
+        log.debug("Henter alle dokumenter for søknad med id: $digisosId")
+        val soknad = soknadsliste.get(digisosId) ?: throw RuntimeException("Finner ikke sak med id: $digisosId")
+        return objectMapper.writeValueAsString(soknad.digisosSoker!!.dokumenter)
+    }
+
+    fun hentDokument(digisosId: String, dokumentlagerId: String): String? {
+        log.debug("Henter dokument med id: $dokumentlagerId")
+        return dokumentLager[dokumentlagerId] // Allerede lagret som json
     }
 
     private fun femMinutterForMottattSoknad(digisosApiWrapper: DigisosApiWrapper): Long {
