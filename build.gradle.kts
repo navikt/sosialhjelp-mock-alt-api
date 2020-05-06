@@ -1,3 +1,6 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val filformatVersion = "1.2020.01.09-15.55-f18d10d7d76a"
@@ -6,6 +9,7 @@ val jacksonVersion = "2.10.3"
 plugins {
 	id("org.springframework.boot") version "2.2.6.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
+	id("com.github.johnrengelman.shadow") version "5.2.0"
 	kotlin("jvm") version "1.3.71"
 	kotlin("plugin.spring") version "1.3.71"
 }
@@ -32,13 +36,28 @@ dependencies {
 	}
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
-}
+tasks {
+	withType<Test> {
+		useJUnitPlatform()
+	}
 
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "1.8"
+	withType<KotlinCompile> {
+		kotlinOptions {
+			freeCompilerArgs = listOf("-Xjsr305=strict")
+			jvmTarget = "1.8"
+		}
+	}
+
+	withType<ShadowJar> {
+		classifier = ""
+		transform(ServiceFileTransformer::class.java) {
+			setPath("META-INF/cxf")
+			include("bus-extensions.txt")
+		}
+		transform(PropertiesFileTransformer::class.java) {
+			paths = listOf("META-INF/spring.factories")
+			mergeStrategy = "append"
+		}
+		mergeServiceFiles()
 	}
 }
