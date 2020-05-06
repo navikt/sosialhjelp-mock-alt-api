@@ -1,0 +1,45 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: sosialhjelp-mock-alt-api
+  namespace: {{namespace}}
+  labels:
+    team: teamdigisos
+spec:
+  image: {{image}}
+  port: 8383
+  liveness:
+    path: /sosialhjelp/mock-alt-api/internal/isAlive
+    initialDelay: 20
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /sosialhjelp/mock-alt-api/internal/isReady
+    initialDelay: 20
+    timeout: 1
+  prometheus:
+    enabled: {{prometheusEnabled}}
+    path: /sosialhjelp/mock-alt-api/internal/prometheus
+  replicas:
+    min: {{minReplicas}}
+    max: {{maxReplicas}}
+  webproxy: {{webProxyEnabled}}
+  vault:
+    enabled: {{vaultEnabled}}
+  ingresses:
+{{#each ingress}}
+    - "{{this}}"
+{{/each}}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  env:
+{{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+{{/each}}
