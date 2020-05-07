@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class IsAliveController {
-    @RequestMapping("/sosialhjelp/mock-alt-api/internal/isAlive")
+    @RequestMapping("/internal/isAlive")
     fun isAlive(@RequestParam parameters: MultiValueMap<String, String>): String {
         return "OK"
     }
 
-    @RequestMapping("/sosialhjelp/mock-alt-api/internal/isReady")
+    @RequestMapping("/internal/isReady")
     fun isReady(@RequestParam parameters: MultiValueMap<String, String>): String {
         return "OK"
     }
