@@ -15,7 +15,7 @@ plugins {
 	kotlin("plugin.spring") version "1.3.71"
 }
 
-val mainClass = "no.nav.sbl.sosialhjelp_mock_alt.MockAltApplication"
+val mainClass = "no.nav.sbl.sosialhjelp_mock_alt.MockAltApplicationKt"
 
 application {
     applicationName = "sosialhjelp-mock-alt-api"
