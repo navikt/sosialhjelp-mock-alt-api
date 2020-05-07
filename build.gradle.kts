@@ -7,11 +7,19 @@ val filformatVersion = "1.2020.01.09-15.55-f18d10d7d76a"
 val jacksonVersion = "2.10.3"
 
 plugins {
+    application
 	id("org.springframework.boot") version "2.2.6.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
 	id("com.github.johnrengelman.shadow") version "5.2.0"
 	kotlin("jvm") version "1.3.71"
 	kotlin("plugin.spring") version "1.3.71"
+}
+
+val mainClass = "no.nav.sbl.sosialhjelp_mock_alt.MockAltApplication"
+
+application {
+    applicationName = "sosialhjelp-mock-alt-api"
+    mainClassName = mainClass
 }
 
 group = "no.nav.sbl"
