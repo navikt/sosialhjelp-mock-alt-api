@@ -39,6 +39,7 @@ spec:
     inbound:
       rules:
         - application: digisos
+        - application: sosialhjelp-modia-api
 {{/if}}
   resources:
     limits:
