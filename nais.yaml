@@ -31,6 +31,12 @@ spec:
 {{#each ingress}}
     - "{{this}}"
 {{/each}}
+{{#if accessPoliciesForGcpEnabled}}
+  accessPolicy:
+    inbound:
+      rules:
+        - application: digisos
+{{/if}}
   resources:
     limits:
       cpu: 500m
