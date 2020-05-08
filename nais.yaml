@@ -33,9 +33,9 @@ spec:
 {{/each}}
 {{#if accessPoliciesForGcpEnabled}}
   accessPolicy:
-    inbound:
-      rules:
-        - application: digisos
+    outbound:
+      external:
+        - host: "digisos.labs.nais.io"
 {{/if}}
   resources:
     limits:
