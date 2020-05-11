@@ -16,7 +16,7 @@ class AbacController {
         val log by logger()
     }
 
-    @RequestMapping("/abac//application/authorize")
+    @RequestMapping("/abac/application/authorize")
     fun getToken(@RequestParam parameters:MultiValueMap<String, String>): String {
         val authorization = XacmlResponse(response = listOf(AbacResponse(decision = Decision.Permit, associatedAdvice = emptyList())))
         log.info("Henter abac authorization: $authorization")
