@@ -14,7 +14,7 @@ import java.lang.RuntimeException
 @RestController
 class InnsynController(private val soknadService: SoknadService) {
 
-    @RequestMapping("/sosialhjelp/innsyn-api/api/v1/digisosapi/oppdaterDigisosSak")
+    @RequestMapping("/innsyn-api/api/v1/digisosapi/oppdaterDigisosSak")
     fun oppdaterSoknad(@RequestParam parameters: MultiValueMap<String, String>, @RequestBody body: String): ResponseEntity<String> {
         val fiksDigisosId: String? = parameters.get("fiksDigisosId")?.get(0)
         if (fiksDigisosId == null) {
