@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.Collections
 
 @RestController
 class FiksController(private val soknadService: SoknadService, private val dokumentKrypteringsService: DokumentKrypteringsService) {
@@ -75,6 +76,20 @@ class FiksController(private val soknadService: SoknadService, private val dokum
         )
         log.info("Henter kommuneinfo: $kommuneInfo")
         return ResponseEntity.ok(objectMapper.writeValueAsString(kommuneInfo))
+    }
+
+    @RequestMapping("/fiks/digisos/api/v1/nav/kommuner")
+    fun hentKommuneInfoListe(): ResponseEntity<String> {
+        val kommuneInfo = KommuneInfo(
+                kommunenummer = "1",
+                kanMottaSoknader = true,
+                kanOppdatereStatus = true,
+                harMidlertidigDeaktivertOppdateringer = false,
+                harMidlertidigDeaktivertMottak = false,
+                kontaktPersoner = null
+        )
+        log.info("Henter kommuneinfo: $kommuneInfo")
+        return ResponseEntity.ok(objectMapper.writeValueAsString(Collections.singletonList(kommuneInfo)))
     }
 
     @RequestMapping("/fiks/digisos/api/v1/dokumentlager-public-key")

@@ -29,6 +29,12 @@ class NorgController {
         return objectMapper.writeValueAsString(navEnhet)
     }
 
+    @RequestMapping("/norg_endpoint_url/kodeverk/EnhetstyperNorg")
+    fun hentEnhetstyperDummy(): String {
+        log.info("Henter EnhetstyperNorg")
+        return "OK"
+    }
+
     private val sosialetjenesterInfo: String = """
         Til saksbehandler:
         Flere vakttelefoner:
