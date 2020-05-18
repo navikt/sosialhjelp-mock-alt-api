@@ -21,8 +21,8 @@ class FiksController(private val soknadService: SoknadService, private val dokum
 
     @RequestMapping("/fiks/digisos/api/v1/soknader/soknader")
     fun listSoknader(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
-        val soknad = soknadService.listSoknader()
-        return ResponseEntity.ok(soknad)
+        val soknadsListe = soknadService.listSoknader()
+        return ResponseEntity.ok(soknadsListe)
     }
 
     @RequestMapping("/fiks/digisos/api/v1/soknader/{digisosId}")
@@ -34,8 +34,8 @@ class FiksController(private val soknadService: SoknadService, private val dokum
     // TODO: Modia versjon. Finn riktige URLer 2020-04-22
     @RequestMapping("/fiks/digisos/api/nav/v1/soknader")
     fun listSoknader2(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
-        val soknad = soknadService.listSoknader()
-        return ResponseEntity.ok(soknad)
+        val soknadsListe = soknadService.listSoknader()
+        return ResponseEntity.ok(soknadsListe)
     }
 
     // TODO: Modia versjon. Finn riktige URLer 2020-04-22
@@ -47,21 +47,21 @@ class FiksController(private val soknadService: SoknadService, private val dokum
 
     // TODO: Modia versjon. Finn riktige URLer 2020-04-22
     @RequestMapping("/fiks/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}")
-    fun hentDokument2(@PathVariable digisosId: String,@PathVariable dokumentlagerId: String): ResponseEntity<String> {
+    fun hentDokumentFraLager2(@PathVariable digisosId: String,@PathVariable dokumentlagerId: String): ResponseEntity<String> {
         val dokumentString = soknadService.hentDokument(digisosId, dokumentlagerId) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(dokumentString)
     }
 
     @RequestMapping("/fiks/digisos/api/v1/soknader/{digisosId}/dokumenter")
     fun hentDokumenterFraLager2(@PathVariable digisosId: String): ResponseEntity<String> {
-        val dokumentString = soknadService.hentDokumenter(digisosId) ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(dokumentString)
+        val dokumentListe = soknadService.hentDokumenter(digisosId) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(dokumentListe)
     }
 
     @RequestMapping("/fiks/digisos/api/v1/soknader/{digisosId}/dokumenter/{dokumentlagerId}")
-    fun hentDokumenterFraLager(@PathVariable digisosId: String, @PathVariable dokumentlagerId: String): ResponseEntity<String> {
-        val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(soknad)
+    fun hentDokumentFraLager(@PathVariable digisosId: String, @PathVariable dokumentlagerId: String): ResponseEntity<String> {
+        val dokumentString = soknadService.hentDokument(digisosId, dokumentlagerId) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(dokumentString)
     }
 
     @RequestMapping("/fiks/digisos/api/v1/nav/kommuner/{kommunenummer}")

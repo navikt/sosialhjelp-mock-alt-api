@@ -6,6 +6,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DokumentInfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.EttersendtInfoNAV
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.OriginalSoknadNAV
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.defaultJsonSoknad
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -68,8 +69,8 @@ class SoknadService {
             dokumentLager.put(dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
             val updatedDigisosSak = digisosSak.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
             soknadsliste.put(id, updatedDigisosSak)
-            log.info("Lagrer orginalsøknad med dokumentlagerId: $id")
-            val orginalSoknad = objectMapper.writeValueAsString(digisosSak)
+            log.info("Lagrer orginalsøknad (med bare default verdier) med dokumentlagerId: $id")
+            val orginalSoknad = objectMapper.writeValueAsString(defaultJsonSoknad)
             dokumentLager.put(id, orginalSoknad)
             log.info("Lagrer vedleggs metadata med dokumentlagerId: $vedleggMetadataId")
             val vedleggMetadata = VedleggMetadata("soknad.json", "application/json", orginalSoknad.length.toLong())
