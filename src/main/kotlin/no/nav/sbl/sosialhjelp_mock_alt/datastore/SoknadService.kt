@@ -40,25 +40,25 @@ class SoknadService {
         return objectMapper.writeValueAsString(soknadsliste.values)
     }
 
-    fun oppdaterDigisosSak(fiksDigisosId: String?, digisosApiWrapper: DigisosApiWrapper): String? {
-        var id = fiksDigisosId
-        if (id == null) {
-            id = UUID.randomUUID().toString()
+    fun oppdaterDigisosSak(fiksDigisosIdInput: String?, digisosApiWrapper: DigisosApiWrapper): String? {
+        var fiksDigisosId = fiksDigisosIdInput
+        if (fiksDigisosId == null) {
+            fiksDigisosId = UUID.randomUUID().toString()
         }
 
-        val oldSoknad = soknadsliste.get(id)
+        val oldSoknad = soknadsliste.get(fiksDigisosId)
         if (oldSoknad == null) {
-            log.info("Oppretter søknad med id: $id")
+            log.info("Oppretter søknad med id: $fiksDigisosId")
             val vedleggMetadataId = UUID.randomUUID().toString()
             val digisosSak = DigisosSak(
-                    fiksDigisosId = id,
+                    fiksDigisosId = fiksDigisosId,
                     sokerFnr = "01234567890",
                     fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
                     kommunenummer = "1",
                     sistEndret = System.currentTimeMillis(),
                     originalSoknadNAV = OriginalSoknadNAV(
                             navEksternRefId = "110000000",
-                            metadata = id,
+                            metadata = fiksDigisosId,
                             vedleggMetadata = vedleggMetadataId,
                             soknadDokument = DokumentInfo("", "", 0L),
                             vedlegg = Collections.emptyList(),
@@ -69,23 +69,26 @@ class SoknadService {
             log.info("Lagrer søker dokument med dokumentlagerId: $dokumentlagerId")
             dokumentLager.put(dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
             val updatedDigisosSak = digisosSak.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
-            soknadsliste.put(id, updatedDigisosSak)
-            log.info("Lagrer orginalsøknad (med bare default verdier) med dokumentlagerId: $id")
+            log.info("Lagrer søknad fiksDigisosId: $fiksDigisosId")
+            log.debug(updatedDigisosSak.toString())
+            soknadsliste.put(fiksDigisosId, updatedDigisosSak)
+            log.info("Lagrer orginalsøknad (med bare default verdier) med dokumentlagerId: $fiksDigisosId")
+            log.debug(defaultJsonSoknad.toString())
             val orginalSoknad = objectMapper.writeValueAsString(defaultJsonSoknad)
-            dokumentLager.put(id, orginalSoknad)
+            dokumentLager.put(fiksDigisosId, orginalSoknad)
             log.info("Lagrer vedleggs metadata med dokumentlagerId: $vedleggMetadataId")
             val vedleggMetadata = VedleggMetadata("soknad.json", "application/json", orginalSoknad.length.toLong())
             dokumentLager.put(vedleggMetadataId, objectMapper.writeValueAsString(vedleggMetadata))
         } else {
-            log.info("Oppdaterer søknad med id: $id")
-            oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(id, digisosApiWrapper)
+            log.info("Oppdaterer søknad med id: $fiksDigisosId")
+            oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(fiksDigisosId, digisosApiWrapper)
             val dokumentlagerId = UUID.randomUUID().toString()
             log.info("Lagrer/oppdaterer søker dokument med dokumentlagerId: ${dokumentlagerId}")
             dokumentLager.put(dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
             val updatedDigisosSak = oldSoknad.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
-            soknadsliste.replace(id, updatedDigisosSak)
+            soknadsliste.replace(fiksDigisosId, updatedDigisosSak)
         }
-        return id
+        return fiksDigisosId
     }
 
     private fun hentSak(id: String?): DigisosSak {
