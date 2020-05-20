@@ -31,6 +31,7 @@ class SoknadService {
     fun hentSoknad(fiksDigisosId: String): String? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
         val soknad = soknadsliste.get(fiksDigisosId) ?: return null
+        log.debug(soknad.toString())
         return objectMapper.writeValueAsString(soknad)
     }
 
