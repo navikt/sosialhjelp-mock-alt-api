@@ -2,7 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.`innsyn-api`
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.utils.DigisosApiWrapper
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
 import org.springframework.http.ResponseEntity
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.RequestBody
