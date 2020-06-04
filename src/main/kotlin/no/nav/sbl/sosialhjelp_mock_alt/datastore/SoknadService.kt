@@ -8,11 +8,12 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.OriginalSoknadNAV
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.defaultJsonSoknad
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.utils.DigisosApiWrapper
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toLocalDateTime
 import no.nav.sbl.sosialhjelp_mock_alt.utils.unixToLocalDateTime
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeParseException
@@ -27,6 +28,7 @@ class SoknadService {
 
     val soknadsliste: HashMap<String, DigisosSak> = HashMap()
     val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
+    val filLager: HashMap<String, VedleggMetadata> = HashMap() // Lagrer bare metadataene
 
     fun hentSoknad(fiksDigisosId: String): String? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
@@ -132,5 +134,12 @@ class SoknadService {
 
     fun DigisosSak.updateOriginalSoknadNAV(originalSoknadNAV: OriginalSoknadNAV): DigisosSak {
         return this.copy(originalSoknadNAV = originalSoknadNAV)
+    }
+
+    fun lastOppFil(fiksDigisosId: String, file: MultipartFile): String {
+        val vedleggsId = UUID.randomUUID().toString()
+        val vedleggMetadata = VedleggMetadata(file.originalFilename, file.contentType, file.size)
+        filLager.put(vedleggsId, vedleggMetadata)
+        return vedleggsId
     }
 }
