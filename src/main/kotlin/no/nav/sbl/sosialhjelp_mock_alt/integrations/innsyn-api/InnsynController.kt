@@ -1,28 +1,27 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.`innsyn-api`
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.SoknadService
-import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
+import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import org.springframework.http.ResponseEntity
-import org.springframework.util.MultiValueMap
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.lang.RuntimeException
+import java.util.UUID
 
 @RestController
 class InnsynController(private val soknadService: SoknadService) {
 
-    @RequestMapping("/innsyn-api/api/v1/digisosapi/oppdaterDigisosSak")
-    fun oppdaterSoknad(@RequestParam parameters: MultiValueMap<String, String>, @RequestBody body: String): ResponseEntity<String> {
-        val fiksDigisosId: String? = parameters.get("fiksDigisosId")?.get(0)
-        if (fiksDigisosId == null) {
-            throw RuntimeException("Missig fiksDigisosId parameter!")
+    @PostMapping("/innsyn-api/api/v1/digisosapi/oppdaterDigisosSak")
+    fun oppdaterSoknad(@RequestParam(required = false) fiksDigisosId:String?, @RequestBody body: String): ResponseEntity<String> {
+        var id = fiksDigisosId
+        if (id == null) {
+            id = UUID.randomUUID().toString()
         }
         val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
 
-        soknadService.oppdaterDigisosSak(fiksDigisosId, digisosApiWrapper)
-        return ResponseEntity.ok("{\"fiksDigisosId\":\"$fiksDigisosId\"}")
+        soknadService.oppdaterDigisosSak(id, digisosApiWrapper)
+        return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
     }
 }
