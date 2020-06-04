@@ -44,7 +44,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
     }
 
     //    ======== Modia =========
-    @GetMapping("/fiks/digisos/api/nav/v1/soknader/soknader")
+    @PostMapping("/fiks/digisos/api/nav/v1/soknader/soknader")
     fun listSoknaderModia(@RequestBody body: String, @RequestParam(name = "sporingsId") sporingsId: String): ResponseEntity<String> {
         val soknadsListe = soknadService.listSoknader()
         return ResponseEntity.ok(soknadsListe)
