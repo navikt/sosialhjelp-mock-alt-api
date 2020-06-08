@@ -1,12 +1,16 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks
 
+import com.fasterxml.jackson.core.type.TypeReference
+import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.DokumentKrypteringsService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.KommuneInfo
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -101,14 +105,27 @@ class FiksController(private val soknadService: SoknadService, private val dokum
 
     //    ======== Last opp filer ========
     @PostMapping("/fiks/digisos/api/v1/soknader/{kommunenummer}/{digisosId}/{navEksternRefId}")
-    fun lastOppFiler(@PathVariable kommunenummer: String, @PathVariable digisosId: String, @PathVariable navEksternRefId: String): ResponseEntity<String> {
-        log.info("Laster opp fil for kommune: ${kommunenummer} digisosId: ${digisosId} navEksternRefId: ${navEksternRefId}")
-        log.warn("Advarsel: Ikke implementert ennå!")
+    fun lastOppFiler(@PathVariable kommunenummer: String,
+                     @PathVariable digisosId: String,
+                     @PathVariable navEksternRefId: String,
+                     @RequestParam body: LinkedMultiValueMap<String, Any>
+    ): ResponseEntity<String> {
+        log.info("Laster opp filer for kommune: ${kommunenummer} digisosId: ${digisosId} navEksternRefId: ${navEksternRefId}")
+        val vedleggsInfoText:String = body["vedlegg.json"].toString()
+        val vedleggsJson = objectMapper.readValue(vedleggsInfoText, object : TypeReference<List<JsonVedleggSpesifikasjon>>() {})
+        body.keys.forEach {
+            if(it.startsWith("vedleggSpesifikasjon")) {
+                val json = body[it].toString()
+                val vedleggMetadata = objectMapper.readValue(json, object : TypeReference<List<VedleggMetadata>>() {})
+                soknadService.lastOppFil(digisosId, vedleggMetadata[0], vedleggsJson[0])
+            }
+        }
         return ResponseEntity.ok("OK")
     }
 
     @PostMapping("/{fiksDigisosId}/filOpplasting", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun filOpplasting(@PathVariable fiksDigisosId: String, @RequestParam("file") file: MultipartFile): ResponseEntity<String> {
+        log.info("Laster opp fil for fiksDigisosId: ${fiksDigisosId}")
         val dokumentlagerId = soknadService.lastOppFil(fiksDigisosId, file)
         return ResponseEntity.ok(dokumentlagerId)
     }
