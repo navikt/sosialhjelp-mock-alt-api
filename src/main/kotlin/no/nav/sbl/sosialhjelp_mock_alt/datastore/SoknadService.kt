@@ -103,7 +103,7 @@ class SoknadService {
             val digisosSak = hentSak(id)
             val idNumber = (digisosSak.ettersendtInfoNAV!!.ettersendelser.size + 1).toString().padStart(4, '0')
             val navEksternRefId = "ettersendelseNavEksternRef$idNumber"
-            val dokumentInfo = DokumentInfo(nyttVedlegg.filnavn!!, dokumentId, nyttVedlegg.storrelse)
+            val dokumentInfo = DokumentInfo(nyttVedlegg.filnavn, dokumentId, nyttVedlegg.storrelse)
             val ettersendelse = Ettersendelse(navEksternRefId, dokumentId, listOf(dokumentInfo), DateTime.now().millis)
             val nyListe: List<Ettersendelse> = listOf(digisosSak.ettersendtInfoNAV.ettersendelser, listOf(ettersendelse)).flatten()
             digisosSak.ettersendtInfoNAV.ettersendelser = nyListe
@@ -158,9 +158,9 @@ class SoknadService {
         var sha512 = "dummySha512"
         if (vedleggsJson != null && !vedleggMetadata.filnavn!!.contentEquals(ETTERSENDELSE_FILNAVN)) {
             vedleggsInfo = vedleggsJson.vedlegg.filter {
-                it.filer.filter { it.filnavn.contentEquals(vedleggMetadata.filnavn!!) }.isNotEmpty()
+                it.filer.filter { it.filnavn!!.contentEquals(vedleggMetadata.filnavn!!) }.isNotEmpty()
             }.first()
-            sha512 = vedleggsInfo.filer.filter{ it.filnavn.contentEquals(vedleggMetadata.filnavn!!) }.first().sha512
+            sha512 = vedleggsInfo.filer.filter{ it.filnavn!!.contentEquals(vedleggMetadata.filnavn!!) }.first().sha512
         }
         dokumentLager.put(vedleggsId, objectMapper.writeValueAsString(
                 JsonVedleggSpesifikasjon()
