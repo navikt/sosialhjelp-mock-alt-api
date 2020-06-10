@@ -28,7 +28,7 @@ data class DokumentInfo(
 )
 
 data class EttersendtInfoNAV(
-        val ettersendelser: List<Ettersendelse>
+        var ettersendelser: List<Ettersendelse>
 )
 
 data class Ettersendelse(
