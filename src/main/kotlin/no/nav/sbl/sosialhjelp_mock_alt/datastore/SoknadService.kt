@@ -46,7 +46,7 @@ class SoknadService {
         return objectMapper.writeValueAsString(soknadsliste.values)
     }
 
-    fun oppdaterDigisosSak(fiksDigisosIdInput: String?, digisosApiWrapper: DigisosApiWrapper): String? {
+    fun oppdaterDigisosSak(fiksOrgId:String, fiksDigisosIdInput: String?, digisosApiWrapper: DigisosApiWrapper): String? {
         var fiksDigisosId = fiksDigisosIdInput
         if (fiksDigisosId == null) {
             fiksDigisosId = UUID.randomUUID().toString()
@@ -60,7 +60,7 @@ class SoknadService {
             val digisosSak = DigisosSak(
                     fiksDigisosId = fiksDigisosId,
                     sokerFnr = "01234567890",
-                    fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
+                    fiksOrgId = fiksOrgId,
                     kommunenummer = "1",
                     sistEndret = System.currentTimeMillis(),
                     originalSoknadNAV = OriginalSoknadNAV(
@@ -158,9 +158,9 @@ class SoknadService {
         var sha512 = "dummySha512"
         if (vedleggsJson != null && !vedleggMetadata.filnavn!!.contentEquals(ETTERSENDELSE_FILNAVN)) {
             vedleggsInfo = vedleggsJson.vedlegg.filter {
-                it.filer.filter { it.filnavn!!.contentEquals(vedleggMetadata.filnavn!!) }.isNotEmpty()
+                it.filer.filter { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.isNotEmpty()
             }.first()
-            sha512 = vedleggsInfo.filer.filter{ it.filnavn!!.contentEquals(vedleggMetadata.filnavn!!) }.first().sha512
+            sha512 = vedleggsInfo.filer.filter{ it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.first().sha512
         }
         dokumentLager.put(vedleggsId, objectMapper.writeValueAsString(
                 JsonVedleggSpesifikasjon()

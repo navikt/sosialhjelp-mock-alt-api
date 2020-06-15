@@ -1,7 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.sts
 
-import com.nimbusds.oauth2.sdk.`as`.AuthorizationServerMetadata
-import com.nimbusds.oauth2.sdk.id.Issuer
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.IdPortenOidcConfiguration
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.sts.model.STSResponse
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
@@ -43,7 +41,10 @@ class StsController {
 
     @RequestMapping("/sts/authorisation")
     fun getStsAuthorisation(@RequestParam parameters:MultiValueMap<String, String>): String {
-        val config = AuthorizationServerMetadata(Issuer("digisos-mock-alt"))
+        val config = HashMap<String, Any>()
+        config.put("issuer", "https://digisos.labs.nais.io/")
+        config.put("subject_types_supported", listOf("public", "pairwise"))
+        config.put("jwks_uri", "https://digisos.labs.nais.io/")
         log.info("Henter authorisation: $config")
         return objectMapper.writeValueAsString(config)
     }
