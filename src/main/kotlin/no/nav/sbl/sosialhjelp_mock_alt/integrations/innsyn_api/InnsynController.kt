@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.`innsyn-api`
+package no.nav.sbl.sosialhjelp_mock_alt.integrations.innsyn_api
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
@@ -21,7 +21,7 @@ class InnsynController(private val soknadService: SoknadService) {
         }
         val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
 
-        soknadService.oppdaterDigisosSak(id, digisosApiWrapper)
+        soknadService.oppdaterDigisosSak("11415cd1-e26d-499a-8421-751457dfcbd5", id, digisosApiWrapper)
         return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
     }
 }

@@ -1,13 +1,18 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks
 
 import com.fasterxml.jackson.core.type.TypeReference
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.DokumentKrypteringsService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.KommuneInfo
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.SakWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
+import org.joda.time.DateTime
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.util.LinkedMultiValueMap
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.util.Collections
+import java.util.UUID
 
 @RestController
 class FiksController(private val soknadService: SoknadService, private val dokumentKrypteringsService: DokumentKrypteringsService) {
@@ -47,6 +53,35 @@ class FiksController(private val soknadService: SoknadService, private val dokum
         return ResponseEntity.ok(dokumentString)
     }
 
+    @PostMapping("/fiks/digisos/api/v1/{fiksOrgId}/{digisosId}/filer")
+    fun lastOppFilerInnsyn(@PathVariable digisosId: String,
+                           @PathVariable(required = false) fiksOrgId: String?,
+                     @RequestParam body: LinkedMultiValueMap<String, Any>
+    ): ResponseEntity<String> {
+        return lastOppFiler("", digisosId, "", body)
+    }
+
+    @PostMapping("/fiks/digisos/api/v1/{fiksOrgId}/{fiksDigisosId}") // tar også /ny
+    fun oppdaterSoknadInnsyn(@PathVariable fiksOrgId:String,
+                             @PathVariable(required = false) fiksDigisosId:String?,
+                             @RequestBody(required = false) body: String?): ResponseEntity<String> {
+        var id = fiksDigisosId
+        if (id == null || id.toLowerCase().contentEquals("ny")) {
+            id = UUID.randomUUID().toString()
+            val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
+            digisosApiWrapper.sak.soker.hendelser.add(JsonHendelse()
+                    .withHendelsestidspunkt(DateTime.now().toDateTimeISO().toString())
+                    .withType(JsonHendelse.Type.SOKNADS_STATUS))
+            soknadService.oppdaterDigisosSak(fiksOrgId, id, digisosApiWrapper)
+            return ResponseEntity.ok("$id")
+        } else {
+            val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
+            soknadService.oppdaterDigisosSak(fiksOrgId, id, digisosApiWrapper)
+            return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
+        }
+    }
+
+    //
     //    ======== Modia =========
     @PostMapping("/fiks/digisos/api/v1/nav/soknader/soknader")
     fun listSoknaderModia(@RequestBody body: String, @RequestParam(name = "sporingsId") sporingsId: String): ResponseEntity<String> {
@@ -110,7 +145,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                      @PathVariable navEksternRefId: String,
                      @RequestParam body: LinkedMultiValueMap<String, Any>
     ): ResponseEntity<String> {
-        log.info("Laster opp filer for kommune: ${kommunenummer} digisosId: ${digisosId} navEksternRefId: ${navEksternRefId}")
+        log.info("Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId")
         val vedleggsInfoText:String = body["vedlegg.json"].toString()
         val vedleggsJson = objectMapper.readValue(vedleggsInfoText, object : TypeReference<List<JsonVedleggSpesifikasjon>>() {})
         body.keys.forEach {
@@ -125,7 +160,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
 
     @PostMapping("/{fiksDigisosId}/filOpplasting", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun filOpplasting(@PathVariable fiksDigisosId: String, @RequestParam("file") file: MultipartFile): ResponseEntity<String> {
-        log.info("Laster opp fil for fiksDigisosId: ${fiksDigisosId}")
+        log.info("Laster opp fil for fiksDigisosId: $fiksDigisosId")
         val dokumentlagerId = soknadService.lastOppFil(fiksDigisosId, file)
         return ResponseEntity.ok(dokumentlagerId)
     }
