@@ -9,10 +9,11 @@ val oidcsupportversion = "0.2.18"
 val oauth2oidcsdkversion = "7.3"
 val jacksonVersion = "2.10.3"
 val swaggerversion = "2.9.2"
+val guavaVersion = "29.0-jre"
 
 plugins {
     application
-	id("org.springframework.boot") version "2.2.6.RELEASE"
+	id("org.springframework.boot") version "2.3.1.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
 	id("com.github.johnrengelman.shadow") version "5.2.0"
 	kotlin("jvm") version "1.3.71"
@@ -48,6 +49,9 @@ dependencies {
 
 	implementation("io.springfox:springfox-swagger2:${swaggerversion}")
 	implementation("io.springfox:springfox-swagger-ui:${swaggerversion}")
+
+//	anbefalte versjoner av snyk:
+	implementation("com.google.guava:guava:$guavaVersion")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
