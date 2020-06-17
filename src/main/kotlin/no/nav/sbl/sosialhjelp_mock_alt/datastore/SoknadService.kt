@@ -30,6 +30,7 @@ class SoknadService {
     companion object {
         val log by logger()
     }
+
     val ETTERSENDELSE_FILNAVN = "ettersendelse.pdf"
     val soknadsliste: HashMap<String, DigisosSak> = HashMap()
     val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
@@ -46,7 +47,7 @@ class SoknadService {
         return objectMapper.writeValueAsString(soknadsliste.values)
     }
 
-    fun oppdaterDigisosSak(fiksOrgId:String, fiksDigisosIdInput: String?, digisosApiWrapper: DigisosApiWrapper): String? {
+    fun oppdaterDigisosSak(fiksOrgId: String, fiksDigisosIdInput: String?, digisosApiWrapper: DigisosApiWrapper): String? {
         var fiksDigisosId = fiksDigisosIdInput
         if (fiksDigisosId == null) {
             fiksDigisosId = UUID.randomUUID().toString()
@@ -98,13 +99,13 @@ class SoknadService {
         return fiksDigisosId
     }
 
-    private fun leggVedleggTilISak(id: String, nyttVedlegg: VedleggMetadata, dokumentId: String) {
+    private fun leggVedleggTilISak(id: String, nyttVedlegg: VedleggMetadata, dokumentId: String, timestamp: Long) {
         if (!nyttVedlegg.filnavn!!.contentEquals(ETTERSENDELSE_FILNAVN)) {
             val digisosSak = hentSak(id)
             val idNumber = (digisosSak.ettersendtInfoNAV!!.ettersendelser.size + 1).toString().padStart(4, '0')
             val navEksternRefId = "ettersendelseNavEksternRef$idNumber"
             val dokumentInfo = DokumentInfo(nyttVedlegg.filnavn, dokumentId, nyttVedlegg.storrelse)
-            val ettersendelse = Ettersendelse(navEksternRefId, dokumentId, listOf(dokumentInfo), DateTime.now().millis)
+            val ettersendelse = Ettersendelse(navEksternRefId, dokumentId, listOf(dokumentInfo), timestamp)
             val nyListe: List<Ettersendelse> = listOf(digisosSak.ettersendtInfoNAV.ettersendelser, listOf(ettersendelse)).flatten()
             digisosSak.ettersendtInfoNAV.ettersendelser = nyListe
         }
@@ -149,10 +150,16 @@ class SoknadService {
 
     fun lastOppFil(fiksDigisosId: String, file: MultipartFile): String {
         val vedleggMetadata = VedleggMetadata(file.originalFilename, file.contentType, file.size)
-        return lastOppFil(fiksDigisosId, vedleggMetadata, null)
+        val timestamp = DateTime.now().millis
+        return lastOppFil(fiksDigisosId, vedleggMetadata, null, timestamp)
     }
 
-    fun lastOppFil(fiksDigisosId: String, vedleggMetadata: VedleggMetadata, vedleggsJson: JsonVedleggSpesifikasjon?): String {
+    fun lastOppFil(
+            fiksDigisosId: String,
+            vedleggMetadata: VedleggMetadata,
+            vedleggsJson: JsonVedleggSpesifikasjon?,
+            timestamp: Long
+    ): String {
         val vedleggsId = UUID.randomUUID().toString()
         var vedleggsInfo: JsonVedlegg? = null
         var sha512 = "dummySha512"
@@ -160,7 +167,7 @@ class SoknadService {
             vedleggsInfo = vedleggsJson.vedlegg.filter {
                 it.filer.filter { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.isNotEmpty()
             }.first()
-            sha512 = vedleggsInfo.filer.filter{ it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.first().sha512
+            sha512 = vedleggsInfo.filer.filter { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.first().sha512
         }
         dokumentLager.put(vedleggsId, objectMapper.writeValueAsString(
                 JsonVedleggSpesifikasjon()
@@ -173,7 +180,7 @@ class SoknadService {
                                         .withSha512(sha512)))
                         ))
         ))
-        leggVedleggTilISak(fiksDigisosId, vedleggMetadata, vedleggsId)
+        leggVedleggTilISak(fiksDigisosId, vedleggMetadata, vedleggsId, timestamp)
         log.info("Lastet opp fil fiksDigisosId: $fiksDigisosId, filnavn: ${vedleggMetadata.filnavn}, vedleggsId: $vedleggsId")
         return vedleggsId
     }
