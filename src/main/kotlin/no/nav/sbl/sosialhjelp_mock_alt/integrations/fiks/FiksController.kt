@@ -148,11 +148,12 @@ class FiksController(private val soknadService: SoknadService, private val dokum
         log.info("Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId")
         val vedleggsInfoText:String = body["vedlegg.json"].toString()
         val vedleggsJson = objectMapper.readValue(vedleggsInfoText, object : TypeReference<List<JsonVedleggSpesifikasjon>>() {})
+        val timestamp = DateTime.now().millis
         body.keys.forEach {
             if(it.startsWith("vedleggSpesifikasjon")) {
                 val json = body[it].toString()
                 val vedleggMetadata = objectMapper.readValue(json, object : TypeReference<List<VedleggMetadata>>() {})
-                soknadService.lastOppFil(digisosId, vedleggMetadata[0], vedleggsJson[0])
+                soknadService.lastOppFil(digisosId, vedleggMetadata[0], vedleggsJson[0], timestamp)
             }
         }
         return ResponseEntity.ok("OK")
