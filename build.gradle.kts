@@ -3,6 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val sosialhjelpCommonVersion = "1.58fd6b8"
 val filformatVersion = "1.2020.01.09-15.55-f18d10d7d76a"
 val tjenestespesifikasjon = "1.2019.09.25-00.21-49b69f0625e0"
 val oidcsupportversion = "0.2.18"
@@ -31,15 +32,26 @@ group = "no.nav.sbl"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+val githubUser: String by project
+val githubPassword: String by project
+
 repositories {
 	mavenCentral()
+	maven {
+		url = uri("https://maven.pkg.github.com/navikt/sosialhjelp-common")
+		credentials {
+			username = githubUser
+			password = githubPassword
+		}
+	}
 }
-
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+	implementation("no.nav.sosialhjelp:sosialhjelp-common-api:$sosialhjelpCommonVersion")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 	implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")

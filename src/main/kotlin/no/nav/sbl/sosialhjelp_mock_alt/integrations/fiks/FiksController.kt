@@ -7,11 +7,11 @@ import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.DokumentKrypteringsService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.KommuneInfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.SakWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
+import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import org.joda.time.DateTime
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -24,8 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import java.util.Collections
-import java.util.UUID
+import java.util.*
 
 @RestController
 class FiksController(private val soknadService: SoknadService, private val dokumentKrypteringsService: DokumentKrypteringsService) {
@@ -56,14 +55,14 @@ class FiksController(private val soknadService: SoknadService, private val dokum
     @PostMapping("/fiks/digisos/api/v1/{fiksOrgId}/{digisosId}/filer")
     fun lastOppFilerInnsyn(@PathVariable digisosId: String,
                            @PathVariable(required = false) fiksOrgId: String?,
-                     @RequestParam body: LinkedMultiValueMap<String, Any>
+                           @RequestParam body: LinkedMultiValueMap<String, Any>
     ): ResponseEntity<String> {
         return lastOppFiler("", digisosId, "", body)
     }
 
     @PostMapping("/fiks/digisos/api/v1/{fiksOrgId}/{fiksDigisosId}") // tar også /ny
-    fun oppdaterSoknadInnsyn(@PathVariable fiksOrgId:String,
-                             @PathVariable(required = false) fiksDigisosId:String?,
+    fun oppdaterSoknadInnsyn(@PathVariable fiksOrgId: String,
+                             @PathVariable(required = false) fiksDigisosId: String?,
                              @RequestBody(required = false) body: String?): ResponseEntity<String> {
         var id = fiksDigisosId
         if (id == null || id.toLowerCase().contentEquals("ny")) {
@@ -111,7 +110,9 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                 kanOppdatereStatus = true,
                 harMidlertidigDeaktivertOppdateringer = false,
                 harMidlertidigDeaktivertMottak = false,
-                kontaktPersoner = null
+                kontaktPersoner = null,
+                harNksTilgang = true,
+                behandlingsansvarlig = null
         )
         log.info("Henter kommuneinfo: $kommuneInfo")
         return ResponseEntity.ok(objectMapper.writeValueAsString(kommuneInfo))
@@ -125,7 +126,9 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                 kanOppdatereStatus = true,
                 harMidlertidigDeaktivertOppdateringer = false,
                 harMidlertidigDeaktivertMottak = false,
-                kontaktPersoner = null
+                kontaktPersoner = null,
+                harNksTilgang = true,
+                behandlingsansvarlig = null
         )
         log.info("Henter kommuneinfo: $kommuneInfo")
         return ResponseEntity.ok(objectMapper.writeValueAsString(Collections.singletonList(kommuneInfo)))
@@ -146,11 +149,11 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                      @RequestParam body: LinkedMultiValueMap<String, Any>
     ): ResponseEntity<String> {
         log.info("Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId")
-        val vedleggsInfoText:String = body["vedlegg.json"].toString()
+        val vedleggsInfoText: String = body["vedlegg.json"].toString()
         val vedleggsJson = objectMapper.readValue(vedleggsInfoText, object : TypeReference<List<JsonVedleggSpesifikasjon>>() {})
         val timestamp = DateTime.now().millis
         body.keys.forEach {
-            if(it.startsWith("vedleggSpesifikasjon")) {
+            if (it.startsWith("vedleggSpesifikasjon")) {
                 val json = body[it].toString()
                 val vedleggMetadata = objectMapper.readValue(json, object : TypeReference<List<VedleggMetadata>>() {})
                 soknadService.lastOppFil(digisosId, vedleggMetadata[0], vedleggsJson[0], timestamp)

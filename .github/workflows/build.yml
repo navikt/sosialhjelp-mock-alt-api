@@ -6,6 +6,10 @@ on:
     tags-ignore:
       - '**' # Don't build any tags
 
+env:
+  ORG_GRADLE_PROJECT_githubUser: x-access-token
+  ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   build:
     name: Build and push docker image
