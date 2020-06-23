@@ -84,7 +84,7 @@ class SoknadService {
                     ettersendtInfoNAV = EttersendtInfoNAV(Collections.emptyList()),
                     digisosSoker = null,
                     tilleggsinformasjon = Tilleggsinformasjon(
-                            enhetsnummer = null
+                            enhetsnummer = "1234"
                     )
             )
             val dokumentlagerId = UUID.randomUUID().toString()

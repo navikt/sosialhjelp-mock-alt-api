@@ -17,7 +17,7 @@ class NorgController {
     fun getToken(@PathVariable enhetsnr: String): String {
         val navEnhet = NavEnhet(
                 enhetId = 198723989,
-                navn = "NavEnehetsNavn",
+                navn = "Mock bydel, mock kommune",
                 enhetNr = enhetsnr,
                 status = "20",
                 antallRessurser = 25,
