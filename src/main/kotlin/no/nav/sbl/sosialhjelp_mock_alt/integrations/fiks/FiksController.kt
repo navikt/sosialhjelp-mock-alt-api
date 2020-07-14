@@ -12,6 +12,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
+import no.nav.sosialhjelp.api.fiks.Kontaktpersoner
 import org.joda.time.DateTime
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
+import kotlin.collections.ArrayList
 
 @RestController
 class FiksController(private val soknadService: SoknadService, private val dokumentKrypteringsService: DokumentKrypteringsService) {
@@ -120,8 +122,9 @@ class FiksController(private val soknadService: SoknadService, private val dokum
 
     @GetMapping("/fiks/digisos/api/v1/nav/kommuner")
     fun hentKommuneInfoListe(): ResponseEntity<String> {
-        val kommuneInfo = KommuneInfo(
-                kommunenummer = "1",
+        val kommuneInfoList = ArrayList<KommuneInfo>()
+        kommuneInfoList.add(KommuneInfo(
+                kommunenummer = "1000",
                 kanMottaSoknader = true,
                 kanOppdatereStatus = true,
                 harMidlertidigDeaktivertOppdateringer = false,
@@ -129,9 +132,45 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                 kontaktPersoner = null,
                 harNksTilgang = true,
                 behandlingsansvarlig = null
-        )
-        log.info("Henter kommuneinfo: $kommuneInfo")
-        return ResponseEntity.ok(objectMapper.writeValueAsString(Collections.singletonList(kommuneInfo)))
+        ))
+        kommuneInfoList.add(KommuneInfo(
+                kommunenummer = "1001",
+                kanMottaSoknader = true,
+                kanOppdatereStatus = true,
+                harMidlertidigDeaktivertOppdateringer = false,
+                harMidlertidigDeaktivertMottak = false,
+                kontaktPersoner = Kontaktpersoner(
+                        Collections.singletonList("Kontakt1001@testnav.no"),
+                        Collections.singletonList("Test1001@testnav.no")),
+                harNksTilgang = true,
+                behandlingsansvarlig = "Behandling1001@testnav.no"
+        ))
+        kommuneInfoList.add(KommuneInfo(
+                kommunenummer = "1002",
+                kanMottaSoknader = true,
+                kanOppdatereStatus = true,
+                harMidlertidigDeaktivertOppdateringer = false,
+                harMidlertidigDeaktivertMottak = false,
+                kontaktPersoner = Kontaktpersoner(
+                        Collections.singletonList("Kontakt1002@testnav.no"),
+                        Collections.singletonList("Test1002@testnav.no")),
+                harNksTilgang = false,
+                behandlingsansvarlig = "Behandlig1002@testnav.no"
+        ))
+        kommuneInfoList.add(KommuneInfo(
+                kommunenummer = "1003",
+                kanMottaSoknader = true,
+                kanOppdatereStatus = true,
+                harMidlertidigDeaktivertOppdateringer = true,
+                harMidlertidigDeaktivertMottak = true,
+                kontaktPersoner = Kontaktpersoner(
+                        Collections.singletonList("Kontakt1003@navo.no"),
+                        Collections.singletonList("Test1003@navno.no")),
+                harNksTilgang = true,
+                behandlingsansvarlig = null
+        ))
+        log.info("Henter kommuneinfo: $kommuneInfoList")
+        return ResponseEntity.ok(objectMapper.writeValueAsString(kommuneInfoList))
     }
 
     //    ======== public-key dokumentlager ========
