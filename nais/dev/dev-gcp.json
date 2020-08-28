@@ -1,0 +1,15 @@
+{
+  "namespace": "teamdigisos",
+  "ingress": [
+    "https://sosialhjelp-mock-alt-api.dev.nav.no/sosialhjelp/mock-alt-api"
+  ],
+  "env": {
+    "GCP_PORT": "8989"
+  },
+  "minReplicas": "1",
+  "maxReplicas": "1",
+  "prometheusEnabled": true,
+  "webProxyEnabled": true,
+  "accessPoliciesForGcpEnabled": true,
+  "vaultEnabled": false
+}
