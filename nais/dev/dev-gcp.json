@@ -4,7 +4,8 @@
     "https://sosialhjelp-mock-alt-api.dev.nav.no/sosialhjelp/mock-alt-api"
   ],
   "env": {
-    "GCP_PORT": "8989"
+    "GCP_PORT": "8989",
+    "HOST_ADDRESS": "https://sosialhjelp-mock-alt-api.dev.nav.no/"
   },
   "minReplicas": "1",
   "maxReplicas": "1",

@@ -5,13 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import no.nav.sbl.soknadsosialhjelp.json.JsonSosialhjelpObjectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.config.CORSFilter
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Import
 
 @SpringBootApplication
+@Import(TokenGeneratorConfiguration::class)
 class MockAltApplication {
 
 	@Bean

@@ -72,7 +72,7 @@ class SoknadService {
                     fiksDigisosId = fiksDigisosId,
                     sokerFnr = "01234567890",
                     fiksOrgId = fiksOrgId,
-                    kommunenummer = "1",
+                    kommunenummer = "0301",
                     sistEndret = System.currentTimeMillis(),
                     originalSoknadNAV = OriginalSoknadNAV(
                             navEksternRefId = "110000000",
