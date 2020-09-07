@@ -3,7 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val sosialhjelpCommonVersion = "1.58fd6b8"
+val sosialhjelpCommonVersion = "1.2d56711"
 val filformatVersion = "1.2020.01.09-15.55-f18d10d7d76a"
 val tjenestespesifikasjon = "1.2019.09.25-00.21-49b69f0625e0"
 val oidcsupportversion = "0.2.18"
@@ -12,14 +12,15 @@ val tokenValidationVersion = "1.1.5"
 val jacksonVersion = "2.10.3"
 val swaggerversion = "2.9.2"
 val guavaVersion = "29.0-jre"
+val jerseyMediaJaxb = "2.31"
 
 plugins {
     application
-	id("org.springframework.boot") version "2.3.1.RELEASE"
+	id("org.springframework.boot") version "2.3.3.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
 	id("com.github.johnrengelman.shadow") version "5.2.0"
-	kotlin("jvm") version "1.3.71"
-	kotlin("plugin.spring") version "1.3.71"
+	kotlin("jvm") version "1.3.72"
+	kotlin("plugin.spring") version "1.3.72"
 }
 
 val mainClass = "no.nav.sbl.sosialhjelp_mock_alt.MockAltApplicationKt"
@@ -67,6 +68,7 @@ dependencies {
 
 //	anbefalte versjoner av snyk:
 	implementation("com.google.guava:guava:$guavaVersion")
+	implementation("org.glassfish.jersey.media:jersey-media-jaxb:$jerseyMediaJaxb")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")

@@ -112,7 +112,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                 kanOppdatereStatus = true,
                 harMidlertidigDeaktivertOppdateringer = false,
                 harMidlertidigDeaktivertMottak = false,
-                kontaktPersoner = null,
+                kontaktpersoner = null,
                 harNksTilgang = true,
                 behandlingsansvarlig = null
         )
@@ -129,7 +129,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                 kanOppdatereStatus = true,
                 harMidlertidigDeaktivertOppdateringer = false,
                 harMidlertidigDeaktivertMottak = false,
-                kontaktPersoner = null,
+                kontaktpersoner = null,
                 harNksTilgang = true,
                 behandlingsansvarlig = null
         ))
@@ -139,7 +139,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                 kanOppdatereStatus = true,
                 harMidlertidigDeaktivertOppdateringer = false,
                 harMidlertidigDeaktivertMottak = false,
-                kontaktPersoner = Kontaktpersoner(
+                kontaktpersoner = Kontaktpersoner(
                         Collections.singletonList("Kontakt1001@testnav.no"),
                         Collections.singletonList("Test1001@testnav.no")),
                 harNksTilgang = true,
@@ -151,7 +151,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                 kanOppdatereStatus = true,
                 harMidlertidigDeaktivertOppdateringer = false,
                 harMidlertidigDeaktivertMottak = false,
-                kontaktPersoner = Kontaktpersoner(
+                kontaktpersoner = Kontaktpersoner(
                         Collections.singletonList("Kontakt1002@testnav.no"),
                         Collections.singletonList("Test1002@testnav.no")),
                 harNksTilgang = false,
@@ -163,7 +163,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                 kanOppdatereStatus = true,
                 harMidlertidigDeaktivertOppdateringer = true,
                 harMidlertidigDeaktivertMottak = true,
-                kontaktPersoner = Kontaktpersoner(
+                kontaktpersoner = Kontaktpersoner(
                         Collections.singletonList("Kontakt1003@navo.no"),
                         Collections.singletonList("Test1003@navno.no")),
                 harNksTilgang = true,
