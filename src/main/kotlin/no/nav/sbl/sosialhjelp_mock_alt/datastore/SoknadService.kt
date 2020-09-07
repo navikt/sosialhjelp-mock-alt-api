@@ -70,7 +70,7 @@ class SoknadService {
             val vedleggMetadataId = UUID.randomUUID().toString()
             val digisosSak = DigisosSak(
                     fiksDigisosId = fiksDigisosId,
-                    sokerFnr = "01234567890",
+                    sokerFnr = fiksDigisosId,
                     fiksOrgId = fiksOrgId,
                     kommunenummer = "0301",
                     sistEndret = System.currentTimeMillis(),
@@ -95,8 +95,8 @@ class SoknadService {
             log.debug(updatedDigisosSak.toString())
             soknadsliste.put(fiksDigisosId, updatedDigisosSak)
             log.info("Lagrer orginalsøknad (med bare default verdier) med dokumentlagerId: $fiksDigisosId")
-            log.debug(defaultJsonSoknad.toString())
-            val orginalSoknad = objectMapper.writeValueAsString(defaultJsonSoknad)
+            log.debug(defaultJsonSoknad(fiksDigisosId).toString())
+            val orginalSoknad = objectMapper.writeValueAsString(defaultJsonSoknad(fiksDigisosId))
             dokumentLager.put(metadataId, orginalSoknad)
             log.info("Lagrer vedleggs metadata med dokumentlagerId: $vedleggMetadataId")
             val vedleggMetadata = VedleggMetadata("soknad.json", "application/json", orginalSoknad.length.toLong())
