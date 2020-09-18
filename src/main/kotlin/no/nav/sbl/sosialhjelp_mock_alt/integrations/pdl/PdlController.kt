@@ -49,7 +49,7 @@ class PdlController {
                     errors = emptyList(),
                     data = PdlModiaHentPerson(
                             hentPerson = PdlModiaPerson(
-                                    navn = listOf(PdlPersonNavn("Natalie", null, "Emberland")),
+                                    navn = listOf(PdlPersonNavn("Person", null, "Testperson")),
                                     kjoenn = listOf(PdlKjoenn(Kjoenn.KVINNE)),
                                     foedsel = listOf(PdlFoedselsdato("1945-10-26")),
                                     telefonnummer = listOf(PdlTelefonnummer("+47","11112222", 1))
