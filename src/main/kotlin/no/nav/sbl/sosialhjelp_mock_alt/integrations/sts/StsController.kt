@@ -28,7 +28,7 @@ class StsController(
         val token = STSResponse(
                 access_token = "token",
                 token_type = "type",
-                expires_in = 999999
+                expires_in = 70
         )
         log.info("Henter token: $token")
         return objectMapper.writeValueAsString(token)

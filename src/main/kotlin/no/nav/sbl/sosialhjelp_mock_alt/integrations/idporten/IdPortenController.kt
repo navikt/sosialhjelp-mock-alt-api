@@ -23,7 +23,7 @@ class IdPortenController(
     fun getToken(@RequestParam parameters: MultiValueMap<String, String>, @RequestBody body: String): String {
         val token = IdPortenAccessTokenResponse(
                 accessToken = "",
-                expiresIn = 999999,
+                expiresIn = 70,
                 scope = "ks:fiks"
         )
         log.info("Henter token: $token")
