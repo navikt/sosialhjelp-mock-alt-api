@@ -44,6 +44,7 @@ spec:
       rules:
         - application: digisos
         - application: sosialhjelp-modia-api
+        - application: sosialhjelp-innsyn-api
 {{/if}}
   resources:
     limits:
