@@ -5,6 +5,10 @@ metadata:
   namespace: {{namespace}}
   labels:
     team: teamdigisos
+{{#if isGcp}}
+tracing:
+  enabled: true
+{{/if}}
 spec:
   image: {{image}}
   port: 8989
@@ -31,7 +35,7 @@ spec:
 {{#each ingress}}
     - "{{this}}"
 {{/each}}
-{{#if accessPoliciesForGcpEnabled}}
+{{#if isGcp}}
   accessPolicy:
     outbound:
       rules:
