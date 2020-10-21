@@ -10,6 +10,10 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.SakWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
+import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraBody
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.api.fiks.Kontaktpersoner
@@ -37,7 +41,8 @@ class FiksController(private val soknadService: SoknadService, private val dokum
     //    ======== Innsyn =========
     @GetMapping("/fiks/digisos/api/v1/soknader/soknader")
     fun listSoknaderInnsyn(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
-        val soknadsListe = soknadService.listSoknader()
+        val fromToken = hentFnrFraToken()
+        val soknadsListe = soknadService.listSoknader(fromToken)
         return ResponseEntity.ok(soknadsListe)
     }
 
@@ -67,17 +72,18 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                              @PathVariable(required = false) fiksDigisosId: String?,
                              @RequestBody(required = false) body: String?): ResponseEntity<String> {
         var id = fiksDigisosId
+        val fnr = hentFnrFraBody(body)
         if (id == null || id.toLowerCase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
             val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
             digisosApiWrapper.sak.soker.hendelser.add(JsonHendelse()
                     .withHendelsestidspunkt(DateTime.now().toDateTimeISO().toString())
                     .withType(JsonHendelse.Type.SOKNADS_STATUS))
-            soknadService.oppdaterDigisosSak(fiksOrgId, id, digisosApiWrapper)
+            soknadService.oppdaterDigisosSak(fiksOrgId, id, fnr, digisosApiWrapper)
             return ResponseEntity.ok("$id")
         } else {
             val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
-            soknadService.oppdaterDigisosSak(fiksOrgId, id, digisosApiWrapper)
+            soknadService.oppdaterDigisosSak(fiksOrgId, id, fnr, digisosApiWrapper)
             return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
         }
     }
@@ -86,7 +92,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
     //    ======== Modia =========
     @PostMapping("/fiks/digisos/api/v1/nav/soknader/soknader")
     fun listSoknaderModia(@RequestBody body: String, @RequestParam(name = "sporingsId") sporingsId: String): ResponseEntity<String> {
-        val soknadsListe = soknadService.listSoknader()
+        val soknadsListe = soknadService.listSoknader(hentFnrFraBody(body))
         return ResponseEntity.ok(soknadsListe)
     }
 
@@ -206,5 +212,22 @@ class FiksController(private val soknadService: SoknadService, private val dokum
         log.info("Laster opp fil for fiksDigisosId: $fiksDigisosId")
         val dokumentlagerId = soknadService.lastOppFil(fiksDigisosId, file)
         return ResponseEntity.ok(dokumentlagerId)
+    }
+
+    //    ======== Util =========
+    @GetMapping("/fiks/alle/fnr")
+    fun listAlleFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
+        val fnrListe = soknadService.listFnr()
+        return ResponseEntity.ok(fnrListe)
+    }
+
+    @GetMapping("/fiks/tilfeldig/fnr")
+    fun listTilfeldigFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
+        return ResponseEntity.ok(genererTilfeldigPersonnummer())
+    }
+
+    @GetMapping("/fiks/fast/fnr")
+    fun listFastFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
+        return ResponseEntity.ok(fastFnr)
     }
 }

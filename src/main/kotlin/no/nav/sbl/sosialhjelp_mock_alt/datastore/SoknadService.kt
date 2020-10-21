@@ -52,18 +52,22 @@ class SoknadService {
         return objectMapper.writeValueAsString(soknad)
     }
 
-    fun listSoknader(): String {
-        log.info("Henter søknadsliste. Antll soknader: ${soknadsliste.size}")
-        return objectMapper.writeValueAsString(soknadsliste.values)
+    fun listSoknader(fnr: String?): String {
+//        if(fnr == null) {
+            log.info("Henter søknadsliste. Antall soknader: ${soknadsliste.size}")
+            return objectMapper.writeValueAsString(soknadsliste.values)
+//        }
+//        val soknadslisteForFnr = soknadsliste.values.filter{it.sokerFnr.equals(fnr)}
+//        log.info("Henter søknadsliste. Antall soknader for $fnr: ${soknadslisteForFnr.size}")
+//        return objectMapper.writeValueAsString(soknadslisteForFnr)
     }
 
-    fun oppdaterDigisosSak(fiksOrgId: String, fiksDigisosIdInput: String?, digisosApiWrapper: DigisosApiWrapper): String? {
+    fun oppdaterDigisosSak(fiksOrgId: String, fnr: String, fiksDigisosIdInput: String?, digisosApiWrapper: DigisosApiWrapper): String? {
         var fiksDigisosId = fiksDigisosIdInput
         if (fiksDigisosId == null) {
             fiksDigisosId = UUID.randomUUID().toString()
         }
 
-        val fnr = (Math.random() * 100000000000).toString()
         val metadataId = UUID.randomUUID().toString()
 
         val oldSoknad = soknadsliste.get(fiksDigisosId)
@@ -140,7 +144,7 @@ class SoknadService {
     }
 
     private fun femMinutterForMottattSoknad(digisosApiWrapper: DigisosApiWrapper): Long {
-        val mottattTidspunkt = digisosApiWrapper.sak.soker.hendelser.minBy { it.hendelsestidspunkt }!!.hendelsestidspunkt
+        val mottattTidspunkt = digisosApiWrapper.sak.soker.hendelser.minByOrNull { it.hendelsestidspunkt }!!.hendelsestidspunkt
         return try {
             mottattTidspunkt.toLocalDateTime().minusMinutes(5).atZone(ZoneId.of("Europe/Oslo")).toInstant().toEpochMilli()
         } catch (e: DateTimeParseException) {
@@ -151,7 +155,7 @@ class SoknadService {
     private fun oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(id: String, digisosApiWrapper: DigisosApiWrapper) {
         val digisosSak = hentSak(id)
         val timestampSendt = digisosSak.originalSoknadNAV!!.timestampSendt
-        val tidligsteHendelsetidspunkt = digisosApiWrapper.sak.soker.hendelser.minBy { it.hendelsestidspunkt }!!.hendelsestidspunkt
+        val tidligsteHendelsetidspunkt = digisosApiWrapper.sak.soker.hendelser.minByOrNull { it.hendelsestidspunkt }!!.hendelsestidspunkt
         if (unixToLocalDateTime(timestampSendt).isAfter(tidligsteHendelsetidspunkt.toLocalDateTime())) {
             val oppdatertDigisosSak = digisosSak.updateOriginalSoknadNAV(digisosSak.originalSoknadNAV!!.copy(timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper)))
             soknadsliste[id] = oppdatertDigisosSak
@@ -205,5 +209,12 @@ class SoknadService {
         leggVedleggTilISak(fiksDigisosId, vedleggMetadata, vedleggsId, timestamp)
         log.info("Lastet opp fil fiksDigisosId: $fiksDigisosId, filnavn: ${vedleggMetadata.filnavn}, vedleggsId: $vedleggsId")
         return vedleggsId
+    }
+
+    //    ======== Util =========
+    fun listFnr(): String {
+        val fnrListe = soknadsliste.values.map { it.sokerFnr }.toHashSet().sorted()
+        log.info("Henter fnr liste: $fnrListe")
+        return objectMapper.writeValueAsString(fnrListe)
     }
 }
