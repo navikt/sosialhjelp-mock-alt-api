@@ -11,7 +11,7 @@ val oauth2oidcsdkversion = "7.3"
 val tokenValidationVersion = "1.1.5"
 val jacksonVersion = "2.10.3"
 val swaggerversion = "2.9.2"
-val guavaVersion = "29.0-jre"
+val guavaVersion = "30.0-jre"
 val jerseyMediaJaxb = "2.31"
 
 plugins {
