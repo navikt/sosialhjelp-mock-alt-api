@@ -41,6 +41,7 @@ spec:
         - application: digisos
         - application: sosialhjelp-modia-api
         - application: sosialhjelp-innsyn-api
+        - application: sosialhjelp-soknad-api
 {{/if}}
 {{#if isGcp}}
   tracing:
