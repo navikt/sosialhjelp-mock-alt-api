@@ -16,7 +16,8 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 class LoginCoockieAndTokenController(
-        @Value("\${host_address}") private val host_address: String
+        @Value("\${host_address}") private val host_address: String,
+        @Value("\${cookie_domain}") private val cookie_domain: String,
 ) {
 
     @GetMapping("/login/metadata")
@@ -38,7 +39,7 @@ class LoginCoockieAndTokenController(
         val expiryTime = expiry?.toLong() ?: JwtTokenGenerator.EXPIRY
         val token = JwtTokenGenerator.createSignedJWT(subject ?: fastFnr, expiryTime)
         val cookie = Cookie(cookieName, token.serialize())
-        cookie.domain = host_address
+        cookie.domain = cookie_domain
         cookie.path = "/"
         response.addCookie(cookie)
         if (redirect != null) {

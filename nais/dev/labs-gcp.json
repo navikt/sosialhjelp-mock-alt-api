@@ -5,7 +5,8 @@
   ],
   "env": {
     "GCP_PORT": "8989",
-    "HOST_ADDRESS": "https://sosialhjelp-mock-alt-api.labs.nais.io/"
+    "HOST_ADDRESS": "https://digisos.labs.nais.io/",
+    "COOKIE_DOMAIN": "digisos.labs.nais.io"
   },
   "minReplicas": "1",
   "maxReplicas": "1",

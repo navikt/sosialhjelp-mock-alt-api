@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class StsController(
-        @Value("\${host_address}") private val host_address: String
+        @Value("\${host_address}") private val host_address: String,
 ) {
     companion object {
         val log by logger()
