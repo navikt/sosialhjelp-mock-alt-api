@@ -5,6 +5,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -22,8 +23,14 @@ class NorgController {
         leggTilNavenhet(navEnheter, "1210", "NAV Ytrebygda, Bergen kommune")
     }
 
+    @RequestMapping("/norg_endpoint_url/enhet")
+    fun getAlleEnheter(@RequestParam enhetStatusListe: String): String {
+        log.info("Henter alle nav enheter: ${navEnheter.size} status: $enhetStatusListe")
+        return objectMapper.writeValueAsString(navEnheter.values)
+    }
+
     @RequestMapping("/norg_endpoint_url/enhet/{enhetsnr}")
-    fun getToken(@PathVariable enhetsnr: String): String {
+    fun getEnhet(@PathVariable enhetsnr: String): String {
         val navEnhet = navEnheter[enhetsnr] ?: lagMockNavEnhet(enhetsnr, "Generert mockenhet $enhetsnr, Mock kommune")
         log.info("Henter nav enhet for id: $enhetsnr")
         return objectMapper.writeValueAsString(navEnhet)
