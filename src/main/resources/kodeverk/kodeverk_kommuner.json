@@ -1,0 +1,4734 @@
+{
+  "betydninger": {
+    "1001": [],
+    "1002": [],
+    "1003": [],
+    "1004": [],
+    "1014": [],
+    "1017": [],
+    "1018": [],
+    "1021": [],
+    "1026": [],
+    "1027": [],
+    "1029": [],
+    "1032": [],
+    "1034": [],
+    "1037": [],
+    "1046": [],
+    "1101": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Eigersund",
+            "tekst": "Eigersund"
+          }
+        }
+      }
+    ],
+    "1102": [],
+    "1103": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Stavanger",
+            "tekst": "Stavanger"
+          }
+        }
+      }
+    ],
+    "1106": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Haugesund",
+            "tekst": "Haugesund"
+          }
+        }
+      }
+    ],
+    "1108": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sandnes",
+            "tekst": "Sandnes"
+          }
+        }
+      }
+    ],
+    "1111": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sokndal",
+            "tekst": "Sokndal"
+          }
+        }
+      }
+    ],
+    "1112": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lund",
+            "tekst": "Lund"
+          }
+        }
+      }
+    ],
+    "1114": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bjerkreim",
+            "tekst": "Bjerkreim"
+          }
+        }
+      }
+    ],
+    "1119": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hå",
+            "tekst": "Hå"
+          }
+        }
+      }
+    ],
+    "1120": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Klepp",
+            "tekst": "Klepp"
+          }
+        }
+      }
+    ],
+    "1121": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Time",
+            "tekst": "Time"
+          }
+        }
+      }
+    ],
+    "1122": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gjesdal",
+            "tekst": "Gjesdal"
+          }
+        }
+      }
+    ],
+    "1124": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sola",
+            "tekst": "Sola"
+          }
+        }
+      }
+    ],
+    "1127": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Randaberg",
+            "tekst": "Randaberg"
+          }
+        }
+      }
+    ],
+    "1129": [],
+    "1130": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Strand",
+            "tekst": "Strand"
+          }
+        }
+      }
+    ],
+    "1133": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hjelmeland",
+            "tekst": "Hjelmeland"
+          }
+        }
+      }
+    ],
+    "1134": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Suldal",
+            "tekst": "Suldal"
+          }
+        }
+      }
+    ],
+    "1135": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sauda",
+            "tekst": "Sauda"
+          }
+        }
+      }
+    ],
+    "1141": [],
+    "1142": [],
+    "1144": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kvitsøy",
+            "tekst": "Kvitsøy"
+          }
+        }
+      }
+    ],
+    "1145": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bokn",
+            "tekst": "Bokn"
+          }
+        }
+      }
+    ],
+    "1146": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tysvær",
+            "tekst": "Tysvær"
+          }
+        }
+      }
+    ],
+    "1149": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Karmøy",
+            "tekst": "Karmøy"
+          }
+        }
+      }
+    ],
+    "1151": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Utsira",
+            "tekst": "Utsira"
+          }
+        }
+      }
+    ],
+    "1154": [],
+    "1159": [],
+    "1160": [
+      {
+        "gyldigFra": "2006-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vindafjord",
+            "tekst": "Vindafjord"
+          }
+        }
+      }
+    ],
+    "1201": [],
+    "1211": [],
+    "1214": [],
+    "1216": [],
+    "1219": [],
+    "1221": [],
+    "1222": [],
+    "1223": [],
+    "1224": [],
+    "1227": [],
+    "1228": [],
+    "1231": [],
+    "1232": [],
+    "1233": [],
+    "1234": [],
+    "1235": [],
+    "1238": [],
+    "1241": [],
+    "1242": [],
+    "1243": [],
+    "1244": [],
+    "1245": [],
+    "1246": [],
+    "1247": [],
+    "1251": [],
+    "1252": [],
+    "1253": [],
+    "1256": [],
+    "1259": [],
+    "1260": [],
+    "1263": [],
+    "1264": [],
+    "1265": [],
+    "1266": [],
+    "1401": [],
+    "1411": [],
+    "1412": [],
+    "1413": [],
+    "1416": [],
+    "1417": [],
+    "1418": [],
+    "1419": [],
+    "1420": [],
+    "1421": [],
+    "1422": [],
+    "1424": [],
+    "1426": [],
+    "1428": [],
+    "1429": [],
+    "1430": [],
+    "1431": [],
+    "1432": [],
+    "1433": [],
+    "1438": [],
+    "1439": [],
+    "1441": [],
+    "1443": [],
+    "1444": [],
+    "1445": [],
+    "1449": [],
+    "1502": [],
+    "1503": [],
+    "1504": [],
+    "1505": [
+      {
+        "gyldigFra": "2008-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kristiansund",
+            "tekst": "Kristiansund"
+          }
+        }
+      }
+    ],
+    "1506": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Molde",
+            "tekst": "Molde"
+          }
+        }
+      }
+    ],
+    "1507": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ålesund",
+            "tekst": "Ålesund"
+          }
+        }
+      }
+    ],
+    "1511": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vanylven",
+            "tekst": "Vanylven"
+          }
+        }
+      }
+    ],
+    "1514": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sande",
+            "tekst": "Sande"
+          }
+        }
+      }
+    ],
+    "1515": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Herøy",
+            "tekst": "Herøy"
+          }
+        }
+      }
+    ],
+    "1516": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ulstein",
+            "tekst": "Ulstein"
+          }
+        }
+      }
+    ],
+    "1517": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hareid",
+            "tekst": "Hareid"
+          }
+        }
+      }
+    ],
+    "1519": [],
+    "1520": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ørsta",
+            "tekst": "Ørsta"
+          }
+        }
+      }
+    ],
+    "1523": [],
+    "1524": [],
+    "1525": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Stranda",
+            "tekst": "Stranda"
+          }
+        }
+      }
+    ],
+    "1526": [],
+    "1528": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sykkylven",
+            "tekst": "Sykkylven"
+          }
+        }
+      }
+    ],
+    "1529": [],
+    "1531": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sula",
+            "tekst": "Sula"
+          }
+        }
+      }
+    ],
+    "1532": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Giske",
+            "tekst": "Giske"
+          }
+        }
+      }
+    ],
+    "1534": [],
+    "1535": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vestnes",
+            "tekst": "Vestnes"
+          }
+        }
+      }
+    ],
+    "1539": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rauma",
+            "tekst": "Rauma"
+          }
+        }
+      }
+    ],
+    "1543": [],
+    "1545": [],
+    "1546": [],
+    "1547": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Aukra",
+            "tekst": "Aukra"
+          }
+        }
+      }
+    ],
+    "1548": [],
+    "1551": [],
+    "1554": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Averøy",
+            "tekst": "Averøy"
+          }
+        }
+      }
+    ],
+    "1556": [],
+    "1557": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gjemnes",
+            "tekst": "Gjemnes"
+          }
+        }
+      }
+    ],
+    "1560": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tingvoll",
+            "tekst": "Tingvoll"
+          }
+        }
+      }
+    ],
+    "1563": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sunndal",
+            "tekst": "Sunndal"
+          }
+        }
+      }
+    ],
+    "1566": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Surnadal",
+            "tekst": "Surnadal"
+          }
+        }
+      }
+    ],
+    "1567": [],
+    "1569": [],
+    "1571": [],
+    "1572": [],
+    "1573": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Smøla",
+            "tekst": "Smøla"
+          }
+        }
+      }
+    ],
+    "1576": [
+      {
+        "gyldigFra": "2006-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Aure",
+            "tekst": "Aure"
+          }
+        }
+      }
+    ],
+    "1577": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Volda",
+            "tekst": "Volda"
+          }
+        }
+      }
+    ],
+    "1578": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fjord",
+            "tekst": "Fjord"
+          }
+        }
+      }
+    ],
+    "1579": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hustadvika",
+            "tekst": "Hustadvika"
+          }
+        }
+      }
+    ],
+    "1601": [],
+    "1612": [],
+    "1613": [],
+    "1617": [],
+    "1620": [],
+    "1621": [],
+    "1622": [],
+    "1624": [],
+    "1627": [],
+    "1630": [],
+    "1632": [],
+    "1633": [],
+    "1634": [],
+    "1635": [],
+    "1636": [],
+    "1638": [],
+    "1640": [],
+    "1644": [],
+    "1648": [],
+    "1653": [],
+    "1657": [],
+    "1662": [],
+    "1663": [],
+    "1664": [],
+    "1665": [],
+    "1702": [],
+    "1703": [],
+    "1711": [],
+    "1714": [],
+    "1717": [],
+    "1718": [],
+    "1719": [],
+    "1721": [],
+    "1723": [],
+    "1724": [],
+    "1725": [],
+    "1729": [],
+    "1736": [],
+    "1738": [],
+    "1739": [],
+    "1740": [],
+    "1742": [],
+    "1743": [],
+    "1744": [],
+    "1748": [],
+    "1749": [],
+    "1750": [],
+    "1751": [],
+    "1755": [],
+    "1756": [],
+    "1804": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bodø",
+            "tekst": "Bodø"
+          }
+        }
+      }
+    ],
+    "1805": [],
+    "1806": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Narvik",
+            "tekst": "Narvik"
+          }
+        }
+      }
+    ],
+    "1811": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bindal",
+            "tekst": "Bindal"
+          }
+        }
+      }
+    ],
+    "1812": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sømna",
+            "tekst": "Sømna"
+          }
+        }
+      }
+    ],
+    "1813": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Brønnøy",
+            "tekst": "Brønnøy"
+          }
+        }
+      }
+    ],
+    "1815": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vega",
+            "tekst": "Vega"
+          }
+        }
+      }
+    ],
+    "1816": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vevelstad",
+            "tekst": "Vevelstad"
+          }
+        }
+      }
+    ],
+    "1818": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Herøy",
+            "tekst": "Herøy"
+          }
+        }
+      }
+    ],
+    "1820": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Alstahaug",
+            "tekst": "Alstahaug"
+          }
+        }
+      }
+    ],
+    "1822": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Leirfjord",
+            "tekst": "Leirfjord"
+          }
+        }
+      }
+    ],
+    "1824": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vefsn",
+            "tekst": "Vefsn"
+          }
+        }
+      }
+    ],
+    "1825": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Grane",
+            "tekst": "Grane"
+          }
+        }
+      }
+    ],
+    "1826": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hattfjelldal",
+            "tekst": "Hattfjelldal"
+          }
+        }
+      }
+    ],
+    "1827": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Dønna",
+            "tekst": "Dønna"
+          }
+        }
+      }
+    ],
+    "1828": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nesna",
+            "tekst": "Nesna"
+          }
+        }
+      }
+    ],
+    "1832": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hemnes",
+            "tekst": "Hemnes"
+          }
+        }
+      }
+    ],
+    "1833": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rana",
+            "tekst": "Rana"
+          }
+        }
+      }
+    ],
+    "1834": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lurøy",
+            "tekst": "Lurøy"
+          }
+        }
+      }
+    ],
+    "1835": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Træna",
+            "tekst": "Træna"
+          }
+        }
+      }
+    ],
+    "1836": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rødøy",
+            "tekst": "Rødøy"
+          }
+        }
+      }
+    ],
+    "1837": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Meløy",
+            "tekst": "Meløy"
+          }
+        }
+      }
+    ],
+    "1838": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gildeskål",
+            "tekst": "Gildeskål"
+          }
+        }
+      }
+    ],
+    "1839": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Beiarn",
+            "tekst": "Beiarn"
+          }
+        }
+      }
+    ],
+    "1840": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Saltdal",
+            "tekst": "Saltdal"
+          }
+        }
+      }
+    ],
+    "1841": [
+      {
+        "gyldigFra": "2010-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fauske – Fuossko",
+            "tekst": "Fauske – Fuossko"
+          }
+        }
+      }
+    ],
+    "1842": [],
+    "1845": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sørfold",
+            "tekst": "Sørfold"
+          }
+        }
+      }
+    ],
+    "1848": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Steigen",
+            "tekst": "Steigen"
+          }
+        }
+      }
+    ],
+    "1849": [],
+    "1850": [],
+    "1851": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lødingen",
+            "tekst": "Lødingen"
+          }
+        }
+      }
+    ],
+    "1852": [],
+    "1853": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Evenes",
+            "tekst": "Evenes"
+          }
+        }
+      }
+    ],
+    "1854": [],
+    "1856": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Røst",
+            "tekst": "Røst"
+          }
+        }
+      }
+    ],
+    "1857": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Værøy",
+            "tekst": "Værøy"
+          }
+        }
+      }
+    ],
+    "1859": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Flakstad",
+            "tekst": "Flakstad"
+          }
+        }
+      }
+    ],
+    "1860": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vestvågøy",
+            "tekst": "Vestvågøy"
+          }
+        }
+      }
+    ],
+    "1865": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vågan",
+            "tekst": "Vågan"
+          }
+        }
+      }
+    ],
+    "1866": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hadsel",
+            "tekst": "Hadsel"
+          }
+        }
+      }
+    ],
+    "1867": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bø",
+            "tekst": "Bø"
+          }
+        }
+      }
+    ],
+    "1868": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Øksnes",
+            "tekst": "Øksnes"
+          }
+        }
+      }
+    ],
+    "1870": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sortland",
+            "tekst": "Sortland"
+          }
+        }
+      }
+    ],
+    "1871": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Andøy",
+            "tekst": "Andøy"
+          }
+        }
+      }
+    ],
+    "1874": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Moskenes",
+            "tekst": "Moskenes"
+          }
+        }
+      }
+    ],
+    "1875": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hamarøy",
+            "tekst": "Hamarøy"
+          }
+        }
+      }
+    ],
+    "1901": [],
+    "1902": [],
+    "1903": [],
+    "1911": [],
+    "1913": [],
+    "1915": [],
+    "1917": [],
+    "1919": [],
+    "1920": [],
+    "1922": [],
+    "1923": [],
+    "1924": [],
+    "1925": [],
+    "1926": [],
+    "1927": [],
+    "1928": [],
+    "1929": [],
+    "1931": [],
+    "1933": [],
+    "1936": [],
+    "1938": [],
+    "1939": [],
+    "1940": [],
+    "1941": [],
+    "1942": [],
+    "1943": [],
+    "2001": [],
+    "2002": [],
+    "2003": [],
+    "2004": [],
+    "2011": [],
+    "2012": [],
+    "2014": [],
+    "2015": [],
+    "2016": [],
+    "2017": [],
+    "2018": [],
+    "2019": [],
+    "2020": [],
+    "2021": [],
+    "2022": [],
+    "2023": [],
+    "2024": [],
+    "2025": [],
+    "2027": [],
+    "2028": [],
+    "2030": [],
+    "2100": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Svalbard",
+            "tekst": "Svalbard"
+          }
+        }
+      }
+    ],
+    "2111": [],
+    "2112": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ny-Ålesund",
+            "tekst": "Ny-Ålesund"
+          }
+        }
+      }
+    ],
+    "2113": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Barentsburg",
+            "tekst": "Barentsburg"
+          }
+        }
+      }
+    ],
+    "2115": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sveagruva",
+            "tekst": "Sveagruva"
+          }
+        }
+      }
+    ],
+    "2121": [],
+    "2131": [],
+    "3001": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Halden",
+            "tekst": "Halden"
+          }
+        }
+      }
+    ],
+    "3002": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Moss",
+            "tekst": "Moss"
+          }
+        }
+      }
+    ],
+    "3003": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sarpsborg",
+            "tekst": "Sarpsborg"
+          }
+        }
+      }
+    ],
+    "3004": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fredrikstad",
+            "tekst": "Fredrikstad"
+          }
+        }
+      }
+    ],
+    "3005": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Drammen",
+            "tekst": "Drammen"
+          }
+        }
+      }
+    ],
+    "3006": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kongsberg",
+            "tekst": "Kongsberg"
+          }
+        }
+      }
+    ],
+    "3007": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ringerike",
+            "tekst": "Ringerike"
+          }
+        }
+      }
+    ],
+    "3011": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hvaler",
+            "tekst": "Hvaler"
+          }
+        }
+      }
+    ],
+    "3012": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Aremark",
+            "tekst": "Aremark"
+          }
+        }
+      }
+    ],
+    "3013": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Marker",
+            "tekst": "Marker"
+          }
+        }
+      }
+    ],
+    "3014": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Indre Østfold",
+            "tekst": "Indre Østfold"
+          }
+        }
+      }
+    ],
+    "3015": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skiptvet",
+            "tekst": "Skiptvet"
+          }
+        }
+      }
+    ],
+    "3016": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rakkestad",
+            "tekst": "Rakkestad"
+          }
+        }
+      }
+    ],
+    "3017": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Råde",
+            "tekst": "Råde"
+          }
+        }
+      }
+    ],
+    "3018": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Våler (Viken)",
+            "tekst": "Våler (Viken)"
+          }
+        }
+      }
+    ],
+    "3019": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vestby",
+            "tekst": "Vestby"
+          }
+        }
+      }
+    ],
+    "3020": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nordre Follo",
+            "tekst": "Nordre Follo"
+          }
+        }
+      }
+    ],
+    "3021": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ås",
+            "tekst": "Ås"
+          }
+        }
+      }
+    ],
+    "3022": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Frogn",
+            "tekst": "Frogn"
+          }
+        }
+      }
+    ],
+    "3023": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nesodden",
+            "tekst": "Nesodden"
+          }
+        }
+      }
+    ],
+    "3024": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bærum",
+            "tekst": "Bærum"
+          }
+        }
+      }
+    ],
+    "3025": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Asker",
+            "tekst": "Asker"
+          }
+        }
+      }
+    ],
+    "3026": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Aurskog-Høland",
+            "tekst": "Aurskog-Høland"
+          }
+        }
+      }
+    ],
+    "3027": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rælingen",
+            "tekst": "Rælingen"
+          }
+        }
+      }
+    ],
+    "3028": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Enebakk",
+            "tekst": "Enebakk"
+          }
+        }
+      }
+    ],
+    "3029": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lørenskog",
+            "tekst": "Lørenskog"
+          }
+        }
+      }
+    ],
+    "3030": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lillestrøm",
+            "tekst": "Lillestrøm"
+          }
+        }
+      }
+    ],
+    "3031": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nittedal",
+            "tekst": "Nittedal"
+          }
+        }
+      }
+    ],
+    "3032": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gjerdrum",
+            "tekst": "Gjerdrum"
+          }
+        }
+      }
+    ],
+    "3033": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ullensaker",
+            "tekst": "Ullensaker"
+          }
+        }
+      }
+    ],
+    "3034": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nes",
+            "tekst": "Nes"
+          }
+        }
+      }
+    ],
+    "3035": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Eidsvoll",
+            "tekst": "Eidsvoll"
+          }
+        }
+      }
+    ],
+    "3036": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nannestad",
+            "tekst": "Nannestad"
+          }
+        }
+      }
+    ],
+    "3037": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hurdal",
+            "tekst": "Hurdal"
+          }
+        }
+      }
+    ],
+    "3038": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hole",
+            "tekst": "Hole"
+          }
+        }
+      }
+    ],
+    "3039": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Flå",
+            "tekst": "Flå"
+          }
+        }
+      }
+    ],
+    "3040": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nesbyen",
+            "tekst": "Nesbyen"
+          }
+        }
+      }
+    ],
+    "3041": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gol",
+            "tekst": "Gol"
+          }
+        }
+      }
+    ],
+    "3042": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hemsedal",
+            "tekst": "Hemsedal"
+          }
+        }
+      }
+    ],
+    "3043": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ål",
+            "tekst": "Ål"
+          }
+        }
+      }
+    ],
+    "3044": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hol",
+            "tekst": "Hol"
+          }
+        }
+      }
+    ],
+    "3045": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sigdal",
+            "tekst": "Sigdal"
+          }
+        }
+      }
+    ],
+    "3046": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Krødsherad",
+            "tekst": "Krødsherad"
+          }
+        }
+      }
+    ],
+    "3047": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Modum",
+            "tekst": "Modum"
+          }
+        }
+      }
+    ],
+    "3048": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Øvre Eiker",
+            "tekst": "Øvre Eiker"
+          }
+        }
+      }
+    ],
+    "3049": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lier",
+            "tekst": "Lier"
+          }
+        }
+      }
+    ],
+    "3050": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Flesberg",
+            "tekst": "Flesberg"
+          }
+        }
+      }
+    ],
+    "3051": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rollag",
+            "tekst": "Rollag"
+          }
+        }
+      }
+    ],
+    "3052": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nore og Uvdal",
+            "tekst": "Nore og Uvdal"
+          }
+        }
+      }
+    ],
+    "3053": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Jevnaker",
+            "tekst": "Jevnaker"
+          }
+        }
+      }
+    ],
+    "3054": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lunner",
+            "tekst": "Lunner"
+          }
+        }
+      }
+    ],
+    "3401": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kongsvinger",
+            "tekst": "Kongsvinger"
+          }
+        }
+      }
+    ],
+    "3403": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hamar",
+            "tekst": "Hamar"
+          }
+        }
+      }
+    ],
+    "3405": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lillehammer",
+            "tekst": "Lillehammer"
+          }
+        }
+      }
+    ],
+    "3407": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gjøvik",
+            "tekst": "Gjøvik"
+          }
+        }
+      }
+    ],
+    "3411": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ringsaker",
+            "tekst": "Ringsaker"
+          }
+        }
+      }
+    ],
+    "3412": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Løten",
+            "tekst": "Løten"
+          }
+        }
+      }
+    ],
+    "3413": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Stange",
+            "tekst": "Stange"
+          }
+        }
+      }
+    ],
+    "3414": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nord-Odal",
+            "tekst": "Nord-Odal"
+          }
+        }
+      }
+    ],
+    "3415": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sør-Odal",
+            "tekst": "Sør-Odal"
+          }
+        }
+      }
+    ],
+    "3416": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Eidskog",
+            "tekst": "Eidskog"
+          }
+        }
+      }
+    ],
+    "3417": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Grue",
+            "tekst": "Grue"
+          }
+        }
+      }
+    ],
+    "3418": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Åsnes",
+            "tekst": "Åsnes"
+          }
+        }
+      }
+    ],
+    "3419": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Våler (Innlandet)",
+            "tekst": "Våler (Innlandet)"
+          }
+        }
+      }
+    ],
+    "3420": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Elverum",
+            "tekst": "Elverum"
+          }
+        }
+      }
+    ],
+    "3421": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Trysil",
+            "tekst": "Trysil"
+          }
+        }
+      }
+    ],
+    "3422": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Åmot",
+            "tekst": "Åmot"
+          }
+        }
+      }
+    ],
+    "3423": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Stor-Elvdal",
+            "tekst": "Stor-Elvdal"
+          }
+        }
+      }
+    ],
+    "3424": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rendalen",
+            "tekst": "Rendalen"
+          }
+        }
+      }
+    ],
+    "3425": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Engerdal",
+            "tekst": "Engerdal"
+          }
+        }
+      }
+    ],
+    "3426": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tolga",
+            "tekst": "Tolga"
+          }
+        }
+      }
+    ],
+    "3427": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tynset",
+            "tekst": "Tynset"
+          }
+        }
+      }
+    ],
+    "3428": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Alvdal",
+            "tekst": "Alvdal"
+          }
+        }
+      }
+    ],
+    "3429": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Folldal",
+            "tekst": "Folldal"
+          }
+        }
+      }
+    ],
+    "3430": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Os (Innlandet)",
+            "tekst": "Os (Innlandet)"
+          }
+        }
+      }
+    ],
+    "3431": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Dovre",
+            "tekst": "Dovre"
+          }
+        }
+      }
+    ],
+    "3432": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lesja",
+            "tekst": "Lesja"
+          }
+        }
+      }
+    ],
+    "3433": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skjåk",
+            "tekst": "Skjåk"
+          }
+        }
+      }
+    ],
+    "3434": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lom",
+            "tekst": "Lom"
+          }
+        }
+      }
+    ],
+    "3435": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vågå",
+            "tekst": "Vågå"
+          }
+        }
+      }
+    ],
+    "3436": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nord-Fron",
+            "tekst": "Nord-Fron"
+          }
+        }
+      }
+    ],
+    "3437": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sel",
+            "tekst": "Sel"
+          }
+        }
+      }
+    ],
+    "3438": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sør-Fron",
+            "tekst": "Sør-Fron"
+          }
+        }
+      }
+    ],
+    "3439": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ringebu",
+            "tekst": "Ringebu"
+          }
+        }
+      }
+    ],
+    "3440": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Øyer",
+            "tekst": "Øyer"
+          }
+        }
+      }
+    ],
+    "3441": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gausdal",
+            "tekst": "Gausdal"
+          }
+        }
+      }
+    ],
+    "3442": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Østre Toten",
+            "tekst": "Østre Toten"
+          }
+        }
+      }
+    ],
+    "3443": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vestre Toten",
+            "tekst": "Vestre Toten"
+          }
+        }
+      }
+    ],
+    "3446": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gran",
+            "tekst": "Gran"
+          }
+        }
+      }
+    ],
+    "3447": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Søndre Land",
+            "tekst": "Søndre Land"
+          }
+        }
+      }
+    ],
+    "3448": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nordre Land",
+            "tekst": "Nordre Land"
+          }
+        }
+      }
+    ],
+    "3449": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sør-Aurdal",
+            "tekst": "Sør-Aurdal"
+          }
+        }
+      }
+    ],
+    "3450": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Etnedal",
+            "tekst": "Etnedal"
+          }
+        }
+      }
+    ],
+    "3451": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nord-Aurdal",
+            "tekst": "Nord-Aurdal"
+          }
+        }
+      }
+    ],
+    "3452": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vestre Slidre",
+            "tekst": "Vestre Slidre"
+          }
+        }
+      }
+    ],
+    "3453": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Øystre Slidre",
+            "tekst": "Øystre Slidre"
+          }
+        }
+      }
+    ],
+    "3454": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vang",
+            "tekst": "Vang"
+          }
+        }
+      }
+    ],
+    "3801": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Horten",
+            "tekst": "Horten"
+          }
+        }
+      }
+    ],
+    "3802": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Holmestrand",
+            "tekst": "Holmestrand"
+          }
+        }
+      }
+    ],
+    "3803": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tønsberg",
+            "tekst": "Tønsberg"
+          }
+        }
+      }
+    ],
+    "3804": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sandefjord",
+            "tekst": "Sandefjord"
+          }
+        }
+      }
+    ],
+    "3805": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Larvik",
+            "tekst": "Larvik"
+          }
+        }
+      }
+    ],
+    "3806": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Porsgrunn",
+            "tekst": "Porsgrunn"
+          }
+        }
+      }
+    ],
+    "3807": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skien",
+            "tekst": "Skien"
+          }
+        }
+      }
+    ],
+    "3808": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Notodden",
+            "tekst": "Notodden"
+          }
+        }
+      }
+    ],
+    "3811": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Færder",
+            "tekst": "Færder"
+          }
+        }
+      }
+    ],
+    "3812": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Siljan",
+            "tekst": "Siljan"
+          }
+        }
+      }
+    ],
+    "3813": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bamble",
+            "tekst": "Bamble"
+          }
+        }
+      }
+    ],
+    "3814": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kragerø",
+            "tekst": "Kragerø"
+          }
+        }
+      }
+    ],
+    "3815": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Drangedal",
+            "tekst": "Drangedal"
+          }
+        }
+      }
+    ],
+    "3816": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nome",
+            "tekst": "Nome"
+          }
+        }
+      }
+    ],
+    "3817": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Midt-Telemark",
+            "tekst": "Midt-Telemark"
+          }
+        }
+      }
+    ],
+    "3818": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tinn",
+            "tekst": "Tinn"
+          }
+        }
+      }
+    ],
+    "3819": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hjartdal",
+            "tekst": "Hjartdal"
+          }
+        }
+      }
+    ],
+    "3820": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Seljord",
+            "tekst": "Seljord"
+          }
+        }
+      }
+    ],
+    "3821": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kviteseid",
+            "tekst": "Kviteseid"
+          }
+        }
+      }
+    ],
+    "3822": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nissedal",
+            "tekst": "Nissedal"
+          }
+        }
+      }
+    ],
+    "3823": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fyresdal",
+            "tekst": "Fyresdal"
+          }
+        }
+      }
+    ],
+    "3824": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tokke",
+            "tekst": "Tokke"
+          }
+        }
+      }
+    ],
+    "3825": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vinje",
+            "tekst": "Vinje"
+          }
+        }
+      }
+    ],
+    "4201": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Risør",
+            "tekst": "Risør"
+          }
+        }
+      }
+    ],
+    "4202": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Grimstad",
+            "tekst": "Grimstad"
+          }
+        }
+      }
+    ],
+    "4203": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Arendal",
+            "tekst": "Arendal"
+          }
+        }
+      }
+    ],
+    "4204": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kristiansand",
+            "tekst": "Kristiansand"
+          }
+        }
+      }
+    ],
+    "4205": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lindesnes",
+            "tekst": "Lindesnes"
+          }
+        }
+      }
+    ],
+    "4206": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Farsund",
+            "tekst": "Farsund"
+          }
+        }
+      }
+    ],
+    "4207": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Flekkefjord",
+            "tekst": "Flekkefjord"
+          }
+        }
+      }
+    ],
+    "4211": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gjerstad",
+            "tekst": "Gjerstad"
+          }
+        }
+      }
+    ],
+    "4212": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vegårshei",
+            "tekst": "Vegårshei"
+          }
+        }
+      }
+    ],
+    "4213": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tvedestrand",
+            "tekst": "Tvedestrand"
+          }
+        }
+      }
+    ],
+    "4214": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Froland",
+            "tekst": "Froland"
+          }
+        }
+      }
+    ],
+    "4215": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lillesand",
+            "tekst": "Lillesand"
+          }
+        }
+      }
+    ],
+    "4216": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Birkenes",
+            "tekst": "Birkenes"
+          }
+        }
+      }
+    ],
+    "4217": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Åmli",
+            "tekst": "Åmli"
+          }
+        }
+      }
+    ],
+    "4218": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Iveland",
+            "tekst": "Iveland"
+          }
+        }
+      }
+    ],
+    "4219": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Evje og Hornnes",
+            "tekst": "Evje og Hornnes"
+          }
+        }
+      }
+    ],
+    "4220": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bygland",
+            "tekst": "Bygland"
+          }
+        }
+      }
+    ],
+    "4221": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Valle",
+            "tekst": "Valle"
+          }
+        }
+      }
+    ],
+    "4222": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bykle",
+            "tekst": "Bykle"
+          }
+        }
+      }
+    ],
+    "4223": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vennesla",
+            "tekst": "Vennesla"
+          }
+        }
+      }
+    ],
+    "4224": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Åseral",
+            "tekst": "Åseral"
+          }
+        }
+      }
+    ],
+    "4225": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lyngdal",
+            "tekst": "Lyngdal"
+          }
+        }
+      }
+    ],
+    "4226": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hægebostad",
+            "tekst": "Hægebostad"
+          }
+        }
+      }
+    ],
+    "4227": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kvinesdal",
+            "tekst": "Kvinesdal"
+          }
+        }
+      }
+    ],
+    "4228": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sirdal",
+            "tekst": "Sirdal"
+          }
+        }
+      }
+    ],
+    "4601": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bergen",
+            "tekst": "Bergen"
+          }
+        }
+      }
+    ],
+    "4602": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kinn",
+            "tekst": "Kinn"
+          }
+        }
+      }
+    ],
+    "4611": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Etne",
+            "tekst": "Etne"
+          }
+        }
+      }
+    ],
+    "4612": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sveio",
+            "tekst": "Sveio"
+          }
+        }
+      }
+    ],
+    "4613": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bømlo",
+            "tekst": "Bømlo"
+          }
+        }
+      }
+    ],
+    "4614": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Stord",
+            "tekst": "Stord"
+          }
+        }
+      }
+    ],
+    "4615": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fitjar",
+            "tekst": "Fitjar"
+          }
+        }
+      }
+    ],
+    "4616": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tysnes",
+            "tekst": "Tysnes"
+          }
+        }
+      }
+    ],
+    "4617": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kvinnherad",
+            "tekst": "Kvinnherad"
+          }
+        }
+      }
+    ],
+    "4618": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ullensvang",
+            "tekst": "Ullensvang"
+          }
+        }
+      }
+    ],
+    "4619": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Eidfjord",
+            "tekst": "Eidfjord"
+          }
+        }
+      }
+    ],
+    "4620": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ulvik",
+            "tekst": "Ulvik"
+          }
+        }
+      }
+    ],
+    "4621": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Voss",
+            "tekst": "Voss"
+          }
+        }
+      }
+    ],
+    "4622": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kvam",
+            "tekst": "Kvam"
+          }
+        }
+      }
+    ],
+    "4623": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Samnanger",
+            "tekst": "Samnanger"
+          }
+        }
+      }
+    ],
+    "4624": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bjørnafjorden",
+            "tekst": "Bjørnafjorden"
+          }
+        }
+      }
+    ],
+    "4625": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Austevoll",
+            "tekst": "Austevoll"
+          }
+        }
+      }
+    ],
+    "4626": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Øygarden",
+            "tekst": "Øygarden"
+          }
+        }
+      }
+    ],
+    "4627": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Askøy",
+            "tekst": "Askøy"
+          }
+        }
+      }
+    ],
+    "4628": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vaksdal",
+            "tekst": "Vaksdal"
+          }
+        }
+      }
+    ],
+    "4629": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Modalen",
+            "tekst": "Modalen"
+          }
+        }
+      }
+    ],
+    "4630": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Osterøy",
+            "tekst": "Osterøy"
+          }
+        }
+      }
+    ],
+    "4631": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Alver",
+            "tekst": "Alver"
+          }
+        }
+      }
+    ],
+    "4632": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Austrheim",
+            "tekst": "Austrheim"
+          }
+        }
+      }
+    ],
+    "4633": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fedje",
+            "tekst": "Fedje"
+          }
+        }
+      }
+    ],
+    "4634": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Masfjorden",
+            "tekst": "Masfjorden"
+          }
+        }
+      }
+    ],
+    "4635": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gulen",
+            "tekst": "Gulen"
+          }
+        }
+      }
+    ],
+    "4636": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Solund",
+            "tekst": "Solund"
+          }
+        }
+      }
+    ],
+    "4637": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hyllestad",
+            "tekst": "Hyllestad"
+          }
+        }
+      }
+    ],
+    "4638": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Høyanger",
+            "tekst": "Høyanger"
+          }
+        }
+      }
+    ],
+    "4639": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vik",
+            "tekst": "Vik"
+          }
+        }
+      }
+    ],
+    "4640": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sogndal",
+            "tekst": "Sogndal"
+          }
+        }
+      }
+    ],
+    "4641": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Aurland",
+            "tekst": "Aurland"
+          }
+        }
+      }
+    ],
+    "4642": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lærdal",
+            "tekst": "Lærdal"
+          }
+        }
+      }
+    ],
+    "4643": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Årdal",
+            "tekst": "Årdal"
+          }
+        }
+      }
+    ],
+    "4644": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Luster",
+            "tekst": "Luster"
+          }
+        }
+      }
+    ],
+    "4645": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Askvoll",
+            "tekst": "Askvoll"
+          }
+        }
+      }
+    ],
+    "4646": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fjaler",
+            "tekst": "Fjaler"
+          }
+        }
+      }
+    ],
+    "4647": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sunnfjord",
+            "tekst": "Sunnfjord"
+          }
+        }
+      }
+    ],
+    "4648": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bremanger",
+            "tekst": "Bremanger"
+          }
+        }
+      }
+    ],
+    "4649": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Stad",
+            "tekst": "Stad"
+          }
+        }
+      }
+    ],
+    "4650": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gloppen",
+            "tekst": "Gloppen"
+          }
+        }
+      }
+    ],
+    "4651": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Stryn",
+            "tekst": "Stryn"
+          }
+        }
+      }
+    ],
+    "5001": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Trondheim",
+            "tekst": "Trondheim"
+          }
+        }
+      }
+    ],
+    "5004": [],
+    "5005": [],
+    "5006": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Steinkjer",
+            "tekst": "Steinkjer"
+          }
+        }
+      }
+    ],
+    "5007": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Namsos",
+            "tekst": "Namsos"
+          }
+        }
+      }
+    ],
+    "5011": [],
+    "5012": [],
+    "5013": [],
+    "5014": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Frøya",
+            "tekst": "Frøya"
+          }
+        }
+      }
+    ],
+    "5015": [],
+    "5016": [],
+    "5017": [],
+    "5018": [],
+    "5019": [],
+    "5020": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Osen",
+            "tekst": "Osen"
+          }
+        }
+      }
+    ],
+    "5021": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Oppdal",
+            "tekst": "Oppdal"
+          }
+        }
+      }
+    ],
+    "5022": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rennebu",
+            "tekst": "Rennebu"
+          }
+        }
+      }
+    ],
+    "5023": [],
+    "5024": [],
+    "5025": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Røros",
+            "tekst": "Røros"
+          }
+        }
+      }
+    ],
+    "5026": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Holtålen",
+            "tekst": "Holtålen"
+          }
+        }
+      }
+    ],
+    "5027": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Midtre Gauldal",
+            "tekst": "Midtre Gauldal"
+          }
+        }
+      }
+    ],
+    "5028": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Melhus",
+            "tekst": "Melhus"
+          }
+        }
+      }
+    ],
+    "5029": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skaun",
+            "tekst": "Skaun"
+          }
+        }
+      }
+    ],
+    "5030": [],
+    "5031": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Malvik",
+            "tekst": "Malvik"
+          }
+        }
+      }
+    ],
+    "5032": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Selbu",
+            "tekst": "Selbu"
+          }
+        }
+      }
+    ],
+    "5033": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tydal",
+            "tekst": "Tydal"
+          }
+        }
+      }
+    ],
+    "5034": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Meråker",
+            "tekst": "Meråker"
+          }
+        }
+      }
+    ],
+    "5035": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Stjørdal",
+            "tekst": "Stjørdal"
+          }
+        }
+      }
+    ],
+    "5036": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Frosta",
+            "tekst": "Frosta"
+          }
+        }
+      }
+    ],
+    "5037": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Levanger",
+            "tekst": "Levanger"
+          }
+        }
+      }
+    ],
+    "5038": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Verdal",
+            "tekst": "Verdal"
+          }
+        }
+      }
+    ],
+    "5039": [],
+    "5040": [],
+    "5041": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Snåase-Snåsa",
+            "tekst": "Snåase-Snåsa"
+          }
+        }
+      }
+    ],
+    "5042": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lierne",
+            "tekst": "Lierne"
+          }
+        }
+      }
+    ],
+    "5043": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Raarvikhe – Røyrvik",
+            "tekst": "Raarvikhe – Røyrvik"
+          }
+        }
+      }
+    ],
+    "5044": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Namsskogan",
+            "tekst": "Namsskogan"
+          }
+        }
+      }
+    ],
+    "5045": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Grong",
+            "tekst": "Grong"
+          }
+        }
+      }
+    ],
+    "5046": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Høylandet",
+            "tekst": "Høylandet"
+          }
+        }
+      }
+    ],
+    "5047": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Overhalla",
+            "tekst": "Overhalla"
+          }
+        }
+      }
+    ],
+    "5048": [],
+    "5049": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Flatanger",
+            "tekst": "Flatanger"
+          }
+        }
+      }
+    ],
+    "5050": [],
+    "5051": [],
+    "5052": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Leka",
+            "tekst": "Leka"
+          }
+        }
+      }
+    ],
+    "5053": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Inderøy",
+            "tekst": "Inderøy"
+          }
+        }
+      }
+    ],
+    "5054": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Indre Fosen",
+            "tekst": "Indre Fosen"
+          }
+        }
+      }
+    ],
+    "5055": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Heim",
+            "tekst": "Heim"
+          }
+        }
+      }
+    ],
+    "5056": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hitra",
+            "tekst": "Hitra"
+          }
+        }
+      }
+    ],
+    "5057": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ørland",
+            "tekst": "Ørland"
+          }
+        }
+      }
+    ],
+    "5058": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Åfjord",
+            "tekst": "Åfjord"
+          }
+        }
+      }
+    ],
+    "5059": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Orkland",
+            "tekst": "Orkland"
+          }
+        }
+      }
+    ],
+    "5060": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nærøysund",
+            "tekst": "Nærøysund"
+          }
+        }
+      }
+    ],
+    "5061": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rindal",
+            "tekst": "Rindal"
+          }
+        }
+      }
+    ],
+    "5401": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tromsø",
+            "tekst": "Tromsø"
+          }
+        }
+      }
+    ],
+    "5402": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Harstad",
+            "tekst": "Harstad"
+          }
+        }
+      }
+    ],
+    "5403": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Alta",
+            "tekst": "Alta"
+          }
+        }
+      }
+    ],
+    "5404": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vardø",
+            "tekst": "Vardø"
+          }
+        }
+      }
+    ],
+    "5405": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Vadsø",
+            "tekst": "Vadsø"
+          }
+        }
+      }
+    ],
+    "5406": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hammerfest",
+            "tekst": "Hammerfest"
+          }
+        }
+      }
+    ],
+    "5411": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kvæfjord",
+            "tekst": "Kvæfjord"
+          }
+        }
+      }
+    ],
+    "5412": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tjeldsund",
+            "tekst": "Tjeldsund"
+          }
+        }
+      }
+    ],
+    "5413": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Ibestad",
+            "tekst": "Ibestad"
+          }
+        }
+      }
+    ],
+    "5414": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gratangen",
+            "tekst": "Gratangen"
+          }
+        }
+      }
+    ],
+    "5415": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Loabák – Lavangen",
+            "tekst": "Loabák – Lavangen"
+          }
+        }
+      }
+    ],
+    "5416": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bardu",
+            "tekst": "Bardu"
+          }
+        }
+      }
+    ],
+    "5417": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Salangen",
+            "tekst": "Salangen"
+          }
+        }
+      }
+    ],
+    "5418": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Målselv",
+            "tekst": "Målselv"
+          }
+        }
+      }
+    ],
+    "5419": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sørreisa",
+            "tekst": "Sørreisa"
+          }
+        }
+      }
+    ],
+    "5420": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Dyrøy",
+            "tekst": "Dyrøy"
+          }
+        }
+      }
+    ],
+    "5421": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Senja",
+            "tekst": "Senja"
+          }
+        }
+      }
+    ],
+    "5422": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Balsfjord",
+            "tekst": "Balsfjord"
+          }
+        }
+      }
+    ],
+    "5423": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Karlsøy",
+            "tekst": "Karlsøy"
+          }
+        }
+      }
+    ],
+    "5424": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lyngen",
+            "tekst": "Lyngen"
+          }
+        }
+      }
+    ],
+    "5425": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Storfjord – Omasvuotna – Omasvuono",
+            "tekst": "Storfjord – Omasvuotna – Omasvuono"
+          }
+        }
+      }
+    ],
+    "5426": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gáivuotna – Kåfjord – Kaivuono",
+            "tekst": "Gáivuotna – Kåfjord – Kaivuono"
+          }
+        }
+      }
+    ],
+    "5427": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skjervøy",
+            "tekst": "Skjervøy"
+          }
+        }
+      }
+    ],
+    "5428": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nordreisa - Ráisa - Raisi",
+            "tekst": "Nordreisa - Ráisa - Raisi"
+          }
+        }
+      }
+    ],
+    "5429": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kvænangen",
+            "tekst": "Kvænangen"
+          }
+        }
+      }
+    ],
+    "5430": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Guovdageaidnu – Kautokeino",
+            "tekst": "Guovdageaidnu – Kautokeino"
+          }
+        }
+      }
+    ],
+    "5432": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Loppa",
+            "tekst": "Loppa"
+          }
+        }
+      }
+    ],
+    "5433": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hasvik",
+            "tekst": "Hasvik"
+          }
+        }
+      }
+    ],
+    "5434": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Måsøy",
+            "tekst": "Måsøy"
+          }
+        }
+      }
+    ],
+    "5435": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Nordkapp",
+            "tekst": "Nordkapp"
+          }
+        }
+      }
+    ],
+    "5436": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Porsanger – Porsá?gu – Porsanki",
+            "tekst": "Porsanger – Porsá?gu – Porsanki"
+          }
+        }
+      }
+    ],
+    "5437": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kárášjohka – Karasjok",
+            "tekst": "Kárášjohka – Karasjok"
+          }
+        }
+      }
+    ],
+    "5438": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lebesby",
+            "tekst": "Lebesby"
+          }
+        }
+      }
+    ],
+    "5439": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Gamvik",
+            "tekst": "Gamvik"
+          }
+        }
+      }
+    ],
+    "5440": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Berlevåg",
+            "tekst": "Berlevåg"
+          }
+        }
+      }
+    ],
+    "5441": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Deatnu - Tana",
+            "tekst": "Deatnu - Tana"
+          }
+        }
+      }
+    ],
+    "5442": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Unjárga – Nesseby",
+            "tekst": "Unjárga – Nesseby"
+          }
+        }
+      }
+    ],
+    "5443": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Båtsfjord",
+            "tekst": "Båtsfjord"
+          }
+        }
+      }
+    ],
+    "5444": [
+      {
+        "gyldigFra": "2019-12-27",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sør-Varanger",
+            "tekst": "Sør-Varanger"
+          }
+        }
+      }
+    ],
+    "0130": [],
+    "0131": [],
+    "0127": [],
+    "0128": [],
+    "0125": [],
+    "0123": [],
+    "0124": [],
+    "0121": [],
+    "0122": [],
+    "0138": [],
+    "0136": [],
+    "0137": [],
+    "0134": [],
+    "0135": [],
+    "0133": [],
+    "0806": [],
+    "0807": [],
+    "0805": [],
+    "0819": [],
+    "0817": [],
+    "0815": [],
+    "0814": [],
+    "0811": [],
+    "0821": [],
+    "0828": [],
+    "0829": [],
+    "0826": [],
+    "0827": [],
+    "0822": [],
+    "0831": [],
+    "0830": [],
+    "0833": [],
+    "0834": [],
+    "0604": [],
+    "0605": [],
+    "0602": [],
+    "0612": [],
+    "0619": [],
+    "0617": [],
+    "0618": [],
+    "0615": [],
+    "0616": [],
+    "0622": [],
+    "0623": [],
+    "0620": [],
+    "0621": [],
+    "0628": [],
+    "0626": [],
+    "0627": [],
+    "0624": [],
+    "0625": [],
+    "0633": [],
+    "0631": [],
+    "0632": [],
+    "0402": [],
+    "0403": [],
+    "0401": [],
+    "0414": [],
+    "0412": [],
+    "0419": [],
+    "0417": [],
+    "0418": [],
+    "0415": [],
+    "0425": [],
+    "0423": [],
+    "0420": [],
+    "0428": [],
+    "0429": [],
+    "0426": [],
+    "0427": [],
+    "0436": [],
+    "0434": [],
+    "0432": [],
+    "0430": [],
+    "0439": [],
+    "0437": [],
+    "0438": [],
+    "0441": [],
+    "0215": [],
+    "0216": [],
+    "0213": [],
+    "0214": [],
+    "0211": [],
+    "0219": [],
+    "0217": [],
+    "0230": [],
+    "0226": [],
+    "0227": [],
+    "0220": [],
+    "0221": [],
+    "0228": [],
+    "0229": [],
+    "0237": [],
+    "0238": [],
+    "0235": [],
+    "0236": [],
+    "0233": [],
+    "0234": [],
+    "0231": [],
+    "0239": [],
+    "0906": [],
+    "0903": [],
+    "0904": [],
+    "0901": [],
+    "0918": [],
+    "0919": [],
+    "0914": [],
+    "0912": [],
+    "0911": [],
+    "0929": [],
+    "0920": [],
+    "0928": [],
+    "0926": [],
+    "0921": [],
+    "0922": [],
+    "0938": [],
+    "0937": [],
+    "0935": [],
+    "0709": [],
+    "0941": [],
+    "0940": [],
+    "0707": [],
+    "0708": [],
+    "0705": [],
+    "0706": [],
+    "0703": [],
+    "0704": [],
+    "0701": [],
+    "0702": [],
+    "0710": [],
+    "0711": [],
+    "0718": [],
+    "0719": [],
+    "0716": [],
+    "0717": [],
+    "0714": [],
+    "0715": [],
+    "0712": [],
+    "0713": [],
+    "0721": [],
+    "0722": [],
+    "0720": [],
+    "0729": [],
+    "0727": [],
+    "0728": [],
+    "0725": [],
+    "0726": [],
+    "0723": [],
+    "0501": [],
+    "0502": [],
+    "0512": [],
+    "0513": [],
+    "0511": [],
+    "0519": [],
+    "0516": [],
+    "0517": [],
+    "0514": [],
+    "0515": [],
+    "0521": [],
+    "0522": [],
+    "0520": [],
+    "0529": [],
+    "0528": [],
+    "0534": [],
+    "0532": [],
+    "0533": [],
+    "0538": [],
+    "0536": [],
+    "0545": [],
+    "0543": [],
+    "0301": [
+      {
+        "gyldigFra": "1900-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Oslo",
+            "tekst": "Oslo"
+          }
+        }
+      }
+    ],
+    "0544": [],
+    "0541": [],
+    "0542": [],
+    "0540": [],
+    "0105": [],
+    "0106": [],
+    "0103": [],
+    "0104": [],
+    "0101": [],
+    "0102": [],
+    "0114": [],
+    "0115": [],
+    "0113": [],
+    "0111": [],
+    "0118": [],
+    "0119": []
+  }
+}

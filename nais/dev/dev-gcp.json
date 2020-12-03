@@ -1,11 +1,12 @@
 {
   "namespace": "teamdigisos",
   "ingress": [
-    "https://sosialhjelp-mock-alt-api.dev.nav.no/sosialhjelp/mock-alt-api"
+    "https://sosialhjelp-mock-alt-api-gcp.dev.nav.no/sosialhjelp/mock-alt-api"
   ],
   "env": {
     "GCP_PORT": "8989",
-    "HOST_ADDRESS": "https://sosialhjelp-mock-alt-api.dev.nav.no/"
+    "HOST_ADDRESS": "https://digisos-gcp.dev.nav.no/",
+    "COOKIE_DOMAIN": "digisos-gcp.dev.nav.no"
   },
   "minReplicas": "1",
   "maxReplicas": "1",

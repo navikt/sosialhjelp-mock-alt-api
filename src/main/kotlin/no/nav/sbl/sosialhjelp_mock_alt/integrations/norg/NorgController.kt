@@ -3,14 +3,15 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.norg
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.norg.model.NavEnhet
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class NorgController {
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     private val navEnheter = mutableMapOf<String, NavEnhet>()
@@ -22,14 +23,20 @@ class NorgController {
         leggTilNavenhet(navEnheter, "1210", "NAV Ytrebygda, Bergen kommune")
     }
 
-    @RequestMapping("/norg_endpoint_url/enhet/{enhetsnr}")
-    fun getToken(@PathVariable enhetsnr: String): String {
+    @GetMapping("/norg_endpoint_url/enhet")
+    fun getAlleEnheter(@RequestParam enhetStatusListe: String): String {
+        log.info("Henter alle nav enheter: ${navEnheter.size} status: $enhetStatusListe")
+        return objectMapper.writeValueAsString(navEnheter.values)
+    }
+
+    @GetMapping("/norg_endpoint_url/enhet/{enhetsnr}")
+    fun getEnhet(@PathVariable enhetsnr: String): String {
         val navEnhet = navEnheter[enhetsnr] ?: lagMockNavEnhet(enhetsnr, "Generert mockenhet $enhetsnr, Mock kommune")
         log.info("Henter nav enhet for id: $enhetsnr")
         return objectMapper.writeValueAsString(navEnhet)
     }
 
-    @RequestMapping("/norg_endpoint_url/kodeverk/EnhetstyperNorg")
+    @GetMapping("/norg_endpoint_url/kodeverk/EnhetstyperNorg")
     fun hentEnhetstyperDummy(): String {
         log.info("Henter EnhetstyperNorg")
         return "OK"

@@ -3,10 +3,13 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks
 import com.fasterxml.jackson.core.type.TypeReference
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSoknadsStatus
+import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.DokumentKrypteringsService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.JsonTilleggsinformasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.SakWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
@@ -15,9 +18,11 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraBody
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
+import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.api.fiks.Kontaktpersoner
 import org.joda.time.DateTime
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.util.LinkedMultiValueMap
@@ -26,10 +31,15 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
+import java.io.File
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 import kotlin.collections.ArrayList
 
 @RestController
@@ -40,9 +50,9 @@ class FiksController(private val soknadService: SoknadService, private val dokum
 
     //    ======== Innsyn =========
     @GetMapping("/fiks/digisos/api/v1/soknader/soknader")
-    fun listSoknaderInnsyn(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
-        val fromToken = hentFnrFraToken()
-        val soknadsListe = soknadService.listSoknader(fromToken)
+    fun listSoknaderInnsyn(@RequestHeader headers: HttpHeaders): ResponseEntity<String> {
+        val fnr = hentFnrFraToken(headers)
+        val soknadsListe = soknadService.listSoknader(fnr)
         return ResponseEntity.ok(soknadsListe)
     }
 
@@ -50,6 +60,14 @@ class FiksController(private val soknadService: SoknadService, private val dokum
     fun hentSoknadInnsyn(@PathVariable digisosId: String): ResponseEntity<String> {
         val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(soknad)
+    }
+
+    @GetMapping("/fiks/dokumentlager/dokumentlager/nedlasting/niva4/{dokumentlagerId}")
+    fun hentDokumentFraLagerInnsynNiva4(@PathVariable dokumentlagerId: String): ResponseEntity<File> {
+        val dokumentString = soknadService.hentDokument(null, dokumentlagerId)
+                ?: return ResponseEntity.notFound().build()
+        val file = objectMapper.readValue(dokumentString, File::class.java)
+        return ResponseEntity.ok(file)
     }
 
     @GetMapping("/fiks/digisos/api/v1/soknader/{digisosId}/dokumenter/{dokumentlagerId}")
@@ -79,16 +97,62 @@ class FiksController(private val soknadService: SoknadService, private val dokum
             digisosApiWrapper.sak.soker.hendelser.add(JsonHendelse()
                     .withHendelsestidspunkt(DateTime.now().toDateTimeISO().toString())
                     .withType(JsonHendelse.Type.SOKNADS_STATUS))
-            soknadService.oppdaterDigisosSak(fiksOrgId, id, fnr, digisosApiWrapper)
+            soknadService.oppdaterDigisosSak(kommuneNr = "0301", fiksOrgId = fiksOrgId,
+                    fnr = fnr!!, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
             return ResponseEntity.ok("$id")
         } else {
             val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
-            soknadService.oppdaterDigisosSak(fiksOrgId, id, fnr, digisosApiWrapper)
+            soknadService.oppdaterDigisosSak(kommuneNr = "0301", fiksOrgId = fiksOrgId,
+                    fnr = fnr!!, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
             return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
         }
     }
 
-    //
+    // Soknad
+    @PostMapping("/fiks/digisos/api/v1/soknader/{kommuneNr}/{fiksDigisosId}")
+    fun lastOppSoknad(@PathVariable kommuneNr: String,
+                      @PathVariable(required = false) fiksDigisosId: String?,
+                      request: StandardMultipartHttpServletRequest): ResponseEntity<String> {
+
+        val id = fiksDigisosId ?: UUID.randomUUID().toString()
+        val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
+        digisosApiWrapper.sak.soker.hendelser.add(JsonSoknadsStatus()
+                .withHendelsestidspunkt(DateTime.now().toDateTimeISO().toString())
+                .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT))
+
+        val soknadJson = objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
+        val fnr = soknadJson.data.personalia.personIdentifikator.verdi
+        val tilleggsinformasjonJson = objectMapper.readValue(
+                request.parameterMap["tilleggsinformasjonJson"]!![0],
+                JsonTilleggsinformasjon::class.java)
+        val enhetsnummer = tilleggsinformasjonJson.enhetsnummer
+
+        val dokumenter = mutableListOf<DokumentInfo>()
+        request.fileMap.forEach {
+            (filnavn, fil) ->
+            val dokumentLagerId = soknadService.leggJsonInnIDokumentlager(objectMapper.writeValueAsString(fil.bytes))
+            val dokumentInfo = DokumentInfo(
+                    filnavn = filnavn,
+                    dokumentlagerDokumentId = dokumentLagerId,
+                    storrelse = fil.size,
+            )
+            dokumenter.add(dokumentInfo)
+        }
+
+        soknadService.oppdaterDigisosSak(
+                kommuneNr = kommuneNr,
+                fiksOrgId = null,
+                fnr = fnr!!,
+                fiksDigisosIdInput = id,
+                enhetsnummer = enhetsnummer,
+                digisosApiWrapper = digisosApiWrapper,
+                jsonSoknad = soknadJson,
+                dokumenter = dokumenter,
+                soknadDokument = dokumenter.firstOrNull { it.filnavn.toLowerCase() == "soknad.pdf" }
+        )
+        return ResponseEntity.ok(id)
+    }
+
     //    ======== Modia =========
     @PostMapping("/fiks/digisos/api/v1/nav/soknader/soknader")
     fun listSoknaderModia(@RequestBody body: String, @RequestParam(name = "sporingsId") sporingsId: String): ResponseEntity<String> {
@@ -175,6 +239,18 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                 harNksTilgang = true,
                 behandlingsansvarlig = null
         ))
+        kommuneInfoList.add(KommuneInfo(
+                kommunenummer = "1514",
+                kanMottaSoknader = true,
+                kanOppdatereStatus = true,
+                harMidlertidigDeaktivertOppdateringer = false,
+                harMidlertidigDeaktivertMottak = false,
+                kontaktpersoner = Kontaktpersoner(
+                        Collections.singletonList("Kontakt1003@navo.no"),
+                        Collections.singletonList("Test1003@navno.no")),
+                harNksTilgang = true,
+                behandlingsansvarlig = null
+        ))
         log.info("Henter kommuneinfo: $kommuneInfoList")
         return ResponseEntity.ok(objectMapper.writeValueAsString(kommuneInfoList))
     }
@@ -196,12 +272,15 @@ class FiksController(private val soknadService: SoknadService, private val dokum
         log.info("Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId")
         val vedleggsInfoText: String = body["vedlegg.json"].toString()
         val vedleggsJson = objectMapper.readValue(vedleggsInfoText, object : TypeReference<List<JsonVedleggSpesifikasjon>>() {})
-        val timestamp = DateTime.now().millis
         body.keys.forEach {
             if (it.startsWith("vedleggSpesifikasjon")) {
                 val json = body[it].toString()
                 val vedleggMetadata = objectMapper.readValue(json, object : TypeReference<List<VedleggMetadata>>() {})
-                soknadService.lastOppFil(digisosId, vedleggMetadata[0], vedleggsJson[0], timestamp)
+                soknadService.lastOppFil(
+                        fiksDigisosId = digisosId,
+                        vedleggMetadata = vedleggMetadata[0],
+                        vedleggsJson = vedleggsJson[0],
+                )
             }
         }
         return ResponseEntity.ok("OK")
@@ -210,7 +289,12 @@ class FiksController(private val soknadService: SoknadService, private val dokum
     @PostMapping("/{fiksDigisosId}/filOpplasting", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun filOpplasting(@PathVariable fiksDigisosId: String, @RequestParam("file") file: MultipartFile): ResponseEntity<String> {
         log.info("Laster opp fil for fiksDigisosId: $fiksDigisosId")
-        val dokumentlagerId = soknadService.lastOppFil(fiksDigisosId, file)
+        val vedleggMetadata = VedleggMetadata(file.originalFilename, file.contentType, file.size)
+        val dokumentlagerId = soknadService.lastOppFil(
+                fiksDigisosId = fiksDigisosId,
+                vedleggMetadata = vedleggMetadata,
+                file = file,
+        )
         return ResponseEntity.ok(dokumentlagerId)
     }
 

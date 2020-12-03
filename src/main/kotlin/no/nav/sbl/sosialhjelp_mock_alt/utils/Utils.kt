@@ -4,11 +4,14 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpHeaders
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlin.reflect.full.companionObject
 
 val fastFnr = genererTilfeldigPersonnummer()
@@ -30,9 +33,16 @@ fun hentFnrFraBody(body: String?): String? {
     return fastFnr
 }
 
-fun hentFnrFraToken(): String {
-    // TODO: Les fnr fra token.
+fun hentFnrFraToken(headers: HttpHeaders): String {
+    val fnrListe = headers["nav-personidenter"]
+    if(fnrListe != null) {
+        return fnrListe.firstOrNull() ?: fastFnr
+    }
     return fastFnr
+}
+
+fun randomInt(length: Int) : Int {
+    return (Math.random() * 10.0.pow(length.toDouble())).roundToInt()
 }
 
 fun <R : Any> R.logger(): Lazy<Logger> {
