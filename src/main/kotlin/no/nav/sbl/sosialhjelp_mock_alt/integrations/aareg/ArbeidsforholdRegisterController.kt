@@ -7,17 +7,17 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class ArbeidsforholdRegisterController {
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
-    @RequestMapping("/aareg/")
+    @GetMapping("/aareg/")
     fun getAaregSts(@RequestHeader headers: HttpHeaders): ResponseEntity<FssToken> {
         val fnr = hentFnrFraToken(headers)
         val fssToken = FssToken.createToken(fnr)
@@ -25,7 +25,7 @@ class ArbeidsforholdRegisterController {
         return ResponseEntity.ok(fssToken)
     }
 
-    @RequestMapping("/aareg/v1/arbeidstaker/arbeidsforhold")
+    @GetMapping("/aareg/v1/arbeidstaker/arbeidsforhold")
     //?sporingsinformasjon=false&regelverk=A_ORDNINGEN&ansettelsesperiodeFom=2020-07-29&ansettelsesperiodeTom=2020-10-29
     fun getArbeidsforhold(@RequestHeader headers: HttpHeaders): ResponseEntity<List<ArbeidsforholdDto>> {
         val fnr = hentFnrFraToken(headers)

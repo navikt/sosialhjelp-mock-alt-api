@@ -8,18 +8,18 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class DkifController {
     companion object {
-        val log by logger()
+        private val log by logger()
     }
     private val kontaktinfoer = mutableMapOf<String, DigitalKontaktinfoBolk>()
 
-    @RequestMapping("/dkif/v1/personer/kontaktinformasjon")
+    @GetMapping("/dkif/v1/personer/kontaktinformasjon")
     fun getKontaktinfo(@RequestHeader headers: HttpHeaders): ResponseEntity<DigitalKontaktinfoBolk> {
         val fnr = hentFnrFraToken(headers)
         var kontaktinfo = kontaktinfoer[fnr]

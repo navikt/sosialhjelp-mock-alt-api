@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.login
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.sts.StsController
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
+import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.security.token.support.core.api.Unprotected
 import no.nav.security.token.support.test.FileResourceRetriever
 import no.nav.security.token.support.test.JwtTokenGenerator
@@ -15,17 +15,20 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @RestController
-class LoginCoockieAndTokenController(
+class LoginCookieAndTokenController(
         @Value("\${host_address}") private val host_address: String,
         @Value("\${cookie_domain}") private val cookie_domain: String,
 ) {
+    companion object {
+        private val log by logger()
+    }
 
     @GetMapping("/login/metadata")
     fun getMockAltMetadate(): String {
         val fileResourceRetriever = FileResourceRetriever("/metadata.json", "/jwkset.json")
         val retrieveResource = fileResourceRetriever.retrieveResource(URL("http://metadata"))
         val metadata = retrieveResource.content.replace("http://jwks", "${host_address}sosialhjelp/mock-alt-api/local/jwks")
-        StsController.log.info("Henter metadata:\n$metadata")
+        log.info("Henter metadata:\n$metadata")
         return metadata
     }
 

@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.freg.FregController
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.BostotteDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.BostotteRolle
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.BostotteStatus
@@ -23,11 +22,11 @@ import java.time.LocalDate
 @RestController
 class HusbankenController {
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     @GetMapping("/husbanken")
-    fun getNokkelinfo(
+    fun getHusbankenData(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fra: LocalDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) til: LocalDate,
             @RequestHeader headers: HttpHeaders,

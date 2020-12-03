@@ -9,19 +9,19 @@ import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class SkatteetatenController {
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
-    @RequestMapping("/skatteetaten/{fnr}/oppgave/inntekt")
-    fun getArbeidsforhold(
+    @GetMapping("/skatteetaten/{fnr}/oppgave/inntekt")
+    fun getStatteetatenInntekt(
             @PathVariable fnr: String,
             @RequestParam fraOgMed: String,
             @RequestParam tilOgMed: String): ResponseEntity<SkattbarInntekt> {

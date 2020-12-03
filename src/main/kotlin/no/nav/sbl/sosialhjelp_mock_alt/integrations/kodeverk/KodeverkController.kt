@@ -21,16 +21,16 @@ class KodeverkController {
     }
 
     private fun lesKodeverk(navn: String): KodeverkDto {
-        val string: String? = this::class.java.classLoader.getResource("kodeverk/kodeverk_${navn}.json")!!.readText()
-        return objectMapper.readValue(string!!, KodeverkDto::class.java)
+        val string: String = this::class.java.classLoader.getResource("kodeverk/kodeverk_${navn}.json")!!.readText()
+        return objectMapper.readValue(string, KodeverkDto::class.java)
     }
 
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     @GetMapping("/kodeverk/api/v1/kodeverk/{kodeverknavn}/koder/betydninger")
-    fun loggUkjentRequest(@PathVariable kodeverknavn: String): ResponseEntity<KodeverkDto> {
+    fun hentKodeverk(@PathVariable kodeverknavn: String): ResponseEntity<KodeverkDto> {
         log.debug("Kodeverk request: ${kodeverknavn}")
         if (kodeverknavn == "Kommuner") {
             return ResponseEntity.ok(kommuner)

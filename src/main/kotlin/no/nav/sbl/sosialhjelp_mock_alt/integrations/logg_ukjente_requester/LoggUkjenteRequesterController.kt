@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class LoggUkjenteRequesterController {
     companion object {
-        val log by logger()
+        private val log by logger()
     }
 
     @RequestMapping("/**")
