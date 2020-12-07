@@ -14,7 +14,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.PdlTelefonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.util.MultiValueMap
-import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -25,7 +25,7 @@ class PdlController {
         private val log by logger()
     }
 
-    @GetMapping("/pdl_endpoint_url")
+    @PostMapping("/pdl_endpoint_url")
     fun dummyEndpoint(@RequestParam parameters: MultiValueMap<String, String>, @RequestBody body: String): String {
         log.info("Henter pdl_endpoint_url")
 
