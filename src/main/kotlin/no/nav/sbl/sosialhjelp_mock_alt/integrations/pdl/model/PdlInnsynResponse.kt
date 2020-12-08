@@ -10,5 +10,10 @@ data class PdlInnsynHentPerson(
 )
 
 data class PdlInnsynPerson(
-        val adressebeskyttelse: List<Adressebeskyttelse>
+        val adressebeskyttelse: List<Adressebeskyttelse>,
+        val navn: List<PdlNavn>
+)
+
+data class PdlNavn(
+        val fornavn: String?
 )

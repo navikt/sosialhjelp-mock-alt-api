@@ -34,11 +34,11 @@ class PdlController {
 
     private fun decideResponse(body: String): String {
         return when {
-            body.contains(Regex("(navn)|(kjoenn)|(telefonnummer)|(foedsel)")) -> {
-                objectMapper.writeValueAsString(defaultResponseModia())
-            }
             body.contains(Regex("(adressebeskyttelse)")) -> {
                 objectMapper.writeValueAsString(defaultResponseInnsyn())
+            }
+            body.contains(Regex("(navn)|(kjoenn)|(telefonnummer)|(foedsel)")) -> {
+                objectMapper.writeValueAsString(defaultResponseModia())
             }
             else -> "OK"
         }
@@ -62,7 +62,8 @@ class PdlController {
                     errors = emptyList(),
                     data = PdlInnsynHentPerson(
                             hentPerson = PdlInnsynPerson(
-                                    adressebeskyttelse = emptyList()
+                                    adressebeskyttelse = emptyList(),
+                                    navn = emptyList()
                             )
                     )
             )
