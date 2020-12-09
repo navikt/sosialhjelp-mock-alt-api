@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.logg_ukjente_requester
+package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.logg_ukjente_requester
 
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
