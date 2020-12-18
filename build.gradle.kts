@@ -3,23 +3,23 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val sosialhjelpCommonVersion = "1.2d56711"
-val filformatVersion = "1.2020.01.09-15.55-f18d10d7d76a"
+val springBootVersion = "2.3.7.RELEASE"
+val sosialhjelpCommonVersion = "1.4ef74b4"
+val filformatVersion = "1.2020.11.05-09.32-14af05dea965"
 val oidcsupportversion = "0.2.18"
 val oauth2oidcsdkversion = "7.3"
-val tokenValidationVersion = "1.1.5"
-val jacksonVersion = "2.10.3"
+val tokenValidationVersion = "1.3.2"
+val jacksonVersion = "2.12.0"
 val swaggerversion = "2.9.2"
-val guavaVersion = "30.0-jre"
+val guavaVersion = "30.1-jre"
 val jerseyMediaJaxb = "2.31"
 
 plugins {
     application
-	id("org.springframework.boot") version "2.3.4.RELEASE"
-	id("io.spring.dependency-management") version "1.0.9.RELEASE"
+	id("io.spring.dependency-management") version "1.0.10.RELEASE"
 	id("com.github.johnrengelman.shadow") version "5.2.0"
-	kotlin("jvm") version "1.4.10"
-	kotlin("plugin.spring") version "1.4.10"
+	kotlin("jvm") version "1.4.21"
+	kotlin("plugin.spring") version "1.4.21"
 }
 
 val mainClass = "no.nav.sbl.sosialhjelp_mock_alt.MockAltApplicationKt"
@@ -46,11 +46,27 @@ repositories {
 		}
 	}
 }
+
+configurations {
+	"implementation" {
+		exclude(group = "javax.activation", module = "activation")
+		exclude(group = "javax.mail", module = "mailapi")
+		exclude(group = "javax.validation", module = "validation-api")
+	}
+	"testImplementation" {
+		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+		exclude(group = "org.mockito", module = "mockito-core")
+		exclude(group = "org.mockito", module = "mockito-junit-jupiter")
+	}
+}
+
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.boot:spring-boot-starter")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation(kotlin("stdlib"))
+	implementation(kotlin("stdlib-jdk8"))
+	implementation(kotlin("reflect"))
+
+	implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
+	implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
 
 	implementation("no.nav.sosialhjelp:sosialhjelp-common-api:$sosialhjelpCommonVersion")
 
@@ -64,12 +80,17 @@ dependencies {
 	implementation("io.springfox:springfox-swagger2:${swaggerversion}")
 	implementation("io.springfox:springfox-swagger-ui:${swaggerversion}")
 
-//	anbefalte versjoner av snyk:
-	implementation("com.google.guava:guava:$guavaVersion")
-	implementation("org.glassfish.jersey.media:jersey-media-jaxb:$jerseyMediaJaxb")
+	testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test") {
-		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+//    spesifikke versjoner oppgradert etter ønske fra snyk
+	constraints {
+		implementation("com.google.guava:guava:$guavaVersion") {
+			because("Forcer oppgradering av transitiv avhengighet")
+		}
+
+		implementation("org.glassfish.jersey.media:jersey-media-jaxb:$jerseyMediaJaxb") {
+			because("Transitiv avhengighet dratt inn av token-validation-test-support@1.3.2 har sårbarhet. Constraintsen kan fjernes når token-validation-test-support bruker jersey-media-jaxb@2.31 eller nyere")
+		}
 	}
 }
 
