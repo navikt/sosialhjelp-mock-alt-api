@@ -6,7 +6,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val springBootVersion = "2.3.7.RELEASE"
 val sosialhjelpCommonVersion = "1.4ef74b4"
 val filformatVersion = "1.2020.11.05-09.32-14af05dea965"
-val oidcsupportversion = "0.2.18"
 val oauth2oidcsdkversion = "7.3"
 val tokenValidationVersion = "1.3.2"
 val jacksonVersion = "2.12.0"
@@ -72,7 +71,6 @@ dependencies {
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 	implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")
-	implementation("no.nav.security:oidc-support:$oidcsupportversion")
 	implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
 	implementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
 	implementation("com.nimbusds:oauth2-oidc-sdk:$oauth2oidcsdkversion")
