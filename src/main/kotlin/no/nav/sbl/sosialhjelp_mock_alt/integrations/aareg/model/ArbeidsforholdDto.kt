@@ -1,7 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import java.time.LocalDate
 
