@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
 data class PdlError(
         val message: String,
@@ -29,10 +29,12 @@ enum class Gradering {
 }
 
 data class PdlPersonNavn(
-        val fornavn: String,
-        val mellomnavn: String?,
-        val etternavn: String
-)
+        var fornavn: String,
+        var mellomnavn: String,
+        var etternavn: String
+) {
+    constructor() : this("", "", "")
+}
 
 data class PdlKjoenn(
         val kjoenn: Kjoenn

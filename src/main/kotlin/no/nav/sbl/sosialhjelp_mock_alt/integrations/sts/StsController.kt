@@ -36,7 +36,9 @@ class StsController(
     fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): String {
         val config = IdPortenOidcConfiguration(
                 issuer = "digisos-mock-alt",
-                tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/sts_token_endpoint_url/token"
+                tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
+                jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks",
+
         )
         log.info("Henter konfigurasjon: $config")
         return objectMapper.writeValueAsString(config)

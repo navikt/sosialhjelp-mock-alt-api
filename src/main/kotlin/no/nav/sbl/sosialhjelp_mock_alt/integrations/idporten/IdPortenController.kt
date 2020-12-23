@@ -35,7 +35,8 @@ class IdPortenController(
     fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): String {
         val config = IdPortenOidcConfiguration(
                 issuer = "digisos-mock-alt",
-                tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token"
+                tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token",
+                jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks"
         )
         log.info("Henter konfigurasjon: $config")
         return objectMapper.writeValueAsString(config)
