@@ -7,12 +7,11 @@ class FssToken(val access_token: String, val token_type: String, val expires_in:
         fun createToken(fnr: String): FssToken {
             val expiryTime = 120L
             val token = JwtTokenGenerator.createSignedJWT(fnr, expiryTime)
-            val fssToken = FssToken(
+            return FssToken(
                     access_token = token.serialize(),
                     token_type = "FssToken",
                     expires_in = expiryTime,
             )
-            return fssToken
         }
     }
 }

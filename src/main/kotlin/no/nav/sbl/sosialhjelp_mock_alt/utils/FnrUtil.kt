@@ -2,15 +2,17 @@ package no.nav.sbl.sosialhjelp_mock_alt.utils
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 fun genererTilfeldigPersonnummer() : String {
-    val year = Math.round(Math.random() * 100).toInt()
+    val year = (Math.random() * 100).roundToInt()
     val dato = LocalDate.of(year, 1, 1)
-    val randomDate = dato.plusDays(Math.round(Math.random() * 365))
+    val randomDate = dato.plusDays((Math.random() * 365).roundToLong())
     val dateString = randomDate.format(DateTimeFormatter.ofPattern("ddMMyy"))
     while (true) {
         var fnr = dateString
-        val randomNumber = Math.round(Math.random() * 500).toInt()
+        val randomNumber = (Math.random() * 500).roundToInt()
         if(randomNumber < 10) {
             fnr += "00"
         } else if(randomNumber < 100) {

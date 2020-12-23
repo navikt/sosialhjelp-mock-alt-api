@@ -5,7 +5,7 @@ import java.util.*
 
 @Service
 class DokumentKrypteringsService {
-    final val publicCertificateString = "MIICKzCCAZQCCQDv9tI+XfqHGjANBgkqhkiG9w0BAQsFADBaMQswCQYDVQQGEwJu" +
+    private val publicCertificateString = "MIICKzCCAZQCCQDv9tI+XfqHGjANBgkqhkiG9w0BAQsFADBaMQswCQYDVQQGEwJu" +
             "bzENMAsGA1UECAwETW9jazENMAsGA1UEBwwETW9jazEMMAoGA1UECgwDTmF2MRAw" +
             "DgYDVQQLDAdEaWdpc29zMQ0wCwYDVQQDDARtb2NrMB4XDTIwMDQyMzA5MzUwM1oX" +
             "DTQ3MDkwODA5MzUwM1owWjELMAkGA1UEBhMCbm8xDTALBgNVBAgMBE1vY2sxDTAL" +
@@ -17,5 +17,5 @@ class DokumentKrypteringsService {
             "eYEGvR3DUfrZV60Yy+T9DxuFFZhj5JEC3QMba/CXR2mAObgnG8IeVeBk/gULUmYq" +
             "8G0U+1smjA2tCPKI6Aknq0SaqqkbrE9jOoYm3+rjl7NoAnWlxXj86OjydYsecTWJ" +
             "LoJpNjfb/NpzHaR/bUECrKIUZ2U04r9mH4fvDJoPow=="
-    val publicCertificateBytes = Base64.getDecoder().decode(publicCertificateString)
+    val publicCertificateBytes: ByteArray = Base64.getDecoder().decode(publicCertificateString)
 }
