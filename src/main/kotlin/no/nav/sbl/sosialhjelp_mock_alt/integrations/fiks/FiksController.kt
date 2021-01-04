@@ -33,13 +33,11 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
 import java.io.File
 import java.util.*
-import javax.servlet.http.HttpServletRequest
 import kotlin.collections.ArrayList
 
 @RestController
@@ -91,7 +89,7 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                              @RequestBody(required = false) body: String?): ResponseEntity<String> {
         var id = fiksDigisosId
         val fnr = hentFnrFraBody(body)
-        if (id == null || id.toLowerCase().contentEquals("ny")) {
+        return if (id == null || id.toLowerCase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
             val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
             digisosApiWrapper.sak.soker.hendelser.add(JsonHendelse()
@@ -99,12 +97,12 @@ class FiksController(private val soknadService: SoknadService, private val dokum
                     .withType(JsonHendelse.Type.SOKNADS_STATUS))
             soknadService.oppdaterDigisosSak(kommuneNr = "0301", fiksOrgId = fiksOrgId,
                     fnr = fnr!!, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
-            return ResponseEntity.ok("$id")
+            ResponseEntity.ok("$id")
         } else {
             val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
             soknadService.oppdaterDigisosSak(kommuneNr = "0301", fiksOrgId = fiksOrgId,
                     fnr = fnr!!, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
-            return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
+            ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
         }
     }
 
@@ -306,12 +304,12 @@ class FiksController(private val soknadService: SoknadService, private val dokum
     }
 
     @GetMapping("/fiks/tilfeldig/fnr")
-    fun listTilfeldigFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
+    fun getTilfeldigFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
         return ResponseEntity.ok(genererTilfeldigPersonnummer())
     }
 
     @GetMapping("/fiks/fast/fnr")
-    fun listFastFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
+    fun getFastFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
         return ResponseEntity.ok(fastFnr)
     }
 }

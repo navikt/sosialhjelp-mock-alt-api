@@ -36,7 +36,9 @@ class StsController(
     fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): String {
         val config = IdPortenOidcConfiguration(
                 issuer = "digisos-mock-alt",
-                tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/sts_token_endpoint_url/token"
+                tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
+                jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks",
+
         )
         log.info("Henter konfigurasjon: $config")
         return objectMapper.writeValueAsString(config)
@@ -45,9 +47,9 @@ class StsController(
     @RequestMapping("/sts/authorisation")
     fun getStsAuthorisation(@RequestParam parameters: MultiValueMap<String, String>): String {
         val config = HashMap<String, Any>()
-        config.put("issuer", "iss-localhost")
-        config.put("subject_types_supported", listOf("public", "pairwise"))
-        config.put("jwks_uri", "${host_address}sosialhjelp/mock-alt-api/local/jwks")
+        config["issuer"] = "iss-localhost"
+        config["subject_types_supported"] = listOf("public", "pairwise")
+        config["jwks_uri"] = "${host_address}sosialhjelp/mock-alt-api/local/jwks"
         log.info("Henter authorisation: $config")
         return objectMapper.writeValueAsString(config)
     }

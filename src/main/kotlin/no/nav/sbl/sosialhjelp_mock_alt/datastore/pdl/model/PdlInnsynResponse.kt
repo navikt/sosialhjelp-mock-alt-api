@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
 data class PdlInnsynPersonResponse(
         val errors: List<PdlError>?,

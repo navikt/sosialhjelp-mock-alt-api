@@ -27,7 +27,7 @@ private val sosialetjenesterInfo: String = """
     """.trimIndent()
 
 fun leggTilNavenhet(navEnheter: MutableMap<String, NavEnhet>, enhetsnr: String, navn: String) {
-    navEnheter.put(enhetsnr, lagMockNavEnhet(enhetsnr, navn))
+    navEnheter[enhetsnr] = lagMockNavEnhet(enhetsnr, navn)
 }
 
 fun lagMockNavEnhet(enhetsnr: String, navn: String): NavEnhet {

@@ -99,25 +99,25 @@ class SoknadService {
             )
             val dokumentlagerId = UUID.randomUUID().toString()
             log.info("Lagrer søker dokument med dokumentlagerId: $dokumentlagerId")
-            dokumentLager.put(dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
+            dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
             val updatedDigisosSak = digisosSak.updateDigisosSoker(DigisosSoker(dokumentlagerId, dokumenter, System.currentTimeMillis()))
             log.info("Lagrer søknad fiksDigisosId: $fiksDigisosId")
             log.debug(updatedDigisosSak.toString())
-            soknadsliste.put(fiksDigisosId, updatedDigisosSak)
+            soknadsliste[fiksDigisosId] = updatedDigisosSak
             log.info("Lagrer orginalsøknad (med bare default verdier) med dokumentlagerId: $fiksDigisosId")
-            var soknad = jsonSoknad ?: defaultJsonSoknad(fnr)
+            val soknad = jsonSoknad ?: defaultJsonSoknad(fnr)
             log.debug(soknad.toString())
             val orginalSoknad = objectMapper.writeValueAsString(soknad)
-            dokumentLager.put(metadataId, orginalSoknad)
+            dokumentLager[metadataId] = orginalSoknad
             log.info("Lagrer vedleggs metadata med dokumentlagerId: $vedleggMetadataId")
             val vedleggMetadata = VedleggMetadata("soknad.json", "application/json", orginalSoknad.length.toLong())
-            dokumentLager.put(vedleggMetadataId, objectMapper.writeValueAsString(vedleggMetadata))
+            dokumentLager[vedleggMetadataId] = objectMapper.writeValueAsString(vedleggMetadata)
         } else {
             log.info("Oppdaterer søknad med id: $fiksDigisosId")
             oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(fiksDigisosId, digisosApiWrapper)
             val dokumentlagerId = UUID.randomUUID().toString()
-            log.info("Lagrer/oppdaterer søker dokument med dokumentlagerId: ${dokumentlagerId}")
-            dokumentLager.put(dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
+            log.info("Lagrer/oppdaterer søker dokument med dokumentlagerId: $dokumentlagerId")
+            dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
             val updatedDigisosSak = oldSoknad.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
             soknadsliste.replace(fiksDigisosId, updatedDigisosSak)
         }
@@ -140,7 +140,7 @@ class SoknadService {
 
     private fun hentSak(id: String?): DigisosSak {
         log.debug("Henter sak med id: $id")
-        return soknadsliste.get(id) ?: throw RuntimeException("Finner ikke sak med id: $id")
+        return soknadsliste[id] ?: throw RuntimeException("Finner ikke sak med id: $id")
     }
 
     fun hentDokument(digisosId: String?, dokumentlagerId: String): String? {
@@ -190,14 +190,14 @@ class SoknadService {
         var vedleggsInfo: JsonVedlegg? = null
         var sha512 = "dummySha512"
         if (vedleggsJson != null && !vedleggMetadata.filnavn!!.contentEquals(ETTERSENDELSE_FILNAVN)) {
-            vedleggsInfo = vedleggsJson.vedlegg.filter {
-                it.filer.filter { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.isNotEmpty()
-            }.firstOrNull()
+            vedleggsInfo = vedleggsJson.vedlegg.firstOrNull { jsonVedlegg ->
+                jsonVedlegg.filer.any { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }
+            }
             if (vedleggsInfo != null) {
-                sha512 = vedleggsInfo.filer.filter { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.first().sha512
+                sha512 = vedleggsInfo.filer.first { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.sha512
             }
         }
-        dokumentLager.put(vedleggsId, objectMapper.writeValueAsString(
+        dokumentLager[vedleggsId] = objectMapper.writeValueAsString(
                 JsonVedleggSpesifikasjon()
                         .withVedlegg(listOf(JsonVedlegg()
                                 .withType(vedleggsInfo?.type ?: "annet")
@@ -207,7 +207,7 @@ class SoknadService {
                                         .withFilnavn(vedleggMetadata.filnavn)
                                         .withSha512(sha512)))
                         ))
-        ))
+        )
         leggVedleggTilISak(fiksDigisosId, vedleggMetadata, vedleggsId, timestamp)
         log.info("Lastet opp fil fiksDigisosId: $fiksDigisosId, filnavn: ${vedleggMetadata.filnavn}, vedleggsId: $vedleggsId")
         return vedleggsId
@@ -217,7 +217,7 @@ class SoknadService {
             json: String,
             vedleggsId: String = UUID.randomUUID().toString(),
     ): String {
-        dokumentLager.put(vedleggsId, json)
+        dokumentLager[vedleggsId] = json
         return vedleggsId
     }
 
