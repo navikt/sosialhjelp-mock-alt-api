@@ -29,12 +29,10 @@ enum class Gradering {
 }
 
 data class PdlPersonNavn(
-        var fornavn: String,
-        var mellomnavn: String,
-        var etternavn: String
-) {
-    constructor() : this("", "", "")
-}
+        var fornavn: String = "",
+        var mellomnavn: String = "",
+        var etternavn: String = "",
+)
 
 data class PdlKjoenn(
         val kjoenn: Kjoenn
