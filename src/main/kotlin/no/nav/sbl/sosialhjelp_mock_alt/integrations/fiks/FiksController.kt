@@ -304,12 +304,12 @@ class FiksController(private val soknadService: SoknadService, private val dokum
     }
 
     @GetMapping("/fiks/tilfeldig/fnr")
-    fun listTilfeldigFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
+    fun getTilfeldigFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
         return ResponseEntity.ok(genererTilfeldigPersonnummer())
     }
 
     @GetMapping("/fiks/fast/fnr")
-    fun listFastFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
+    fun getFastFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
         return ResponseEntity.ok(fastFnr)
     }
 }
