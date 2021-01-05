@@ -39,11 +39,11 @@ class SoknadService {
     val soknadsliste: HashMap<String, DigisosSak> = HashMap()
     val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
 
-    fun hentSoknad(fiksDigisosId: String): String? {
+    fun hentSoknad(fiksDigisosId: String): DigisosSak? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
         val soknad = soknadsliste.get(fiksDigisosId) ?: return null
         log.debug(soknad.toString())
-        return objectMapper.writeValueAsString(soknad)
+        return soknad
     }
 
     fun listSoknader(fnr: String?): String {

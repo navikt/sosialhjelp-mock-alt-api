@@ -50,7 +50,7 @@ fun <R : Any> R.logger(): Lazy<Logger> {
 }
 
 // unwrap companion class to enclosing class given a Java Class
-fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
+private fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
     return ofClass.enclosingClass?.takeIf {
         ofClass.enclosingClass.kotlin.companionObject?.java == ofClass
     } ?: ofClass
