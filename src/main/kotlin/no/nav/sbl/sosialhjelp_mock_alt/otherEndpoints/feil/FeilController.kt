@@ -17,13 +17,13 @@ class FeilController(val feilService: FeilService) {
         private val log by logger()
     }
 
-    @PostMapping("/feil/edit_feil")
+    @PostMapping("/feil")
     fun editFeil(@RequestBody feilsituasjon: Feilsituasjon ) {
         log.warn(objectMapper.writeValueAsString(feilsituasjon))
         feilService.legtilFeil(feilsituasjon)
     }
 
-    @GetMapping("feil/hent_feil")
+    @GetMapping("/feil")
     fun hentFeil(@RequestParam ident: String): ResponseEntity<Feilsituasjon> {
         val feil = feilService.hentFeil(ident)
         if(feil != null) {
