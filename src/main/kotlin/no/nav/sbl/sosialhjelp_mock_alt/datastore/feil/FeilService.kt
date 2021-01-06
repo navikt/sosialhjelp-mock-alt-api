@@ -44,6 +44,10 @@ class FeilService {
             }
         }
     }
+
+    fun hentFeil(fnr: String): Feilsituasjon? {
+        return feilsituasjoner[fnr]
+    }
 }
 
 class Feilsituasjon(
