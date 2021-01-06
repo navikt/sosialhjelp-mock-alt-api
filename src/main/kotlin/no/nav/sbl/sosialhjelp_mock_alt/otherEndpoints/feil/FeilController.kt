@@ -20,7 +20,7 @@ class FeilController(val feilService: FeilService) {
     @PostMapping("/feil")
     fun editFeil(@RequestBody feilsituasjon: Feilsituasjon ) {
         log.warn(objectMapper.writeValueAsString(feilsituasjon))
-        feilService.legtilFeil(feilsituasjon)
+        feilService.leggTilFeil(feilsituasjon)
     }
 
     @GetMapping("/feil")

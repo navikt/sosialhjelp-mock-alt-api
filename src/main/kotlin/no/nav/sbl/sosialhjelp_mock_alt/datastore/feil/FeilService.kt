@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 class FeilService {
     private val feilsituasjoner = HashMap<String, Feilsituasjon>()
 
-    fun legtilFeil(
+    fun leggTilFeil(
             feilsituasjon: Feilsituasjon,
     ) {
         feilsituasjoner.put(feilsituasjon.fnr, feilsituasjon)
