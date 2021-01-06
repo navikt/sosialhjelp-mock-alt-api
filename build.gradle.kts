@@ -4,6 +4,7 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransf
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val springBootVersion = "2.3.7.RELEASE"
+val coroutinesVersion = "1.4.2"
 val sosialhjelpCommonVersion = "1.4ef74b4"
 val filformatVersion = "1.2020.11.05-09.32-14af05dea965"
 val tokenValidationVersion = "1.3.2"
@@ -67,9 +68,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
 	implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
 
-	implementation("no.nav.sosialhjelp:sosialhjelp-common-api:$sosialhjelpCommonVersion")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+
+	implementation("no.nav.sosialhjelp:sosialhjelp-common-api:$sosialhjelpCommonVersion")
 	implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")
 	implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
 	implementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
