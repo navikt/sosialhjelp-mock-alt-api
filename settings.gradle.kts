@@ -1,1 +1,1 @@
-rootProject.name = "sosialhjelp-mock-alt"
+rootProject.name = "sosialhjelp-mock-alt-api"
