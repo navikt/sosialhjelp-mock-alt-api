@@ -1,5 +1,8 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
+import java.time.LocalDate
+import java.time.LocalDateTime
+
 data class PdlError(
         val message: String,
         val locations: List<PdlErrorLocation>,
@@ -48,4 +51,97 @@ data class PdlTelefonnummer(
         val landskode: String,
         val nummer: String,
         val prioritet: Int
+)
+
+data class PdlBostedsadresse(
+        val coAdressenavn: String?,
+        val vegadresse: PdlVegadresse?,
+        val matrikkeladresse: PdlMatrikkeladresse?,
+        val ukjentBosted: PdlUkjentBosted?
+)
+
+data class PdlKontaktadresse(
+        val type: String?,
+        val coAdressenavn: String?,
+        val vegadresse: PdlVegadresse?,
+        val metadata: PdlMetadata?,
+        val folkeregistermetadata: PdlFolkeregistermetadata?
+)
+
+data class PdlOppholdsadresse(
+        val oppholdAnnetSted: String?,
+        val coAdressenavn: String?,
+        val vegadresse: PdlVegadresse?,
+        val metadata: PdlMetadata?,
+        val folkeregistermetadata: PdlFolkeregistermetadata?
+)
+
+data class PdlVegadresse(
+        val matrikkelId: String?,
+        val adressenavn: String?,
+        val husnummer: Int?,
+        val husbokstav: String?,
+        val tilleggsnavn: String?,
+        val postnummer: String?,
+        val kommunenummer: String?,
+        val bruksenhetsnummer: String?
+)
+
+data class PdlMatrikkeladresse(
+        val matrikkelId: String?,
+        val postnummer: String?,
+        val tilleggsnavn: String?,
+        val kommunenummer: String?,
+        val bruksenhetsnummer: String?
+)
+
+data class PdlUkjentBosted(
+        val bostedskommune: String?
+)
+
+data class PdlFamilierelasjon(
+        val relatertPersonsIdent: String?,
+        val relatertPersonsRolle: String?,
+        val minRolleForPerson: String?
+)
+
+data class PdlFoedsel(
+        val foedselsdato: LocalDate?
+)
+
+data class PdlFolkeregisterpersonstatus(
+        val status: String?
+)
+
+data class PdlSivilstand(
+        val type: SivilstandType?,
+        val relatertVedSivilstand: String?,
+        val metadata: PdlMetadata?,
+        val folkeregistermetadata: PdlFolkeregistermetadata?,
+)
+
+enum class SivilstandType { UOPPGITT, UGIFT, GIFT, ENKE_ELLER_ENKEMANN, SKILT, SEPARERT, PARTNER, SEPARERT_PARTNER, SKILT_PARTNER, GJENLEVENDE_PARTNER }
+
+data class PdlStatsborgerskap(
+        val land: String?
+)
+
+data class PdlMetadata(
+        val master: String,
+        val endringer: List<PdlEndring>
+)
+
+data class PdlEndring(
+        val kilde: String?,
+        val registrert: LocalDateTime?,
+        val registrertAv: String?,
+        val systemkilde: String?,
+        val type: String?
+)
+
+data class PdlFolkeregistermetadata(
+        val ajourholdstidspunkt: LocalDateTime?,
+        val gyldighetstidspunkt: LocalDateTime?,
+        val opphoerstidspunkt: LocalDateTime?,
+        val kilde: String?
 )
