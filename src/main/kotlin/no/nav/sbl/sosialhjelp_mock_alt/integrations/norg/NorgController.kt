@@ -36,6 +36,13 @@ class NorgController {
         return objectMapper.writeValueAsString(navEnhet)
     }
 
+    @GetMapping("/norg_endpoint_url/enhet/navkontor/{geografiskTilknytning}", produces = ["application/json;charset=UTF-8"])
+    fun getEnhetForGt(@PathVariable geografiskTilknytning: String): String {
+        val navEnhet = navEnheter[geografiskTilknytning] ?: lagMockNavEnhet(geografiskTilknytning.substring(0,4), "mock GT-enhet")
+        log.info("Henter nav enhet for gt: $geografiskTilknytning")
+        return objectMapper.writeValueAsString(navEnhet)
+    }
+
     @GetMapping("/norg_endpoint_url/kodeverk/EnhetstyperNorg")
     fun hentEnhetstyperDummy(): String {
         log.info("Henter EnhetstyperNorg")
