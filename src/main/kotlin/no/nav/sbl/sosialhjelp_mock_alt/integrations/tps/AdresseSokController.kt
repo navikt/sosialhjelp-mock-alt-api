@@ -26,7 +26,7 @@ class AdresseSokController {
                 flereTreff = false,
                 adresseDataList = listOf(
                         AdresseData(
-                                kommunenummer = "1234",
+                                kommunenummer = "1000",
                                 kommunenavn = "Mock Kommune",
                                 adressenavn = "Mock veien",
                                 husnummerFra = "1",
