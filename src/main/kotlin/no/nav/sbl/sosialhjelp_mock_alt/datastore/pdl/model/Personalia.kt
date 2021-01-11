@@ -9,6 +9,7 @@ data class Personalia(
         var addressebeskyttelse: Gradering = Gradering.UGRADERT,
         var sivilstand: String = "UOPPGITT",
         var starsborgerskap: String = "NOR",
+        var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
         var locked: Boolean = false,
         var opprettetTidspunkt: Long = DateTime.now().millis
 ) {
@@ -43,4 +44,16 @@ data class Personalia(
         opprettetTidspunkt = tidspunkt
         return this
     }
+
+    fun withBostedsadresse(nyBostedsadresse: ForenkletBostedsadresse): Personalia {
+        bostedsadresse = nyBostedsadresse
+        return this
+    }
 }
+
+data class ForenkletBostedsadresse(
+        val adressenavn: String,
+        val husnummer: Int,
+        val postnummer: String,
+        val kommunenummer: String
+)
