@@ -8,6 +8,7 @@ data class Personalia(
         val navn: PdlPersonNavn = PdlPersonNavn(),
         var addressebeskyttelse: Gradering = Gradering.UGRADERT,
         var sivilstand: String = "UOPPGITT",
+        var ektefelle: String? = null,
         var starsborgerskap: String = "NOR",
         var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
         var locked: Boolean = false,
@@ -27,6 +28,11 @@ data class Personalia(
 
     fun withSivilstand(nyVerdi: String): Personalia {
         sivilstand = nyVerdi
+        return this
+    }
+
+    fun withEktefelle(nyVerdi: String): Personalia {
+        ektefelle = nyVerdi
         return this
     }
 
