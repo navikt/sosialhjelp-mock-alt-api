@@ -104,11 +104,14 @@ class FiksController(
     }
 
     @PostMapping("/fiks/digisos/api/v1/{fiksOrgId}/{fiksDigisosId}") // tar også /ny
-    fun oppdaterSoknadInnsyn(@PathVariable fiksOrgId: String,
-                                     @PathVariable(required = false) fiksDigisosId: String?,
-                                     @RequestBody(required = false) body: String?): ResponseEntity<String> {
+    fun oppdaterSoknadInnsyn(
+            @PathVariable fiksOrgId: String,
+            @PathVariable(required = false) fiksDigisosId: String?,
+            @RequestBody(required = false) body: String?,
+            @RequestHeader headers: HttpHeaders,
+    ): ResponseEntity<String> {
         var id = fiksDigisosId
-        val fnr = hentFnrFraBody(body)
+        val fnr = hentFnrFraToken(headers)
         feilService.eventueltLagFeil(fnr!!, "FixController", "lastOppSoknad")
         return if (id == null || id.toLowerCase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
