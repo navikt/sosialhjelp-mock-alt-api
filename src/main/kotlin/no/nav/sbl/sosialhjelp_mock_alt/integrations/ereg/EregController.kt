@@ -1,7 +1,7 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.freg
+package no.nav.sbl.sosialhjelp_mock_alt.integrations.ereg
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.freg.model.NavnDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.freg.model.OrganisasjonNoekkelinfoDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model.NavnDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model.OrganisasjonNoekkelinfoDto
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.HttpHeaders
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class FregController {
+class EregController {
     companion object {
         private val log by logger()
     }
@@ -24,7 +24,7 @@ class FregController {
                 navn = NavnDto("Mock navn"),
                 organisasjonsnummer = orgnr,
         )
-        log.info("Henter freg nøkkelinfo: ${objectMapper.writeValueAsString(nokkelinfo)}")
+        log.info("Henter ereg nøkkelinfo: ${objectMapper.writeValueAsString(nokkelinfo)}")
         return ResponseEntity.ok(nokkelinfo)
     }
 }

@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model
 
 import no.nav.sbl.soknadsosialhjelp.soknad.okonomi.opplysning.JsonOkonomiOpplysningUtbetaling
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
@@ -27,12 +27,12 @@ class SakerDto(
 
 enum class BostotteStatus { UNDER_BEHANDLING, VEDTATT }
 enum class BostotteRolle { HOVEDPERSON, BIPERSON }
-class VedtakDto {
+class VedtakDto(vedtak: Vedtakskode) {
     val kode: String
     val beskrivelse: String
     val type: String
 
-    constructor(vedtak: Vedtakskode) {
+    init {
         kode = vedtak.name
         beskrivelse = vedtak.beskrivelse
         type = vedtak.type

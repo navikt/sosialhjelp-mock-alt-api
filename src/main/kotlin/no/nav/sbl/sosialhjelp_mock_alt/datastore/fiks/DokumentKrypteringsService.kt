@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.datastore
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks
 
 import org.springframework.stereotype.Service
 import java.util.*

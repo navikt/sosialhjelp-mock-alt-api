@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.dkif
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.dkif.model.DigitalKontaktinfo
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.dkif.model.DigitalKontaktinfoBolk
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfoBolk
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger

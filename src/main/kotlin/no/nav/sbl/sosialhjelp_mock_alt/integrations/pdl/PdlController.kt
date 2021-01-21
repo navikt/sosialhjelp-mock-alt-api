@@ -52,34 +52,4 @@ class PdlController(private val pdlService: PdlService) {
             else -> "OK"
         }
     }
-
-    // Frontend stuff:
-    @PostMapping("/pdl/upload_url")
-    fun pdlUpload(@RequestBody body: String): ResponseEntity<String> {
-        log.info("Laster opp pdl data: $body")
-        val personalia = objectMapper.readValue(body, Personalia::class.java)
-        if (personalia.fnr.isEmpty()) {
-            return ResponseEntity.badRequest().body("FNR må være satt!")
-        }
-        pdlService.leggTilPerson(personalia)
-        return ResponseEntity.ok("OK")
-    }
-
-    @GetMapping("/pdl/download_url")
-    fun pdlDownload(@RequestParam ident: String): ResponseEntity<Personalia> {
-        val personalia = try {
-            pdlService.getPersonalia(ident)
-        } catch (e: Exception) {
-            log.warn("Finner ikke personalia for fnr: $ident")
-            return ResponseEntity.noContent().build()
-        }
-        log.info("Henter ned pdl data for fnr: $ident")
-        return ResponseEntity.ok(personalia)
-    }
-
-    @GetMapping("/pdl/person_liste")
-    fun personListe(): ResponseEntity<Collection<Personalia>> {
-        val personListe = pdlService.getPersonListe()
-        return ResponseEntity.ok(personListe)
-    }
 }

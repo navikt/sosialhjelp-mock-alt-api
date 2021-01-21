@@ -1,10 +1,10 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.skatteetaten
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.skatteetaten.model.Forskuddstrekk
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.skatteetaten.model.Inntekt
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.skatteetaten.model.Inntektstype
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.skatteetaten.model.OppgaveInntektsmottaker
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.skatteetaten.model.SkattbarInntekt
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Forskuddstrekk
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt

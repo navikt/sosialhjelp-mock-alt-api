@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.datastore.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 

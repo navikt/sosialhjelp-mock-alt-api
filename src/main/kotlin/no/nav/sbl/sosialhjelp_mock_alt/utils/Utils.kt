@@ -6,6 +6,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -22,6 +23,9 @@ fun String.toLocalDateTime(): LocalDateTime {
 }
 fun unixToLocalDateTime(tidspunkt: Long): LocalDateTime {
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(tidspunkt), ZoneId.of("Europe/Oslo"))
+}
+fun LocalDate.toIsoString(): String {
+    return DateTimeFormatter.ISO_LOCAL_DATE.format(this)
 }
 
 fun hentFnrFraBody(body: String?): String? {
