@@ -4,7 +4,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import java.time.LocalDate
 
-class ArbeidsforholdDto(
+data class ArbeidsforholdDto(
         val ansettelsesperiode: AnsettelsesperiodeDto,
         val arbeidsavtaler: List<ArbeidsavtaleDto>,
         val arbeidsforholdId: String,
@@ -37,7 +37,7 @@ class ArbeidsforholdDto(
         }
 
         fun nyttArbeidsforhold(
-                personalia: Personalia,
+                fnr: String,
                 fom: LocalDate,
                 tom: LocalDate? = null,
                 stillingsprosent: Double = 100.0,
@@ -47,8 +47,8 @@ class ArbeidsforholdDto(
                 navArbeidsforholdId: Long = randomInt(7).toLong(),
         ): ArbeidsforholdDto {
             val person = PersonDto(
-                    offentligIdent = personalia.fnr,
-                    aktoerId = personalia.fnr,
+                    offentligIdent = fnr,
+                    aktoerId = fnr,
                     type = "Person"
             )
             return ArbeidsforholdDto(

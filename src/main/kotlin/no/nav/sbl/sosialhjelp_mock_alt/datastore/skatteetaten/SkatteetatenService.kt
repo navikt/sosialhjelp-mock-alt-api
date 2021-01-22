@@ -14,10 +14,7 @@ class SkatteetatenService {
     }
 
     fun getSkattbarInntekt(fnr: String): SkattbarInntekt {
-        val returnValue = skattelisten[fnr]
-        if(returnValue != null)
-            return returnValue
-        return SkattbarInntekt()
+        return skattelisten[fnr] ?: SkattbarInntekt()
     }
 
     companion object {

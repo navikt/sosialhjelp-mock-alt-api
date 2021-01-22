@@ -9,8 +9,8 @@ class BostotteService {
 
     final val bostotteMap: HashMap<String, BostotteDto> = HashMap()
 
-    fun putBostotte(fnr: String, skattbarInntekt: BostotteDto) {
-        bostotteMap[fnr] = skattbarInntekt
+    fun putBostotte(fnr: String, bostotteDto: BostotteDto) {
+        bostotteMap[fnr] = bostotteDto
     }
 
     fun getBostotte(fnr: String): BostotteDto {

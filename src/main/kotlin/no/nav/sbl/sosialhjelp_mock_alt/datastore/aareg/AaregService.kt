@@ -22,7 +22,7 @@ class AaregService {
         aaregMap.put(
                 personalia.fnr,
                 ArbeidsforholdDto.nyttArbeidsforhold(
-                        personalia,
+                        personalia.fnr,
                         startDato,
                 ))
     }
@@ -40,14 +40,14 @@ class AaregService {
         if(personalia.locked) {
             throw RuntimeException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
-        val arbeidsgiver: OpplysningspliktigArbeidsgiverDto =
+        val arbeidsgiver: OpplysningspliktigArbeidsgiverDto
         if(arbeidsforholdType === ArbeidsgiverType.PERSON.name) {
-            PersonDto(ident, ident)
+            arbeidsgiver = PersonDto(ident, ident)
         } else {
-            OrganisasjonDto(orgnummer)
+            arbeidsgiver = OrganisasjonDto(orgnummer)
         }
         aaregMap[personalia.fnr] = ArbeidsforholdDto.nyttArbeidsforhold(
-                personalia,
+                personalia.fnr,
                 startDato,
                 sluttDato,
                 stillingsprosent,

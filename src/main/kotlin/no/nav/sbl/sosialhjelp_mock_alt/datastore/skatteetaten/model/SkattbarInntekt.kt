@@ -61,14 +61,16 @@ class Inntekt(
         val aldersUfoereEtterlatteAvtalefestetOgKrigspensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon?,
 ) {
     fun type(): Inntektstype {
-        if (loennsinntekt != null) return Inntektstype.Loennsinntekt
-        if (ytelseFraOffentlige != null) return Inntektstype.YtelseFraOffentlige
-        if (pensjonEllerTrygd != null) return Inntektstype.PensjonEllerTrygd
-        if (lottOgPartInnenFiske != null) return Inntektstype.LottOgPartInnenFiske
-        if (dagmammaIEgenBolig != null) return Inntektstype.DagmammaIEgenBolig
-        if (naeringsinntekt != null) return Inntektstype.Naeringsinntekt
-        if (aldersUfoereEtterlatteAvtalefestetOgKrigspensjon != null) return Inntektstype.AldersUfoereEtterlatteAvtalefestetOgKrigspensjon
-        return Inntektstype.Loennsinntekt
+        return when {
+            loennsinntekt != null -> Inntektstype.Loennsinntekt
+            ytelseFraOffentlige != null -> Inntektstype.YtelseFraOffentlige
+            pensjonEllerTrygd != null -> Inntektstype.PensjonEllerTrygd
+            lottOgPartInnenFiske != null -> Inntektstype.LottOgPartInnenFiske
+            dagmammaIEgenBolig != null -> Inntektstype.DagmammaIEgenBolig
+            naeringsinntekt != null -> Inntektstype.Naeringsinntekt
+            aldersUfoereEtterlatteAvtalefestetOgKrigspensjon != null -> Inntektstype.AldersUfoereEtterlatteAvtalefestetOgKrigspensjon
+            else -> Inntektstype.Loennsinntekt
+        }
     }
 
     data class Builder(
@@ -106,6 +108,7 @@ class Inntekt(
                     aldersUfoereEtterlatteAvtalefestetOgKrigspensjon = AldersUfoereEtterlatteAvtalefestetOgKrigspensjon()
             }
         }
+
         fun build() = Inntekt(
                 skatteOgAvgiftsregel,
                 fordel,
@@ -162,7 +165,8 @@ class Tilleggsinformasjon(
                     Inntektstype.LottOgPartInnenFiske -> lottOgPart = LottOgPartInnenFiske()
                     Inntektstype.AldersUfoereEtterlatteAvtalefestetOgKrigspensjon ->
                         pensjon = AldersUfoereEtterlatteAvtalefestetOgKrigspensjon()
-                    else -> {}
+                    else -> {
+                    }
                 }
             }
         }
