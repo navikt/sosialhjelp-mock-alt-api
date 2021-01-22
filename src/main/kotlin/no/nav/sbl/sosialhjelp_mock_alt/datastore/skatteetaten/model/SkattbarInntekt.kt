@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.skatteetaten.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model
 
 class SkattbarInntekt(val oppgaveInntektsmottaker: MutableList<OppgaveInntektsmottaker> = mutableListOf()) {
     data class Builder(
@@ -34,7 +34,7 @@ class OppgaveInntektsmottaker(
 class Forskuddstrekk(
         val beskrivelse: String,
         val beloep: Int,
-){
+) {
     data class Builder(
             var beskrivelse: String = "",
             var beloep: Int = 0,
@@ -60,6 +60,19 @@ class Inntekt(
         val naeringsinntekt: Naeringsinntekt?,
         val aldersUfoereEtterlatteAvtalefestetOgKrigspensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon?,
 ) {
+    fun type(): Inntektstype {
+        return when {
+            loennsinntekt != null -> Inntektstype.Loennsinntekt
+            ytelseFraOffentlige != null -> Inntektstype.YtelseFraOffentlige
+            pensjonEllerTrygd != null -> Inntektstype.PensjonEllerTrygd
+            lottOgPartInnenFiske != null -> Inntektstype.LottOgPartInnenFiske
+            dagmammaIEgenBolig != null -> Inntektstype.DagmammaIEgenBolig
+            naeringsinntekt != null -> Inntektstype.Naeringsinntekt
+            aldersUfoereEtterlatteAvtalefestetOgKrigspensjon != null -> Inntektstype.AldersUfoereEtterlatteAvtalefestetOgKrigspensjon
+            else -> Inntektstype.Loennsinntekt
+        }
+    }
+
     data class Builder(
             var skatteOgAvgiftsregel: String = "",
             var fordel: String = "",
@@ -79,20 +92,21 @@ class Inntekt(
         fun utloeserArbeidsgiveravgift(utloeserArbeidsgiveravgift: Boolean) = apply { this.utloeserArbeidsgiveravgift = utloeserArbeidsgiveravgift }
         fun inngaarIGrunnlagForTrekk(inngaarIGrunnlagForTrekk: Boolean) = apply { this.inngaarIGrunnlagForTrekk = inngaarIGrunnlagForTrekk }
         fun beloep(beloep: Int) = apply { this.beloep = beloep }
-        fun type(type:Inntektstype, subType:Inntektstype? = null) = apply {
-                when(type) {
-                    Inntektstype.Loennsinntekt -> loennsinntekt = Loennsinntekt(
-                            Tilleggsinformasjon.Builder().ofType(subType).build())
-                    Inntektstype.YtelseFraOffentlige -> ytelseFraOffentlige = YtelseFraOffentlige(
-                            Tilleggsinformasjon.Builder().ofType(subType).build())
-                    Inntektstype.PensjonEllerTrygd -> pensjonEllerTrygd = PensjonEllerTrygd(
-                            Tilleggsinformasjon.Builder().ofType(subType).build())
-                    Inntektstype.LottOgPartInnenFiske -> lottOgPartInnenFiske = LottOgPartInnenFiske()
-                    Inntektstype.DagmammaIEgenBolig -> dagmammaIEgenBolig = DagmammaIEgenBolig()
-                    Inntektstype.Naeringsinntekt -> naeringsinntekt = Naeringsinntekt()
-                    Inntektstype.AldersUfoereEtterlatteAvtalefestetOgKrigspensjon ->
-                        aldersUfoereEtterlatteAvtalefestetOgKrigspensjon = AldersUfoereEtterlatteAvtalefestetOgKrigspensjon()
-                }
+
+        fun type(type: Inntektstype, subType: Inntektstype? = null) = apply {
+            when (type) {
+                Inntektstype.Loennsinntekt -> loennsinntekt = Loennsinntekt(
+                        Tilleggsinformasjon.Builder().ofType(subType).build())
+                Inntektstype.YtelseFraOffentlige -> ytelseFraOffentlige = YtelseFraOffentlige(
+                        Tilleggsinformasjon.Builder().ofType(subType).build())
+                Inntektstype.PensjonEllerTrygd -> pensjonEllerTrygd = PensjonEllerTrygd(
+                        Tilleggsinformasjon.Builder().ofType(subType).build())
+                Inntektstype.LottOgPartInnenFiske -> lottOgPartInnenFiske = LottOgPartInnenFiske()
+                Inntektstype.DagmammaIEgenBolig -> dagmammaIEgenBolig = DagmammaIEgenBolig()
+                Inntektstype.Naeringsinntekt -> naeringsinntekt = Naeringsinntekt()
+                Inntektstype.AldersUfoereEtterlatteAvtalefestetOgKrigspensjon ->
+                    aldersUfoereEtterlatteAvtalefestetOgKrigspensjon = AldersUfoereEtterlatteAvtalefestetOgKrigspensjon()
+            }
         }
 
         fun build() = Inntekt(
@@ -138,20 +152,22 @@ class Tilleggsinformasjon(
         val dagmammaIEgenBolig: DagmammaIEgenBolig?,
         val lottOgPart: LottOgPartInnenFiske?,
         val pensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon?,
-){
+) {
     data class Builder(
             var dagmammaIEgenBolig: DagmammaIEgenBolig? = null,
             var lottOgPart: LottOgPartInnenFiske? = null,
             var pensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon? = null,
     ) {
         fun ofType(type: Inntektstype? = null) = apply {
-            if(type != null) {
-                    when(type) {
-                        Inntektstype.DagmammaIEgenBolig -> dagmammaIEgenBolig = DagmammaIEgenBolig()
-                        Inntektstype.LottOgPartInnenFiske -> lottOgPart = LottOgPartInnenFiske()
-                        Inntektstype.AldersUfoereEtterlatteAvtalefestetOgKrigspensjon ->
-                            pensjon = AldersUfoereEtterlatteAvtalefestetOgKrigspensjon()
+            if (type != null) {
+                when (type) {
+                    Inntektstype.DagmammaIEgenBolig -> dagmammaIEgenBolig = DagmammaIEgenBolig()
+                    Inntektstype.LottOgPartInnenFiske -> lottOgPart = LottOgPartInnenFiske()
+                    Inntektstype.AldersUfoereEtterlatteAvtalefestetOgKrigspensjon ->
+                        pensjon = AldersUfoereEtterlatteAvtalefestetOgKrigspensjon()
+                    else -> {
                     }
+                }
             }
         }
 

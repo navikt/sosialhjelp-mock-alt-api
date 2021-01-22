@@ -1,12 +1,12 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.BostotteDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.BostotteRolle
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.BostotteStatus
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.SakerDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.UtbetalingerDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.VedtakDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.Vedtakskode
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteRolle
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteStatus
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.VedtakDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.Vedtakskode
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt

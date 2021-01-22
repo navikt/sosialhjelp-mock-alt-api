@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
@@ -43,27 +44,31 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Service
-class PdlService {
+class PdlService(aaregService: AaregService) {
 
     final val personListe: HashMap<String, Personalia> = HashMap()
 
     init {
-        personListe.put(fastFnr, Personalia(fnr = fastFnr)
+        val standardBruker = Personalia(fnr = fastFnr)
                 .withNavn("Standard", "", "Standarsen")
                 .withOpprettetTidspunkt(0)
-                .locked())
+                .locked()
+        personListe.put(fastFnr, standardBruker)
+        aaregService.leggTilEnkeltArbeidsforhold(personalia = standardBruker, LocalDate.now().minusYears(10))
         val hemmeligBruker = Personalia()
                 .withNavn("Hemmelig", "", "Adressesen")
                 .withAdressebeskyttelse(Gradering.STRENGT_FORTROLIG)
                 .withOpprettetTidspunkt(1)
                 .locked()
         personListe.put(hemmeligBruker.fnr, hemmeligBruker)
+        aaregService.leggTilEnkeltArbeidsforhold(personalia = hemmeligBruker, LocalDate.now().minusYears(10))
         val svenskBruker = Personalia()
                 .withNavn("Svenske", "", "Svenskersen")
                 .withStarsborgerskap("SWE")
                 .withOpprettetTidspunkt(2)
                 .locked()
         personListe.put(svenskBruker.fnr, svenskBruker)
+        aaregService.leggTilEnkeltArbeidsforhold(personalia = svenskBruker, LocalDate.now().minusYears(10))
     }
 
     private val ektefelleMap = mutableMapOf<String, PdlSoknadEktefelle>()
@@ -121,7 +126,7 @@ class PdlService {
         var sivilstand = PdlSivilstand(SivilstandType.UGIFT, null, defaultMetadata(), defaultFolkeregistermetadata())
         var statsborgerskap = PdlStatsborgerskap("NOR")
         var bostedsadresse = PdlBostedsadresse(null, defaultAdresse, null, null)
-        
+
         if (personalia != null) {
             navn = PdlSoknadPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn, defaultMetadata(), defaultFolkeregistermetadata())
             adressebeskyttelse = Adressebeskyttelse(personalia.addressebeskyttelse)
@@ -197,6 +202,9 @@ class PdlService {
     }
 
     fun leggTilPerson(personalia: Personalia) {
+        if(personListe[personalia.fnr] != null && personListe[personalia.fnr]!!.locked) {
+            throw RuntimeException("Ident ${personalia.fnr} is locked! Cannot update!")
+        }
         personListe.put(personalia.fnr, personalia)
     }
 

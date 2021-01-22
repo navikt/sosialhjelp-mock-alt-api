@@ -1,12 +1,12 @@
-package no.nav.sbl.sosialhjelp_mock_alt.datastore
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks
 
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.defaultJsonSoknad
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.defaultJsonSoknad
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toLocalDateTime
