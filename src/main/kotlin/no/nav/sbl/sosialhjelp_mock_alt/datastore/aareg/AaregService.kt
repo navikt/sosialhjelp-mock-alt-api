@@ -13,15 +13,14 @@ import java.time.LocalDate
 @Service
 class AaregService {
 
-    final val aaregMap: HashMap<String, ArbeidsforholdDto> = HashMap()
+    final val aaregMap: HashMap<String, List<ArbeidsforholdDto>> = HashMap()
 
     fun leggTilEnkeltArbeidsforhold(
             personalia: Personalia,
             startDato: LocalDate,
     ) {
-        aaregMap.put(
-                personalia.fnr,
-                ArbeidsforholdDto.nyttArbeidsforhold(
+        aaregMap[personalia.fnr] =
+                listOf(ArbeidsforholdDto.nyttArbeidsforhold(
                         personalia.fnr,
                         startDato,
                 ))
@@ -37,26 +36,35 @@ class AaregService {
             ident: String,
             orgnummer: String
     ) {
-        if(personalia.locked) {
-            throw RuntimeException("Ident ${personalia.fnr} is locked! Cannot update!")
+        val fnr = personalia.fnr
+        if (personalia.locked) {
+            throw RuntimeException("Ident $fnr is locked! Cannot update!")
         }
         val arbeidsgiver: OpplysningspliktigArbeidsgiverDto
-        if(arbeidsforholdType === ArbeidsgiverType.PERSON.name) {
+        if (arbeidsforholdType === ArbeidsgiverType.PERSON.name) {
             arbeidsgiver = PersonDto(ident, ident)
         } else {
             arbeidsgiver = OrganisasjonDto(orgnummer)
         }
-        aaregMap[personalia.fnr] = ArbeidsforholdDto.nyttArbeidsforhold(
-                personalia.fnr,
+
+        val nyttArbeidsforhold = ArbeidsforholdDto.nyttArbeidsforhold(
+                fnr,
                 startDato,
                 sluttDato,
                 stillingsprosent,
+                arbeidsforholdId,
                 arbeidsgiver,
         )
+
+        val gamleArbeidsforhold = aaregMap[fnr] ?: emptyList()
+        val filtrerteForhold = gamleArbeidsforhold.filter { it.arbeidsforholdId != arbeidsforholdId }
+        aaregMap[fnr] = filtrerteForhold.plus(nyttArbeidsforhold)
+        log.info("Legger til arbeidsforhold $fnr totalt antall: ${aaregMap[fnr]?.size ?: 0}")
     }
 
-    fun getArbeidsforhold(fnr: String): List<ArbeidsforholdDto?> {
-        return listOf(aaregMap[fnr])
+    fun getArbeidsforhold(fnr: String): List<ArbeidsforholdDto> {
+        log.info("Henter arbeidsforhold for $fnr")
+        return aaregMap[fnr] ?: emptyList()
     }
 
     companion object {

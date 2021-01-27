@@ -14,7 +14,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsforholdDt
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OrganisasjonDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.PersonDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
-import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toIsoString
 
 data class FrontendPersonalia(

@@ -34,7 +34,7 @@ class IdPortenController(
     @GetMapping("/idporten/idporten-oidc-provider/.well-known/openid-configuration")
     fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): String {
         val config = IdPortenOidcConfiguration(
-                issuer = "digisos-mock-alt",
+                issuer = "iss-localhost",
                 tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token",
                 jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks"
         )

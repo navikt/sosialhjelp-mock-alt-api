@@ -2,7 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.appgw
 
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.FssToken
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
@@ -18,7 +18,7 @@ class AppGatewaySTSController {
 
     @GetMapping("/appgw/")
     fun getAaregSts(@RequestHeader headers: HttpHeaders): ResponseEntity<FssToken> {
-        val fnr = hentFnrFraToken(headers)
+        val fnr = hentFnrFraHeaders(headers)
         val fssToken = FssToken.createToken(fnr)
         log.info("Henter appgw token: ${objectMapper.writeValueAsString(fssToken)}")
         return ResponseEntity.ok(fssToken)

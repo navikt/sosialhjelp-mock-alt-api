@@ -17,7 +17,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraBody
-import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
@@ -55,7 +55,7 @@ class FiksController(
     //    ======== Innsyn =========
     @GetMapping("/fiks/digisos/api/v1/soknader/soknader")
     fun listSoknaderInnsyn(@RequestHeader headers: HttpHeaders): ResponseEntity<String> {
-        val fnr = hentFnrFraToken(headers)
+        val fnr = hentFnrFraHeaders(headers)
         feilService.eventueltLagFeil(fnr, "FixController", "hentSoknad")
         val soknadsListe = soknadService.listSoknader(fnr)
         return ResponseEntity.ok(soknadsListe)
@@ -111,8 +111,8 @@ class FiksController(
             @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         var id = fiksDigisosId
-        val fnr = hentFnrFraToken(headers)
-        feilService.eventueltLagFeil(fnr!!, "FixController", "lastOppSoknad")
+        val fnr = hentFnrFraHeaders(headers)
+        feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
         return if (id == null || id.toLowerCase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
             val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")

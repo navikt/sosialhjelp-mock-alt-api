@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.utils
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+import no.nav.security.token.support.core.jwt.JwtToken
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
@@ -37,10 +38,21 @@ fun hentFnrFraBody(body: String?): String? {
     return fastFnr
 }
 
-fun hentFnrFraToken(headers: HttpHeaders): String {
+fun hentFnrFraHeaders(headers: HttpHeaders): String {
     val fnrListe = headers["nav-personidenter"]
     if(fnrListe != null) {
         return fnrListe.firstOrNull() ?: fastFnr
+    }
+    return fastFnr
+}
+
+fun hentFnrFraToken(headers: HttpHeaders): String {
+    val token = headers[HttpHeaders.AUTHORIZATION]
+    if(token != null) {
+        if(token.isNotEmpty()) {
+            val tokenString = token.first().split(" ")[1]
+            return JwtToken(tokenString).subject
+        }
     }
     return fastFnr
 }

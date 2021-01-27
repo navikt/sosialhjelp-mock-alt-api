@@ -3,7 +3,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.feil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelp_mock_alt.KonfigurertFeil
-import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Service
@@ -19,7 +19,7 @@ class FeilService {
     }
 
     fun eventueltLagFeil(headers: HttpHeaders, className: String, functionName: String) {
-        val fnr = hentFnrFraToken(headers)
+        val fnr = hentFnrFraHeaders(headers)
         eventueltLagFeil(fnr, className, functionName)
     }
 
