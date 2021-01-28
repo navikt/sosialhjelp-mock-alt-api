@@ -13,50 +13,26 @@ import java.time.LocalDate
 @Service
 class AaregService {
 
-    final val aaregMap: HashMap<String, ArbeidsforholdDto> = HashMap()
+    final val aaregMap: HashMap<String, List<ArbeidsforholdDto>> = HashMap()
 
     fun leggTilEnkeltArbeidsforhold(
             personalia: Personalia,
             startDato: LocalDate,
     ) {
-        aaregMap.put(
-                personalia.fnr,
-                ArbeidsforholdDto.nyttArbeidsforhold(
+        aaregMap[personalia.fnr] =
+                listOf(ArbeidsforholdDto.nyttArbeidsforhold(
                         personalia.fnr,
                         startDato,
                 ))
     }
 
-    fun leggTilArbeidsforhold(
-            personalia: Personalia,
-            startDato: LocalDate,
-            sluttDato: LocalDate,
-            stillingsprosent: Double,
-            arbeidsforholdId: String,
-            arbeidsforholdType: String,
-            ident: String,
-            orgnummer: String
-    ) {
-        if(personalia.locked) {
-            throw RuntimeException("Ident ${personalia.fnr} is locked! Cannot update!")
-        }
-        val arbeidsgiver: OpplysningspliktigArbeidsgiverDto
-        if(arbeidsforholdType === ArbeidsgiverType.PERSON.name) {
-            arbeidsgiver = PersonDto(ident, ident)
-        } else {
-            arbeidsgiver = OrganisasjonDto(orgnummer)
-        }
-        aaregMap[personalia.fnr] = ArbeidsforholdDto.nyttArbeidsforhold(
-                personalia.fnr,
-                startDato,
-                sluttDato,
-                stillingsprosent,
-                arbeidsgiver,
-        )
+    fun setArbeidsforholdForFnr(fnr: String, arbeidsforholdsliste: List<ArbeidsforholdDto>) {
+        aaregMap[fnr] = arbeidsforholdsliste
     }
 
-    fun getArbeidsforhold(fnr: String): List<ArbeidsforholdDto?> {
-        return listOf(aaregMap[fnr])
+    fun getArbeidsforhold(fnr: String): List<ArbeidsforholdDto> {
+        log.info("Henter arbeidsforhold for $fnr")
+        return aaregMap[fnr] ?: emptyList()
     }
 
     companion object {

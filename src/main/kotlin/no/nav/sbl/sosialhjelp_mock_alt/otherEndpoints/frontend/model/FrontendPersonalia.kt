@@ -11,11 +11,13 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsforholdDto
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsgiverType
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OpplysningspliktigArbeidsgiverDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OrganisasjonDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.PersonDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
-import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toIsoString
+import java.time.LocalDate
 
 data class FrontendPersonalia(
         val fnr: String = genererTilfeldigPersonnummer(),
@@ -66,6 +68,26 @@ data class FrontendPersonalia(
             )
         }
 
+        fun aaregArbeidsforhold(fnr: String, frontendArbeidsforhold: FrontendArbeidsforhold): ArbeidsforholdDto {
+            val arbeidsgiver: OpplysningspliktigArbeidsgiverDto
+            if (frontendArbeidsforhold.type == ArbeidsgiverType.Person.name) {
+                arbeidsgiver = PersonDto(frontendArbeidsforhold.ident, frontendArbeidsforhold.ident)
+            } else {
+                arbeidsgiver = OrganisasjonDto(frontendArbeidsforhold.orgnummer)
+            }
+            return ArbeidsforholdDto.nyttArbeidsforhold(
+                    fnr = fnr,
+                    fom = textToLocalDate(frontendArbeidsforhold.startDato),
+                    tom = textToLocalDate(frontendArbeidsforhold.sluttDato),
+                    stillingsprosent = frontendArbeidsforhold.stillingsProsent.toDouble(),
+                    arbeidsforholdId = frontendArbeidsforhold.id,
+                    arbeidsgiver = arbeidsgiver,
+            )
+        }
+
+        private fun textToLocalDate(string: String): LocalDate {
+            return LocalDate.of(string.substring(0, 4).toInt(), string.substring(5, 7).toInt(), string.substring(8).toInt())
+        }
     }
 }
 

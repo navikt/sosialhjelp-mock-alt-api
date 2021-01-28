@@ -16,6 +16,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.pdlPersonalia
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.aaregArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.ResponseEntity
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.time.LocalDate
 
 @RestController
 class FrontendController(
@@ -47,11 +47,12 @@ class FrontendController(
         if (personalia.fnr.isEmpty()) {
             return ResponseEntity.badRequest().body("FNR må være satt!")
         }
+        pdlService.veryfyNotLocked(personalia.fnr)
         pdlService.leggTilPerson(pdlPersonalia(personalia))
-        if(personalia.telefonnummer.isNotEmpty()) {
+        if (personalia.telefonnummer.isNotEmpty()) {
             dkifService.putDigitalKontaktinfo(personalia.fnr, DigitalKontaktinfo(personalia.telefonnummer))
         }
-        if(personalia.organisasjon.isNotEmpty() && personalia.organisasjonsNavn.isNotEmpty()) {
+        if (personalia.organisasjon.isNotEmpty() && personalia.organisasjonsNavn.isNotEmpty()) {
             eregService.putOrganisasjonNoekkelinfo(personalia.fnr,
                     OrganisasjonNoekkelinfoDto(
                             navn = NavnDto(personalia.organisasjonsNavn),
@@ -59,18 +60,9 @@ class FrontendController(
                     )
             )
         }
-        personalia.arbeidsforhold.forEach {
-            aaregService.leggTilArbeidsforhold(
-                    personalia = pdlPersonalia(personalia),
-                    startDato = textToLocalDate(it.startDato),
-                    sluttDato = textToLocalDate(it.sluttDato),
-                    stillingsprosent = it.stillingsProsent.toDouble(),
-                    arbeidsforholdId = it.id,
-                    arbeidsforholdType = it.type,
-                    ident = it.ident,
-                    orgnummer = it.orgnummer,
-            )
-        }
+        aaregService.setArbeidsforholdForFnr(
+                personalia.fnr, personalia.arbeidsforhold.map { aaregArbeidsforhold(personalia.fnr, it) }
+        )
         val skattbarInntektBuilder = SkattbarInntekt.Builder()
         personalia.skattetatenUtbetalinger.forEach {
             skattbarInntektBuilder.leggTilOppgave(FrontendSkattbarInntekt.oversettTilInntektsmottaker(it))
@@ -81,10 +73,6 @@ class FrontendController(
         personalia.bostotteUtbetalinger.forEach { bostotteDto.utbetalinger.add(it) }
         bostotteService.putBostotte(personalia.fnr, bostotteDto)
         return ResponseEntity.ok("OK")
-    }
-
-    private fun textToLocalDate(string: String): LocalDate {
-        return LocalDate.of(string.substring(0, 4).toInt(), string.substring(5, 7).toInt(), string.substring(8).toInt())
     }
 
     @GetMapping("/mock-alt/personalia")
@@ -104,7 +92,7 @@ class FrontendController(
         frontendPersonalia.organisasjonsNavn =
                 eregService.getOrganisasjonNoekkelinfo(personalia.fnr)?.navn?.navnelinje1 ?: ""
         frontendPersonalia.arbeidsforhold = aaregService.getArbeidsforhold(personalia.fnr)
-                .map { FrontendArbeidsforhold.arbeidsforhold(it!!) }
+                .map { FrontendArbeidsforhold.arbeidsforhold(it) }
         val skattbarInntekt = skatteetatenService.getSkattbarInntekt(personalia.fnr)
         frontendPersonalia.skattetatenUtbetalinger = skattbarInntekt.oppgaveInntektsmottaker.map {
             FrontendSkattbarInntekt.skattUtbetaling(it)
