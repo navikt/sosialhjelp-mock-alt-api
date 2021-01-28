@@ -134,9 +134,9 @@ class PdlService(aaregService: AaregService) {
                 val ektefelleIdent = genererTilfeldigPersonnummer()
                 sivilstand = PdlSivilstand(SivilstandType.valueOf(personalia.sivilstand), ektefelleIdent, defaultMetadata(), defaultFolkeregistermetadata())
                 when (personalia.ektefelle) {
-                    "EKTEFELLE_SAMME_BOSTED" -> ektefelleMap[ektefelleIdent] = ektefelleSammeBosted
-                    "EKTEFELLE_ANNET_BOSTED" -> ektefelleMap[ektefelleIdent] = ektefelleAnnetBosted
-                    "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[ektefelleIdent] = ektefelleMedAdressebeskyttelse
+                    "EKTEFELLE_SAMME_BOSTED" -> ektefelleMap[ident] = ektefelleSammeBosted
+                    "EKTEFELLE_ANNET_BOSTED" -> ektefelleMap[ident] = ektefelleAnnetBosted
+                    "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[ident] = ektefelleMedAdressebeskyttelse
                 }
             }
             statsborgerskap = PdlStatsborgerskap(personalia.starsborgerskap)
@@ -162,15 +162,7 @@ class PdlService(aaregService: AaregService) {
 
     fun getSoknadEktefelleResponseFor(ident: String): PdlSoknadEktefelleResponse {
         log.info("Henter PDL soknad data for (ektefelle) $ident")
-
-        val defaultEktefelle = PdlSoknadEktefelle(
-                adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
-                bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
-                foedsel = listOf(PdlFoedsel(LocalDate.of(1956, 4, 3))),
-                navn = listOf(PdlSoknadPersonNavn("Ektefelle", "", "McEktefelle", defaultMetadata(), defaultFolkeregistermetadata()))
-        )
-
-        val pdlEktefelle = ektefelleMap[ident] ?: defaultEktefelle
+        val pdlEktefelle = ektefelleMap[ident] ?: defaultEktefelle()
 
         return PdlSoknadEktefelleResponse(
                 errors = null,
@@ -202,7 +194,7 @@ class PdlService(aaregService: AaregService) {
     }
 
     fun leggTilPerson(personalia: Personalia) {
-        if(personListe[personalia.fnr] != null && personListe[personalia.fnr]!!.locked) {
+        if (personListe[personalia.fnr] != null && personListe[personalia.fnr]!!.locked) {
             throw RuntimeException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
         personListe.put(personalia.fnr, personalia)
@@ -210,6 +202,13 @@ class PdlService(aaregService: AaregService) {
 
     fun getPersonalia(ident: String): Personalia {
         return personListe.getOrElse(ident, { throw RuntimeException("Ident $ident not found!") })
+    }
+
+    fun veryfyNotLocked(fnr: String) {
+        val personalia = personListe[fnr]
+        if (personalia != null && personalia.locked) {
+            throw RuntimeException("Bruker er låst og skal ikke oppdateres!")
+        }
     }
 
     fun getPersonListe(): List<Personalia> {
@@ -233,7 +232,7 @@ class PdlService(aaregService: AaregService) {
         private val ektefelleAnnetBosted = PdlSoknadEktefelle(
                 adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
                 bostedsadresse = listOf(PdlBostedsadresse(null, annenAdresse, null, null)),
-                foedsel = listOf(PdlFoedsel(LocalDate.of(1966,6,6))),
+                foedsel = listOf(PdlFoedsel(LocalDate.of(1966, 6, 6))),
                 navn = listOf(PdlSoknadPersonNavn("GUL", "", "EKTEFELLE", defaultMetadata(), defaultFolkeregistermetadata()))
         )
 
@@ -262,6 +261,14 @@ class PdlService(aaregService: AaregService) {
                         gyldighetstidspunkt = LocalDateTime.now().minusYears(1),
                         opphoerstidspunkt = null,
                         kilde = "kilde"
+                )
+
+        private fun defaultEktefelle() =
+                PdlSoknadEktefelle(
+                        adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
+                        bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
+                        foedsel = listOf(PdlFoedsel(LocalDate.of(1956, 4, 3))),
+                        navn = listOf(PdlSoknadPersonNavn("Ektefelle", "", "McEktefelle", defaultMetadata(), defaultFolkeregistermetadata()))
                 )
     }
 }

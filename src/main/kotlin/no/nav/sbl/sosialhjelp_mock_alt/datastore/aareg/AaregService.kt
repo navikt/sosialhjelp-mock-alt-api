@@ -26,40 +26,8 @@ class AaregService {
                 ))
     }
 
-    fun leggTilArbeidsforhold(
-            personalia: Personalia,
-            startDato: LocalDate,
-            sluttDato: LocalDate,
-            stillingsprosent: Double,
-            arbeidsforholdId: String,
-            arbeidsforholdType: String,
-            ident: String,
-            orgnummer: String
-    ) {
-        val fnr = personalia.fnr
-        if (personalia.locked) {
-            throw RuntimeException("Ident $fnr is locked! Cannot update!")
-        }
-        val arbeidsgiver: OpplysningspliktigArbeidsgiverDto
-        if (arbeidsforholdType === ArbeidsgiverType.PERSON.name) {
-            arbeidsgiver = PersonDto(ident, ident)
-        } else {
-            arbeidsgiver = OrganisasjonDto(orgnummer)
-        }
-
-        val nyttArbeidsforhold = ArbeidsforholdDto.nyttArbeidsforhold(
-                fnr,
-                startDato,
-                sluttDato,
-                stillingsprosent,
-                arbeidsforholdId,
-                arbeidsgiver,
-        )
-
-        val gamleArbeidsforhold = aaregMap[fnr] ?: emptyList()
-        val filtrerteForhold = gamleArbeidsforhold.filter { it.arbeidsforholdId != arbeidsforholdId }
-        aaregMap[fnr] = filtrerteForhold.plus(nyttArbeidsforhold)
-        log.info("Legger til arbeidsforhold $fnr totalt antall: ${aaregMap[fnr]?.size ?: 0}")
+    fun setArbeidsforholdForFnr(fnr: String, arbeidsforholdsliste: List<ArbeidsforholdDto>) {
+        aaregMap[fnr] = arbeidsforholdsliste
     }
 
     fun getArbeidsforhold(fnr: String): List<ArbeidsforholdDto> {

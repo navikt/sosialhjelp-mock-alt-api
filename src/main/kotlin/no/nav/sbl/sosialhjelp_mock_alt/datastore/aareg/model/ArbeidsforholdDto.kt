@@ -46,8 +46,8 @@ data class ArbeidsforholdDto(
 }
 
 enum class ArbeidsgiverType {
-    PERSON,
-    ORGANISASJON,
+    Person,
+    Organisasjon,
 }
 
 class AnsettelsesperiodeDto(val periode: PeriodeDto)
