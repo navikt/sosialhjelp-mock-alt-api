@@ -2,10 +2,6 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsforholdDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsgiverType
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OpplysningspliktigArbeidsgiverDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OrganisasjonDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.PersonDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.stereotype.Service
 import java.time.LocalDate

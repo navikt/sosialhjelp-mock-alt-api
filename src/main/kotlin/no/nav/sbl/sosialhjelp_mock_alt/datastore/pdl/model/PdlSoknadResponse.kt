@@ -1,5 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
+import java.time.LocalDateTime
+
 data class PdlSoknadPersonResponse(
         val errors: List<PdlError>?,
         val data: PdlSoknadHentPerson?
@@ -48,15 +50,19 @@ data class PdlSoknadHentBarn(
 data class PdlSoknadBarn(
         val adressebeskyttelse: List<Adressebeskyttelse>?,
         val bostedsadresse: List<PdlBostedsadresse>?,
-        val folkeregistepersonstatus: List<PdlFolkeregisterpersonstatus>?,
+        val folkeregisterpersonstatus: List<PdlFolkeregisterpersonstatus>?,
         val foedsel: List<PdlFoedsel>?,
         val navn: List<PdlSoknadPersonNavn>?,
 )
 
 data class PdlSoknadPersonNavn(
-        val fornavn: String?,
-        val mellomnavn: String?,
-        val etternavn: String?,
-        val metadata: PdlMetadata?,
-        val folkeregistermetadata: PdlFolkeregistermetadata?
-)
+        val fornavn: String,
+        val mellomnavn: String,
+        val etternavn: String,
+        val metadata: PdlMetadata = defaultMetadata(),
+        val folkeregistermetadata: PdlFolkeregistermetadata = defaultFolkeregistermetadata(),
+) {
+    companion object {
+
+    }
+}

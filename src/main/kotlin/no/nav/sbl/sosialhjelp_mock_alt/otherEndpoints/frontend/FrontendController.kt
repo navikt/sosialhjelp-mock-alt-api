@@ -14,6 +14,8 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model.OrganisasjonNoekkeli
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendBarn
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendBarn.Companion.frontendBarn
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.pdlPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.aaregArbeidsforhold
@@ -48,6 +50,7 @@ class FrontendController(
             return ResponseEntity.badRequest().body("FNR må være satt!")
         }
         pdlService.veryfyNotLocked(personalia.fnr)
+        personalia.barn.forEach { pdlService.leggTilBarn(it.fnr, it.pdlBarn()) }
         pdlService.leggTilPerson(pdlPersonalia(personalia))
         if (personalia.telefonnummer.isNotEmpty()) {
             dkifService.putDigitalKontaktinfo(personalia.fnr, DigitalKontaktinfo(personalia.telefonnummer))
@@ -85,6 +88,8 @@ class FrontendController(
         }
         log.info("Henter ned pdl data for fnr: $ident")
         val frontendPersonalia = FrontendPersonalia(personalia)
+        frontendPersonalia.barn =
+                personalia.familierelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
         frontendPersonalia.telefonnummer =
                 dkifService.getDigitalKontaktinfo(personalia.fnr)?.mobiltelefonnummer ?: ""
         frontendPersonalia.organisasjon =

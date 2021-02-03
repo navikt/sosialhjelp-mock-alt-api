@@ -6,6 +6,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlEndring
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFamilierelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedsel
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedselsdato
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregistermetadata
@@ -122,25 +123,37 @@ class PdlService(aaregService: AaregService) {
 
         val personalia = personListe[ident]
         var adressebeskyttelse = Adressebeskyttelse(Gradering.UGRADERT)
-        var navn = PdlSoknadPersonNavn("Person", "", "Testperson", defaultMetadata(), defaultFolkeregistermetadata())
-        var sivilstand = PdlSivilstand(SivilstandType.UGIFT, null, defaultMetadata(), defaultFolkeregistermetadata())
+        var navn = PdlSoknadPersonNavn("Person", "", "Testperson")
+        var familierelasjoner: List<PdlFamilierelasjon> = emptyList()
+        var sivilstand = PdlSivilstand(SivilstandType.UGIFT, null)
         var statsborgerskap = PdlStatsborgerskap("NOR")
         var bostedsadresse = PdlBostedsadresse(null, defaultAdresse, null, null)
 
         if (personalia != null) {
-            navn = PdlSoknadPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn, defaultMetadata(), defaultFolkeregistermetadata())
+            navn = PdlSoknadPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn)
             adressebeskyttelse = Adressebeskyttelse(personalia.addressebeskyttelse)
             if (personalia.sivilstand.equals("GIFT", true) || personalia.sivilstand.equals("PARTNER", true)) {
                 val ektefelleIdent = genererTilfeldigPersonnummer()
-                sivilstand = PdlSivilstand(SivilstandType.valueOf(personalia.sivilstand), ektefelleIdent, defaultMetadata(), defaultFolkeregistermetadata())
+                sivilstand = PdlSivilstand(SivilstandType.valueOf(personalia.sivilstand), ektefelleIdent)
                 when (personalia.ektefelle) {
                     "EKTEFELLE_SAMME_BOSTED" -> ektefelleMap[ident] = ektefelleSammeBosted
                     "EKTEFELLE_ANNET_BOSTED" -> ektefelleMap[ident] = ektefelleAnnetBosted
                     "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[ident] = ektefelleMedAdressebeskyttelse
                 }
             }
+            familierelasjoner = personalia.familierelasjon.map { PdlFamilierelasjon(it.ident, it.rolle, it.motrolle) }
             statsborgerskap = PdlStatsborgerskap(personalia.starsborgerskap)
-            bostedsadresse = PdlBostedsadresse(null, PdlVegadresse("matrikkelId", personalia.bostedsadresse.adressenavn, personalia.bostedsadresse.husnummer, null, null, personalia.bostedsadresse.postnummer, personalia.bostedsadresse.kommunenummer, null), null, null)
+            bostedsadresse = PdlBostedsadresse(null,
+                    PdlVegadresse(
+                            "matrikkelId",
+                            personalia.bostedsadresse.adressenavn,
+                            personalia.bostedsadresse.husnummer,
+                            null,
+                            null,
+                            personalia.bostedsadresse.postnummer,
+                            personalia.bostedsadresse.kommunenummer,
+                            null,
+                    ), null, null)
         }
 
         return PdlSoknadPersonResponse(
@@ -151,7 +164,7 @@ class PdlService(aaregService: AaregService) {
                                 bostedsadresse = listOf(bostedsadresse),
                                 kontaktadresse = emptyList(),
                                 oppholdsadresse = emptyList(),
-                                familierelasjoner = emptyList(),
+                                familierelasjoner = familierelasjoner,
                                 navn = listOf(navn),
                                 sivilstand = listOf(sivilstand),
                                 statsborgerskap = listOf(statsborgerskap)
@@ -162,6 +175,7 @@ class PdlService(aaregService: AaregService) {
 
     fun getSoknadEktefelleResponseFor(ident: String): PdlSoknadEktefelleResponse {
         log.info("Henter PDL soknad data for (ektefelle) $ident")
+
         val pdlEktefelle = ektefelleMap[ident] ?: defaultEktefelle()
 
         return PdlSoknadEktefelleResponse(
@@ -175,15 +189,7 @@ class PdlService(aaregService: AaregService) {
     fun getSoknadBarnResponseFor(ident: String): PdlSoknadBarnResponse {
         log.info("Henter PDL soknad data for (barn) $ident")
 
-        val defaultBarn = PdlSoknadBarn(
-                adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
-                bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
-                folkeregistepersonstatus = listOf(PdlFolkeregisterpersonstatus("bosatt")),
-                foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(10))),
-                navn = listOf(PdlSoknadPersonNavn("Kid", "", "McKid", defaultMetadata(), defaultFolkeregistermetadata()))
-        )
-
-        val pdlBarn = barnMap[ident] ?: defaultBarn
+        val pdlBarn = barnMap[ident] ?: defaultBarn()
 
         return PdlSoknadBarnResponse(
                 errors = null,
@@ -200,8 +206,16 @@ class PdlService(aaregService: AaregService) {
         personListe.put(personalia.fnr, personalia)
     }
 
+    fun leggTilBarn(fnr: String, pdlBarn: PdlSoknadBarn) {
+        barnMap[fnr] = pdlBarn
+    }
+
     fun getPersonalia(ident: String): Personalia {
         return personListe.getOrElse(ident, { throw RuntimeException("Ident $ident not found!") })
+    }
+
+    fun getBarn(ident: String): PdlSoknadBarn {
+        return barnMap.getOrElse(ident, { throw RuntimeException("Barn with ident $ident not found!") })
     }
 
     fun veryfyNotLocked(fnr: String) {
@@ -226,14 +240,14 @@ class PdlService(aaregService: AaregService) {
                 adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
                 bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
                 foedsel = listOf(PdlFoedsel(LocalDate.of(1955, 5, 5))),
-                navn = listOf(PdlSoknadPersonNavn("LILLA", "", "EKTEFELLE", defaultMetadata(), defaultFolkeregistermetadata()))
+                navn = listOf(PdlSoknadPersonNavn("LILLA", "", "EKTEFELLE"))
         )
 
         private val ektefelleAnnetBosted = PdlSoknadEktefelle(
                 adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
                 bostedsadresse = listOf(PdlBostedsadresse(null, annenAdresse, null, null)),
                 foedsel = listOf(PdlFoedsel(LocalDate.of(1966, 6, 6))),
-                navn = listOf(PdlSoknadPersonNavn("GUL", "", "EKTEFELLE", defaultMetadata(), defaultFolkeregistermetadata()))
+                navn = listOf(PdlSoknadPersonNavn("GUL", "", "EKTEFELLE"))
         )
 
         private val ektefelleMedAdressebeskyttelse = PdlSoknadEktefelle(
@@ -243,32 +257,22 @@ class PdlService(aaregService: AaregService) {
                 navn = emptyList()
         )
 
-        private fun defaultMetadata() =
-                PdlMetadata(
-                        "PDL",
-                        listOf(PdlEndring(
-                                kilde = "NAV",
-                                registrert = LocalDateTime.now().minusDays(7),
-                                registrertAv = "saksbehandler",
-                                systemkilde = "kilde",
-                                type = "type"
-                        ))
-                )
-
-        private fun defaultFolkeregistermetadata() =
-                PdlFolkeregistermetadata(
-                        ajourholdstidspunkt = LocalDateTime.now().minusDays(6),
-                        gyldighetstidspunkt = LocalDateTime.now().minusYears(1),
-                        opphoerstidspunkt = null,
-                        kilde = "kilde"
-                )
-
         private fun defaultEktefelle() =
                 PdlSoknadEktefelle(
                         adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
                         bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
                         foedsel = listOf(PdlFoedsel(LocalDate.of(1956, 4, 3))),
-                        navn = listOf(PdlSoknadPersonNavn("Ektefelle", "", "McEktefelle", defaultMetadata(), defaultFolkeregistermetadata()))
+                        navn = listOf(PdlSoknadPersonNavn("Ektefelle", "", "McEktefelle"))
                 )
+
+        private fun defaultBarn() =
+                PdlSoknadBarn(
+                        adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
+                        bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
+                        folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus("bosatt")),
+                        foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(10))),
+                        navn = listOf(PdlSoknadPersonNavn("Kid", "", "McKid"))
+                )
+
     }
 }
