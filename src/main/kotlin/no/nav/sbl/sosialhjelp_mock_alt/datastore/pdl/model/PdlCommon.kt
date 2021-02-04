@@ -116,8 +116,8 @@ data class PdlFolkeregisterpersonstatus(
 data class PdlSivilstand(
         val type: SivilstandType?,
         val relatertVedSivilstand: String?,
-        val metadata: PdlMetadata?,
-        val folkeregistermetadata: PdlFolkeregistermetadata?,
+        val metadata: PdlMetadata = defaultMetadata(),
+        val folkeregistermetadata: PdlFolkeregistermetadata = defaultFolkeregistermetadata(),
 )
 
 enum class SivilstandType { UOPPGITT, UGIFT, GIFT, ENKE_ELLER_ENKEMANN, SKILT, SEPARERT, PARTNER, SEPARERT_PARTNER, SKILT_PARTNER, GJENLEVENDE_PARTNER }
@@ -145,3 +145,23 @@ data class PdlFolkeregistermetadata(
         val opphoerstidspunkt: LocalDateTime?,
         val kilde: String?
 )
+
+fun defaultMetadata() =
+        PdlMetadata(
+                "PDL",
+                listOf(PdlEndring(
+                        kilde = "NAV",
+                        registrert = LocalDateTime.now().minusDays(7),
+                        registrertAv = "saksbehandler",
+                        systemkilde = "kilde",
+                        type = "type"
+                ))
+        )
+
+fun defaultFolkeregistermetadata() =
+        PdlFolkeregistermetadata(
+                ajourholdstidspunkt = LocalDateTime.now().minusDays(6),
+                gyldighetstidspunkt = LocalDateTime.now().minusYears(1),
+                opphoerstidspunkt = null,
+                kilde = "kilde"
+        )

@@ -2,9 +2,17 @@ package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Familierelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedsel
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregisterpersonstatus
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlPersonNavn
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadBarn
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadPersonNavn
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlVegadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Forskuddstrekk
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
@@ -16,6 +24,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.Opplysningsplikt
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OrganisasjonDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.PersonDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
+import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toIsoString
 import java.time.LocalDate
 
@@ -25,6 +34,7 @@ data class FrontendPersonalia(
         var addressebeskyttelse: Gradering = Gradering.UGRADERT,
         var sivilstand: String = "UOPPGITT",
         var ektefelle: String? = null,
+        var barn: List<FrontendBarn>,
         var starsborgerskap: String = "NOR",
         var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
         var telefonnummer: String = "",
@@ -42,6 +52,7 @@ data class FrontendPersonalia(
             addressebeskyttelse = personalia.addressebeskyttelse,
             sivilstand = personalia.sivilstand,
             ektefelle = personalia.ektefelle,
+            barn = emptyList(),
             starsborgerskap = personalia.starsborgerskap,
             bostedsadresse = personalia.bostedsadresse,
             telefonnummer = "",
@@ -56,12 +67,14 @@ data class FrontendPersonalia(
 
     companion object {
         fun pdlPersonalia(personalia: FrontendPersonalia): Personalia {
+            val familierelasjoner = personalia.barn.map{Familierelasjon(it.fnr, "barn", "forelder")}
             return Personalia(
                     fnr = personalia.fnr,
                     navn = personalia.navn,
                     addressebeskyttelse = personalia.addressebeskyttelse,
                     sivilstand = personalia.sivilstand,
                     ektefelle = personalia.ektefelle,
+                    familierelasjon = familierelasjoner,
                     starsborgerskap = personalia.starsborgerskap,
                     bostedsadresse = personalia.bostedsadresse,
                     locked = personalia.locked,
@@ -72,8 +85,10 @@ data class FrontendPersonalia(
             val arbeidsgiver: OpplysningspliktigArbeidsgiverDto
             if (frontendArbeidsforhold.type == ArbeidsgiverType.Person.name) {
                 arbeidsgiver = PersonDto(frontendArbeidsforhold.ident, frontendArbeidsforhold.ident)
-            } else {
+            } else if (frontendArbeidsforhold.type == ArbeidsgiverType.Organisasjon.name) {
                 arbeidsgiver = OrganisasjonDto(frontendArbeidsforhold.orgnummer)
+            } else {
+                throw RuntimeException("Ukjent ArbreidsgiverType: ${frontendArbeidsforhold.type}")
             }
             return ArbeidsforholdDto.nyttArbeidsforhold(
                     fnr = fnr,
@@ -87,6 +102,55 @@ data class FrontendPersonalia(
 
         private fun textToLocalDate(string: String): LocalDate {
             return LocalDate.of(string.substring(0, 4).toInt(), string.substring(5, 7).toInt(), string.substring(8).toInt())
+        }
+    }
+}
+
+data class FrontendBarn(
+        val fnr: String,
+        var addressebeskyttelse: Gradering = Gradering.UGRADERT,
+        var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
+        var folkeregisterpersonstatus: String = "bosatt",
+        val foedsel: LocalDate = LocalDate.now().minusYears(10),
+        val navn: PdlPersonNavn = PdlPersonNavn(),
+) {
+
+    fun pdlBarn(): PdlSoknadBarn {
+        val vegadresse = PdlVegadresse(
+                randomInt(7).toString(),
+                bostedsadresse.adressenavn,
+                bostedsadresse.husnummer,
+                bostedsadresse.adressenavn,
+                null,
+                bostedsadresse.postnummer,
+                bostedsadresse.kommunenummer,
+                null,
+        )
+        return PdlSoknadBarn(
+                adressebeskyttelse = listOf(Adressebeskyttelse(addressebeskyttelse)),
+                bostedsadresse = listOf(PdlBostedsadresse(null, vegadresse, null, null)),
+                folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus(folkeregisterpersonstatus)),
+                foedsel = listOf(PdlFoedsel(foedsel)),
+                navn = listOf(PdlSoknadPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn)),
+        )
+    }
+    companion object {
+        fun frontendBarn(fnr: String, pdlBarn: PdlSoknadBarn): FrontendBarn {
+            val bostedsadresse = pdlBarn.bostedsadresse!!.first()
+            val navn = pdlBarn.navn?.first() ?: PdlSoknadPersonNavn("","","")
+            return FrontendBarn(
+                    fnr = fnr,
+                    addressebeskyttelse = pdlBarn.adressebeskyttelse!!.first().gradering,
+                    bostedsadresse = ForenkletBostedsadresse(
+                            adressenavn = bostedsadresse.vegadresse?.adressenavn ?: "",
+                            husnummer = bostedsadresse.vegadresse?.husnummer ?: 1,
+                            postnummer = bostedsadresse.vegadresse?.kommunenummer ?: "",
+                            kommunenummer = bostedsadresse.vegadresse?.kommunenummer ?: "",
+                    ),
+                    folkeregisterpersonstatus = pdlBarn.folkeregisterpersonstatus?.first()?.status ?: "bosatt",
+                    foedsel = pdlBarn.foedsel?.first()?.foedselsdato ?: LocalDate.now().minusYears(10),
+                    navn = PdlPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn)
+            )
         }
     }
 }

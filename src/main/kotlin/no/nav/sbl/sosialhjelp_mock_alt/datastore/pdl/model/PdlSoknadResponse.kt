@@ -48,15 +48,15 @@ data class PdlSoknadHentBarn(
 data class PdlSoknadBarn(
         val adressebeskyttelse: List<Adressebeskyttelse>?,
         val bostedsadresse: List<PdlBostedsadresse>?,
-        val folkeregistepersonstatus: List<PdlFolkeregisterpersonstatus>?,
+        val folkeregisterpersonstatus: List<PdlFolkeregisterpersonstatus>?,
         val foedsel: List<PdlFoedsel>?,
         val navn: List<PdlSoknadPersonNavn>?,
 )
 
 data class PdlSoknadPersonNavn(
-        val fornavn: String?,
-        val mellomnavn: String?,
-        val etternavn: String?,
-        val metadata: PdlMetadata?,
-        val folkeregistermetadata: PdlFolkeregistermetadata?
+        val fornavn: String,
+        val mellomnavn: String,
+        val etternavn: String,
+        val metadata: PdlMetadata = defaultMetadata(),
+        val folkeregistermetadata: PdlFolkeregistermetadata = defaultFolkeregistermetadata(),
 )
