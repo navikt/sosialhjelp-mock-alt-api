@@ -44,7 +44,7 @@ class FrontendController(
     // Frontend stuff:
     @PostMapping("/mock-alt/personalia")
     fun frontendUpload(@RequestBody body: String): ResponseEntity<String> {
-        log.info("Laster opp pdl data: $body")
+        log.info("Laster opp personalia: $body")
         val personalia = objectMapper.readValue(body, FrontendPersonalia::class.java)
         if (personalia.fnr.isEmpty()) {
             return ResponseEntity.badRequest().body("FNR må være satt!")
@@ -86,7 +86,7 @@ class FrontendController(
             log.warn("Finner ikke personalia for fnr: $ident")
             return ResponseEntity.noContent().build()
         }
-        log.info("Henter ned pdl data for fnr: $ident")
+        log.info("Henter ned personalia for fnr: $ident")
         val frontendPersonalia = FrontendPersonalia(personalia)
         frontendPersonalia.barn =
                 personalia.familierelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }

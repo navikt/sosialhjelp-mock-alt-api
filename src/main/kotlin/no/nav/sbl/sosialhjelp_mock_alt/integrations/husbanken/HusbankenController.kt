@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 
 @RestController
-class HusbankenController(private val bostotteService: BostotteService) {
+class HusbankenController(
+        private val bostotteService: BostotteService,
+        private val feilService: FeilService,
+) {
     companion object {
         private val log by logger()
     }
@@ -28,6 +32,7 @@ class HusbankenController(private val bostotteService: BostotteService) {
     ):
             ResponseEntity<BostotteDto> {
         val fnr = hentFnrFraToken(headers)
+        feilService.eventueltLagFeil(fnr, "HusbankenController", "getHusbankenData")
         val bostotte = bostotteService.getBostotte(fnr)
         log.info("Henter husbanken bostotte:\n${objectMapper.writeValueAsString(bostotte)}")
         return ResponseEntity.ok(bostotte)
