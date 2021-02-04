@@ -9,7 +9,7 @@ data class Personalia(
         var addressebeskyttelse: Gradering = Gradering.UGRADERT,
         var sivilstand: String = "UOPPGITT",
         var ektefelle: String? = null,
-        var familierelasjon: List<Familiereasjon> = emptyList(),
+        var familierelasjon: List<Familierelasjon> = emptyList(),
         var starsborgerskap: String = "NOR",
         var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
         var locked: Boolean = false,
@@ -58,7 +58,7 @@ data class Personalia(
     }
 }
 
-data class Familiereasjon(
+data class Familierelasjon(
         val ident: String = genererTilfeldigPersonnummer(),
         val rolle: String = "barn",
         val motrolle: String = "forelder",
