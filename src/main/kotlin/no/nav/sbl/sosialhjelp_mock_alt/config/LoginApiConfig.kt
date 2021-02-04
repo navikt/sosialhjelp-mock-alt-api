@@ -11,8 +11,6 @@ class LoginApiConfig : WebMvcConfigurer {
 
     @Bean
     fun restTemplate(): RestTemplate {
-        return RestTemplateBuilder()
-//                .errorHandler(RestTemplateErrorHandler())
-                .build()!!
+        return RestTemplateBuilder().build()!!
     }
 }
