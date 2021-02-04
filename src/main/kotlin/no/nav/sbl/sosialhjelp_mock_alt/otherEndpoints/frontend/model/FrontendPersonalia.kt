@@ -2,13 +2,11 @@ package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Familiereasjon
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Familierelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFamilierelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedsel
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregisterpersonstatus
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlPersonNavn
@@ -69,7 +67,7 @@ data class FrontendPersonalia(
 
     companion object {
         fun pdlPersonalia(personalia: FrontendPersonalia): Personalia {
-            val familierelasjoner = personalia.barn.map{Familiereasjon(it.fnr, "barn", "forelder")}
+            val familierelasjoner = personalia.barn.map{Familierelasjon(it.fnr, "barn", "forelder")}
             return Personalia(
                     fnr = personalia.fnr,
                     navn = personalia.navn,
