@@ -87,12 +87,14 @@ class LogginApiController(
     fun sendRequests(body: Any?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
         var newUri = request.requestURL.toString().replace("/sosialhjelp/mock-alt-api/login-api", "")
         newUri = newUri.replace("localhost:8989", "localhost:8181")
-        log.debug("sendRequests newUri: $newUri")
+        newUri = newUri.replace("sosialhjelp-mock-alt-api-gcp.dev.nav.no", "digisos-gcp.dev.nav.no")
+        newUri = newUri.replace("sosialhjelp-mock-alt-api.labs.nais.io", "digisos.labs.nais.io")
 
         val headers = getHeaders(request)
         addAccessTokenHeader(headers)
         fixCorsHeadersInResponse(request, response)
 
+        log.debug("sendRequests newUri: $newUri")
         return restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
     }
 
