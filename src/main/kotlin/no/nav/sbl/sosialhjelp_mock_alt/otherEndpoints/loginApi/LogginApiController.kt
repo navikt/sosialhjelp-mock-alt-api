@@ -61,7 +61,9 @@ class LogginApiController(
         }
         val eksternResponse = sendRequests(body, method, request, response)
         log.debug("SoknadProxy response: $eksternResponse")
-        log.debug("SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, body: ${eksternResponse.body},  headers: ${eksternResponse.headers}")
+        log.debug("SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, " +
+                "body: ${objectMapper.writeValueAsString(eksternResponse.body)},  " +
+                "headers: ${objectMapper.writeValueAsString(eksternResponse.headers)}")
         return eksternResponse
     }
 
