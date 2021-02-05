@@ -87,6 +87,7 @@ class LogginApiController(
     fun sendRequests(body: Any?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
         var newUri = request.requestURL.toString().replace("/sosialhjelp/mock-alt-api/login-api", "")
         newUri = newUri.replace("localhost:8989", "localhost:8181")
+        log.debug("sendRequests newUri: $newUri")
 
         val headers = getHeaders(request)
         addAccessTokenHeader(headers)
