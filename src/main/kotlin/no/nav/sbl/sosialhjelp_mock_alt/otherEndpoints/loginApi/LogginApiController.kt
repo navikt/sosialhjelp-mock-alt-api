@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.loginApi
 import no.nav.sbl.sosialhjelp_mock_alt.config.CORSFilter
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.security.token.support.core.jwt.JwtToken
 import org.springframework.beans.factory.annotation.Autowired
@@ -46,7 +47,7 @@ class LogginApiController(
         log.info("SoknadProxy request: ${request}")
         try {
             checkAuthorized(getHeaders(request))
-        } catch (e: RuntimeException) {
+        } catch (e: MockAltException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(objectMapper.writeValueAsString(UnauthorizedMelding("azuread_authentication_error", "Autentiseringsfeil", loginurl)).toByteArray())
@@ -69,7 +70,7 @@ class LogginApiController(
         log.info("Check Authorized cookie: ${objectMapper.writeValueAsString(cookie)}")
         if (cookie == null || cookie.isEmpty()) {
             log.info("Unauthorized: No Cookie!")
-            throw RuntimeException("Unauthorized: No Cookie!")
+            throw MockAltException("Unauthorized: No Cookie!")
         } else {
             log.info("Check Authorized cookie not empty: ${objectMapper.writeValueAsString(cookie)}")
             log.info("Check Authorized cookie not empty 2: ${objectMapper.writeValueAsString(cookie.first())}")
@@ -77,7 +78,7 @@ class LogginApiController(
             val fnr = JwtToken(tokenString).subject
             if(!pdlService.personListe.containsKey(key = fnr)) {
                 log.info("Unauthorized: Unknown subject: $fnr")
-                throw RuntimeException("Unauthorized: Unknown subject: $fnr")
+                throw MockAltException("Unauthorized: Unknown subject: $fnr")
             }
             log.info("Authorized ok med fnr: $fnr")
         }
