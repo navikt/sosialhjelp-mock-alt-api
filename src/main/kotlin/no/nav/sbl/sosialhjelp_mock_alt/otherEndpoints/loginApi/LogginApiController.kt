@@ -66,10 +66,13 @@ class LogginApiController(
     private fun checkAuthorized(headers: HttpHeaders) {
         log.info("Check Authorized: ${objectMapper.writeValueAsString(headers)}")
         val cookie = headers[HttpHeaders.COOKIE]
+        log.info("Check Authorized cookie: ${objectMapper.writeValueAsString(cookie)}")
         if (cookie == null || cookie.isEmpty()) {
             log.info("Unauthorized: No Cookie!")
             throw RuntimeException("Unauthorized: No Cookie!")
         } else {
+            log.info("Check Authorized cookie not empty: ${objectMapper.writeValueAsString(cookie)}")
+            log.info("Check Authorized cookie not empty 2: ${objectMapper.writeValueAsString(cookie.first())}")
             val tokenString = cookie.first().replace("localhost-idtoken=", "")
             val fnr = JwtToken(tokenString).subject
             if(!pdlService.personListe.containsKey(key = fnr)) {
