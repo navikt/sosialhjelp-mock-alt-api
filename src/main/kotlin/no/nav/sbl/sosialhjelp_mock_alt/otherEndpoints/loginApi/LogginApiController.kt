@@ -54,6 +54,7 @@ class LogginApiController(
         if (request is MultipartHttpServletRequest) {
             return sendRequests(getMultipartBody(request), method, request, response)
         }
+        log.info("SoknadProxy send request:")
         val eksternResponse = sendRequests(body, method, request, response)
         log.info("SoknadProxy response: $eksternResponse")
         log.info("SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, body: ${eksternResponse.body},  headers: ${eksternResponse.headers}")
@@ -74,6 +75,7 @@ class LogginApiController(
                 log.info("Unauthorized: Unknown subject: $fnr")
                 throw RuntimeException("Unauthorized: Unknown subject: $fnr")
             }
+            log.info("Authorized ok med fnr: $fnr")
         }
     }
 
