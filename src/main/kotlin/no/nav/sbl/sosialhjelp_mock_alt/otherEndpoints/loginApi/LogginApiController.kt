@@ -37,14 +37,18 @@ class LogginApiController(
 ) {
     companion object {
         private val log by logger()
+
+        fun extractToken(cookie: List<String>): String {
+            return cookie.first().split("localhost-idtoken=")[1].split(";")[0]
+        }
     }
 
     @RequestMapping("/login-api/**")
     @ResponseBody
     @Throws(URISyntaxException::class)
     fun soknadProxy(@RequestBody(required = false) body: String?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
-        log.info("SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
-        log.info("SoknadProxy request: ${request}")
+        log.debug("SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
+        log.debug("SoknadProxy request: ${request}")
         try {
             checkAuthorized(getHeaders(request))
         } catch (e: MockAltException) {
@@ -55,32 +59,28 @@ class LogginApiController(
         if (request is MultipartHttpServletRequest) {
             return sendRequests(getMultipartBody(request), method, request, response)
         }
-        log.info("SoknadProxy send request:")
         val eksternResponse = sendRequests(body, method, request, response)
-        log.info("SoknadProxy response: $eksternResponse")
-        log.info("SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, body: ${eksternResponse.body},  headers: ${eksternResponse.headers}")
+        log.debug("SoknadProxy response: $eksternResponse")
+        log.debug("SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, body: ${eksternResponse.body},  headers: ${eksternResponse.headers}")
         return eksternResponse
     }
 
     data class UnauthorizedMelding(val id: String, val message: String, val loginUrl: String)
 
     private fun checkAuthorized(headers: HttpHeaders) {
-        log.info("Check Authorized: ${objectMapper.writeValueAsString(headers)}")
         val cookie = headers[HttpHeaders.COOKIE]
-        log.info("Check Authorized cookie: ${objectMapper.writeValueAsString(cookie)}")
+        log.debug("Check Authorized cookie: ${objectMapper.writeValueAsString(cookie)}")
         if (cookie == null || cookie.isEmpty()) {
             log.info("Unauthorized: No Cookie!")
             throw MockAltException("Unauthorized: No Cookie!")
         } else {
-            log.info("Check Authorized cookie not empty: ${objectMapper.writeValueAsString(cookie)}")
-            log.info("Check Authorized cookie not empty 2: ${objectMapper.writeValueAsString(cookie.first())}")
-            val tokenString = cookie.first().replace("localhost-idtoken=", "")
+            val tokenString = extractToken(cookie)
             val fnr = JwtToken(tokenString).subject
-            if(!pdlService.personListe.containsKey(key = fnr)) {
+            if (!pdlService.personListe.containsKey(key = fnr)) {
                 log.info("Unauthorized: Unknown subject: $fnr")
                 throw MockAltException("Unauthorized: Unknown subject: $fnr")
             }
-            log.info("Authorized ok med fnr: $fnr")
+            log.debug("Authorized ok med fnr: $fnr")
         }
     }
 
@@ -119,7 +119,7 @@ class LogginApiController(
         val cookie = httpHeaders[HttpHeaders.COOKIE]
         if (cookie != null && cookie.isNotEmpty()) {
             log.info("First cookie: ${cookie.first()}")
-            val token = cookie.first().replace("localhost-idtoken=", "")
+            val token = extractToken(cookie)
             log.info("Token  part: ${token}")
             httpHeaders.setBearerAuth(token)
             httpHeaders[HttpHeaders.COOKIE] = null
