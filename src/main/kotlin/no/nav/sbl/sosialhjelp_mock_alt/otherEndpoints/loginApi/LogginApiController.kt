@@ -42,8 +42,8 @@ class LogginApiController(
     @ResponseBody
     @Throws(URISyntaxException::class)
     fun soknadProxy(@RequestBody(required = false) body: String?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
-        log.debug("SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
-        log.debug("SoknadProxy request: $request")
+        log.info("SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
+        log.info("SoknadProxy request: $request")
         try {
             checkAuthorized(getHeaders(request))
         } catch (e: RuntimeException) {
@@ -55,8 +55,8 @@ class LogginApiController(
             return sendRequests(getMultipartBody(request), method, request, response)
         }
         val eksternResponse = sendRequests(body, method, request, response)
-        log.debug("SoknadProxy response: $eksternResponse")
-        log.debug("SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, body: ${eksternResponse.body},  headers: ${eksternResponse.headers}")
+        log.info("SoknadProxy response: $eksternResponse")
+        log.info("SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, body: ${eksternResponse.body},  headers: ${eksternResponse.headers}")
         return eksternResponse
     }
 
@@ -111,7 +111,9 @@ class LogginApiController(
     fun addAccessTokenHeader(httpHeaders: HttpHeaders): HttpHeaders {
         val cookie = httpHeaders[HttpHeaders.COOKIE]
         if (cookie != null && cookie.isNotEmpty()) {
+            log.info("First cookie: ${cookie.first()}")
             val token = cookie.first().replace("localhost-idtoken=", "")
+            log.info("Token  part: ${token}")
             httpHeaders.setBearerAuth(token)
             httpHeaders[HttpHeaders.COOKIE] = null
         }
