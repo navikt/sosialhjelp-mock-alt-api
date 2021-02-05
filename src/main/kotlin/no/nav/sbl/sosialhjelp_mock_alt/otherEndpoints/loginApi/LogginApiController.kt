@@ -43,7 +43,7 @@ class LogginApiController(
     @Throws(URISyntaxException::class)
     fun soknadProxy(@RequestBody(required = false) body: String?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
         log.info("SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
-        log.info("SoknadProxy request: ${objectMapper.writeValueAsString(request)}")
+        log.info("SoknadProxy request: ${request}")
         try {
             checkAuthorized(getHeaders(request))
         } catch (e: RuntimeException) {
@@ -56,7 +56,7 @@ class LogginApiController(
         }
         log.info("SoknadProxy send request:")
         val eksternResponse = sendRequests(body, method, request, response)
-        log.info("SoknadProxy response: ${objectMapper.writeValueAsString(eksternResponse)}")
+        log.info("SoknadProxy response: $eksternResponse")
         log.info("SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, body: ${eksternResponse.body},  headers: ${eksternResponse.headers}")
         return eksternResponse
     }
