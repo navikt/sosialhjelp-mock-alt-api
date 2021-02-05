@@ -69,12 +69,13 @@ class LogginApiController(
 
     private fun checkAuthorized(headers: HttpHeaders) {
         val cookie = headers[HttpHeaders.COOKIE]
-        log.debug("Check Authorized cookie: ${objectMapper.writeValueAsString(cookie)}")
         if (cookie == null || cookie.isEmpty()) {
             log.info("Unauthorized: No Cookie!")
             throw MockAltException("Unauthorized: No Cookie!")
         } else {
             val tokenString = extractToken(cookie)
+            if(tokenString.isEmpty())
+                log.debug("Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}")
             val fnr = JwtToken(tokenString).subject
             if (!pdlService.personListe.containsKey(key = fnr)) {
                 log.info("Unauthorized: Unknown subject: $fnr")
@@ -121,9 +122,7 @@ class LogginApiController(
     fun addAccessTokenHeader(httpHeaders: HttpHeaders): HttpHeaders {
         val cookie = httpHeaders[HttpHeaders.COOKIE]
         if (cookie != null && cookie.isNotEmpty()) {
-            log.info("First cookie: ${cookie.first()}")
             val token = extractToken(cookie)
-            log.info("Token  part: ${token}")
             httpHeaders.setBearerAuth(token)
             httpHeaders[HttpHeaders.COOKIE] = null
         }
