@@ -74,15 +74,19 @@ class LogginApiController(
             log.info("Unauthorized: No Cookie!")
             throw MockAltException("Unauthorized: No Cookie!")
         } else {
-            val tokenString = extractToken(cookie)
-            if(tokenString.isEmpty())
-                log.debug("Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}")
-            val fnr = JwtToken(tokenString).subject
-            if (!pdlService.personListe.containsKey(key = fnr)) {
-                log.info("Unauthorized: Unknown subject: $fnr")
-                throw MockAltException("Unauthorized: Unknown subject: $fnr")
+            try {
+                val tokenString = extractToken(cookie)
+                if (tokenString.isEmpty())
+                    log.debug("Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}")
+                val fnr = JwtToken(tokenString).subject
+                if (!pdlService.personListe.containsKey(key = fnr)) {
+                    log.info("Unauthorized: Unknown subject: $fnr")
+                    throw MockAltException("Unauthorized: Unknown subject: $fnr")
+                }
+                log.debug("Authorized ok med fnr: $fnr")
+            } catch (e: IndexOutOfBoundsException) {
+                throw MockAltException("Unauthorized: Bad Cookie: ${e.message}")
             }
-            log.debug("Authorized ok med fnr: $fnr")
         }
     }
 
@@ -100,8 +104,8 @@ class LogginApiController(
         try {
             return restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
         } catch (e: HttpClientErrorException) {
-            if(e.message?.contains("Unauthorized: 401 ") == true) {
-                return redirectToLoginPage()
+            if (e.message?.contains("Unauthorized: 401 ") == true) {
+                throw MockAltException("Unauthorized: Client reported 401.")
             }
             throw e
         }
