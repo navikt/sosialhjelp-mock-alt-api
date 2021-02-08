@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
@@ -52,9 +53,7 @@ class LogginApiController(
         try {
             checkAuthorized(getHeaders(request))
         } catch (e: MockAltException) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(objectMapper.writeValueAsString(UnauthorizedMelding("azuread_authentication_error", "Autentiseringsfeil", loginurl)).toByteArray())
+            return redirectToLoginPage()
         }
         if (request is MultipartHttpServletRequest) {
             return sendRequests(getMultipartBody(request), method, request, response)
@@ -98,7 +97,20 @@ class LogginApiController(
         fixCorsHeadersInResponse(request, response)
 
         log.debug("sendRequests newUri: $newUri")
-        return restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
+        try {
+            return restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
+        } catch (e: HttpClientErrorException) {
+            if(e.message?.contains("Unauthorized: 401 ") == true) {
+                return redirectToLoginPage()
+            }
+            throw e
+        }
+    }
+
+    private fun redirectToLoginPage(): ResponseEntity<ByteArray> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(objectMapper.writeValueAsString(UnauthorizedMelding("azuread_authentication_error", "Autentiseringsfeil", loginurl)).toByteArray())
     }
 
     fun getHeaders(request: HttpServletRequest): HttpHeaders {
