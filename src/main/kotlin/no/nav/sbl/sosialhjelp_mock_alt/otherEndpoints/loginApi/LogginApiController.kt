@@ -85,6 +85,7 @@ class LogginApiController(
                 }
                 log.debug("Authorized ok med fnr: $fnr")
             } catch (e: IndexOutOfBoundsException) {
+                log.info("Unauthorized: Bad Cookie: ${e.message}")
                 throw MockAltException("Unauthorized: Bad Cookie: ${e.message}")
             }
         }
