@@ -5,17 +5,14 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlEndring
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFamilierelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedsel
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedselsdato
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregistermetadata
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregisterpersonstatus
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlInnsynHentPerson
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlInnsynPerson
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlInnsynPersonResponse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlKjoenn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaHentPerson
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaPerson
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaPersonResponse
@@ -37,12 +34,12 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlTelefonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlVegadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.SivilstandType
+import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Service
 class PdlService(aaregService: AaregService) {
@@ -201,7 +198,7 @@ class PdlService(aaregService: AaregService) {
 
     fun leggTilPerson(personalia: Personalia) {
         if (personListe[personalia.fnr] != null && personListe[personalia.fnr]!!.locked) {
-            throw RuntimeException("Ident ${personalia.fnr} is locked! Cannot update!")
+            throw MockAltException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
         personListe.put(personalia.fnr, personalia)
     }
@@ -211,17 +208,17 @@ class PdlService(aaregService: AaregService) {
     }
 
     fun getPersonalia(ident: String): Personalia {
-        return personListe.getOrElse(ident, { throw RuntimeException("Ident $ident not found!") })
+        return personListe.getOrElse(ident, { throw MockAltException("Ident $ident not found!") })
     }
 
     fun getBarn(ident: String): PdlSoknadBarn {
-        return barnMap.getOrElse(ident, { throw RuntimeException("Barn with ident $ident not found!") })
+        return barnMap.getOrElse(ident, { throw MockAltException("Barn with ident $ident not found!") })
     }
 
     fun veryfyNotLocked(fnr: String) {
         val personalia = personListe[fnr]
         if (personalia != null && personalia.locked) {
-            throw RuntimeException("Bruker er låst og skal ikke oppdateres!")
+            throw MockAltException("Bruker er låst og skal ikke oppdateres!")
         }
     }
 

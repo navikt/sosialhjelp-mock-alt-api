@@ -23,6 +23,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsgiverType
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OpplysningspliktigArbeidsgiverDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OrganisasjonDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.PersonDto
+import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toIsoString
@@ -88,7 +89,7 @@ data class FrontendPersonalia(
             } else if (frontendArbeidsforhold.type == ArbeidsgiverType.Organisasjon.name) {
                 arbeidsgiver = OrganisasjonDto(frontendArbeidsforhold.orgnummer)
             } else {
-                throw RuntimeException("Ukjent ArbreidsgiverType: ${frontendArbeidsforhold.type}")
+                throw MockAltException("Ukjent ArbreidsgiverType: ${frontendArbeidsforhold.type}")
             }
             return ArbeidsforholdDto.nyttArbeidsforhold(
                     fnr = fnr,

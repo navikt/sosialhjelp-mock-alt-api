@@ -8,6 +8,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.defaultJsonSoknad
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toLocalDateTime
 import no.nav.sbl.sosialhjelp_mock_alt.utils.unixToLocalDateTime
@@ -140,7 +141,7 @@ class SoknadService {
 
     private fun hentSak(id: String?): DigisosSak {
         log.debug("Henter sak med id: $id")
-        return soknadsliste[id] ?: throw RuntimeException("Finner ikke sak med id: $id")
+        return soknadsliste[id] ?: throw MockAltException("Finner ikke sak med id: $id")
     }
 
     fun hentDokument(digisosId: String?, dokumentlagerId: String): String? {
