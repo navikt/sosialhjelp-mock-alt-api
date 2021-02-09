@@ -91,7 +91,7 @@ class LogginApiController(
         }
     }
 
-    fun sendRequests(body: Any?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
+    private fun sendRequests(body: Any?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
         var newUri = request.requestURL.toString().replace("/sosialhjelp/mock-alt-api/login-api", "")
         newUri = newUri.replace("localhost:8989", "localhost:8181")
         newUri = newUri.replace("sosialhjelp-mock-alt-api-gcp.dev.nav.no", "digisos-gcp.dev.nav.no")
@@ -118,7 +118,7 @@ class LogginApiController(
                 .body(objectMapper.writeValueAsString(UnauthorizedMelding("azuread_authentication_error", "Autentiseringsfeil", loginurl)).toByteArray())
     }
 
-    fun getHeaders(request: HttpServletRequest): HttpHeaders {
+    private fun getHeaders(request: HttpServletRequest): HttpHeaders {
         val httpHeaders = HttpHeaders()
         val headerNames = request.headerNames
 
@@ -132,13 +132,13 @@ class LogginApiController(
         return httpHeaders
     }
 
-    fun fixCorsHeadersInResponse(request: HttpServletRequest, response: HttpServletResponse) {
+    private fun fixCorsHeadersInResponse(request: HttpServletRequest, response: HttpServletResponse) {
         response.reset()
         CORSFilter.setAllowOriginHeader(request, response)
     }
 
 
-    fun addAccessTokenHeader(httpHeaders: HttpHeaders): HttpHeaders {
+    private fun addAccessTokenHeader(httpHeaders: HttpHeaders): HttpHeaders {
         val cookie = httpHeaders[HttpHeaders.COOKIE]
         if (cookie != null && cookie.isNotEmpty()) {
             val token = extractToken(cookie)

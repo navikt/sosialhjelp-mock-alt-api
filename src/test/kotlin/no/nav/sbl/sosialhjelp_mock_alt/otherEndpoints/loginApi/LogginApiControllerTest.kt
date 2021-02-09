@@ -15,7 +15,7 @@ internal class LogginApiControllerTest {
     }
 
     @Test
-    fun cookieTest_firstPosittion() {
+    fun cookieTest_firstPosition() {
         val token = LogginApiController.extractToken(listOf(
                 "localhost-idtoken=ourTokenString; " +
                         "other=0; " +
@@ -24,7 +24,7 @@ internal class LogginApiControllerTest {
     }
 
     @Test
-    fun cookieTest_lastPosittion() {
+    fun cookieTest_lastPosition() {
         val token = LogginApiController.extractToken(listOf(
                 "other=0; " +
                         "something=1111111" +
