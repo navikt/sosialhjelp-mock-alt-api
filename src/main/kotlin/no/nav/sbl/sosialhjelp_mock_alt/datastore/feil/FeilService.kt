@@ -26,8 +26,8 @@ class FeilService {
         val feilsituasjoner = hentFeil(fnr)
         feilsituasjoner.forEach{feilsituasjon ->
             if (feilsituasjon.className.contentEquals(className) || feilsituasjon.className.contentEquals("*")) {
-                if (feilsituasjon.functionName.contentEquals(functionName) || feilsituasjon.functionName.contentEquals("*")) {
-                    if(feilsituasjon.timeoutSansynlighet > randomInt(2)) {
+                if (functionName.startsWith(feilsituasjon.functionName) || feilsituasjon.functionName.contentEquals("*")) {
+                    if(feilsituasjon.timeout > 0 && feilsituasjon.timeoutSansynlighet > randomInt(2)) {
                         var sleep = 0
                         log.info("Timeout er konfigurert for $className.$functionName")
                         while (sleep < feilsituasjon.timeout) {
@@ -36,8 +36,8 @@ class FeilService {
                         }
                     }
                     if(feilsituasjon.feilkodeSansynlighet > randomInt(2)) {
-                        log.info("Error er konfigurert for $className.$functionName -> ${feilsituasjon.feilkode}")
                         if (feilsituasjon.feilkode != null && feilsituasjon.feilkode > 0) {
+                            log.info("Error er konfigurert for $className.$functionName -> ${feilsituasjon.feilkode}")
                             throw KonfigurertFeil(feilsituasjon.feilkode, feilsituasjon.feilmelding)
                         }
                     }

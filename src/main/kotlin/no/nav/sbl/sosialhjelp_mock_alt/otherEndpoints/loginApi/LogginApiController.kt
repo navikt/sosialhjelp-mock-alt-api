@@ -47,6 +47,8 @@ class LogginApiController(
         try {
             checkAuthorized(getHeaders(request))
         } catch (e: RuntimeException) {
+            log.warn(e.message)
+            if (e.message?.startsWith("Unauthorized: ") != true) log.debug(e.stackTraceToString())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(objectMapper.writeValueAsString(UnauthorizedMelding("azuread_authentication_error", "Autentiseringsfeil", loginurl)).toByteArray())
@@ -65,14 +67,12 @@ class LogginApiController(
     private fun checkAuthorized(headers: HttpHeaders) {
         val cookie = headers[HttpHeaders.COOKIE]
         if (cookie == null || cookie.isEmpty()) {
-            log.info("Unauthorized: No Cookie!")
             throw RuntimeException("Unauthorized: No Cookie!")
         } else {
-            val tokenString = cookie.first().replace("localhost-idtoken=", "")
+            val tokenString = cookie.first().replace("localhost-idtoken=", "").split(";")[0]
             val fnr = JwtToken(tokenString).subject
-            if(!pdlService.personListe.containsKey(key = fnr)) {
-                log.info("Unauthorized: Unknown subject: $fnr")
-                throw RuntimeException("Unauthorized: Unknown subject: $fnr")
+            if (!pdlService.personListe.containsKey(key = fnr)) {
+                throw RuntimeException("Unauthorized: Unknown subject in token: $fnr")
             }
         }
     }
@@ -111,7 +111,7 @@ class LogginApiController(
     fun addAccessTokenHeader(httpHeaders: HttpHeaders): HttpHeaders {
         val cookie = httpHeaders[HttpHeaders.COOKIE]
         if (cookie != null && cookie.isNotEmpty()) {
-            val token = cookie.first().replace("localhost-idtoken=", "")
+            val token = cookie.first().replace("localhost-idtoken=", "").split(";")[0]
             httpHeaders.setBearerAuth(token)
             httpHeaders[HttpHeaders.COOKIE] = null
         }
