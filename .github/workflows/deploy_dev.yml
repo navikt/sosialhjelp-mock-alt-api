@@ -1,4 +1,4 @@
-name: Deploy GCP
+name: Deploy til dev
 on:
   workflow_dispatch:
     inputs:
@@ -7,49 +7,43 @@ on:
         required: true
         default: 'dev-gcp'
       cluster:
-        description: 'Cluster å deploye til (labs-gcp eller dev-gcp)'
+        description: 'Cluster å deploye til (dev-sbs, labs-gcp eller dev-gcp)'
         required: true
         default: 'dev-gcp'
   repository_dispatch:
-    types: [deploy_dev_gcp]
+    types: [deploy_dev_gcp, deploy_miljo_tag]
 
 jobs:
   deploy:
-    name: Deploy to GCP
+    name: Deploy to dev
     runs-on: ubuntu-latest
-    if: github.event.action == 'deploy_dev_gcp'
     env:
       DOCKER_IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}
     steps:
-      - name: Sett cluster og config fra repository_dispatch
-        if: github.event_name == 'repository_dispatch'
-        run: |
-          echo "CLUSTER_NAME=${{ github.event.client_payload.cluster }}" >> $GITHUB_ENV
-          echo "CONFIG_FILE=${{ github.event.client_payload.config-file-name }}" >> $GITHUB_ENV
-          echo "TAG=${{ github.event.client_payload.TAG }}" >> $GITHUB_ENV
-      - name: Sett cluster og config fra workflow_dispatch
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          echo "CLUSTER_NAME=${{ github.event.inputs.cluster }}" >> $GITHUB_ENV
-          echo "CONFIG_FILE=${{ github.event.inputs.config-file-name }}" >> $GITHUB_ENV
-          echo "TAG=${{ env.GITHUB_REF }}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ env.TAG }}
       - name: Create artifact version
         id: artifact-version
         uses: navikt/sosialhjelp-ci/actions/create-artifact-version@master
       - name: Sett env variabler
         run: |
           echo "DOCKER_TAG=${{ env.DOCKER_IMAGE }}:${{ steps.artifact-version.outputs.version }}" >> $GITHUB_ENV
-
-      - name: Deploy til GCP
+      - name: Sett cluster og config fra repository_dispatch
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          echo "CLUSTER_NAME=${{ github.event.client_payload.cluster }}" >> $GITHUB_ENV
+          echo "CONFIG_FILE=${{ github.event.client_payload.config-file-name }}" >> $GITHUB_ENV
+      - name: Sett cluster og config fra workflow_dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "CLUSTER_NAME=${{ github.event.inputs.cluster }}" >> $GITHUB_ENV
+          echo "CONFIG_FILE=${{ github.event.inputs.config-file-name }}" >> $GITHUB_ENV
+      - name: Deploy til dev
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais.yaml
           CLUSTER: ${{ env.CLUSTER_NAME }}
-          VARS: nais/dev/${{ CONFIG_FILE}}.json
-          REF: ${{ env.TAG }}
+          VARS: nais/dev/${{ env.CONFIG_FILE }}.json
+          REF: ${{ github.sha }}
           PRINT_PAYLOAD: true
           IMAGE: ${{ env.DOCKER_TAG }}
