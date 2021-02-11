@@ -1,10 +1,10 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model
 
 import no.nav.sbl.soknadsosialhjelp.soknad.okonomi.opplysning.JsonOkonomiOpplysningUtbetaling
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import java.time.LocalDate
 
-class BostotteDto(
+data class BostotteDto(
         val saker: MutableList<SakerDto> = mutableListOf(),
         val utbetalinger: MutableList<UtbetalingerDto> = mutableListOf(),
 ) {
@@ -17,7 +17,7 @@ class BostotteDto(
     }
 }
 
-class SakerDto(
+data class SakerDto(
         val mnd: Int,
         val ar: Int,
         val status: BostotteStatus,
@@ -27,12 +27,13 @@ class SakerDto(
 
 enum class BostotteStatus { UNDER_BEHANDLING, VEDTATT }
 enum class BostotteRolle { HOVEDPERSON, BIPERSON }
-class VedtakDto {
+
+data class VedtakDto(val vedtak: Vedtakskode) {
     val kode: String
     val beskrivelse: String
     val type: String
 
-    constructor(vedtak: Vedtakskode) {
+    init {
         kode = vedtak.name
         beskrivelse = vedtak.beskrivelse
         type = vedtak.type
@@ -53,7 +54,7 @@ enum class Vedtakskode(val beskrivelse: String, val type: String) {
     V48("Søknaden din om bostøtte er avvist fordi noen du bor sammen med ikke er registrert på adressen i folkeregisteret.", "AVSLAG"),
 }
 
-class UtbetalingerDto(
+data class UtbetalingerDto(
         val belop: Double = randomInt(5).toDouble(),
         val utbetalingsdato: LocalDate,
         val mottaker: BostotteMottaker = BostotteMottaker.HUSSTAND,

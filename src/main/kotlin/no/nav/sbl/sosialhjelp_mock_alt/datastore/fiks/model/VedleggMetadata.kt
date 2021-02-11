@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.datastore.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model
 
 
 data class VedleggMetadata(

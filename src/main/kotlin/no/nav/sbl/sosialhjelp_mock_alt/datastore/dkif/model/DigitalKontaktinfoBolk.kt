@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.dkif.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model
 
 class DigitalKontaktinfoBolk(
         val kontaktinfo: Map<String, DigitalKontaktinfo>,

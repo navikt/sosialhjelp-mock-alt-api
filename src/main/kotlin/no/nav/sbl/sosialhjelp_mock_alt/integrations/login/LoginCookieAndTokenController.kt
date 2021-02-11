@@ -39,7 +39,8 @@ class LoginCookieAndTokenController(
                   @RequestParam(value = "redirect", required = false) redirect: String?,
                   @RequestParam(value = "expiry", required = false) expiry: String?,
                   request: HttpServletRequest?, response: HttpServletResponse): Cookie? {
-        val expiryTime = expiry?.toLong() ?: JwtTokenGenerator.EXPIRY
+        val defaultHours = 12
+        val expiryTime = expiry?.toLong() ?: (60 * defaultHours).toLong()
         val token = JwtTokenGenerator.createSignedJWT(subject ?: fastFnr, expiryTime)
         val cookie = Cookie(cookieName, token.serialize())
         cookie.domain = cookie_domain

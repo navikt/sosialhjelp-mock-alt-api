@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.freg.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model
 
 class OrganisasjonNoekkelinfoDto(val navn:NavnDto, val organisasjonsnummer: String)
 

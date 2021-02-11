@@ -27,6 +27,7 @@ val objectMapper: ObjectMapper = JsonSosialhjelpObjectMapper.createObjectMapper(
 		.registerModules(JavaTimeModule(), KotlinModule())
 		.configure(SerializationFeature.INDENT_OUTPUT, true)
 		.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+		.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
 
 fun main(args: Array<String>) {
 	runApplication<MockAltApplication>(*args)

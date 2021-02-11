@@ -6,18 +6,18 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSoknadsStatus
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.DokumentKrypteringsService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.DokumentKrypteringsService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.JsonTilleggsinformasjon
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.SakWrapper
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.VedleggMetadata
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.JsonTilleggsinformasjon
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.SakWrapper
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraBody
-import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
@@ -55,7 +55,7 @@ class FiksController(
     //    ======== Innsyn =========
     @GetMapping("/fiks/digisos/api/v1/soknader/soknader")
     fun listSoknaderInnsyn(@RequestHeader headers: HttpHeaders): ResponseEntity<String> {
-        val fnr = hentFnrFraToken(headers)
+        val fnr = hentFnrFraHeaders(headers)
         feilService.eventueltLagFeil(fnr, "FixController", "hentSoknad")
         val soknadsListe = soknadService.listSoknader(fnr)
         return ResponseEntity.ok(soknadsListe)
@@ -104,12 +104,15 @@ class FiksController(
     }
 
     @PostMapping("/fiks/digisos/api/v1/{fiksOrgId}/{fiksDigisosId}") // tar også /ny
-    fun oppdaterSoknadInnsyn(@PathVariable fiksOrgId: String,
-                                     @PathVariable(required = false) fiksDigisosId: String?,
-                                     @RequestBody(required = false) body: String?): ResponseEntity<String> {
+    fun oppdaterSoknadInnsyn(
+            @PathVariable fiksOrgId: String,
+            @PathVariable(required = false) fiksDigisosId: String?,
+            @RequestBody(required = false) body: String?,
+            @RequestHeader headers: HttpHeaders,
+    ): ResponseEntity<String> {
         var id = fiksDigisosId
-        val fnr = hentFnrFraBody(body)
-        feilService.eventueltLagFeil(fnr!!, "FixController", "lastOppSoknad")
+        val fnr = hentFnrFraHeaders(headers)
+        feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
         return if (id == null || id.toLowerCase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
             val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")

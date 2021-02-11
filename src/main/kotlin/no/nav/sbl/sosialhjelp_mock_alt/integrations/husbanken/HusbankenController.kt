@@ -1,15 +1,11 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.BostotteDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.BostotteRolle
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.BostotteStatus
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.SakerDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.UtbetalingerDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.VedtakDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.husbanken.model.Vedtakskode
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
-import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
@@ -20,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 
 @RestController
-class HusbankenController {
+class HusbankenController(
+        private val bostotteService: BostotteService,
+        private val feilService: FeilService,
+) {
     companion object {
         private val log by logger()
     }
@@ -32,24 +31,9 @@ class HusbankenController {
             @RequestHeader headers: HttpHeaders,
     ):
             ResponseEntity<BostotteDto> {
-        val bostotte = BostotteDto()
-        val dato1 = LocalDate.now().minusDays(15)
-        val dato2 = LocalDate.now().minusDays(45)
-        bostotte.withSak(SakerDto(
-                dato1.monthValue + 1,
-                dato1.year,
-                BostotteStatus.VEDTATT,
-                VedtakDto(Vedtakskode.V00)
-        ))
-        bostotte.withSak(SakerDto(
-                dato2.monthValue + 1,
-                dato2.year,
-                BostotteStatus.VEDTATT,
-                VedtakDto(Vedtakskode.V02),
-                BostotteRolle.BIPERSON
-        ))
-        bostotte.withUtbetaling(UtbetalingerDto(randomInt(5).toDouble(), dato1))
-        bostotte.withUtbetaling(UtbetalingerDto(randomInt(5).toDouble(), dato2))
+        val fnr = hentFnrFraToken(headers)
+        feilService.eventueltLagFeil(fnr, "HusbankenController", "getHusbankenData")
+        val bostotte = bostotteService.getBostotte(fnr)
         log.info("Henter husbanken bostotte:\n${objectMapper.writeValueAsString(bostotte)}")
         return ResponseEntity.ok(bostotte)
     }

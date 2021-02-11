@@ -1,9 +1,9 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.innsyn_api
 
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.SoknadService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.model.DigisosApiWrapper
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -35,6 +35,6 @@ class InnsynController(private val soknadService: SoknadService) {
     }
 
     private fun hentFnrFraTokenOrInput(fnrInput: String?, headers: HttpHeaders): String {
-        return fnrInput ?: hentFnrFraToken(headers)
+        return fnrInput ?: hentFnrFraHeaders(headers)
     }
 }

@@ -3,33 +3,33 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.feil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import no.nav.sbl.sosialhjelp_mock_alt.KonfigurertFeil
-import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
+import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Service
 
 @Service
 class FeilService {
-    private val feilsituasjoner = HashMap<String, Feilsituasjon>()
+    private val feilsituasjoner = HashMap<String, List<Feilsituasjon>>()
 
-    fun leggTilFeil(
-            feilsituasjon: Feilsituasjon,
-    ) {
-        feilsituasjoner.put(feilsituasjon.fnr, feilsituasjon)
+    fun setFeilForFnr(fnr: String, nyeFeilsituasjoner: List<Feilsituasjon>) {
+        feilsituasjoner[fnr] = nyeFeilsituasjoner
     }
 
     fun eventueltLagFeil(headers: HttpHeaders, className: String, functionName: String) {
-        val fnr = hentFnrFraToken(headers)
+        val fnr = hentFnrFraHeaders(headers)
         eventueltLagFeil(fnr, className, functionName)
     }
 
     fun eventueltLagFeil(fnr: String, className: String, functionName: String) {
-        val feilsituasjon = feilsituasjoner[fnr]
-        if (feilsituasjon != null) {
+        val feilsituasjoner = hentFeil(fnr)
+        feilsituasjoner.forEach{feilsituasjon ->
             if (feilsituasjon.className.contentEquals(className) || feilsituasjon.className.contentEquals("*")) {
-                if (feilsituasjon.functionName.contentEquals(functionName) || feilsituasjon.functionName.contentEquals("*")) {
-                    if(feilsituasjon.timeoutSansynlighet > randomInt(2)) {
+                if (functionName.startsWith(feilsituasjon.functionName) || feilsituasjon.functionName.contentEquals("*")) {
+                    if(feilsituasjon.timeout > 0 && feilsituasjon.timeoutSansynlighet > randomInt(2)) {
                         var sleep = 0
+                        log.info("Timeout er konfigurert for $className.$functionName")
                         while (sleep < feilsituasjon.timeout) {
                             runBlocking { delay(10_000) }
                             sleep += 10
@@ -37,6 +37,7 @@ class FeilService {
                     }
                     if(feilsituasjon.feilkodeSansynlighet > randomInt(2)) {
                         if (feilsituasjon.feilkode != null && feilsituasjon.feilkode > 0) {
+                            log.info("Error er konfigurert for $className.$functionName -> ${feilsituasjon.feilkode}")
                             throw KonfigurertFeil(feilsituasjon.feilkode, feilsituasjon.feilmelding)
                         }
                     }
@@ -45,8 +46,12 @@ class FeilService {
         }
     }
 
-    fun hentFeil(fnr: String): Feilsituasjon? {
-        return feilsituasjoner[fnr]
+    fun hentFeil(fnr: String): List<Feilsituasjon> {
+        return feilsituasjoner[fnr] ?: emptyList()
+    }
+
+    companion object {
+        private val log by logger()
     }
 }
 
