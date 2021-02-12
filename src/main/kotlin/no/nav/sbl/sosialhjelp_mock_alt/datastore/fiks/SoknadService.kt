@@ -1,10 +1,14 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks
 
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSoknadsStatus
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.SakWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.defaultJsonSoknad
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
@@ -39,6 +43,7 @@ class SoknadService {
     val ETTERSENDELSE_FILNAVN = "ettersendelse.pdf"
     val soknadsliste: HashMap<String, DigisosSak> = HashMap()
     val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
+    val fillager: FixedFileStrorage = FixedFileStrorage()
 
     fun hentSoknad(fiksDigisosId: String): DigisosSak? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
@@ -55,6 +60,15 @@ class SoknadService {
 //        val soknadslisteForFnr = soknadsliste.values.filter{it.sokerFnr.equals(fnr)}
 //        log.info("Henter søknadsliste. Antall soknader for $fnr: ${soknadslisteForFnr.size}")
 //        return objectMapper.writeValueAsString(soknadslisteForFnr)
+    }
+
+    fun opprettDigisosSak(fiksOrgId: String, fnr: String, id: String) {
+        val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
+        digisosApiWrapper.sak.soker.hendelser.add(JsonSoknadsStatus()
+                .withHendelsestidspunkt(DateTime.now().toDateTimeISO().toString())
+                .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT))
+        oppdaterDigisosSak(kommuneNr = "0301", fiksOrgId = fiksOrgId,
+                fnr = fnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
     }
 
     fun oppdaterDigisosSak(
@@ -144,6 +158,11 @@ class SoknadService {
         return soknadsliste[id] ?: throw MockAltException("Finner ikke sak med id: $id")
     }
 
+    fun hentFil(dokumentlagerId: String): FileEntry? {
+        log.debug("Henter fil med id: $dokumentlagerId")
+        return fillager.find(dokumentlagerId)
+    }
+
     fun hentDokument(digisosId: String?, dokumentlagerId: String): String? {
         log.debug("Henter dokument med id: $dokumentlagerId")
         return dokumentLager[dokumentlagerId] // Allerede lagret som json
@@ -210,15 +229,19 @@ class SoknadService {
                         ))
         )
         leggVedleggTilISak(fiksDigisosId, vedleggMetadata, vedleggsId, timestamp)
+        if(file != null) {
+            fillager.add(vedleggsId, vedleggMetadata.filnavn ?: file.name, file.bytes)
+        }
         log.info("Lastet opp fil fiksDigisosId: $fiksDigisosId, filnavn: ${vedleggMetadata.filnavn}, vedleggsId: $vedleggsId")
         return vedleggsId
     }
 
-    fun leggJsonInnIDokumentlager(
-            json: String,
+    fun leggInnIDokumentlager(
+            filnavn: String,
+            bytes: ByteArray,
             vedleggsId: String = UUID.randomUUID().toString(),
     ): String {
-        dokumentLager[vedleggsId] = json
+        fillager.add(vedleggsId, filnavn, bytes)
         return vedleggsId
     }
 
@@ -229,3 +252,21 @@ class SoknadService {
         return objectMapper.writeValueAsString(fnrListe)
     }
 }
+
+class FixedFileStrorage() {
+    private val maxSize = 200
+    private val items:MutableList<FileEntry> = mutableListOf()
+
+    fun add(key: String, fileName: String, bytes: ByteArray) {
+        while(items.size >= maxSize) {
+            items.removeAt(0)
+        }
+        items.add(FileEntry(key, fileName, bytes))
+    }
+
+    fun find(key:String): FileEntry? {
+        return items.findLast { it.key == key }
+    }
+}
+
+class FileEntry(val key: String, val filnavn: String, val bytes: ByteArray)

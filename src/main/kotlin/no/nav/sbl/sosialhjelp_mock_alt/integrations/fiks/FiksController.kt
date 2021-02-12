@@ -6,9 +6,9 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSoknadsStatus
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.DokumentKrypteringsService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.JsonTilleggsinformasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.SakWrapper
@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
-import java.io.File
 import java.util.Collections
 import java.util.UUID
 
@@ -72,12 +71,24 @@ class FiksController(
     fun hentDokumentFraLagerInnsynNiva4(
             @PathVariable dokumentlagerId: String,
             @RequestHeader headers: HttpHeaders,
-    ): ResponseEntity<File> {
+    ): ResponseEntity<ByteArray> {
         feilService.eventueltLagFeil(headers, "FixController", "hentSoknad")
+        val fil = soknadService.hentFil(dokumentlagerId)
+        if(fil != null) {
+            val mediaType = if(fil.filnavn.toLowerCase().endsWith(".png"))
+                MediaType.IMAGE_PNG
+            else if(fil.filnavn.toLowerCase().endsWith(".jpeg") || fil.filnavn.toLowerCase().endsWith(".jpg"))
+                MediaType.IMAGE_JPEG
+            else
+                MediaType.APPLICATION_PDF
+            return ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fil.filnavn + "\"")
+                    .body(fil.bytes)
+        }
         val dokumentString = soknadService.hentDokument(null, dokumentlagerId)
                 ?: return ResponseEntity.notFound().build()
-        val file = objectMapper.readValue(dokumentString, File::class.java)
-        return ResponseEntity.ok(file)
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(dokumentString.toByteArray())
     }
 
     @GetMapping("/fiks/digisos/api/v1/soknader/{digisosId}/dokumenter/{dokumentlagerId}")
@@ -98,9 +109,10 @@ class FiksController(
             @PathVariable(required = false) fiksOrgId: String?,
             @RequestParam body: LinkedMultiValueMap<String, Any>,
             @RequestHeader headers: HttpHeaders,
+            request: StandardMultipartHttpServletRequest
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "lastOpp")
-        return lastOppFiler("", digisosId, "", body, headers)
+        return lastOppFiler("", digisosId, "", body, headers, request)
     }
 
     @PostMapping("/fiks/digisos/api/v1/{fiksOrgId}/{fiksDigisosId}") // tar også /ny
@@ -115,12 +127,7 @@ class FiksController(
         feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
         return if (id == null || id.toLowerCase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
-            val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
-            digisosApiWrapper.sak.soker.hendelser.add(JsonHendelse()
-                    .withHendelsestidspunkt(DateTime.now().toDateTimeISO().toString())
-                    .withType(JsonHendelse.Type.SOKNADS_STATUS))
-            soknadService.oppdaterDigisosSak(kommuneNr = "0301", fiksOrgId = fiksOrgId,
-                    fnr = fnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
+            soknadService.opprettDigisosSak(fiksOrgId, fnr, id)
             ResponseEntity.ok("$id")
         } else {
             val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
@@ -152,7 +159,7 @@ class FiksController(
 
         val dokumenter = mutableListOf<DokumentInfo>()
         request.fileMap.forEach { (filnavn, fil) ->
-            val dokumentLagerId = soknadService.leggJsonInnIDokumentlager(objectMapper.writeValueAsString(fil.bytes))
+            val dokumentLagerId = soknadService.leggInnIDokumentlager(filnavn, fil.bytes)
             val dokumentInfo = DokumentInfo(
                     filnavn = filnavn,
                     dokumentlagerDokumentId = dokumentLagerId,
@@ -313,19 +320,22 @@ class FiksController(
             @PathVariable navEksternRefId: String,
             @RequestParam body: LinkedMultiValueMap<String, Any>,
             @RequestHeader headers: HttpHeaders,
+            request: StandardMultipartHttpServletRequest,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "lastOpp")
         log.info("Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId")
         val vedleggsInfoText: String = body["vedlegg.json"].toString()
-        val vedleggsJson = objectMapper.readValue(vedleggsInfoText, object : TypeReference<List<JsonVedleggSpesifikasjon>>() {})
+        val vedleggsJson = objectMapper.readValue(vedleggsInfoText, object : TypeReference<List<JsonVedleggSpesifikasjon>>() {}).first()
         body.keys.forEach {
             if (it.startsWith("vedleggSpesifikasjon")) {
                 val json = body[it].toString()
-                val vedleggMetadata = objectMapper.readValue(json, object : TypeReference<List<VedleggMetadata>>() {})
+                val vedleggMetadata = objectMapper.readValue(json, object : TypeReference<List<VedleggMetadata>>() {}).first()
+                val file = request.fileMap.values.find { it.originalFilename == vedleggMetadata.filnavn }
                 soknadService.lastOppFil(
                         fiksDigisosId = digisosId,
-                        vedleggMetadata = vedleggMetadata[0],
-                        vedleggsJson = vedleggsJson[0],
+                        vedleggMetadata = vedleggMetadata,
+                        vedleggsJson = vedleggsJson,
+                        file = file,
                 )
             }
         }

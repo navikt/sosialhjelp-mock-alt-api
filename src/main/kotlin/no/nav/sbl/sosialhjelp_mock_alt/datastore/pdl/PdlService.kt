@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
@@ -40,9 +41,13 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.util.UUID
 
 @Service
-class PdlService(aaregService: AaregService) {
+class PdlService(
+        aaregService: AaregService,
+        soknadService: SoknadService,
+) {
 
     final val personListe: HashMap<String, Personalia> = HashMap()
 
@@ -52,7 +57,7 @@ class PdlService(aaregService: AaregService) {
                 .withOpprettetTidspunkt(0)
                 .locked()
         personListe.put(fastFnr, standardBruker)
-        aaregService.leggTilEnkeltArbeidsforhold(personalia = standardBruker, LocalDate.now().minusYears(10))
+        soknadService.opprettDigisosSak("1234", fastFnr, UUID.randomUUID().toString())
         val hemmeligBruker = Personalia()
                 .withNavn("Hemmelig", "", "Adressesen")
                 .withAdressebeskyttelse(Gradering.STRENGT_FORTROLIG)
@@ -67,6 +72,7 @@ class PdlService(aaregService: AaregService) {
                 .locked()
         personListe.put(svenskBruker.fnr, svenskBruker)
         aaregService.leggTilEnkeltArbeidsforhold(personalia = svenskBruker, LocalDate.now().minusYears(10))
+        soknadService.opprettDigisosSak("1234", svenskBruker.fnr, UUID.randomUUID().toString())
     }
 
     private val ektefelleMap = mutableMapOf<String, PdlSoknadEktefelle>()
