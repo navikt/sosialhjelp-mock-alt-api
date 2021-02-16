@@ -4,7 +4,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model.NavnDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model.OrganisasjonNoekkelinfoDto
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
@@ -22,8 +21,7 @@ class EregController(private val eregService: EregService) {
     @GetMapping("/freg/v1/organisasjon/{orgnr}/noekkelinfo")
     fun getNokkelinfo(@PathVariable orgnr: String, @RequestHeader headers: HttpHeaders):
             ResponseEntity<OrganisasjonNoekkelinfoDto> {
-        val fnr = hentFnrFraHeaders(headers)
-        val nokkelinfo = eregService.getOrganisasjonNoekkelinfo(fnr) ?: OrganisasjonNoekkelinfoDto(
+        val nokkelinfo = eregService.getOrganisasjonNoekkelinfo(orgnr) ?: OrganisasjonNoekkelinfoDto(
                     navn = NavnDto("Mock navn"),
                     organisasjonsnummer = orgnr,
             )

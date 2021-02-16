@@ -244,13 +244,6 @@ class SoknadService {
         fillager.add(vedleggsId, filnavn, bytes)
         return vedleggsId
     }
-
-    //    ======== Util =========
-    fun listFnr(): String {
-        val fnrListe = soknadsliste.values.map { it.sokerFnr }.toHashSet().sorted()
-        log.info("Henter fnr liste: $fnrListe")
-        return objectMapper.writeValueAsString(fnrListe)
-    }
 }
 
 class FixedFileStrorage() {

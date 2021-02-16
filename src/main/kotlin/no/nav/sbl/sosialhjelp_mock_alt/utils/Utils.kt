@@ -39,6 +39,13 @@ fun hentFnrFraBody(body: String?): String? {
 }
 
 fun hentFnrFraHeaders(headers: HttpHeaders): String {
+    val fnrString = headers["nav-personident"]
+    if(fnrString != null) {
+        val fnr = fnrString.first()
+        if(fnr != null) {
+            return fnr
+        }
+    }
     val fnrListe = headers["nav-personidenter"]
     if(fnrListe != null) {
         return fnrListe.firstOrNull() ?: fastFnr

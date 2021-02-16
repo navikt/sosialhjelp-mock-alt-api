@@ -15,6 +15,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.SakWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
+import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraBody
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
@@ -360,11 +361,11 @@ class FiksController(
     }
 
     //    ======== Util =========
-    @GetMapping("/fiks/alle/fnr")
-    fun listAlleFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
-        val fnrListe = soknadService.listFnr()
-        return ResponseEntity.ok(fnrListe)
+    @GetMapping("/fiks/tilfeldig/orgnummer")
+    fun getTilfeldigOrgnummer(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
+        return ResponseEntity.ok(genererTilfeldigOrganisasjonsnummer())
     }
+
 
     @GetMapping("/fiks/tilfeldig/fnr")
     fun getTilfeldigFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
