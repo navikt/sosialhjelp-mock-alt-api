@@ -27,6 +27,20 @@ fun genererTilfeldigPersonnummer() : String {
     }
 }
 
+fun genererTilfeldigOrganisasjonsnummer() : String {
+    var numberString = ""
+    while (numberString.length < 8) {
+        val number = (Math.random() * 10).roundToInt()
+        numberString += number
+    }
+    return numberString + beregnOrgNummerKontrollsiffer(numberString)
+}
+
+private fun beregnOrgNummerKontrollsiffer(fnr: String) : Int {
+    val kontrollSiffer1Multiplikatorer = intArrayOf(3, 2, 7, 6, 5, 4, 3, 2)
+    return beregnKontrollsiffer(fnr, kontrollSiffer1Multiplikatorer)
+}
+
 private fun beregnKontrollsiffer1(fnr: String) : Int {
     val kontrollSiffer1Multiplikatorer = intArrayOf(3, 7, 6, 1, 8, 9, 4, 5, 2)
     return beregnKontrollsiffer(fnr, kontrollSiffer1Multiplikatorer)

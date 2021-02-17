@@ -56,7 +56,7 @@ class FrontendController(
             dkifService.putDigitalKontaktinfo(personalia.fnr, DigitalKontaktinfo(personalia.telefonnummer))
         }
         if (personalia.organisasjon.isNotEmpty() && personalia.organisasjonsNavn.isNotEmpty()) {
-            eregService.putOrganisasjonNoekkelinfo(personalia.fnr,
+            eregService.putOrganisasjonNoekkelinfo(personalia.organisasjon,
                     OrganisasjonNoekkelinfoDto(
                             navn = NavnDto(personalia.organisasjonsNavn),
                             organisasjonsnummer = personalia.organisasjon,

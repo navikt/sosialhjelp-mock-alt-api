@@ -9,12 +9,12 @@ class EregService {
 
     final val organisasjonNoekkelinfoMap: HashMap<String, OrganisasjonNoekkelinfoDto> = HashMap()
 
-    fun putOrganisasjonNoekkelinfo(fnr: String, arbeidsforholdDto: OrganisasjonNoekkelinfoDto) {
-        organisasjonNoekkelinfoMap[fnr] = arbeidsforholdDto
+    fun putOrganisasjonNoekkelinfo(orgNr: String, arbeidsforholdDto: OrganisasjonNoekkelinfoDto) {
+        organisasjonNoekkelinfoMap[orgNr] = arbeidsforholdDto
     }
 
-    fun getOrganisasjonNoekkelinfo(fnr: String): OrganisasjonNoekkelinfoDto? {
-        return organisasjonNoekkelinfoMap[fnr]
+    fun getOrganisasjonNoekkelinfo(orgNr: String): OrganisasjonNoekkelinfoDto? {
+        return organisasjonNoekkelinfoMap[orgNr]
     }
 
     companion object {
