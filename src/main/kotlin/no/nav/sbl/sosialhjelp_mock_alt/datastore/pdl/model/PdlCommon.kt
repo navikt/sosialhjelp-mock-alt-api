@@ -37,7 +37,7 @@ data class PdlPersonNavn(
         var etternavn: String = "",
 ) {
     override fun toString(): String {
-        return (fornavn + " " + mellomnavn + " " + etternavn).replace("  ", " ")
+        return ("$fornavn $mellomnavn $etternavn").replace("  ", " ")
     }
 }
 
