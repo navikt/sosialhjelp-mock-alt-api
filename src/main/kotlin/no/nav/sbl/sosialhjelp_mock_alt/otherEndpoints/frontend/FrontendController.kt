@@ -12,6 +12,8 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingsListeDto
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendBarn.Companion.frontendBarn
@@ -19,6 +21,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPer
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.aaregArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.pdlPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapToFrontend
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.ResponseEntity
@@ -34,6 +37,7 @@ class FrontendController(
         private val aaregService: AaregService,
         private val skatteetatenService: SkatteetatenService,
         private val bostotteService: BostotteService,
+        private val utbetalingService: UtbetalingService,
         private val eregService: EregService,
         private val dkifService: DkifService,
 ) {
@@ -75,11 +79,13 @@ class FrontendController(
         personalia.bostotteSaker.forEach { bostotteDto.saker.add(it) }
         personalia.bostotteUtbetalinger.forEach { bostotteDto.utbetalinger.add(it) }
         bostotteService.putBostotte(personalia.fnr, bostotteDto)
+        utbetalingService.putUtbetalingerFraNav(personalia.fnr,
+                UtbetalingsListeDto(personalia.utbetalingerFraNav.map { it.frontToBackend() }))
         return ResponseEntity.ok("OK")
     }
 
     @GetMapping("/mock-alt/personalia")
-    fun pdlDownload(@RequestParam ident: String): ResponseEntity<FrontendPersonalia> {
+    fun frontendDownload(@RequestParam ident: String): ResponseEntity<FrontendPersonalia> {
         val personalia = try {
             pdlService.getPersonalia(ident)
         } catch (e: MockAltException) {
@@ -105,6 +111,8 @@ class FrontendController(
         val bostotteDto = bostotteService.getBostotte(personalia.fnr)
         frontendPersonalia.bostotteSaker = bostotteDto.saker
         frontendPersonalia.bostotteUtbetalinger = bostotteDto.utbetalinger
+        frontendPersonalia.utbetalingerFraNav =
+                utbetalingService.getUtbetalingerFraNav(personalia.fnr).utbetalinger.map { mapToFrontend(it) }
 
         return ResponseEntity.ok(frontendPersonalia)
     }

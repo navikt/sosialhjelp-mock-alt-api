@@ -18,6 +18,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Forskuddstre
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsforholdDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsgiverType
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OpplysningspliktigArbeidsgiverDto
@@ -28,6 +29,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toIsoString
 import java.time.LocalDate
+import java.util.Date
 
 data class FrontendPersonalia(
         val fnr: String = genererTilfeldigPersonnummer(),
@@ -45,6 +47,7 @@ data class FrontendPersonalia(
         var bostotteSaker: List<SakerDto>,
         var bostotteUtbetalinger: List<UtbetalingerDto>,
         var skattetatenUtbetalinger: List<FrontendSkattbarInntekt>,
+        var utbetalingerFraNav: List<FrontendUtbetalingFraNav>,
         var locked: Boolean = false,
 ) {
     constructor(personalia: Personalia) : this(
@@ -63,12 +66,13 @@ data class FrontendPersonalia(
             bostotteSaker = emptyList(),
             bostotteUtbetalinger = emptyList(),
             skattetatenUtbetalinger = emptyList(),
+            utbetalingerFraNav = emptyList(),
             locked = personalia.locked,
     )
 
     companion object {
         fun pdlPersonalia(personalia: FrontendPersonalia): Personalia {
-            val familierelasjoner = personalia.barn.map{Familierelasjon(it.fnr, "barn", "forelder")}
+            val familierelasjoner = personalia.barn.map { Familierelasjon(it.fnr, "barn", "forelder") }
             return Personalia(
                     fnr = personalia.fnr,
                     navn = personalia.navn,
@@ -135,10 +139,11 @@ data class FrontendBarn(
                 navn = listOf(PdlSoknadPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn)),
         )
     }
+
     companion object {
         fun frontendBarn(fnr: String, pdlBarn: PdlSoknadBarn): FrontendBarn {
             val bostedsadresse = pdlBarn.bostedsadresse!!.first()
-            val navn = pdlBarn.navn?.first() ?: PdlSoknadPersonNavn("","","")
+            val navn = pdlBarn.navn?.first() ?: PdlSoknadPersonNavn("", "", "")
             return FrontendBarn(
                     fnr = fnr,
                     addressebeskyttelse = pdlBarn.adressebeskyttelse!!.first().gradering,
@@ -188,6 +193,21 @@ class FrontendSkattbarInntekt(
             )
         }
 
+    }
+}
+
+class FrontendUtbetalingFraNav(
+        val belop: Double,
+        val dato: Date,
+        val ytelsestype: String,
+) {
+    fun frontToBackend(): UtbetalingDto {
+        return UtbetalingDto(belop, dato, ytelsestype)
+    }
+    companion object {
+        fun mapToFrontend(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
+            return FrontendUtbetalingFraNav(utbetaling.belop, utbetaling.dato, utbetaling.ytelsestype)
+        }
     }
 }
 
