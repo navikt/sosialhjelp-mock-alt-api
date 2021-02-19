@@ -25,6 +25,12 @@ class FeilController(val feilService: FeilService) {
     fun hentFeil(@RequestParam ident: String): ResponseEntity<FeilsituasjonerFrontend> {
         return ResponseEntity.ok(FeilsituasjonerFrontend(ident, feilService.hentFeil(ident)))
     }
+
+    @GetMapping("/alleFeilene")
+    fun hentAlleFeil(): ResponseEntity<List<FeilsituasjonerFrontend>> {
+        val alleFeilene = feilService.hentAlleFeilene()
+        return ResponseEntity.ok(alleFeilene.map { FeilsituasjonerFrontend(it.key, it.value) })
+    }
 }
 
 data class FeilsituasjonerFrontend(
