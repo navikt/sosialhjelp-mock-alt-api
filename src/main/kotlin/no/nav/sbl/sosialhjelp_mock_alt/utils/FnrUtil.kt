@@ -21,6 +21,8 @@ fun genererTilfeldigPersonnummer(dato: LocalDate = randomDate(), kjoenn: Kjoenn?
             fnr += "00" + randomNumber
         } else if (randomNumber < 100) {
             fnr += "0" + randomNumber
+        } else {
+            fnr += randomNumber
         }
         fnr += beregnKontrollsiffer1(fnr)
         fnr += beregnKontrollsiffer2(fnr)
