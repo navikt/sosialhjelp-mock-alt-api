@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
@@ -35,6 +36,8 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlTelefonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlVegadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.SivilstandType
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
@@ -47,6 +50,9 @@ import java.util.UUID
 class PdlService(
         aaregService: AaregService,
         soknadService: SoknadService,
+        skatteetatenService: SkatteetatenService,
+        utbetalingService: UtbetalingService,
+        bostotteService: BostotteService,
 ) {
 
     final val personListe: HashMap<String, Personalia> = HashMap()
@@ -57,6 +63,9 @@ class PdlService(
                 .withOpprettetTidspunkt(0)
                 .locked()
         personListe.put(fastFnr, standardBruker)
+        skatteetatenService.enableAutoGenerationFor(fastFnr)
+        utbetalingService.enableAutoGenerationFor(fastFnr)
+        bostotteService.enableAutoGenerationFor(fastFnr)
         soknadService.opprettDigisosSak("1234", fastFnr, UUID.randomUUID().toString())
         val hemmeligBruker = Personalia()
                 .withNavn("Hemmelig", "", "Adressesen")
@@ -71,6 +80,9 @@ class PdlService(
                 .withOpprettetTidspunkt(2)
                 .locked()
         personListe.put(svenskBruker.fnr, svenskBruker)
+        skatteetatenService.enableAutoGenerationFor(svenskBruker.fnr)
+        utbetalingService.enableAutoGenerationFor(svenskBruker.fnr)
+        bostotteService.enableAutoGenerationFor(svenskBruker.fnr)
         aaregService.leggTilEnkeltArbeidsforhold(personalia = svenskBruker, LocalDate.now().minusYears(10))
         soknadService.opprettDigisosSak("1234", svenskBruker.fnr, UUID.randomUUID().toString())
     }

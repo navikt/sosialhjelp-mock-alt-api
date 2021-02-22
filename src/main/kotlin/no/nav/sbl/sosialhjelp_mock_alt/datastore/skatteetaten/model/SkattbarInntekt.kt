@@ -1,5 +1,9 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model
 
+import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 class SkattbarInntekt(val oppgaveInntektsmottaker: MutableList<OppgaveInntektsmottaker> = mutableListOf()) {
     data class Builder(
             var oppgaver: MutableList<OppgaveInntektsmottaker> = mutableListOf()
@@ -26,6 +30,21 @@ class OppgaveInntektsmottaker(
         fun opplysningspliktigId(opplysningspliktigId: String) = apply { this.opplysningspliktigId = opplysningspliktigId }
         fun leggTilInntekt(inntekt: Inntekt) = apply { inntektsListe.add(inntekt) }
         fun leggTilForskuddstrekk(trekk: Forskuddstrekk) = apply { forskuddstrekksListe.add(trekk) }
+        fun standardOppgave(
+                dato: LocalDate = LocalDate.now().minusDays(14),
+                belop: Int = 15000,
+                trekk: Int = 5000
+        ) = apply {
+            kalendermaaned = DateTimeFormatter.ofPattern("yyyy-MM").format(dato)
+            opplysningspliktigId = randomInt(5).toString()
+            leggTilInntekt(
+                    Inntekt.Builder()
+                            .type(Inntektstype.Loennsinntekt)
+                            .beloep(belop)
+                            .build()
+            )
+            leggTilForskuddstrekk(Forskuddstrekk.Builder().beloep(trekk).build())
+        }
 
         fun build() = OppgaveInntektsmottaker(kalendermaaned, opplysningspliktigId!!, inntektsListe, forskuddstrekksListe)
     }
