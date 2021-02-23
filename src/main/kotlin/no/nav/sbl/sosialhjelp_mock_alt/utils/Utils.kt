@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.utils
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.security.token.support.core.jwt.JwtToken
 import org.slf4j.Logger
@@ -16,21 +17,23 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.reflect.full.companionObject
 
-val fastFnr = genererTilfeldigPersonnummer()
+val fastFnr = genererTilfeldigPersonnummer(dato = LocalDate.of(1945, 10, 26), Kjoenn.KVINNE)
 
 fun String.toLocalDateTime(): LocalDateTime {
     return ZonedDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
             .withZoneSameInstant(ZoneId.of("Europe/Oslo")).toLocalDateTime()
 }
+
 fun unixToLocalDateTime(tidspunkt: Long): LocalDateTime {
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(tidspunkt), ZoneId.of("Europe/Oslo"))
 }
+
 fun LocalDate.toIsoString(): String {
     return DateTimeFormatter.ISO_LOCAL_DATE.format(this)
 }
 
 fun hentFnrFraBody(body: String?): String? {
-    if(body != null) {
+    if (body != null) {
         val bodyMap: Map<String, String> = objectMapper.readValue(body)
         return bodyMap.get("fnr")
     }
@@ -40,14 +43,14 @@ fun hentFnrFraBody(body: String?): String? {
 
 fun hentFnrFraHeaders(headers: HttpHeaders): String {
     val fnrString = headers["nav-personident"]
-    if(fnrString != null) {
+    if (fnrString != null) {
         val fnr = fnrString.first()
-        if(fnr != null) {
+        if (fnr != null) {
             return fnr
         }
     }
     val fnrListe = headers["nav-personidenter"]
-    if(fnrListe != null) {
+    if (fnrListe != null) {
         return fnrListe.firstOrNull() ?: fastFnr
     }
     return fastFnr
@@ -55,8 +58,8 @@ fun hentFnrFraHeaders(headers: HttpHeaders): String {
 
 fun hentFnrFraToken(headers: HttpHeaders): String {
     val token = headers[HttpHeaders.AUTHORIZATION]
-    if(token != null) {
-        if(token.isNotEmpty()) {
+    if (token != null) {
+        if (token.isNotEmpty()) {
             val tokenString = token.first().split(" ")[1]
             return JwtToken(tokenString).subject
         }
@@ -64,7 +67,7 @@ fun hentFnrFraToken(headers: HttpHeaders): String {
     return fastFnr
 }
 
-fun randomInt(length: Int) : Int {
+fun randomInt(length: Int): Int {
     return (Math.random() * 10.0.pow(length.toDouble())).roundToInt()
 }
 
