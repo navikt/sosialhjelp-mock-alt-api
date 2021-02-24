@@ -6,8 +6,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model.NavnDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model.OrganisasjonNoekkelinfoDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
@@ -59,17 +57,12 @@ class FrontendController(
         if (personalia.telefonnummer.isNotEmpty()) {
             dkifService.putDigitalKontaktinfo(personalia.fnr, DigitalKontaktinfo(personalia.telefonnummer))
         }
-        if (personalia.organisasjon.isNotEmpty() && personalia.organisasjonsNavn.isNotEmpty()) {
-            eregService.putOrganisasjonNoekkelinfo(personalia.organisasjon,
-                    OrganisasjonNoekkelinfoDto(
-                            navn = NavnDto(personalia.organisasjonsNavn),
-                            organisasjonsnummer = personalia.organisasjon,
-                    )
-            )
-        }
         aaregService.setArbeidsforholdForFnr(
                 personalia.fnr, personalia.arbeidsforhold.map { aaregArbeidsforhold(personalia.fnr, it) }
         )
+        personalia.arbeidsforhold.forEach {
+            eregService.putOrganisasjonNoekkelinfo(it.orgnummer, it.orgnavn)
+        }
         val skattbarInntektBuilder = SkattbarInntekt.Builder()
         personalia.skattetatenUtbetalinger.forEach {
             skattbarInntektBuilder.leggTilOppgave(FrontendSkattbarInntekt.oversettTilInntektsmottaker(it))
@@ -98,12 +91,8 @@ class FrontendController(
                 personalia.familierelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
         frontendPersonalia.telefonnummer =
                 dkifService.getDigitalKontaktinfo(personalia.fnr)?.mobiltelefonnummer ?: ""
-        frontendPersonalia.organisasjon =
-                eregService.getOrganisasjonNoekkelinfo(personalia.fnr)?.organisasjonsnummer ?: ""
-        frontendPersonalia.organisasjonsNavn =
-                eregService.getOrganisasjonNoekkelinfo(personalia.fnr)?.navn?.navnelinje1 ?: ""
         frontendPersonalia.arbeidsforhold = aaregService.getArbeidsforhold(personalia.fnr)
-                .map { FrontendArbeidsforhold.arbeidsforhold(it) }
+                .map { FrontendArbeidsforhold.arbeidsforhold(it, eregService) }
         val skattbarInntekt = skatteetatenService.getSkattbarInntekt(personalia.fnr)
         frontendPersonalia.skattetatenUtbetalinger = skattbarInntekt.oppgaveInntektsmottaker.map {
             FrontendSkattbarInntekt.skattUtbetaling(it)

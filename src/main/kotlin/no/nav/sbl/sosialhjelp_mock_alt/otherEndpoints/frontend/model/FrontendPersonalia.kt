@@ -24,6 +24,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsgiverType
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OpplysningspliktigArbeidsgiverDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OrganisasjonDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.PersonDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
@@ -41,8 +42,6 @@ data class FrontendPersonalia(
         var starsborgerskap: String = "NOR",
         var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Gateveien", 1, "0101", "0301"),
         var telefonnummer: String = "",
-        var organisasjon: String = "",
-        var organisasjonsNavn: String = "",
         var arbeidsforhold: List<FrontendArbeidsforhold>,
         var bostotteSaker: List<SakerDto>,
         var bostotteUtbetalinger: List<UtbetalingerDto>,
@@ -60,8 +59,6 @@ data class FrontendPersonalia(
             starsborgerskap = personalia.starsborgerskap,
             bostedsadresse = personalia.bostedsadresse,
             telefonnummer = "",
-            organisasjon = "",
-            organisasjonsNavn = "",
             arbeidsforhold = emptyList(),
             bostotteSaker = emptyList(),
             bostotteUtbetalinger = emptyList(),
@@ -222,9 +219,10 @@ class FrontendArbeidsforhold(
         val stillingsProsent: String,
         val ident: String,
         val orgnummer: String,
+        val orgnavn: String,
 ) {
     companion object {
-        fun arbeidsforhold(dto: ArbeidsforholdDto): FrontendArbeidsforhold {
+        fun arbeidsforhold(dto: ArbeidsforholdDto, eregService: EregService): FrontendArbeidsforhold {
             var sluttDato = ""
             if (dto.ansettelsesperiode.periode.tom != null) sluttDato = dto.ansettelsesperiode.periode.tom.toIsoString()
             var ident = ""
@@ -235,6 +233,7 @@ class FrontendArbeidsforhold(
             if (dto.arbeidsgiver is PersonDto) {
                 ident = dto.arbeidsgiver.offentligIdent
             }
+            val orgnavn = eregService.getOrganisasjonNoekkelinfo(orgnummer)?.navn?.navnelinje1 ?: ""
             return FrontendArbeidsforhold(
                     type = dto.arbeidsgiver.type,
                     id = dto.arbeidsforholdId,
@@ -243,6 +242,7 @@ class FrontendArbeidsforhold(
                     stillingsProsent = dto.arbeidsavtaler[0].stillingsprosent.toString(),
                     ident = ident,
                     orgnummer = orgnummer,
+                    orgnavn = orgnavn,
             )
         }
     }
