@@ -19,11 +19,11 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsforholdDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsgiverType
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OpplysningspliktigArbeidsgiverDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OrganisasjonDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.PersonDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsforholdDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsgiverType
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OpplysningspliktigArbeidsgiverDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OrganisasjonDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.PersonDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
@@ -39,7 +39,7 @@ data class FrontendPersonalia(
         var ektefelle: String? = null,
         var barn: List<FrontendBarn>,
         var starsborgerskap: String = "NOR",
-        var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
+        var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Gateveien", 1, "0101", "0301"),
         var telefonnummer: String = "",
         var organisasjon: String = "",
         var organisasjonsNavn: String = "",
@@ -87,13 +87,16 @@ data class FrontendPersonalia(
         }
 
         fun aaregArbeidsforhold(fnr: String, frontendArbeidsforhold: FrontendArbeidsforhold): ArbeidsforholdDto {
-            val arbeidsgiver: OpplysningspliktigArbeidsgiverDto
-            if (frontendArbeidsforhold.type == ArbeidsgiverType.Person.name) {
-                arbeidsgiver = PersonDto(frontendArbeidsforhold.ident, frontendArbeidsforhold.ident)
-            } else if (frontendArbeidsforhold.type == ArbeidsgiverType.Organisasjon.name) {
-                arbeidsgiver = OrganisasjonDto(frontendArbeidsforhold.orgnummer)
-            } else {
-                throw MockAltException("Ukjent ArbreidsgiverType: ${frontendArbeidsforhold.type}")
+            val arbeidsgiver: OpplysningspliktigArbeidsgiverDto = when (frontendArbeidsforhold.type) {
+                ArbeidsgiverType.Person.name -> {
+                    PersonDto(frontendArbeidsforhold.ident, frontendArbeidsforhold.ident)
+                }
+                ArbeidsgiverType.Organisasjon.name -> {
+                    OrganisasjonDto(frontendArbeidsforhold.orgnummer)
+                }
+                else -> {
+                    throw MockAltException("Ukjent ArbreidsgiverType: ${frontendArbeidsforhold.type}")
+                }
             }
             return ArbeidsforholdDto.nyttArbeidsforhold(
                     fnr = fnr,
@@ -150,7 +153,7 @@ data class FrontendBarn(
                     bostedsadresse = ForenkletBostedsadresse(
                             adressenavn = bostedsadresse.vegadresse?.adressenavn ?: "",
                             husnummer = bostedsadresse.vegadresse?.husnummer ?: 1,
-                            postnummer = bostedsadresse.vegadresse?.kommunenummer ?: "",
+                            postnummer = bostedsadresse.vegadresse?.postnummer ?: "",
                             kommunenummer = bostedsadresse.vegadresse?.kommunenummer ?: "",
                     ),
                     folkeregisterpersonstatus = pdlBarn.folkeregisterpersonstatus?.first()?.status ?: "bosatt",
@@ -197,9 +200,9 @@ class FrontendSkattbarInntekt(
 }
 
 class FrontendUtbetalingFraNav(
-        val belop: Double,
-        val dato: Date,
-        val ytelsestype: String,
+        private val belop: Double,
+        private val dato: Date,
+        private val ytelsestype: String,
 ) {
     fun frontToBackend(): UtbetalingDto {
         return UtbetalingDto(belop, dato, ytelsestype)

@@ -1,5 +1,6 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model
 
+import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import java.time.LocalDate
 
@@ -19,7 +20,7 @@ data class ArbeidsforholdDto(
                 stillingsprosent: Double = 100.0,
                 arbeidsforholdId: String = randomInt(7).toString(),
                 arbeidsgiver: OpplysningspliktigArbeidsgiverDto = OrganisasjonDto(
-                        organisasjonsnummer = randomInt(9).toString(),
+                        organisasjonsnummer = genererTilfeldigOrganisasjonsnummer(),
                 ),
                 navArbeidsforholdId: Long = randomInt(7).toLong(),
         ): ArbeidsforholdDto {
