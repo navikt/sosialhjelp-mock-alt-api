@@ -56,6 +56,11 @@ data class Personalia(
         bostedsadresse = nyBostedsadresse
         return this
     }
+
+    fun withFamilierelasjonsBarn(barnFnr: String): Personalia {
+        familierelasjon = listOf( Familierelasjon(barnFnr, "barn", "forelder"))
+        return this
+    }
 }
 
 data class Familierelasjon(

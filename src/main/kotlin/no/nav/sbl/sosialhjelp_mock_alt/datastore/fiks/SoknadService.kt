@@ -40,14 +40,14 @@ class SoknadService {
         val log by logger()
     }
 
-    val ETTERSENDELSE_FILNAVN = "ettersendelse.pdf"
+    final val ettersendelseFilnavn = "ettersendelse.pdf"
     val soknadsliste: HashMap<String, DigisosSak> = HashMap()
     val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
     val fillager: FixedFileStrorage = FixedFileStrorage()
 
     fun hentSoknad(fiksDigisosId: String): DigisosSak? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
-        val soknad = soknadsliste.get(fiksDigisosId) ?: return null
+        val soknad = soknadsliste[fiksDigisosId] ?: return null
         log.debug(soknad.toString())
         return soknad
     }
@@ -140,7 +140,7 @@ class SoknadService {
     }
 
     private fun leggVedleggTilISak(id: String, nyttVedlegg: VedleggMetadata, dokumentId: String, timestamp: Long) {
-        if (!nyttVedlegg.filnavn!!.contentEquals(ETTERSENDELSE_FILNAVN)) {
+        if (!nyttVedlegg.filnavn!!.contentEquals(ettersendelseFilnavn)) {
             val digisosSak = hentSak(id)
             val idNumber = (digisosSak.ettersendtInfoNAV!!.ettersendelser.size + 1).toString().padStart(4, '0')
             val navEksternRefId = "ettersendelseNavEksternRef$idNumber"
@@ -209,7 +209,7 @@ class SoknadService {
         val vedleggsId = UUID.randomUUID().toString()
         var vedleggsInfo: JsonVedlegg? = null
         var sha512 = "dummySha512"
-        if (vedleggsJson != null && !vedleggMetadata.filnavn!!.contentEquals(ETTERSENDELSE_FILNAVN)) {
+        if (vedleggsJson != null && !vedleggMetadata.filnavn!!.contentEquals(ettersendelseFilnavn)) {
             vedleggsInfo = vedleggsJson.vedlegg.firstOrNull { jsonVedlegg ->
                 jsonVedlegg.filer.any { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }
             }
@@ -246,7 +246,7 @@ class SoknadService {
     }
 }
 
-class FixedFileStrorage() {
+class FixedFileStrorage {
     private val maxSize = 200
     private val items:MutableList<FileEntry> = mutableListOf()
 

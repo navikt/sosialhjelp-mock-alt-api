@@ -50,7 +50,7 @@ class LogginApiController(
     @Throws(URISyntaxException::class)
     fun soknadProxy(@RequestBody(required = false) body: String?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
         log.debug("SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
-        log.debug("SoknadProxy request: ${request}")
+        log.debug("SoknadProxy request: $request")
         try {
             checkAuthorized(getHeaders(request))
         } catch (e: MockAltException) {
@@ -86,7 +86,7 @@ class LogginApiController(
                     throw MockAltException("Unauthorized: Token has expired: $expirationDate")
                 }
                 val fnr = jwtToken.subject
-                if (!pdlService.personListe.containsKey(key = fnr)) {
+                if (!pdlService.finnesPersonMedFnr(fnr)) {
                     log.info("Unauthorized: Unknown subject: $fnr")
                     throw MockAltException("Unauthorized: Unknown subject: $fnr")
                 }
