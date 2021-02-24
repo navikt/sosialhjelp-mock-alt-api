@@ -5,8 +5,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model.NavnDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.model.OrganisasjonNoekkelinfoDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
@@ -256,14 +254,9 @@ class PdlService(
         ektefelleMap[brukerFnr] = ektefelleSammeBosted
         barnMap[barnFnr] = defaultBarn(etternavn)
 
-        dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(randomInt(8).toString()))
+        dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
-        eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer,
-                OrganisasjonNoekkelinfoDto(
-                        navn = NavnDto("Arbeidsgiveren AS"),
-                        organisasjonsnummer = organisasjonsnummer,
-                )
-        )
+        eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")
         aaregService.leggTilEnkeltArbeidsforhold(
                 personalia = standardBruker,
                 startDato = LocalDate.now().minusYears(10),
