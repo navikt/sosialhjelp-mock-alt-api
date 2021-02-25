@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsforholdDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsforholdDto
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.FssToken
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders

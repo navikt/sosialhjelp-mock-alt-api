@@ -30,16 +30,16 @@ class PdlController(
     }
 
     /**
-     * familierelasjoner -> kun del av person-request fra soknad-api
+     * forelderBarnRelasjon -> kun del av person-request fra soknad-api
      * folkeregisterpersonstatus -> kun del av barn-request fra soknad-api
-     * bostedsadresse -> del av ektefelle-request fra soknad-api (gjelder også de 2 over, men denne inneholder verken familierelasjoner eller folkeregisterpersonstatus)
-     * adressebeskyttelse -> del av request fra innsyn-api (gjelder også de 3 over, men denne inneholder verken familierelasjoner, folkeregisterpersonstatus eller bostedsadresse)
+     * bostedsadresse -> del av ektefelle-request fra soknad-api (gjelder også de 2 over, men denne inneholder verken forelderBarnRelasjon eller folkeregisterpersonstatus)
+     * adressebeskyttelse -> del av request fra innsyn-api (gjelder også de 3 over, men denne inneholder verken forelderBarnRelasjon, folkeregisterpersonstatus eller bostedsadresse)
      * kjoenn -> kun del av request fra modia-api
      */
     private fun decideResponse(pdlRequest: PdlRequest): String {
         val fnr = pdlRequest.variables.ident
         return when {
-            pdlRequest.query.contains(Regex("(familierelasjoner)")) -> {
+            pdlRequest.query.contains(Regex("(forelderBarnRelasjon)")) -> {
                 feilService.eventueltLagFeil(fnr, "PdlController", "getSoknadPerson")
                 objectMapper.writeValueAsString(pdlService.getSoknadPersonResponseFor(fnr))
             }

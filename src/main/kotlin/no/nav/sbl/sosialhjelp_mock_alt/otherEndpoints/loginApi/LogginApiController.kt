@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 import java.io.IOException
 import java.io.InputStream
 import java.net.URISyntaxException
+import java.util.Date
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -49,7 +50,7 @@ class LogginApiController(
     @Throws(URISyntaxException::class)
     fun soknadProxy(@RequestBody(required = false) body: String?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
         log.debug("SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
-        log.debug("SoknadProxy request: ${request}")
+        log.debug("SoknadProxy request: $request")
         try {
             checkAuthorized(getHeaders(request))
         } catch (e: MockAltException) {
@@ -78,8 +79,14 @@ class LogginApiController(
                 val tokenString = extractToken(cookie)
                 if (tokenString.isEmpty())
                     log.debug("Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}")
-                val fnr = JwtToken(tokenString).subject
-                if (!pdlService.personListe.containsKey(key = fnr)) {
+                val jwtToken = JwtToken(tokenString)
+                val expirationDate = jwtToken.jwtTokenClaims.expirationTime
+                if(Date().after(expirationDate)) {
+                    log.info("Unauthorized: Token has expired: $expirationDate")
+                    throw MockAltException("Unauthorized: Token has expired: $expirationDate")
+                }
+                val fnr = jwtToken.subject
+                if (!pdlService.finnesPersonMedFnr(fnr)) {
                     log.info("Unauthorized: Unknown subject: $fnr")
                     throw MockAltException("Unauthorized: Unknown subject: $fnr")
                 }

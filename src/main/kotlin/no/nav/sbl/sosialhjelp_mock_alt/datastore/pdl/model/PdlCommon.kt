@@ -35,7 +35,11 @@ data class PdlPersonNavn(
         var fornavn: String = "",
         var mellomnavn: String = "",
         var etternavn: String = "",
-)
+) {
+    override fun toString(): String {
+        return ("$fornavn $mellomnavn $etternavn").replace("  ", " ")
+    }
+}
 
 data class PdlKjoenn(
         val kjoenn: Kjoenn
@@ -99,7 +103,7 @@ data class PdlUkjentBosted(
         val bostedskommune: String?
 )
 
-data class PdlFamilierelasjon(
+data class PdlForelderBarnRelasjon(
         val relatertPersonsIdent: String?,
         val relatertPersonsRolle: String?,
         val minRolleForPerson: String?

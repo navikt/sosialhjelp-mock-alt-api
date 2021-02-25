@@ -4,16 +4,16 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import org.joda.time.DateTime
 
 data class Personalia(
-        val fnr: String = genererTilfeldigPersonnummer(),
-        val navn: PdlPersonNavn = PdlPersonNavn(),
-        var addressebeskyttelse: Gradering = Gradering.UGRADERT,
-        var sivilstand: String = "UOPPGITT",
-        var ektefelle: String? = null,
-        var familierelasjon: List<Familierelasjon> = emptyList(),
-        var starsborgerskap: String = "NOR",
-        var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
-        var locked: Boolean = false,
-        var opprettetTidspunkt: Long = DateTime.now().millis
+    val fnr: String = genererTilfeldigPersonnummer(),
+    val navn: PdlPersonNavn = PdlPersonNavn(),
+    var addressebeskyttelse: Gradering = Gradering.UGRADERT,
+    var sivilstand: String = "UOPPGITT",
+    var ektefelle: String? = null,
+    var forelderBarnRelasjon: List<ForelderBarnRelasjon> = emptyList(),
+    var starsborgerskap: String = "NOR",
+    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
+    var locked: Boolean = false,
+    var opprettetTidspunkt: Long = DateTime.now().millis
 ) {
     fun withNavn(fornavn: String, mellomnavn: String, etternavn: String): Personalia {
         navn.fornavn = fornavn
@@ -56,9 +56,14 @@ data class Personalia(
         bostedsadresse = nyBostedsadresse
         return this
     }
+
+    fun withForelderBarnRelasjon(barnFnr: String): Personalia {
+        forelderBarnRelasjon = listOf( ForelderBarnRelasjon(barnFnr, "barn", "forelder"))
+        return this
+    }
 }
 
-data class Familierelasjon(
+data class ForelderBarnRelasjon(
         val ident: String = genererTilfeldigPersonnummer(),
         val rolle: String = "barn",
         val motrolle: String = "forelder",

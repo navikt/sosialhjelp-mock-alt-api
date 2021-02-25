@@ -3,7 +3,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Familierelasjon
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForelderBarnRelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
@@ -18,16 +18,19 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Forskuddstre
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsforholdDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.ArbeidsgiverType
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OpplysningspliktigArbeidsgiverDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.OrganisasjonDto
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.aareg.model.PersonDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsforholdDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsgiverType
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OpplysningspliktigArbeidsgiverDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OrganisasjonDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.PersonDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toIsoString
 import java.time.LocalDate
+import java.util.Date
 
 data class FrontendPersonalia(
         val fnr: String = genererTilfeldigPersonnummer(),
@@ -37,14 +40,13 @@ data class FrontendPersonalia(
         var ektefelle: String? = null,
         var barn: List<FrontendBarn>,
         var starsborgerskap: String = "NOR",
-        var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
+        var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Gateveien", 1, "0101", "0301"),
         var telefonnummer: String = "",
-        var organisasjon: String = "",
-        var organisasjonsNavn: String = "",
         var arbeidsforhold: List<FrontendArbeidsforhold>,
         var bostotteSaker: List<SakerDto>,
         var bostotteUtbetalinger: List<UtbetalingerDto>,
         var skattetatenUtbetalinger: List<FrontendSkattbarInntekt>,
+        var utbetalingerFraNav: List<FrontendUtbetalingFraNav>,
         var locked: Boolean = false,
 ) {
     constructor(personalia: Personalia) : this(
@@ -57,25 +59,24 @@ data class FrontendPersonalia(
             starsborgerskap = personalia.starsborgerskap,
             bostedsadresse = personalia.bostedsadresse,
             telefonnummer = "",
-            organisasjon = "",
-            organisasjonsNavn = "",
             arbeidsforhold = emptyList(),
             bostotteSaker = emptyList(),
             bostotteUtbetalinger = emptyList(),
             skattetatenUtbetalinger = emptyList(),
+            utbetalingerFraNav = emptyList(),
             locked = personalia.locked,
     )
 
     companion object {
         fun pdlPersonalia(personalia: FrontendPersonalia): Personalia {
-            val familierelasjoner = personalia.barn.map{Familierelasjon(it.fnr, "barn", "forelder")}
+            val forelderBarnRelasjon = personalia.barn.map { ForelderBarnRelasjon(it.fnr, "barn", "forelder") }
             return Personalia(
                     fnr = personalia.fnr,
                     navn = personalia.navn,
                     addressebeskyttelse = personalia.addressebeskyttelse,
                     sivilstand = personalia.sivilstand,
                     ektefelle = personalia.ektefelle,
-                    familierelasjon = familierelasjoner,
+                    forelderBarnRelasjon = forelderBarnRelasjon,
                     starsborgerskap = personalia.starsborgerskap,
                     bostedsadresse = personalia.bostedsadresse,
                     locked = personalia.locked,
@@ -83,13 +84,16 @@ data class FrontendPersonalia(
         }
 
         fun aaregArbeidsforhold(fnr: String, frontendArbeidsforhold: FrontendArbeidsforhold): ArbeidsforholdDto {
-            val arbeidsgiver: OpplysningspliktigArbeidsgiverDto
-            if (frontendArbeidsforhold.type == ArbeidsgiverType.Person.name) {
-                arbeidsgiver = PersonDto(frontendArbeidsforhold.ident, frontendArbeidsforhold.ident)
-            } else if (frontendArbeidsforhold.type == ArbeidsgiverType.Organisasjon.name) {
-                arbeidsgiver = OrganisasjonDto(frontendArbeidsforhold.orgnummer)
-            } else {
-                throw MockAltException("Ukjent ArbreidsgiverType: ${frontendArbeidsforhold.type}")
+            val arbeidsgiver: OpplysningspliktigArbeidsgiverDto = when (frontendArbeidsforhold.type) {
+                ArbeidsgiverType.Person.name -> {
+                    PersonDto(frontendArbeidsforhold.ident, frontendArbeidsforhold.ident)
+                }
+                ArbeidsgiverType.Organisasjon.name -> {
+                    OrganisasjonDto(frontendArbeidsforhold.orgnummer)
+                }
+                else -> {
+                    throw MockAltException("Ukjent ArbreidsgiverType: ${frontendArbeidsforhold.type}")
+                }
             }
             return ArbeidsforholdDto.nyttArbeidsforhold(
                     fnr = fnr,
@@ -135,17 +139,18 @@ data class FrontendBarn(
                 navn = listOf(PdlSoknadPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn)),
         )
     }
+
     companion object {
         fun frontendBarn(fnr: String, pdlBarn: PdlSoknadBarn): FrontendBarn {
             val bostedsadresse = pdlBarn.bostedsadresse!!.first()
-            val navn = pdlBarn.navn?.first() ?: PdlSoknadPersonNavn("","","")
+            val navn = pdlBarn.navn?.first() ?: PdlSoknadPersonNavn("", "", "")
             return FrontendBarn(
                     fnr = fnr,
                     addressebeskyttelse = pdlBarn.adressebeskyttelse!!.first().gradering,
                     bostedsadresse = ForenkletBostedsadresse(
                             adressenavn = bostedsadresse.vegadresse?.adressenavn ?: "",
                             husnummer = bostedsadresse.vegadresse?.husnummer ?: 1,
-                            postnummer = bostedsadresse.vegadresse?.kommunenummer ?: "",
+                            postnummer = bostedsadresse.vegadresse?.postnummer ?: "",
                             kommunenummer = bostedsadresse.vegadresse?.kommunenummer ?: "",
                     ),
                     folkeregisterpersonstatus = pdlBarn.folkeregisterpersonstatus?.first()?.status ?: "bosatt",
@@ -191,6 +196,21 @@ class FrontendSkattbarInntekt(
     }
 }
 
+class FrontendUtbetalingFraNav(
+        private val belop: Double,
+        private val dato: Date,
+        private val ytelsestype: String,
+) {
+    fun frontToBackend(): UtbetalingDto {
+        return UtbetalingDto(belop, dato, ytelsestype)
+    }
+    companion object {
+        fun mapToFrontend(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
+            return FrontendUtbetalingFraNav(utbetaling.belop, utbetaling.dato, utbetaling.ytelsestype)
+        }
+    }
+}
+
 class FrontendArbeidsforhold(
         val type: String,
         val id: String,
@@ -199,9 +219,10 @@ class FrontendArbeidsforhold(
         val stillingsProsent: String,
         val ident: String,
         val orgnummer: String,
+        val orgnavn: String,
 ) {
     companion object {
-        fun arbeidsforhold(dto: ArbeidsforholdDto): FrontendArbeidsforhold {
+        fun arbeidsforhold(dto: ArbeidsforholdDto, eregService: EregService): FrontendArbeidsforhold {
             var sluttDato = ""
             if (dto.ansettelsesperiode.periode.tom != null) sluttDato = dto.ansettelsesperiode.periode.tom.toIsoString()
             var ident = ""
@@ -212,6 +233,7 @@ class FrontendArbeidsforhold(
             if (dto.arbeidsgiver is PersonDto) {
                 ident = dto.arbeidsgiver.offentligIdent
             }
+            val orgnavn = eregService.getOrganisasjonNoekkelinfo(orgnummer)?.navn?.navnelinje1 ?: ""
             return FrontendArbeidsforhold(
                     type = dto.arbeidsgiver.type,
                     id = dto.arbeidsforholdId,
@@ -220,6 +242,7 @@ class FrontendArbeidsforhold(
                     stillingsProsent = dto.arbeidsavtaler[0].stillingsprosent.toString(),
                     ident = ident,
                     orgnummer = orgnummer,
+                    orgnavn = orgnavn,
             )
         }
     }

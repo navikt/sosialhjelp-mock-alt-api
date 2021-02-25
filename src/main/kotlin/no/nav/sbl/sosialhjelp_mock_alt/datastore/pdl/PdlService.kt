@@ -1,11 +1,17 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFamilierelasjon
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlForelderBarnRelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedsel
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedselsdato
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregisterpersonstatus
@@ -34,43 +40,44 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlTelefonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlVegadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.SivilstandType
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
+import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
+import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.util.UUID
 
 @Service
-class PdlService(aaregService: AaregService) {
+class PdlService(
+        val dkifService: DkifService,
+        val eregService: EregService,
+        val aaregService: AaregService,
+        val skatteetatenService: SkatteetatenService,
+        val utbetalingService: UtbetalingService,
+        val bostotteService: BostotteService,
+        val soknadService: SoknadService,
+) {
 
-    final val personListe: HashMap<String, Personalia> = HashMap()
+    private val personListe: HashMap<String, Personalia> = HashMap()
+    private val ektefelleMap = mutableMapOf<String, PdlSoknadEktefelle>()
+    private val barnMap = mutableMapOf<String, PdlSoknadBarn>()
 
     init {
-        val standardBruker = Personalia(fnr = fastFnr)
-                .withNavn("Standard", "", "Standarsen")
-                .withOpprettetTidspunkt(0)
-                .locked()
-        personListe.put(fastFnr, standardBruker)
-        aaregService.leggTilEnkeltArbeidsforhold(personalia = standardBruker, LocalDate.now().minusYears(10))
+        opprettBrukerMedAlt(fastFnr, "Standard", "Standardsen", "NOR", 1)
+        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 2)
+
         val hemmeligBruker = Personalia()
                 .withNavn("Hemmelig", "", "Adressesen")
                 .withAdressebeskyttelse(Gradering.STRENGT_FORTROLIG)
-                .withOpprettetTidspunkt(1)
+                .withOpprettetTidspunkt(3)
                 .locked()
-        personListe.put(hemmeligBruker.fnr, hemmeligBruker)
-        aaregService.leggTilEnkeltArbeidsforhold(personalia = hemmeligBruker, LocalDate.now().minusYears(10))
-        val svenskBruker = Personalia()
-                .withNavn("Svenske", "", "Svenskersen")
-                .withStarsborgerskap("SWE")
-                .withOpprettetTidspunkt(2)
-                .locked()
-        personListe.put(svenskBruker.fnr, svenskBruker)
-        aaregService.leggTilEnkeltArbeidsforhold(personalia = svenskBruker, LocalDate.now().minusYears(10))
+        personListe[hemmeligBruker.fnr] = hemmeligBruker
     }
-
-    private val ektefelleMap = mutableMapOf<String, PdlSoknadEktefelle>()
-    private val barnMap = mutableMapOf<String, PdlSoknadBarn>()
 
     fun getInnsynResponseFor(ident: String): PdlInnsynPersonResponse {
         log.info("Henter PDL innsyns data for $ident")
@@ -121,7 +128,7 @@ class PdlService(aaregService: AaregService) {
         val personalia = personListe[ident]
         var adressebeskyttelse = Adressebeskyttelse(Gradering.UGRADERT)
         var navn = PdlSoknadPersonNavn("Person", "", "Testperson")
-        var familierelasjoner: List<PdlFamilierelasjon> = emptyList()
+        var forelderBarnRelasjon: List<PdlForelderBarnRelasjon> = emptyList()
         var sivilstand = PdlSivilstand(SivilstandType.UGIFT, null)
         var statsborgerskap = PdlStatsborgerskap("NOR")
         var bostedsadresse = PdlBostedsadresse(null, defaultAdresse, null, null)
@@ -138,7 +145,7 @@ class PdlService(aaregService: AaregService) {
                     "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[ident] = ektefelleMedAdressebeskyttelse
                 }
             }
-            familierelasjoner = personalia.familierelasjon.map { PdlFamilierelasjon(it.ident, it.rolle, it.motrolle) }
+            forelderBarnRelasjon = personalia.forelderBarnRelasjon.map { PdlForelderBarnRelasjon(it.ident, it.rolle, it.motrolle) }
             statsborgerskap = PdlStatsborgerskap(personalia.starsborgerskap)
             bostedsadresse = PdlBostedsadresse(null,
                     PdlVegadresse(
@@ -161,7 +168,7 @@ class PdlService(aaregService: AaregService) {
                                 bostedsadresse = listOf(bostedsadresse),
                                 kontaktadresse = emptyList(),
                                 oppholdsadresse = emptyList(),
-                                familierelasjoner = familierelasjoner,
+                                forelderBarnRelasjon = forelderBarnRelasjon,
                                 navn = listOf(navn),
                                 sivilstand = listOf(sivilstand),
                                 statsborgerskap = listOf(statsborgerskap)
@@ -196,11 +203,13 @@ class PdlService(aaregService: AaregService) {
         )
     }
 
+    // Util:
+
     fun leggTilPerson(personalia: Personalia) {
         if (personListe[personalia.fnr] != null && personListe[personalia.fnr]!!.locked) {
             throw MockAltException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
-        personListe.put(personalia.fnr, personalia)
+        personListe[personalia.fnr] = personalia
     }
 
     fun leggTilBarn(fnr: String, pdlBarn: PdlSoknadBarn) {
@@ -223,14 +232,48 @@ class PdlService(aaregService: AaregService) {
     }
 
     fun getPersonListe(): List<Personalia> {
-        val personListe = personListe.values.sortedBy { it.opprettetTidspunkt }
-        return personListe
+        return personListe.values.sortedBy { it.opprettetTidspunkt }
+    }
+
+    fun finnesPersonMedFnr(fnr: String?): Boolean {
+        return personListe.containsKey(key = fnr)
+    }
+
+    private fun opprettBrukerMedAlt(brukerFnr: String, fornavn: String, etternavn: String, statsborgerskap: String, position: Long) {
+        val barnFnr = genererTilfeldigPersonnummer()
+        val standardBruker = Personalia(fnr = brukerFnr)
+                .withNavn(fornavn, "", etternavn)
+                .withOpprettetTidspunkt(position)
+                .withEktefelle("EKTEFELLE_SAMME_BOSTED")
+                .withSivilstand("GIFT")
+                .withForelderBarnRelasjon(barnFnr)
+                .withBostedsadresse(ForenkletBostedsadresse("Gateveien", 1, "0101", "0301"))
+                .withStarsborgerskap(statsborgerskap)
+                .locked()
+        personListe[brukerFnr] = standardBruker
+        ektefelleMap[brukerFnr] = ektefelleSammeBosted
+        barnMap[barnFnr] = defaultBarn(etternavn)
+
+        dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
+        val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
+        eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")
+        aaregService.leggTilEnkeltArbeidsforhold(
+                personalia = standardBruker,
+                startDato = LocalDate.now().minusYears(10),
+                orgnummmer = organisasjonsnummer,
+        )
+
+        skatteetatenService.enableAutoGenerationFor(brukerFnr)
+        utbetalingService.enableAutoGenerationFor(brukerFnr)
+        bostotteService.enableAutoGenerationFor(brukerFnr)
+
+        soknadService.opprettDigisosSak("1234", brukerFnr, UUID.randomUUID().toString())
     }
 
     companion object {
         private val log by logger()
 
-        private val defaultAdresse = PdlVegadresse("matrikkelId", "gateveien", 1, "A", null, "0101", "0301", "H101")
+        private val defaultAdresse = PdlVegadresse("matrikkelId", "Gateveien", 1, "A", null, "0101", "0301", "H101")
         private val annenAdresse = PdlVegadresse("matrikkelId2", "Karl Johans gate", 1, null, null, "0101", "0301", null)
 
         private val ektefelleSammeBosted = PdlSoknadEktefelle(
@@ -262,13 +305,13 @@ class PdlService(aaregService: AaregService) {
                         navn = listOf(PdlSoknadPersonNavn("Ektefelle", "", "McEktefelle"))
                 )
 
-        private fun defaultBarn() =
+        private fun defaultBarn(etternavn: String = "McKid") =
                 PdlSoknadBarn(
                         adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
                         bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
                         folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus("bosatt")),
                         foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(10))),
-                        navn = listOf(PdlSoknadPersonNavn("Kid", "", "McKid"))
+                        navn = listOf(PdlSoknadPersonNavn("Kid", "", etternavn))
                 )
 
     }

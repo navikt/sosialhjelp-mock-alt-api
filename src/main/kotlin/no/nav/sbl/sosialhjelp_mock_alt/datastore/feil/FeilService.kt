@@ -50,6 +50,10 @@ class FeilService {
         return feilsituasjoner[fnr] ?: emptyList()
     }
 
+    fun hentAlleFeilene() : HashMap<String, List<Feilsituasjon>> {
+        return feilsituasjoner
+    }
+
     companion object {
         private val log by logger()
     }

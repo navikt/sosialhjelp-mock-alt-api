@@ -9,7 +9,7 @@ val sosialhjelpCommonVersion = "1.4ef74b4"
 val filformatVersion = "1.2020.11.05-09.32-14af05dea965"
 val tokenValidationVersion = "1.3.2"
 val jacksonVersion = "2.12.0"
-val swaggerversion = "2.9.2"
+val swaggerversion = "2.10.0"
 val guavaVersion = "30.1-jre"
 val jerseyMediaJaxb = "2.31"
 
