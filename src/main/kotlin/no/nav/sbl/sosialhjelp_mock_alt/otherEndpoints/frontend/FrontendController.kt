@@ -88,7 +88,7 @@ class FrontendController(
         log.info("Henter ned personalia for fnr: $ident")
         val frontendPersonalia = FrontendPersonalia(personalia)
         frontendPersonalia.barn =
-                personalia.familierelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
+                personalia.forelderBarnRelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
         frontendPersonalia.telefonnummer =
                 dkifService.getDigitalKontaktinfo(personalia.fnr)?.mobiltelefonnummer ?: ""
         frontendPersonalia.arbeidsforhold = aaregService.getArbeidsforhold(personalia.fnr)

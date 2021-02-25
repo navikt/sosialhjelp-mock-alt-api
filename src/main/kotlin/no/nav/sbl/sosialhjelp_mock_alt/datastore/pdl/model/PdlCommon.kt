@@ -103,7 +103,7 @@ data class PdlUkjentBosted(
         val bostedskommune: String?
 )
 
-data class PdlFamilierelasjon(
+data class PdlForelderBarnRelasjon(
         val relatertPersonsIdent: String?,
         val relatertPersonsRolle: String?,
         val minRolleForPerson: String?

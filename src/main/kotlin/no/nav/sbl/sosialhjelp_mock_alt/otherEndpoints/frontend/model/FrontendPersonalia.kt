@@ -3,7 +3,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Familierelasjon
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForelderBarnRelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
@@ -69,14 +69,14 @@ data class FrontendPersonalia(
 
     companion object {
         fun pdlPersonalia(personalia: FrontendPersonalia): Personalia {
-            val familierelasjoner = personalia.barn.map { Familierelasjon(it.fnr, "barn", "forelder") }
+            val forelderBarnRelasjon = personalia.barn.map { ForelderBarnRelasjon(it.fnr, "barn", "forelder") }
             return Personalia(
                     fnr = personalia.fnr,
                     navn = personalia.navn,
                     addressebeskyttelse = personalia.addressebeskyttelse,
                     sivilstand = personalia.sivilstand,
                     ektefelle = personalia.ektefelle,
-                    familierelasjon = familierelasjoner,
+                    forelderBarnRelasjon = forelderBarnRelasjon,
                     starsborgerskap = personalia.starsborgerskap,
                     bostedsadresse = personalia.bostedsadresse,
                     locked = personalia.locked,

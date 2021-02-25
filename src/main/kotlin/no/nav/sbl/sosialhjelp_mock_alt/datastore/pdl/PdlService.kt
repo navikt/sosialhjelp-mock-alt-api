@@ -11,7 +11,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadres
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFamilierelasjon
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlForelderBarnRelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedsel
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedselsdato
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregisterpersonstatus
@@ -128,7 +128,7 @@ class PdlService(
         val personalia = personListe[ident]
         var adressebeskyttelse = Adressebeskyttelse(Gradering.UGRADERT)
         var navn = PdlSoknadPersonNavn("Person", "", "Testperson")
-        var familierelasjoner: List<PdlFamilierelasjon> = emptyList()
+        var forelderBarnRelasjon: List<PdlForelderBarnRelasjon> = emptyList()
         var sivilstand = PdlSivilstand(SivilstandType.UGIFT, null)
         var statsborgerskap = PdlStatsborgerskap("NOR")
         var bostedsadresse = PdlBostedsadresse(null, defaultAdresse, null, null)
@@ -145,7 +145,7 @@ class PdlService(
                     "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[ident] = ektefelleMedAdressebeskyttelse
                 }
             }
-            familierelasjoner = personalia.familierelasjon.map { PdlFamilierelasjon(it.ident, it.rolle, it.motrolle) }
+            forelderBarnRelasjon = personalia.forelderBarnRelasjon.map { PdlForelderBarnRelasjon(it.ident, it.rolle, it.motrolle) }
             statsborgerskap = PdlStatsborgerskap(personalia.starsborgerskap)
             bostedsadresse = PdlBostedsadresse(null,
                     PdlVegadresse(
@@ -168,7 +168,7 @@ class PdlService(
                                 bostedsadresse = listOf(bostedsadresse),
                                 kontaktadresse = emptyList(),
                                 oppholdsadresse = emptyList(),
-                                familierelasjoner = familierelasjoner,
+                                forelderBarnRelasjon = forelderBarnRelasjon,
                                 navn = listOf(navn),
                                 sivilstand = listOf(sivilstand),
                                 statsborgerskap = listOf(statsborgerskap)
@@ -246,7 +246,7 @@ class PdlService(
                 .withOpprettetTidspunkt(position)
                 .withEktefelle("EKTEFELLE_SAMME_BOSTED")
                 .withSivilstand("GIFT")
-                .withFamilierelasjonsBarn(barnFnr)
+                .withForelderBarnRelasjon(barnFnr)
                 .withBostedsadresse(ForenkletBostedsadresse("Gateveien", 1, "0101", "0301"))
                 .withStarsborgerskap(statsborgerskap)
                 .locked()
