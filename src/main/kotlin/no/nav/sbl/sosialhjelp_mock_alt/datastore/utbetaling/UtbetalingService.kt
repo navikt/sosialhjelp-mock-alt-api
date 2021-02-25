@@ -3,8 +3,8 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingsListeDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
-import org.joda.time.DateTime
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class UtbetalingService {
@@ -18,7 +18,7 @@ class UtbetalingService {
 
     fun getUtbetalingerFraNav(fnr: String): UtbetalingsListeDto {
         if (autoGenerationSet.contains(fnr)) {
-            return UtbetalingsListeDto().add(UtbetalingDto(12000.0, DateTime.now().minusDays(14).toDate()))
+            return UtbetalingsListeDto().add(UtbetalingDto(12000.0, LocalDate.now().minusDays(14)))
         }
         return utbetalingslisten[fnr] ?: UtbetalingsListeDto()
     }
