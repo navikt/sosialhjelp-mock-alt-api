@@ -1,7 +1,13 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model
 
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsforholdDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsgiverType
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OpplysningspliktigArbeidsgiverDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OrganisasjonDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.PersonDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForelderBarnRelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
@@ -19,18 +25,11 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsforholdDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.ArbeidsgiverType
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OpplysningspliktigArbeidsgiverDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.OrganisasjonDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.PersonDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toIsoString
 import java.time.LocalDate
-import java.util.Date
 
 data class FrontendPersonalia(
         val fnr: String = genererTilfeldigPersonnummer(),
@@ -196,17 +195,28 @@ class FrontendSkattbarInntekt(
     }
 }
 
-class FrontendUtbetalingFraNav(
-        private val belop: Double,
-        private val dato: Date,
-        private val ytelsestype: String,
+data class FrontendUtbetalingFraNav(
+        val belop: Double,
+        val dato: LocalDate,
+        val ytelsestype: String,
+        val melding: String,
+        val skattebelop: Double,
+        val ytelseskomponenttype: String,
 ) {
     fun frontToBackend(): UtbetalingDto {
-        return UtbetalingDto(belop, dato, ytelsestype)
+        return UtbetalingDto(belop, dato, ytelsestype, melding, skattebelop, ytelseskomponenttype)
     }
+
     companion object {
         fun mapToFrontend(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
-            return FrontendUtbetalingFraNav(utbetaling.belop, utbetaling.dato, utbetaling.ytelsestype)
+            return FrontendUtbetalingFraNav(
+                    utbetaling.belop,
+                    utbetaling.dato,
+                    utbetaling.ytelsestype,
+                    utbetaling.melding,
+                    utbetaling.skattebelop,
+                    utbetaling.ytelseskomponenttype,
+            )
         }
     }
 }

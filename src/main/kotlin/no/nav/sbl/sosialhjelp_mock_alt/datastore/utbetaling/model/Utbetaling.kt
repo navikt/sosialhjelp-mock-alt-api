@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model
 
-import java.util.Date
+import java.time.LocalDate
 
 data class UtbetalingsListeDto(
         var utbetalinger: List<UtbetalingDto> = listOf(),
@@ -16,6 +16,9 @@ data class UtbetalingsListeDto(
 
 data class UtbetalingDto(
         val belop: Double = 1337.0,
-        val dato: Date = Date(),
+        val dato: LocalDate = LocalDate.now(),
         val ytelsestype: String = "Dagpenger",
+        val melding: String = "",
+        val skattebelop: Double = 0.0,
+        val ytelseskomponenttype: String = "",
 )
