@@ -327,9 +327,9 @@ class FiksController(
         log.info("Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId")
         val vedleggsInfoText: String = body["vedlegg.json"].toString()
         val vedleggsJson = objectMapper.readValue(vedleggsInfoText, object : TypeReference<List<JsonVedleggSpesifikasjon>>() {}).first()
-        body.keys.forEach {
-            if (it.startsWith("vedleggSpesifikasjon")) {
-                val json = body[it].toString()
+        body.keys.forEach { key ->
+            if (key.startsWith("vedleggSpesifikasjon")) {
+                val json = body[key].toString()
                 val vedleggMetadata = objectMapper.readValue(json, object : TypeReference<List<VedleggMetadata>>() {}).first()
                 val file = request.fileMap.values.find { it.originalFilename == vedleggMetadata.filnavn }
                 soknadService.lastOppFil(
