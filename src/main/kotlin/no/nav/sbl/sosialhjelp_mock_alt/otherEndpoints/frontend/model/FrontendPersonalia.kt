@@ -199,14 +199,24 @@ data class FrontendUtbetalingFraNav(
         val belop: Double,
         val dato: LocalDate,
         val ytelsestype: String,
+        val melding: String,
+        val skattebelop: Double,
+        val ytelseskomponenttype: String,
 ) {
     fun frontToBackend(): UtbetalingDto {
-        return UtbetalingDto(belop, dato, ytelsestype)
+        return UtbetalingDto(belop, dato, ytelsestype, melding, skattebelop, ytelseskomponenttype)
     }
 
     companion object {
         fun mapToFrontend(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
-            return FrontendUtbetalingFraNav(utbetaling.belop, utbetaling.dato, utbetaling.ytelsestype)
+            return FrontendUtbetalingFraNav(
+                    utbetaling.belop,
+                    utbetaling.dato,
+                    utbetaling.ytelsestype,
+                    utbetaling.melding,
+                    utbetaling.skattebelop,
+                    utbetaling.ytelseskomponenttype,
+            )
         }
     }
 }

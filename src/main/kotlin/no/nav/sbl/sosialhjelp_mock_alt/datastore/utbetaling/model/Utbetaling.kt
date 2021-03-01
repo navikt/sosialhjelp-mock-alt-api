@@ -18,4 +18,7 @@ data class UtbetalingDto(
         val belop: Double = 1337.0,
         val dato: LocalDate = LocalDate.now(),
         val ytelsestype: String = "Dagpenger",
+        val melding: String = "",
+        val skattebelop: Double = 0.0,
+        val ytelseskomponenttype: String = "",
 )
