@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 data class Personalia(
     val fnr: String = genererTilfeldigPersonnummer(),
     val navn: PdlPersonNavn = PdlPersonNavn(),
-    var addressebeskyttelse: Gradering = Gradering.UGRADERT,
+    var adressebeskyttelse: Gradering = Gradering.UGRADERT,
     var sivilstand: String = "UOPPGITT",
     var ektefelle: String? = null,
     var forelderBarnRelasjon: List<ForelderBarnRelasjon> = emptyList(),
@@ -23,7 +23,7 @@ data class Personalia(
     }
 
     fun withAdressebeskyttelse(nyVerdi: Gradering): Personalia {
-        addressebeskyttelse = nyVerdi
+        adressebeskyttelse = nyVerdi
         return this
     }
 
