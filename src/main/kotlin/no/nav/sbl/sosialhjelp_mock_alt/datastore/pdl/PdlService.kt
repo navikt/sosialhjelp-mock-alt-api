@@ -85,7 +85,7 @@ class PdlService(
         var adressebeskyttelseList: List<Adressebeskyttelse> = emptyList()
         var navnList: List<PdlNavn> = emptyList()
         if (personalia != null) {
-            adressebeskyttelseList = listOf(Adressebeskyttelse(personalia.addressebeskyttelse))
+            adressebeskyttelseList = listOf(Adressebeskyttelse(personalia.adressebeskyttelse))
             navnList = listOf(PdlNavn(personalia.navn.fornavn))
         }
         return PdlInnsynPersonResponse(
@@ -135,7 +135,7 @@ class PdlService(
 
         if (personalia != null) {
             navn = PdlSoknadPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn)
-            adressebeskyttelse = Adressebeskyttelse(personalia.addressebeskyttelse)
+            adressebeskyttelse = Adressebeskyttelse(personalia.adressebeskyttelse)
             if (personalia.sivilstand.equals("GIFT", true) || personalia.sivilstand.equals("PARTNER", true)) {
                 val ektefelleIdent = genererTilfeldigPersonnummer()
                 sivilstand = PdlSivilstand(SivilstandType.valueOf(personalia.sivilstand), ektefelleIdent)
