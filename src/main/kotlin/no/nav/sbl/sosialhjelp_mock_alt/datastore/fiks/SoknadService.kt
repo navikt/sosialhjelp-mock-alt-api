@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSaksStatus
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSoknadsStatus
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
@@ -34,6 +35,8 @@ import java.util.UUID
 import kotlin.collections.get
 import kotlin.collections.set
 
+const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
+
 @Service
 class SoknadService {
     companion object {
@@ -52,14 +55,14 @@ class SoknadService {
         return soknad
     }
 
-    fun listSoknader(fnr: String?): String {
+    fun listSoknader(fnr: String?): MutableCollection<DigisosSak> {
 //        if(fnr == null) {
         log.info("Henter søknadsliste. Antall soknader: ${soknadsliste.size}")
-        return objectMapper.writeValueAsString(soknadsliste.values)
+        return soknadsliste.values
 //        }
 //        val soknadslisteForFnr = soknadsliste.values.filter{it.sokerFnr.equals(fnr)}
 //        log.info("Henter søknadsliste. Antall soknader for $fnr: ${soknadslisteForFnr.size}")
-//        return objectMapper.writeValueAsString(soknadslisteForFnr)
+//        return soknadslisteForFnr
     }
 
     fun opprettDigisosSak(fiksOrgId: String, fnr: String, id: String) {
@@ -80,7 +83,7 @@ class SoknadService {
             enhetsnummer: String = "1234",
             jsonSoknad: JsonSoknad? = null,
             dokumenter: MutableList<DokumentInfo> = mutableListOf(),
-            soknadDokument : DokumentInfo? = null
+            soknadDokument: DokumentInfo? = null
     ): String? {
         var fiksDigisosId = fiksDigisosIdInput
         if (fiksDigisosId == null) {
@@ -229,7 +232,7 @@ class SoknadService {
                         ))
         )
         leggVedleggTilISak(fiksDigisosId, vedleggMetadata, vedleggsId, timestamp)
-        if(file != null) {
+        if (file != null) {
             fillager.add(vedleggsId, vedleggMetadata.filnavn ?: file.name, file.bytes)
         }
         log.info("Lastet opp fil fiksDigisosId: $fiksDigisosId, filnavn: ${vedleggMetadata.filnavn}, vedleggsId: $vedleggsId")
@@ -244,20 +247,37 @@ class SoknadService {
         fillager.add(vedleggsId, filnavn, bytes)
         return vedleggsId
     }
+
+    fun hentSoknadstittel(fiksDigisosId: String): String {
+        val digisosSak = soknadsliste[fiksDigisosId]
+        val soknadString = dokumentLager[digisosSak!!.digisosSoker!!.metadata]
+        val soknad = objectMapper.readValue(soknadString, JsonDigisosSoker::class.java)
+        val saksTittelMap = HashMap<String, String>()
+        soknad.hendelser.filter { it.type == JsonHendelse.Type.SAKS_STATUS }
+                .forEach {
+                    if (it is JsonSaksStatus) {
+                        saksTittelMap.put(it.referanse, it.tittel)
+                    }
+                }
+        if(saksTittelMap.isNotEmpty()) {
+            return saksTittelMap.values.joinToString()
+        }
+        return SOKNAD_DEFAULT_TITTEL
+    }
 }
 
 class FixedFileStrorage {
     private val maxSize = 200
-    private val items:MutableList<FileEntry> = mutableListOf()
+    private val items: MutableList<FileEntry> = mutableListOf()
 
     fun add(key: String, fileName: String, bytes: ByteArray) {
-        while(items.size >= maxSize) {
+        while (items.size >= maxSize) {
             items.removeAt(0)
         }
         items.add(FileEntry(key, fileName, bytes))
     }
 
-    fun find(key:String): FileEntry? {
+    fun find(key: String): FileEntry? {
         return items.findLast { it.key == key }
     }
 }

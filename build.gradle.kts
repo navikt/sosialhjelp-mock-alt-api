@@ -3,7 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.3.7.RELEASE"
+val springBootVersion = "2.3.9.RELEASE"
 val coroutinesVersion = "1.4.2"
 val sosialhjelpCommonVersion = "1.4ef74b4"
 val filformatVersion = "1.2020.11.05-09.32-14af05dea965"

@@ -6,6 +6,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
@@ -19,9 +20,13 @@ import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPer
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.aaregArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.pdlPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSoknad
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapToFrontend
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendVedlegg
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
+import no.nav.sosialhjelp.api.fiks.DigisosSak
+import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -38,6 +43,7 @@ class FrontendController(
         private val utbetalingService: UtbetalingService,
         private val eregService: EregService,
         private val dkifService: DkifService,
+        private val soknadService: SoknadService,
 ) {
     companion object {
         private val log by logger()
@@ -110,5 +116,30 @@ class FrontendController(
     fun personListe(): ResponseEntity<Collection<Personalia>> {
         val personListe = pdlService.getPersonListe()
         return ResponseEntity.ok(personListe)
+    }
+
+    @GetMapping("/mock-alt/soknad/liste")
+    fun soknadsListe(): ResponseEntity<Collection<FrontendSoknad>> {
+        return ResponseEntity.ok(soknadService.listSoknader(null).map { toFrontendSoknad(it) })
+    }
+
+    private fun toFrontendSoknad(soknad: DigisosSak) : FrontendSoknad {
+        soknadService.hentSoknadstittel(soknad.fiksDigisosId)
+        val vedlegg = mutableListOf<FrontendVedlegg>()
+        vedlegg.addAll(soknad.digisosSoker!!.dokumenter.map { toVedlegg(it) })
+        soknad.ettersendtInfoNAV!!.ettersendelser.forEach { ettersendelse ->
+            ettersendelse.vedlegg.forEach { vedlegg.add(toVedlegg(it))}
+        }
+        return FrontendSoknad(
+                sokerFnr = soknad.sokerFnr,
+                sokerNavn = pdlService.getPersonalia(soknad.sokerFnr).navn.toString(),
+                fiksDigisosId = soknad.fiksDigisosId,
+                tittel = soknadService.hentSoknadstittel(soknad.fiksDigisosId),
+                vedlegg = vedlegg
+        )
+    }
+
+    private fun toVedlegg(dokument: DokumentInfo) : FrontendVedlegg {
+        return FrontendVedlegg(dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse)
     }
 }
