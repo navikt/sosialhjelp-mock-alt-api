@@ -58,7 +58,7 @@ class FiksController(
         val fnr = hentFnrFraHeaders(headers)
         feilService.eventueltLagFeil(fnr, "FixController", "hentSoknad")
         val soknadsListe = soknadService.listSoknader(fnr)
-        return ResponseEntity.ok(soknadsListe)
+        return ResponseEntity.ok(objectMapper.writeValueAsString(soknadsListe))
     }
 
     @GetMapping("/fiks/digisos/api/v1/soknader/{digisosId}")
@@ -192,7 +192,7 @@ class FiksController(
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "hentSoknad")
         val soknadsListe = soknadService.listSoknader(hentFnrFraBody(body))
-        return ResponseEntity.ok(soknadsListe)
+        return ResponseEntity.ok(objectMapper.writeValueAsString(soknadsListe))
     }
 
     @GetMapping("/fiks/digisos/api/v1/nav/soknader/{digisosId}")
