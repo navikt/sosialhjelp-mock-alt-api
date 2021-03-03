@@ -34,7 +34,7 @@ import java.time.LocalDate
 data class FrontendPersonalia(
         val fnr: String = genererTilfeldigPersonnummer(),
         val navn: PdlPersonNavn = PdlPersonNavn(),
-        var addressebeskyttelse: Gradering = Gradering.UGRADERT,
+        var adressebeskyttelse: Gradering = Gradering.UGRADERT,
         var sivilstand: String = "UOPPGITT",
         var ektefelle: String? = null,
         var barn: List<FrontendBarn>,
@@ -51,7 +51,7 @@ data class FrontendPersonalia(
     constructor(personalia: Personalia) : this(
             fnr = personalia.fnr,
             navn = personalia.navn,
-            addressebeskyttelse = personalia.addressebeskyttelse,
+            adressebeskyttelse = personalia.adressebeskyttelse,
             sivilstand = personalia.sivilstand,
             ektefelle = personalia.ektefelle,
             barn = emptyList(),
@@ -72,7 +72,7 @@ data class FrontendPersonalia(
             return Personalia(
                     fnr = personalia.fnr,
                     navn = personalia.navn,
-                    addressebeskyttelse = personalia.addressebeskyttelse,
+                    adressebeskyttelse = personalia.adressebeskyttelse,
                     sivilstand = personalia.sivilstand,
                     ektefelle = personalia.ektefelle,
                     forelderBarnRelasjon = forelderBarnRelasjon,
@@ -112,7 +112,7 @@ data class FrontendPersonalia(
 
 data class FrontendBarn(
         val fnr: String,
-        var addressebeskyttelse: Gradering = Gradering.UGRADERT,
+        var adressebeskyttelse: Gradering = Gradering.UGRADERT,
         var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
         var folkeregisterpersonstatus: String = "bosatt",
         val foedsel: LocalDate = LocalDate.now().minusYears(10),
@@ -131,7 +131,7 @@ data class FrontendBarn(
                 null,
         )
         return PdlSoknadBarn(
-                adressebeskyttelse = listOf(Adressebeskyttelse(addressebeskyttelse)),
+                adressebeskyttelse = listOf(Adressebeskyttelse(adressebeskyttelse)),
                 bostedsadresse = listOf(PdlBostedsadresse(null, vegadresse, null, null)),
                 folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus(folkeregisterpersonstatus)),
                 foedsel = listOf(PdlFoedsel(foedsel)),
@@ -145,7 +145,7 @@ data class FrontendBarn(
             val navn = pdlBarn.navn?.first() ?: PdlSoknadPersonNavn("", "", "")
             return FrontendBarn(
                     fnr = fnr,
-                    addressebeskyttelse = pdlBarn.adressebeskyttelse!!.first().gradering,
+                    adressebeskyttelse = pdlBarn.adressebeskyttelse!!.first().gradering,
                     bostedsadresse = ForenkletBostedsadresse(
                             adressenavn = bostedsadresse.vegadresse?.adressenavn ?: "",
                             husnummer = bostedsadresse.vegadresse?.husnummer ?: 1,
