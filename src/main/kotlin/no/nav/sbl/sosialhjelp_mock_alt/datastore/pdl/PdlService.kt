@@ -69,7 +69,6 @@ class PdlService(
     private val personListe: HashMap<String, Personalia> = HashMap()
     private val ektefelleMap = mutableMapOf<String, PdlSoknadEktefelle>()
     private val barnMap = mutableMapOf<String, PdlSoknadBarn>()
-    private val adressebeskyttelseMap = mutableMapOf<String, PdlSoknadAdressebeskyttelse>()
 
     init {
         opprettBrukerMedAlt(fastFnr, "Standard", "Standardsen", "NOR", 1)
@@ -210,12 +209,16 @@ class PdlService(
     fun getSoknadAdressebeskyttelseResponseFor(ident: String): PdlSoknadAdressebeskyttelseResponse {
         log.info("Henter PDL adressebeskyttelse for $ident")
 
-        val pdlAdressebeskyttelse = adressebeskyttelseMap[ident] ?: defaultAdressebeskyttelse()
+        val personalia = personListe[ident]
+        var adressebeskyttelse = Adressebeskyttelse(Gradering.UGRADERT)
+        if (personalia != null) {
+            adressebeskyttelse = Adressebeskyttelse(personalia.adressebeskyttelse)
+        }
 
         return PdlSoknadAdressebeskyttelseResponse(
             errors = null,
             data = PdlSoknadHentAdressebeskyttelse(
-                hentPerson = pdlAdressebeskyttelse
+                hentPerson = PdlSoknadAdressebeskyttelse(adressebeskyttelse = listOf(adressebeskyttelse))
             )
         )
     }
@@ -330,10 +333,5 @@ class PdlService(
                         foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(10))),
                         navn = listOf(PdlSoknadPersonNavn("Kid", "", etternavn))
                 )
-
-        private fun defaultAdressebeskyttelse() =
-            PdlSoknadAdressebeskyttelse(
-                adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT))
-            )
     }
 }
