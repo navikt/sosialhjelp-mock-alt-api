@@ -15,6 +15,11 @@ data class PdlSoknadBarnResponse(
         val data: PdlSoknadHentBarn?
 )
 
+data class PdlSoknadAdressebeskyttelseResponse(
+        val errors: List<PdlError>?,
+        val data: PdlSoknadHentAdressebeskyttelse?
+)
+
 data class PdlSoknadHentPerson(
         val hentPerson: PdlSoknadPerson?
 )
@@ -59,4 +64,12 @@ data class PdlSoknadPersonNavn(
         val etternavn: String,
         val metadata: PdlMetadata = defaultMetadata(),
         val folkeregistermetadata: PdlFolkeregistermetadata = defaultFolkeregistermetadata(),
+)
+
+data class PdlSoknadHentAdressebeskyttelse(
+        val hentPerson: PdlSoknadAdressebeskyttelse?
+)
+
+data class PdlSoknadAdressebeskyttelse(
+        val adressebeskyttelse: List<Adressebeskyttelse>?
 )

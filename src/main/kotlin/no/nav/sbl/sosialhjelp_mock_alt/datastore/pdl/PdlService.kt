@@ -25,10 +25,13 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaPersonRespons
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlNavn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlPersonNavn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSivilstand
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadAdressebeskyttelse
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadAdressebeskyttelseResponse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadBarn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadBarnResponse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadEktefelle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadEktefelleResponse
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentAdressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentBarn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentEktefelle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentPerson
@@ -203,6 +206,23 @@ class PdlService(
         )
     }
 
+    fun getSoknadAdressebeskyttelseResponseFor(ident: String): PdlSoknadAdressebeskyttelseResponse {
+        log.info("Henter PDL adressebeskyttelse for $ident")
+
+        val personalia = personListe[ident]
+        var adressebeskyttelse = Adressebeskyttelse(Gradering.UGRADERT)
+        if (personalia != null) {
+            adressebeskyttelse = Adressebeskyttelse(personalia.adressebeskyttelse)
+        }
+
+        return PdlSoknadAdressebeskyttelseResponse(
+            errors = null,
+            data = PdlSoknadHentAdressebeskyttelse(
+                hentPerson = PdlSoknadAdressebeskyttelse(adressebeskyttelse = listOf(adressebeskyttelse))
+            )
+        )
+    }
+
     // Util:
 
     fun leggTilPerson(personalia: Personalia) {
@@ -313,6 +333,5 @@ class PdlService(
                         foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(10))),
                         navn = listOf(PdlSoknadPersonNavn("Kid", "", etternavn))
                 )
-
     }
 }

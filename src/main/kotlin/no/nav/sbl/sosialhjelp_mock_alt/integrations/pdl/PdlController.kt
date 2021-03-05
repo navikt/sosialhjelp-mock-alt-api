@@ -33,8 +33,9 @@ class PdlController(
      * forelderBarnRelasjon -> kun del av person-request fra soknad-api
      * folkeregisterpersonstatus -> kun del av barn-request fra soknad-api
      * bostedsadresse -> del av ektefelle-request fra soknad-api (gjelder også de 2 over, men denne inneholder verken forelderBarnRelasjon eller folkeregisterpersonstatus)
-     * adressebeskyttelse -> del av request fra innsyn-api (gjelder også de 3 over, men denne inneholder verken forelderBarnRelasjon, folkeregisterpersonstatus eller bostedsadresse)
      * kjoenn -> kun del av request fra modia-api
+     * navn -> del av request fra innsyn-api (gjelder også 3 av de over, men denne inneholder verken forelderBarnRelasjon, folkeregisterpersonstatus eller bostedsadresse)
+     * adressebeskyttelse -> tilgangskontroll-sjekk kall fra soknad-api
      */
     private fun decideResponse(pdlRequest: PdlRequest): String {
         val fnr = pdlRequest.variables.ident
@@ -51,13 +52,17 @@ class PdlController(
                 feilService.eventueltLagFeil(fnr, "PdlController", "getSoknadEktefelle")
                 objectMapper.writeValueAsString(pdlService.getSoknadEktefelleResponseFor(fnr))
             }
-            pdlRequest.query.contains(Regex("(adressebeskyttelse)")) -> {
-                feilService.eventueltLagFeil(fnr, "PdlController", "getInnsyn")
-                objectMapper.writeValueAsString(pdlService.getInnsynResponseFor(fnr))
-            }
             pdlRequest.query.contains(Regex("(kjoenn)")) -> {
                 feilService.eventueltLagFeil(fnr, "PdlController", "getModia")
                 objectMapper.writeValueAsString(pdlService.getModiaResponseFor(fnr))
+            }
+            pdlRequest.query.contains(Regex("(navn)")) -> {
+                feilService.eventueltLagFeil(fnr, "PdlController", "getInnsyn")
+                objectMapper.writeValueAsString(pdlService.getInnsynResponseFor(fnr))
+            }
+            pdlRequest.query.contains(Regex("(adressebeskyttelse)")) -> {
+                feilService.eventueltLagFeil(fnr, "PdlController", "getSoknadAdressebeskyttelse")
+                objectMapper.writeValueAsString(pdlService.getSoknadAdressebeskyttelseResponseFor(fnr))
             }
             else -> "OK"
         }
