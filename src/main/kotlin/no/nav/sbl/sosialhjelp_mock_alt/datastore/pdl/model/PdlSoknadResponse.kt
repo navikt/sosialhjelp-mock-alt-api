@@ -25,7 +25,6 @@ data class PdlSoknadHentPerson(
 )
 
 data class PdlSoknadPerson(
-        val adressebeskyttelse: List<Adressebeskyttelse>?,
         val bostedsadresse: List<PdlBostedsadresse>?,
         val oppholdsadresse: List<PdlOppholdsadresse>?,
         val kontaktadresse: List<PdlKontaktadresse>?,

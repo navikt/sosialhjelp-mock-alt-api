@@ -129,7 +129,6 @@ class PdlService(
         log.info("Henter PDL soknad data for (person) $ident")
 
         val personalia = personListe[ident]
-        var adressebeskyttelse = Adressebeskyttelse(Gradering.UGRADERT)
         var navn = PdlSoknadPersonNavn("Person", "", "Testperson")
         var forelderBarnRelasjon: List<PdlForelderBarnRelasjon> = emptyList()
         var sivilstand = PdlSivilstand(SivilstandType.UGIFT, null)
@@ -138,7 +137,6 @@ class PdlService(
 
         if (personalia != null) {
             navn = PdlSoknadPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn)
-            adressebeskyttelse = Adressebeskyttelse(personalia.adressebeskyttelse)
             if (personalia.sivilstand.equals("GIFT", true) || personalia.sivilstand.equals("PARTNER", true)) {
                 val ektefelleIdent = genererTilfeldigPersonnummer()
                 sivilstand = PdlSivilstand(SivilstandType.valueOf(personalia.sivilstand), ektefelleIdent)
@@ -167,7 +165,6 @@ class PdlService(
                 errors = null,
                 data = PdlSoknadHentPerson(
                         hentPerson = PdlSoknadPerson(
-                                adressebeskyttelse = listOf(adressebeskyttelse),
                                 bostedsadresse = listOf(bostedsadresse),
                                 kontaktadresse = emptyList(),
                                 oppholdsadresse = emptyList(),
