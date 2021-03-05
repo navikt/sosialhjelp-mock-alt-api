@@ -25,10 +25,13 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaPersonRespons
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlNavn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlPersonNavn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSivilstand
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadAdressebeskyttelse
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadAdressebeskyttelseResponse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadBarn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadBarnResponse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadEktefelle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadEktefelleResponse
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentAdressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentBarn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentEktefelle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentPerson
@@ -66,6 +69,7 @@ class PdlService(
     private val personListe: HashMap<String, Personalia> = HashMap()
     private val ektefelleMap = mutableMapOf<String, PdlSoknadEktefelle>()
     private val barnMap = mutableMapOf<String, PdlSoknadBarn>()
+    private val adressebeskyttelseMap = mutableMapOf<String, PdlSoknadAdressebeskyttelse>()
 
     init {
         opprettBrukerMedAlt(fastFnr, "Standard", "Standardsen", "NOR", 1)
@@ -203,6 +207,19 @@ class PdlService(
         )
     }
 
+    fun getSoknadAdressebeskyttelseResponseFor(ident: String): PdlSoknadAdressebeskyttelseResponse {
+        log.info("Henter PDL adressebeskyttelse for $ident")
+
+        val pdlAdressebeskyttelse = adressebeskyttelseMap[ident] ?: defaultAdressebeskyttelse()
+
+        return PdlSoknadAdressebeskyttelseResponse(
+            errors = null,
+            data = PdlSoknadHentAdressebeskyttelse(
+                hentPerson = pdlAdressebeskyttelse
+            )
+        )
+    }
+
     // Util:
 
     fun leggTilPerson(personalia: Personalia) {
@@ -314,5 +331,9 @@ class PdlService(
                         navn = listOf(PdlSoknadPersonNavn("Kid", "", etternavn))
                 )
 
+        private fun defaultAdressebeskyttelse() =
+            PdlSoknadAdressebeskyttelse(
+                adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT))
+            )
     }
 }
