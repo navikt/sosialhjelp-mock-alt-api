@@ -138,15 +138,11 @@ data class PdlMetadata(
 data class PdlEndring(
         val kilde: String?,
         val registrert: LocalDateTime?,
-        val registrertAv: String?,
-        val systemkilde: String?,
         val type: String?
 )
 
 data class PdlFolkeregistermetadata(
         val ajourholdstidspunkt: LocalDateTime?,
-        val gyldighetstidspunkt: LocalDateTime?,
-        val opphoerstidspunkt: LocalDateTime?,
         val kilde: String?
 )
 
@@ -156,8 +152,6 @@ fun defaultMetadata() =
                 listOf(PdlEndring(
                         kilde = "NAV",
                         registrert = LocalDateTime.now().minusDays(7),
-                        registrertAv = "saksbehandler",
-                        systemkilde = "kilde",
                         type = "type"
                 ))
         )
@@ -165,7 +159,5 @@ fun defaultMetadata() =
 fun defaultFolkeregistermetadata() =
         PdlFolkeregistermetadata(
                 ajourholdstidspunkt = LocalDateTime.now().minusDays(6),
-                gyldighetstidspunkt = LocalDateTime.now().minusYears(1),
-                opphoerstidspunkt = null,
                 kilde = "kilde"
         )
