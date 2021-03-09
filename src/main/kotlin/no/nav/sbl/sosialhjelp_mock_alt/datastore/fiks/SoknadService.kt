@@ -65,12 +65,12 @@ class SoknadService {
 //        return soknadslisteForFnr
     }
 
-    fun opprettDigisosSak(fiksOrgId: String, fnr: String, id: String) {
+    fun opprettDigisosSak(fiksOrgId: String, kommuneNr: String, fnr: String, id: String) {
         val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
         digisosApiWrapper.sak.soker.hendelser.add(JsonSoknadsStatus()
                 .withHendelsestidspunkt(DateTime.now().toDateTimeISO().toString())
                 .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT))
-        oppdaterDigisosSak(kommuneNr = "0301", fiksOrgId = fiksOrgId,
+        oppdaterDigisosSak(kommuneNr = kommuneNr, fiksOrgId = fiksOrgId,
                 fnr = fnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
     }
 
@@ -82,6 +82,7 @@ class SoknadService {
             digisosApiWrapper: DigisosApiWrapper,
             enhetsnummer: String = "1234",
             jsonSoknad: JsonSoknad? = null,
+            jsonVedlegg: JsonVedleggSpesifikasjon? = null,
             dokumenter: MutableList<DokumentInfo> = mutableListOf(),
             soknadDokument: DokumentInfo? = null
     ): String? {
@@ -128,8 +129,8 @@ class SoknadService {
             val orginalSoknad = objectMapper.writeValueAsString(soknad)
             dokumentLager[metadataId] = orginalSoknad
             log.info("Lagrer vedleggs metadata med dokumentlagerId: $vedleggMetadataId")
-            val vedleggMetadata = VedleggMetadata("soknad.json", "application/json", orginalSoknad.length.toLong())
-            dokumentLager[vedleggMetadataId] = objectMapper.writeValueAsString(vedleggMetadata)
+            val vedlegg = jsonVedlegg ?: defaultVedleggMetadata()
+            dokumentLager[vedleggMetadataId] = objectMapper.writeValueAsString(vedlegg)
         } else {
             log.info("Oppdaterer søknad med id: $fiksDigisosId")
             oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(fiksDigisosId, digisosApiWrapper)
@@ -140,6 +141,10 @@ class SoknadService {
             soknadsliste.replace(fiksDigisosId, updatedDigisosSak)
         }
         return fiksDigisosId
+    }
+
+    private fun defaultVedleggMetadata(): JsonVedleggSpesifikasjon {
+        return JsonVedleggSpesifikasjon()
     }
 
     private fun leggVedleggTilISak(id: String, nyttVedlegg: VedleggMetadata, dokumentId: String, timestamp: Long) {
@@ -256,7 +261,7 @@ class SoknadService {
         soknad.hendelser.filter { it.type == JsonHendelse.Type.SAKS_STATUS }
                 .forEach {
                     if (it is JsonSaksStatus) {
-                        saksTittelMap.put(it.referanse, it.tittel)
+                        saksTittelMap[it.referanse] = it.tittel
                     }
                 }
         if(saksTittelMap.isNotEmpty()) {

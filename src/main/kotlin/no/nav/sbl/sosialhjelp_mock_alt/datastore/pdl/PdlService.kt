@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.adresse.AdresseService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
@@ -11,10 +12,10 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadres
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlForelderBarnRelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedsel
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedselsdato
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregisterpersonstatus
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlForelderBarnRelasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlInnsynHentPerson
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlInnsynPerson
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlInnsynPersonResponse
@@ -53,7 +54,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.util.UUID
 
 @Service
 class PdlService(
@@ -64,6 +64,7 @@ class PdlService(
         val utbetalingService: UtbetalingService,
         val bostotteService: BostotteService,
         val soknadService: SoknadService,
+        val adresseService: AdresseService,
 ) {
 
     private val personListe: HashMap<String, Personalia> = HashMap()
@@ -72,7 +73,9 @@ class PdlService(
 
     init {
         opprettBrukerMedAlt(fastFnr, "Standard", "Standardsen", "NOR", 1)
-        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 2)
+        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Bergen", "Bergenhusen", "NOR", 2,
+                postnummer = "5005", kommuneNummer = "4601", enhetsnummer = "1209")
+        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 3)
 
         val hemmeligBruker = Personalia()
                 .withNavn("Hemmelig", "", "Adressesen")
@@ -213,10 +216,10 @@ class PdlService(
         }
 
         return PdlSoknadAdressebeskyttelseResponse(
-            errors = null,
-            data = PdlSoknadHentAdressebeskyttelse(
-                hentPerson = PdlSoknadAdressebeskyttelse(adressebeskyttelse = listOf(adressebeskyttelse))
-            )
+                errors = null,
+                data = PdlSoknadHentAdressebeskyttelse(
+                        hentPerson = PdlSoknadAdressebeskyttelse(adressebeskyttelse = listOf(adressebeskyttelse))
+                )
         )
     }
 
@@ -227,6 +230,7 @@ class PdlService(
             throw MockAltException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
         personListe[personalia.fnr] = personalia
+        adresseService.putAdresseInfo(personalia.bostedsadresse.postnummer, personalia.bostedsadresse)
     }
 
     fun leggTilBarn(fnr: String, pdlBarn: PdlSoknadBarn) {
@@ -256,7 +260,16 @@ class PdlService(
         return personListe.containsKey(key = fnr)
     }
 
-    private fun opprettBrukerMedAlt(brukerFnr: String, fornavn: String, etternavn: String, statsborgerskap: String, position: Long) {
+    private fun opprettBrukerMedAlt(
+            brukerFnr: String,
+            fornavn: String,
+            etternavn: String,
+            statsborgerskap: String,
+            position: Long,
+            postnummer: String = "0101",
+            kommuneNummer: String = "0301",
+            enhetsnummer: String = "1234",
+    ) {
         val barnFnr = genererTilfeldigPersonnummer()
         val standardBruker = Personalia(fnr = brukerFnr)
                 .withNavn(fornavn, "", etternavn)
@@ -264,13 +277,14 @@ class PdlService(
                 .withEktefelle("EKTEFELLE_SAMME_BOSTED")
                 .withSivilstand("GIFT")
                 .withForelderBarnRelasjon(barnFnr)
-                .withBostedsadresse(ForenkletBostedsadresse("Gateveien", 1, "0101", "0301"))
+                .withBostedsadresse(ForenkletBostedsadresse("Gateveien", 1, postnummer, kommuneNummer))
                 .withStarsborgerskap(statsborgerskap)
                 .locked()
         personListe[brukerFnr] = standardBruker
         ektefelleMap[brukerFnr] = ektefelleSammeBosted
         barnMap[barnFnr] = defaultBarn(etternavn)
 
+        adresseService.putAdresseInfo(standardBruker.bostedsadresse.postnummer, standardBruker.bostedsadresse, enhetsnummer)
         dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
         eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")
@@ -284,7 +298,7 @@ class PdlService(
         utbetalingService.enableAutoGenerationFor(brukerFnr)
         bostotteService.enableAutoGenerationFor(brukerFnr)
 
-        soknadService.opprettDigisosSak("1234", brukerFnr, UUID.randomUUID().toString())
+        soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, brukerFnr)
     }
 
     companion object {
