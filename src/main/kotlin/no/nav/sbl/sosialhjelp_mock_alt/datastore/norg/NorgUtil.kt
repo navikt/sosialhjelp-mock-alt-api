@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.norg
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.norg.model.NavEnhet
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.norg.model.NavEnhet
 
 private val sosialetjenesterInfo: String = """
         Til saksbehandler:

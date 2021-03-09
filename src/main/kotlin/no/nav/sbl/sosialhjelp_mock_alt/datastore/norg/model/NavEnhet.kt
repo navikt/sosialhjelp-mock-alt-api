@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.norg.model
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.norg.model
 
 data class NavEnhet(
         val enhetId: Int,

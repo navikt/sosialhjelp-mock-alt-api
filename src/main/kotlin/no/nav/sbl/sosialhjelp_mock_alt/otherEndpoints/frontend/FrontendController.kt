@@ -29,10 +29,14 @@ import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.io.ByteArrayOutputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 @RestController
 class FrontendController(
@@ -118,6 +122,43 @@ class FrontendController(
         return ResponseEntity.ok(personListe)
     }
 
+    @GetMapping("/mock-alt/soknad/{fiksDigisosId}", produces = arrayOf("application/zip"))
+    fun zipSoknad(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
+        val soknad = soknadService.hentSoknad(fiksDigisosId)!!
+        val soknadsInfo = toFrontendSoknad(soknad)
+        val bytebuffer = ByteArrayOutputStream()
+        val zipArchive = ZipOutputStream(bytebuffer)
+
+        val soknadJson = soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata)
+        val soknadZip = ZipEntry("soknad.json")
+        zipArchive.putNextEntry(soknadZip)
+        zipArchive.write(soknadJson!!.toByteArray())
+        zipArchive.closeEntry()
+
+        val vedleggJson = soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata)
+        val vedleggZip = ZipEntry("vedlegg.json")
+        zipArchive.putNextEntry(vedleggZip)
+        zipArchive.write(vedleggJson!!.toByteArray())
+        zipArchive.closeEntry()
+
+        soknadsInfo.vedlegg.forEach { vedlegg ->
+            val fil = soknadService.hentFil(vedlegg.id)
+            if(fil != null) {
+                val zipFile = ZipEntry(fil.filnavn)
+                zipArchive.putNextEntry(zipFile)
+                zipArchive.write(fil.bytes)
+                zipArchive.closeEntry()
+            }
+        }
+        zipArchive.finish()
+        zipArchive.close()
+        bytebuffer.close()
+        return ResponseEntity.ok()
+                .header("Content-Disposition",
+                        "attachment; filename=soknad_$fiksDigisosId.zip")
+                .body(bytebuffer.toByteArray())
+    }
+
     @GetMapping("/mock-alt/soknad/liste")
     fun soknadsListe(): ResponseEntity<Collection<FrontendSoknad>> {
         return ResponseEntity.ok(soknadService.listSoknader(null).map { toFrontendSoknad(it) })
@@ -130,16 +171,24 @@ class FrontendController(
         soknad.ettersendtInfoNAV!!.ettersendelser.forEach { ettersendelse ->
             ettersendelse.vedlegg.forEach { vedlegg.add(toVedlegg(it))}
         }
+        val sokerNavn = try {
+            pdlService.getPersonalia(soknad.sokerFnr).navn.toString()
+        } catch (e: MockAltException) {
+            "<Ukjent>"
+        }
+
         return FrontendSoknad(
                 sokerFnr = soknad.sokerFnr,
-                sokerNavn = pdlService.getPersonalia(soknad.sokerFnr).navn.toString(),
+                sokerNavn = sokerNavn,
                 fiksDigisosId = soknad.fiksDigisosId,
                 tittel = soknadService.hentSoknadstittel(soknad.fiksDigisosId),
-                vedlegg = vedlegg
+                vedlegg = vedlegg,
+                vedleggSomMangler = vedlegg.filter { !it.kanLastesned }.size
         )
     }
 
     private fun toVedlegg(dokument: DokumentInfo) : FrontendVedlegg {
-        return FrontendVedlegg(dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse)
+        val kanLastesned = soknadService.hentFil(dokument.dokumentlagerDokumentId) != null
+        return FrontendVedlegg(dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse, kanLastesned)
     }
 }

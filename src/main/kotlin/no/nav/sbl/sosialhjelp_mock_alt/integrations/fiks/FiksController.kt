@@ -13,7 +13,9 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.JsonTilleggsinformasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.SakWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
@@ -47,6 +49,7 @@ class FiksController(
         private val soknadService: SoknadService,
         private val dokumentKrypteringsService: DokumentKrypteringsService,
         private val feilService: FeilService,
+        private val pdlService: PdlService,
 ) {
     companion object {
         private val log by logger()
@@ -126,13 +129,18 @@ class FiksController(
         var id = fiksDigisosId
         val fnr = hentFnrFraHeaders(headers)
         feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
+        val kommuneNr = try {
+            pdlService.getPersonalia(fnr).bostedsadresse.kommunenummer
+        } catch (e: MockAltException) {
+            "0301"
+        }
         return if (id == null || id.toLowerCase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
-            soknadService.opprettDigisosSak(fiksOrgId, fnr, id)
+            soknadService.opprettDigisosSak(fiksOrgId, kommuneNr, fnr, id)
             ResponseEntity.ok("$id")
         } else {
             val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
-            soknadService.oppdaterDigisosSak(kommuneNr = "0301", fiksOrgId = fiksOrgId,
+            soknadService.oppdaterDigisosSak(kommuneNr = kommuneNr, fiksOrgId = fiksOrgId,
                     fnr = fnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
             ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
         }
@@ -151,6 +159,7 @@ class FiksController(
                 .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT))
 
         val soknadJson = objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
+        val vedleggJson = objectMapper.readValue(request.parameterMap["vedleggJson"]!![0], JsonVedleggSpesifikasjon::class.java)
         val fnr = soknadJson.data.personalia.personIdentifikator.verdi
         feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
         val tilleggsinformasjonJson = objectMapper.readValue(
@@ -177,6 +186,7 @@ class FiksController(
                 enhetsnummer = enhetsnummer,
                 digisosApiWrapper = digisosApiWrapper,
                 jsonSoknad = soknadJson,
+                jsonVedlegg = vedleggJson,
                 dokumenter = dokumenter,
                 soknadDokument = dokumenter.firstOrNull { it.filnavn.toLowerCase() == "soknad.pdf" }
         )
@@ -226,16 +236,7 @@ class FiksController(
             @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "kommuneinfo")
-        val kommuneInfo = KommuneInfo(
-                kommunenummer = kommunenummer,
-                kanMottaSoknader = true,
-                kanOppdatereStatus = true,
-                harMidlertidigDeaktivertOppdateringer = false,
-                harMidlertidigDeaktivertMottak = false,
-                kontaktpersoner = null,
-                harNksTilgang = true,
-                behandlingsansvarlig = null
-        )
+        val kommuneInfo = lagKommuneInfo(kommunenummer)
         log.info("Henter kommuneinfo: $kommuneInfo")
         return ResponseEntity.ok(objectMapper.writeValueAsString(kommuneInfo))
     }
@@ -244,67 +245,28 @@ class FiksController(
     fun hentKommuneInfoListe(@RequestHeader headers: HttpHeaders): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "kommuneinfo")
         val kommuneInfoList = ArrayList<KommuneInfo>()
-        kommuneInfoList.add(KommuneInfo(
-                kommunenummer = "1000",
-                kanMottaSoknader = true,
-                kanOppdatereStatus = true,
-                harMidlertidigDeaktivertOppdateringer = false,
-                harMidlertidigDeaktivertMottak = false,
-                kontaktpersoner = null,
-                harNksTilgang = true,
-                behandlingsansvarlig = null
-        ))
-        kommuneInfoList.add(KommuneInfo(
-                kommunenummer = "1001",
-                kanMottaSoknader = true,
-                kanOppdatereStatus = true,
-                harMidlertidigDeaktivertOppdateringer = false,
-                harMidlertidigDeaktivertMottak = false,
-                kontaktpersoner = Kontaktpersoner(
-                        Collections.singletonList("Kontakt1001@testnav.no"),
-                        Collections.singletonList("Test1001@testnav.no")),
-                harNksTilgang = true,
-                behandlingsansvarlig = "Behandling1001@testnav.no"
-        ))
-        kommuneInfoList.add(KommuneInfo(
-                kommunenummer = "1002",
-                kanMottaSoknader = true,
-                kanOppdatereStatus = true,
-                harMidlertidigDeaktivertOppdateringer = false,
-                harMidlertidigDeaktivertMottak = false,
-                kontaktpersoner = Kontaktpersoner(
-                        Collections.singletonList("Kontakt1002@testnav.no"),
-                        Collections.singletonList("Test1002@testnav.no")),
-                harNksTilgang = false,
-                behandlingsansvarlig = "Behandlig1002@testnav.no"
-        ))
-        kommuneInfoList.add(KommuneInfo(
-                kommunenummer = "1003",
-                kanMottaSoknader = true,
-                kanOppdatereStatus = true,
-                harMidlertidigDeaktivertOppdateringer = true,
-                harMidlertidigDeaktivertMottak = true,
-                kontaktpersoner = Kontaktpersoner(
-                        Collections.singletonList("Kontakt1003@navo.no"),
-                        Collections.singletonList("Test1003@navno.no")),
-                harNksTilgang = true,
-                behandlingsansvarlig = null
-        ))
-        kommuneInfoList.add(KommuneInfo(
-                kommunenummer = "1514",
-                kanMottaSoknader = true,
-                kanOppdatereStatus = true,
-                harMidlertidigDeaktivertOppdateringer = false,
-                harMidlertidigDeaktivertMottak = false,
-                kontaktpersoner = Kontaktpersoner(
-                        Collections.singletonList("Kontakt1003@navo.no"),
-                        Collections.singletonList("Test1003@navno.no")),
-                harNksTilgang = true,
-                behandlingsansvarlig = null
-        ))
+        kommuneInfoList.add(lagKommuneInfo("1000"))
+        kommuneInfoList.add(lagKommuneInfo("1001"))
+        kommuneInfoList.add(lagKommuneInfo("1002"))
+        kommuneInfoList.add(lagKommuneInfo("1003"))
+        kommuneInfoList.add(lagKommuneInfo("1514"))
+        kommuneInfoList.add(lagKommuneInfo("4601"))
         log.info("Henter kommuneinfo: $kommuneInfoList")
         return ResponseEntity.ok(objectMapper.writeValueAsString(kommuneInfoList))
     }
+
+    private fun lagKommuneInfo(id: String) = KommuneInfo(
+            kommunenummer = id,
+            kanMottaSoknader = true,
+            kanOppdatereStatus = true,
+            harMidlertidigDeaktivertOppdateringer = false,
+            harMidlertidigDeaktivertMottak = false,
+            kontaktpersoner = Kontaktpersoner(
+                    Collections.singletonList("Kontakt$id@navo.no"),
+                    Collections.singletonList("Test$id@navno.no")),
+            harNksTilgang = true,
+            behandlingsansvarlig = null
+    )
 
     //    ======== public-key dokumentlager ========
     @GetMapping("/fiks/digisos/api/v1/dokumentlager-public-key")
