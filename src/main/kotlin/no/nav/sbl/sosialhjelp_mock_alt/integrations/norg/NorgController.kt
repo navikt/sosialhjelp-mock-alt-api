@@ -14,14 +14,14 @@ class NorgController(val norgService: NorgService) {
         private val log by logger()
     }
 
-    @GetMapping("/norg_endpoint_url/enhet")
+    @GetMapping("/norg_endpoint_url/enhet", produces = ["application/json;charset=UTF-8"])
     fun getAlleEnheter(@RequestParam enhetStatusListe: String): String {
         val navEnheter = norgService.getAlleNavenheter()
         log.info("Henter alle nav enheter: ${navEnheter.size} status: $enhetStatusListe")
         return objectMapper.writeValueAsString(navEnheter)
     }
 
-    @GetMapping("/norg_endpoint_url/enhet/{enhetsnr}")
+    @GetMapping("/norg_endpoint_url/enhet/{enhetsnr}", produces = ["application/json;charset=UTF-8"])
     fun getEnhet(@PathVariable enhetsnr: String): String {
         val navEnhet = norgService.getNavenhet(enhetsnr)
         log.info("Henter nav enhet for id: $enhetsnr")
@@ -35,7 +35,7 @@ class NorgController(val norgService: NorgService) {
         return objectMapper.writeValueAsString(navEnhet)
     }
 
-    @GetMapping("/norg_endpoint_url/kodeverk/EnhetstyperNorg")
+    @GetMapping("/norg_endpoint_url/kodeverk/EnhetstyperNorg", produces = ["application/json;charset=UTF-8"])
     fun hentEnhetstyperDummy(): String {
         log.info("Henter EnhetstyperNorg")
         return "OK"
