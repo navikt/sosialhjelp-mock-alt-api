@@ -66,7 +66,7 @@ class FiksController(
 
     @GetMapping("/fiks/digisos/api/v1/soknader/{digisosId}")
     fun hentSoknadInnsyn(@PathVariable digisosId: String): ResponseEntity<DigisosSak> {
-        val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.notFound().build()
+        val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.noContent().build()
         feilService.eventueltLagFeil(soknad.sokerFnr, "FixController", "hentSoknad")
         return ResponseEntity.ok(soknad)
     }
@@ -245,6 +245,8 @@ class FiksController(
     fun hentKommuneInfoListe(@RequestHeader headers: HttpHeaders): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "kommuneinfo")
         val kommuneInfoList = ArrayList<KommuneInfo>()
+        kommuneInfoList.add(lagKommuneInfo("0301"))
+        kommuneInfoList.add(lagKommuneInfo("0315"))
         kommuneInfoList.add(lagKommuneInfo("1000"))
         kommuneInfoList.add(lagKommuneInfo("1001"))
         kommuneInfoList.add(lagKommuneInfo("1002"))

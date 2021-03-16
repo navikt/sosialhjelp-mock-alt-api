@@ -268,7 +268,7 @@ class PdlService(
             position: Long,
             postnummer: String = "0101",
             kommuneNummer: String = "0301",
-            enhetsnummer: String = "1234",
+            enhetsnummer: String = "0315",
     ) {
         val barnFnr = genererTilfeldigPersonnummer()
         val standardBruker = Personalia(fnr = brukerFnr)

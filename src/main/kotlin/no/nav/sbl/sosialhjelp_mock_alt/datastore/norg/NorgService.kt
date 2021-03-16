@@ -11,7 +11,7 @@ class NorgService {
     private val navEnheter = mutableMapOf<String, NavEnhet>()
 
     init {
-        leggTilNavenhet(navEnheter, "1234", "Mock bydel, mock kommune")
+        leggTilNavenhet(navEnheter, "0315", "Grünerløkka, Oslo kommune")
         leggTilNavenhet(navEnheter, "1208", "NAV Årstad, Årstad kommune")
         leggTilNavenhet(navEnheter, "1209", "NAV Bergenhus, Bergen kommune")
         leggTilNavenhet(navEnheter, "1210", "NAV Ytrebygda, Bergen kommune")

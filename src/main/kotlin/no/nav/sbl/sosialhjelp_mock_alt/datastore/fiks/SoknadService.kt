@@ -80,7 +80,7 @@ class SoknadService {
             fnr: String,
             fiksDigisosIdInput: String?,
             digisosApiWrapper: DigisosApiWrapper,
-            enhetsnummer: String = "1234",
+            enhetsnummer: String = "0315",
             jsonSoknad: JsonSoknad? = null,
             jsonVedlegg: JsonVedleggSpesifikasjon? = null,
             dokumenter: MutableList<DokumentInfo> = mutableListOf(),
