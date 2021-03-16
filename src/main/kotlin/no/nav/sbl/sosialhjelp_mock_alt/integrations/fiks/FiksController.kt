@@ -246,6 +246,7 @@ class FiksController(
         feilService.eventueltLagFeil(headers, "FixController", "kommuneinfo")
         val kommuneInfoList = ArrayList<KommuneInfo>()
         kommuneInfoList.add(lagKommuneInfo("0301"))
+        kommuneInfoList.add(lagKommuneInfo("0315"))
         kommuneInfoList.add(lagKommuneInfo("1000"))
         kommuneInfoList.add(lagKommuneInfo("1001"))
         kommuneInfoList.add(lagKommuneInfo("1002"))
