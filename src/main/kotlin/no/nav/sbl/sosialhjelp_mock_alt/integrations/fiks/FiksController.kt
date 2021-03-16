@@ -8,6 +8,7 @@ import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.DokumentKrypteringsService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.KommuneInfoService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.JsonTilleggsinformasjon
@@ -24,8 +25,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
-import no.nav.sosialhjelp.api.fiks.KommuneInfo
-import no.nav.sosialhjelp.api.fiks.Kontaktpersoner
 import org.joda.time.DateTime
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -41,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
-import java.util.Collections
 import java.util.UUID
 
 @RestController
@@ -50,6 +48,7 @@ class FiksController(
         private val dokumentKrypteringsService: DokumentKrypteringsService,
         private val feilService: FeilService,
         private val pdlService: PdlService,
+        private val kommuneInfoService: KommuneInfoService,
 ) {
     companion object {
         private val log by logger()
@@ -236,7 +235,7 @@ class FiksController(
             @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "kommuneinfo")
-        val kommuneInfo = lagKommuneInfo(kommunenummer)
+        val kommuneInfo = kommuneInfoService.getKommuneInfo(kommunenummer)
         log.info("Henter kommuneinfo: $kommuneInfo")
         return ResponseEntity.ok(objectMapper.writeValueAsString(kommuneInfo))
     }
@@ -244,31 +243,10 @@ class FiksController(
     @GetMapping("/fiks/digisos/api/v1/nav/kommuner")
     fun hentKommuneInfoListe(@RequestHeader headers: HttpHeaders): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "kommuneinfo")
-        val kommuneInfoList = ArrayList<KommuneInfo>()
-        kommuneInfoList.add(lagKommuneInfo("0301"))
-        kommuneInfoList.add(lagKommuneInfo("0315"))
-        kommuneInfoList.add(lagKommuneInfo("1000"))
-        kommuneInfoList.add(lagKommuneInfo("1001"))
-        kommuneInfoList.add(lagKommuneInfo("1002"))
-        kommuneInfoList.add(lagKommuneInfo("1003"))
-        kommuneInfoList.add(lagKommuneInfo("1514"))
-        kommuneInfoList.add(lagKommuneInfo("4601"))
-        log.info("Henter kommuneinfo: $kommuneInfoList")
+        val kommuneInfoList = kommuneInfoService.hentAlleKommuner()
+        log.info("Henter kommuneinfo: ${kommuneInfoList.size}")
         return ResponseEntity.ok(objectMapper.writeValueAsString(kommuneInfoList))
     }
-
-    private fun lagKommuneInfo(id: String) = KommuneInfo(
-            kommunenummer = id,
-            kanMottaSoknader = true,
-            kanOppdatereStatus = true,
-            harMidlertidigDeaktivertOppdateringer = false,
-            harMidlertidigDeaktivertMottak = false,
-            kontaktpersoner = Kontaktpersoner(
-                    Collections.singletonList("Kontakt$id@navo.no"),
-                    Collections.singletonList("Test$id@navno.no")),
-            harNksTilgang = true,
-            behandlingsansvarlig = null
-    )
 
     //    ======== public-key dokumentlager ========
     @GetMapping("/fiks/digisos/api/v1/dokumentlager-public-key")
