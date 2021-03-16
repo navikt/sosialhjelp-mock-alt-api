@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.kodeverk
 
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.KommuneInfoService
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.kodeverk.dto.KodeverkDto
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -9,7 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class KodeverkController {
+class KodeverkController(
+        kommuneInfoService: KommuneInfoService,
+) {
     final val kommuner: KodeverkDto
     final val landkoder: KodeverkDto
     final val postnummer: KodeverkDto
@@ -18,6 +21,7 @@ class KodeverkController {
         kommuner = lesKodeverk("kommuner")
         landkoder = lesKodeverk("landkoder")
         postnummer = lesKodeverk("postnummer")
+        kommuner.betydninger.keys.forEach{kommuneInfoService.addKommunieInfo(it)}
     }
 
     private fun lesKodeverk(navn: String): KodeverkDto {
