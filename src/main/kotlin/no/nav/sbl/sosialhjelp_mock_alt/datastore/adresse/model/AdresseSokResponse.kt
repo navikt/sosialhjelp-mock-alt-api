@@ -17,7 +17,7 @@ data class AdresseSokResponse(
                                     husnummerTil = "42",
                                     postnummer = "0101",
                                     poststed = "Mock by",
-                                    geografiskTilknytning = "1234",
+                                    geografiskTilknytning = "0315",
                                     gatekode = "gatekode",
                                     bydel = "bydel",
                                     husnummer = "2",

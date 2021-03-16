@@ -16,7 +16,7 @@ class AdresseService {
         return adresseMap[postnummer] ?: AdresseSokResponse.defaultAdressesok()
     }
 
-    fun putAdresseInfo(postnummer: String, adresse: ForenkletBostedsadresse, geografiskTilknytning: String = "1234") {
+    fun putAdresseInfo(postnummer: String, adresse: ForenkletBostedsadresse, geografiskTilknytning: String = "0315") {
         adresseMap[postnummer] = AdresseSokResponse(
                 flereTreff = false,
                 adresseDataList = listOf(AdresseData(
