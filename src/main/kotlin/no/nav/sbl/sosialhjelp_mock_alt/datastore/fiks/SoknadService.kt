@@ -134,11 +134,17 @@ class SoknadService {
         } else {
             log.info("Oppdaterer søknad med id: $fiksDigisosId")
             oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(fiksDigisosId, digisosApiWrapper)
-            val dokumentlagerId = UUID.randomUUID().toString()
-            log.info("Lagrer/oppdaterer søker dokument med dokumentlagerId: $dokumentlagerId")
-            dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
-            val updatedDigisosSak = oldSoknad.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
-            soknadsliste.replace(fiksDigisosId, updatedDigisosSak)
+            var dokumentlagerId = oldSoknad.digisosSoker?.metadata
+            if(dokumentlagerId == null) {
+                dokumentlagerId = UUID.randomUUID().toString()
+                log.info("Lag nytt søker dokument med dokumentlagerId: $dokumentlagerId")
+                dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
+                val updatedDigisosSak = oldSoknad.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
+                soknadsliste.replace(fiksDigisosId, updatedDigisosSak)
+            } else {
+                log.info("Oppdaterer søker dokument med dokumentlagerId: $dokumentlagerId")
+                dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
+            }
         }
         return fiksDigisosId
     }
