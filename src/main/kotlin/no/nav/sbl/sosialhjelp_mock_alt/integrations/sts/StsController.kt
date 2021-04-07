@@ -22,14 +22,14 @@ class StsController(
     }
 
     @RequestMapping("/sts_token_endpoint_url/token")
-    fun getToken(@RequestParam parameters: MultiValueMap<String, String>, @RequestBody body: String): String {
+    fun getToken(@RequestParam parameters: MultiValueMap<String, String>, @RequestBody body: String): STSResponse {
         val token = STSResponse(
                 access_token = "token",
                 token_type = "type",
                 expires_in = 999999
         )
         log.info("Henter token: $token")
-        return objectMapper.writeValueAsString(token)
+        return token
     }
 
     @RequestMapping("/sts_token_endpoint_url/.well-known/openid-configuration")
