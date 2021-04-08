@@ -4,10 +4,13 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
+import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraCookieNoDefault
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeadersNoDefault
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -26,14 +29,16 @@ class InnsynController(private val soknadService: SoknadService) {
             @RequestParam(required = false) fiksDigisosId:String?,
             @RequestParam(required = false) fnr:String?,
             @RequestBody body: String,
-            @RequestHeader headers: HttpHeaders): ResponseEntity<String> {
+            @RequestHeader headers: HttpHeaders,
+            @CookieValue(name = "localhost-idtoken") cookie: String?,
+    ): ResponseEntity<String> {
         var id = fiksDigisosId
         if (id == null) {
             id = UUID.randomUUID().toString()
         }
         val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
 
-        val faktiskFnr = hentFnrFraTokenOrInput(fnr, headers)
+        val faktiskFnr = hentFnrFraInputOrTokenOrCookieOrDefault(fnr, headers, cookie)
         soknadService.oppdaterDigisosSak(kommuneNr = "0301", fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
                 fnr = faktiskFnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
         return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
@@ -56,7 +61,7 @@ class InnsynController(private val soknadService: SoknadService) {
     }
 
 
-    private fun hentFnrFraTokenOrInput(fnrInput: String?, headers: HttpHeaders): String {
-        return fnrInput ?: hentFnrFraHeaders(headers)
+    private fun hentFnrFraInputOrTokenOrCookieOrDefault(fnrInput: String?, headers: HttpHeaders, cookie: String?): String {
+        return fnrInput ?: hentFnrFraHeadersNoDefault(headers) ?: hentFnrFraCookieNoDefault(cookie) ?: fastFnr
     }
 }

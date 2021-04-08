@@ -56,13 +56,14 @@ class SoknadService {
     }
 
     fun listSoknader(fnr: String?): MutableCollection<DigisosSak> {
-//        if(fnr == null) {
-        log.info("Henter søknadsliste. Antall soknader: ${soknadsliste.size}")
-        return soknadsliste.values
-//        }
-//        val soknadslisteForFnr = soknadsliste.values.filter{it.sokerFnr.equals(fnr)}
-//        log.info("Henter søknadsliste. Antall soknader for $fnr: ${soknadslisteForFnr.size}")
-//        return soknadslisteForFnr
+        if (fnr == null) {
+            log.info("Henter søknadsliste. Antall soknader: ${soknadsliste.size}")
+            return soknadsliste.values
+        }
+        val soknadslisteForFnr = soknadsliste.values.filter { it.sokerFnr.equals(fnr) }.toMutableList()
+        log.info("Henter søknadsliste. Antall soknader for $fnr: ${soknadslisteForFnr.size}")
+        log.info("- returnerer fortsatt alle. Antall soknader: ${soknadsliste.size}")
+        return soknadsliste.values // soknadslisteForFnr
     }
 
     fun opprettDigisosSak(fiksOrgId: String, kommuneNr: String, fnr: String, id: String) {
@@ -135,7 +136,7 @@ class SoknadService {
             log.info("Oppdaterer søknad med id: $fiksDigisosId")
             oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(fiksDigisosId, digisosApiWrapper)
             var dokumentlagerId = oldSoknad.digisosSoker?.metadata
-            if(dokumentlagerId == null) {
+            if (dokumentlagerId == null) {
                 dokumentlagerId = UUID.randomUUID().toString()
                 log.info("Lag nytt søker dokument med dokumentlagerId: $dokumentlagerId")
                 dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
@@ -270,7 +271,7 @@ class SoknadService {
                         saksTittelMap[it.referanse] = it.tittel
                     }
                 }
-        if(saksTittelMap.isNotEmpty()) {
+        if (saksTittelMap.isNotEmpty()) {
             return saksTittelMap.values.joinToString()
         }
         return SOKNAD_DEFAULT_TITTEL
