@@ -25,7 +25,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
-import org.joda.time.DateTime
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -40,6 +39,9 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @RestController
@@ -154,7 +156,7 @@ class FiksController(
         val id = fiksDigisosId ?: UUID.randomUUID().toString()
         val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
         digisosApiWrapper.sak.soker.hendelser.add(JsonSoknadsStatus()
-                .withHendelsestidspunkt(DateTime.now().toDateTimeISO().toString())
+                .withHendelsestidspunkt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
                 .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT))
 
         val soknadJson = objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
