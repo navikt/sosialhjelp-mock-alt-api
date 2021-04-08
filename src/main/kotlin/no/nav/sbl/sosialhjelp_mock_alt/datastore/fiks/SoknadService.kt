@@ -29,6 +29,9 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Collections
 import java.util.UUID
@@ -69,7 +72,7 @@ class SoknadService {
     fun opprettDigisosSak(fiksOrgId: String, kommuneNr: String, fnr: String, id: String) {
         val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
         digisosApiWrapper.sak.soker.hendelser.add(JsonSoknadsStatus()
-                .withHendelsestidspunkt(DateTime.now().toDateTimeISO().toString())
+                .withHendelsestidspunkt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
                 .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT))
         oppdaterDigisosSak(kommuneNr = kommuneNr, fiksOrgId = fiksOrgId,
                 fnr = fnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
