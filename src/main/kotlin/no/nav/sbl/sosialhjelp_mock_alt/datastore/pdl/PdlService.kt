@@ -7,6 +7,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
@@ -52,8 +53,12 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
+import no.nav.sbl.sosialhjelp_mock_alt.utils.randomLong
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import kotlin.random.Random
+import kotlin.random.nextInt
+import kotlin.random.nextLong
 
 @Service
 class PdlService(
@@ -65,6 +70,7 @@ class PdlService(
         val bostotteService: BostotteService,
         val soknadService: SoknadService,
         val adresseService: AdresseService,
+        val kontonummerService: KontonummerService
 ) {
 
     private val personListe: HashMap<String, Personalia> = HashMap()
@@ -286,6 +292,7 @@ class PdlService(
 
         adresseService.putAdresseInfo(standardBruker.bostedsadresse.postnummer, standardBruker.bostedsadresse, enhetsnummer)
         dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
+        kontonummerService.putKontonummer(brukerFnr, randomLong(11).toString())
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
         eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")
         aaregService.leggTilEnkeltArbeidsforhold(
