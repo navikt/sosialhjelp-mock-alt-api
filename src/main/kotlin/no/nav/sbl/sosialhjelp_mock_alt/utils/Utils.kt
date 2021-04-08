@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.utils
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.nimbusds.jwt.SignedJWT
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.security.token.support.core.jwt.JwtToken
@@ -42,6 +43,10 @@ fun hentFnrFraBody(body: String?): String? {
 }
 
 fun hentFnrFraHeaders(headers: HttpHeaders): String {
+    return hentFnrFraHeadersNoDefault(headers) ?: fastFnr
+}
+
+fun hentFnrFraHeadersNoDefault(headers: HttpHeaders): String? {
     val fnrString = headers["nav-personident"]
     if (fnrString != null) {
         val fnr = fnrString.first()
@@ -53,7 +58,16 @@ fun hentFnrFraHeaders(headers: HttpHeaders): String {
     if (fnrListe != null) {
         return fnrListe.firstOrNull() ?: fastFnr
     }
-    return fastFnr
+    return null
+}
+
+fun hentFnrFraCookieNoDefault(cookie: String?): String? {
+    if (cookie != null) {
+        // read fnr from cookie
+        val jwt = SignedJWT.parse(cookie)
+        return jwt.jwtClaimsSet.subject
+    }
+    return null
 }
 
 fun hentFnrFraToken(headers: HttpHeaders): String {
