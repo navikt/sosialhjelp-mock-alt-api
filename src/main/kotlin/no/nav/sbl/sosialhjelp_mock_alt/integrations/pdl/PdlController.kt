@@ -4,7 +4,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.PdlRequest
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -16,11 +15,7 @@ class PdlController(
         private val pdlService: PdlService,
         private val feilService: FeilService,
 ) {
-    companion object {
-        private val log by logger()
-    }
-
-    @PostMapping("/pdl_endpoint_url")
+    @PostMapping("/pdl_endpoint_url", produces = ["application/json;charset=UTF-8"])
     fun pdlEndpoint(
             @RequestParam parameters: MultiValueMap<String, String>,
             @RequestBody body: String,
