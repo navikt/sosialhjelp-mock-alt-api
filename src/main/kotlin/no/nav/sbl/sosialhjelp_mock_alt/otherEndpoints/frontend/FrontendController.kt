@@ -7,6 +7,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
@@ -48,6 +49,7 @@ class FrontendController(
         private val eregService: EregService,
         private val dkifService: DkifService,
         private val soknadService: SoknadService,
+        private val kontonummerService: KontonummerService,
 ) {
     companion object {
         private val log by logger()
@@ -66,6 +68,9 @@ class FrontendController(
         pdlService.leggTilPerson(pdlPersonalia(personalia))
         if (personalia.telefonnummer.isNotEmpty()) {
             dkifService.putDigitalKontaktinfo(personalia.fnr, DigitalKontaktinfo(personalia.telefonnummer))
+        }
+        if (personalia.kontonummer.isNotEmpty()) {
+            kontonummerService.putKontonummer(personalia.fnr, personalia.kontonummer)
         }
         aaregService.setArbeidsforholdForFnr(
                 personalia.fnr, personalia.arbeidsforhold.map { aaregArbeidsforhold(personalia.fnr, it) }
@@ -101,6 +106,7 @@ class FrontendController(
                 personalia.forelderBarnRelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
         frontendPersonalia.telefonnummer =
                 dkifService.getDigitalKontaktinfo(personalia.fnr)?.mobiltelefonnummer ?: ""
+        frontendPersonalia.kontonummer = kontonummerService.getKontonummer(personalia.fnr)?.kontonummer ?: ""
         frontendPersonalia.arbeidsforhold = aaregService.getArbeidsforhold(personalia.fnr)
                 .map { FrontendArbeidsforhold.arbeidsforhold(it, eregService) }
         val skattbarInntekt = skatteetatenService.getSkattbarInntekt(personalia.fnr)
