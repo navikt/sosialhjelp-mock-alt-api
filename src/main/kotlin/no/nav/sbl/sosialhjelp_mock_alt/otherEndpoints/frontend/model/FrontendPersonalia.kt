@@ -24,6 +24,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Forskuddstre
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.KomponentDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
@@ -205,19 +206,26 @@ data class FrontendUtbetalingFraNav(
         val skattebelop: Double,
         val ytelseskomponenttype: String,
 ) {
-    fun frontToBackend(): UtbetalingDto {
-        return UtbetalingDto(belop, dato, ytelsestype, melding, skattebelop, ytelseskomponenttype)
+
+    fun toUtbetalingDto(): UtbetalingDto {
+        return UtbetalingDto(
+            tittel = ytelsestype,
+            netto = belop,
+            skattetrekk = skattebelop,
+            utbetalingsdato = dato,
+            komponenter = listOf(KomponentDto(type = ytelseskomponenttype))
+        )
     }
 
     companion object {
         fun mapToFrontend(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
             return FrontendUtbetalingFraNav(
-                    utbetaling.belop,
-                    utbetaling.dato,
-                    utbetaling.ytelsestype,
-                    utbetaling.melding,
-                    utbetaling.skattebelop,
-                    utbetaling.ytelseskomponenttype,
+                utbetaling.netto,
+                utbetaling.utbetalingsdato ?: LocalDate.now(),
+                utbetaling.tittel,
+                "", // melding?
+                utbetaling.skattetrekk,
+                utbetaling.komponenter.first().type ?: ""
             )
         }
     }

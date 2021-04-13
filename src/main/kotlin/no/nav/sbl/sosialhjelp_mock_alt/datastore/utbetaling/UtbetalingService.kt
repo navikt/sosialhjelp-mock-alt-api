@@ -1,33 +1,24 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingsListeDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 
 @Service
 class UtbetalingService {
+    private final val utbetalingListMap: HashMap<String, List<UtbetalingDto>> = HashMap()
 
-    final val utbetalingslisten: HashMap<String, UtbetalingsListeDto> = HashMap()
-    final val autoGenerationSet: HashSet<String> = HashSet()
-
-    fun putUtbetalingerFraNav(fnr: String, utbetaling: UtbetalingsListeDto) {
-        utbetalingslisten[fnr] = utbetaling
+    fun getUtbetalingerFraNav(ident: String): List<UtbetalingDto> {
+        log.info("Henter utbetalinger for $ident")
+        return utbetalingListMap[ident] ?: emptyList()
     }
 
-    fun getUtbetalingerFraNav(fnr: String): UtbetalingsListeDto {
-        if (autoGenerationSet.contains(fnr)) {
-            return UtbetalingsListeDto().add(UtbetalingDto(12000.0, LocalDate.now().minusDays(14)))
-        }
-        return utbetalingslisten[fnr] ?: UtbetalingsListeDto()
-    }
-
-    fun enableAutoGenerationFor(fnr: String) {
-        autoGenerationSet.add(fnr)
+    fun putUtbetalingerFraNav(ident: String, utbetalinger: List<UtbetalingDto>) {
+        utbetalingListMap[ident] = utbetalinger
     }
 
     companion object {
         private val log by logger()
     }
+
 }
