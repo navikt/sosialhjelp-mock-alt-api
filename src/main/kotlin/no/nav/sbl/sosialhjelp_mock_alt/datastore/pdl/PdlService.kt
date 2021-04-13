@@ -298,9 +298,9 @@ class PdlService(
                 startDato = LocalDate.now().minusYears(10),
                 orgnummmer = organisasjonsnummer,
         )
-        utbetalingService.putUtbetalingerFraNav(brukerFnr, listOf(UtbetalingDto()))
 
         skatteetatenService.enableAutoGenerationFor(brukerFnr)
+        utbetalingService.enableAutoGenerationFor(brukerFnr)
         bostotteService.enableAutoGenerationFor(brukerFnr)
 
         soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, brukerFnr)
