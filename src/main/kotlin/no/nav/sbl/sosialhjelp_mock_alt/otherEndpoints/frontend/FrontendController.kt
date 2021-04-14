@@ -13,7 +13,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingsListeDto
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendBarn.Companion.frontendBarn
@@ -87,8 +86,11 @@ class FrontendController(
         personalia.bostotteSaker.forEach { bostotteDto.saker.add(it) }
         personalia.bostotteUtbetalinger.forEach { bostotteDto.utbetalinger.add(it) }
         bostotteService.putBostotte(personalia.fnr, bostotteDto)
-        utbetalingService.putUtbetalingerFraNav(personalia.fnr,
-                UtbetalingsListeDto(personalia.utbetalingerFraNav.map { it.frontToBackend() }))
+        utbetalingService.putUtbetalingerFraNav(
+            ident = personalia.fnr,
+            utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalingDto() }
+        )
+
         return ResponseEntity.ok("OK")
     }
 
@@ -117,7 +119,7 @@ class FrontendController(
         frontendPersonalia.bostotteSaker = bostotteDto.saker
         frontendPersonalia.bostotteUtbetalinger = bostotteDto.utbetalinger
         frontendPersonalia.utbetalingerFraNav =
-                utbetalingService.getUtbetalingerFraNav(personalia.fnr).utbetalinger.map { mapToFrontend(it) }
+            utbetalingService.getUtbetalingerFraNav(personalia.fnr).map { mapToFrontend(it) }
 
         return ResponseEntity.ok(frontendPersonalia)
     }
