@@ -42,6 +42,7 @@ spec:
         - application: sosialhjelp-modia-api
         - application: sosialhjelp-innsyn-api
         - application: sosialhjelp-soknad-api
+        - application: sosialhjelp-dialog-api
 {{/if}}
 {{#if isGcp}}
   tracing:
