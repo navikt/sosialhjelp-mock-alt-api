@@ -3,15 +3,13 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.3.9.RELEASE"
+val springBootVersion = "2.4.5"
 val coroutinesVersion = "1.4.2"
 val sosialhjelpCommonVersion = "1.4ef74b4"
 val filformatVersion = "1.2021.03.02-10.58-415c44e55124"
-val tokenValidationVersion = "1.3.3"
+val tokenValidationVersion = "1.3.5"
 val jacksonVersion = "2.12.0"
-val swaggerversion = "2.10.0"
-val guavaVersion = "30.1-jre"
-val jerseyMediaJaxb = "2.31"
+val springdocversion = "1.5.7"
 
 plugins {
     application
@@ -77,21 +75,10 @@ dependencies {
 	implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
 	implementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
 
-	implementation("io.springfox:springfox-swagger2:${swaggerversion}")
-	implementation("io.springfox:springfox-swagger-ui:${swaggerversion}")
+	implementation("org.springdoc:springdoc-openapi-ui:${springdocversion}")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 
-//    spesifikke versjoner oppgradert etter ønske fra snyk
-	constraints {
-		implementation("com.google.guava:guava:$guavaVersion") {
-			because("Forcer oppgradering av transitiv avhengighet")
-		}
-
-		implementation("org.glassfish.jersey.media:jersey-media-jaxb:$jerseyMediaJaxb") {
-			because("Transitiv avhengighet dratt inn av token-validation-test-support@1.3.2 har sårbarhet. Constraintsen kan fjernes når token-validation-test-support bruker jersey-media-jaxb@2.31 eller nyere")
-		}
-	}
 }
 
 tasks {
