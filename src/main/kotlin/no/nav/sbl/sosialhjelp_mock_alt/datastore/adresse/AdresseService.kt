@@ -18,21 +18,23 @@ class AdresseService {
 
     fun putAdresseInfo(postnummer: String, adresse: ForenkletBostedsadresse, geografiskTilknytning: String = "0315") {
         adresseMap[postnummer] = AdresseSokResponse(
-                flereTreff = false,
-                adresseDataList = listOf(AdresseData(
-                        kommunenummer = adresse.kommunenummer,
-                        kommunenavn = "",
-                        adressenavn = adresse.adressenavn,
-                        husnummerFra = "1",
-                        husnummerTil = "99999",
-                        postnummer = postnummer,
-                        poststed = "poststed",
-                        geografiskTilknytning = geografiskTilknytning,
-                        gatekode = "gatekode",
-                        bydel = "",
-                        husnummer = adresse.husnummer.toString(),
-                        husbokstav = null,
-                ))
+            flereTreff = false,
+            adresseDataList = listOf(
+                AdresseData(
+                    kommunenummer = adresse.kommunenummer,
+                    kommunenavn = "",
+                    adressenavn = adresse.adressenavn,
+                    husnummerFra = "1",
+                    husnummerTil = "99999",
+                    postnummer = postnummer,
+                    poststed = "poststed",
+                    geografiskTilknytning = geografiskTilknytning,
+                    gatekode = "gatekode",
+                    bydel = "",
+                    husnummer = adresse.husnummer.toString(),
+                    husbokstav = null,
+                )
+            )
         )
     }
 

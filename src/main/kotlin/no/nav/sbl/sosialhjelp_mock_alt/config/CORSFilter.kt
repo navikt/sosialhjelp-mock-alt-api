@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.config
 
-
 import java.io.IOException
 import javax.servlet.Filter
 import javax.servlet.FilterChain

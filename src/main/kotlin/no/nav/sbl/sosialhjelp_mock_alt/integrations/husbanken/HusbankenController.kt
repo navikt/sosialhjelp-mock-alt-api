@@ -17,8 +17,8 @@ import java.time.LocalDate
 
 @RestController
 class HusbankenController(
-        private val bostotteService: BostotteService,
-        private val feilService: FeilService,
+    private val bostotteService: BostotteService,
+    private val feilService: FeilService,
 ) {
     companion object {
         private val log by logger()
@@ -26,11 +26,11 @@ class HusbankenController(
 
     @GetMapping("/husbanken")
     fun getHusbankenData(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fra: LocalDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) til: LocalDate,
-            @RequestHeader headers: HttpHeaders,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fra: LocalDate,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) til: LocalDate,
+        @RequestHeader headers: HttpHeaders,
     ):
-            ResponseEntity<BostotteDto> {
+        ResponseEntity<BostotteDto> {
         val fnr = hentFnrFraToken(headers)
         feilService.eventueltLagFeil(fnr, "HusbankenController", "getHusbankenData")
         val bostotte = bostotteService.getBostotte(fnr)
