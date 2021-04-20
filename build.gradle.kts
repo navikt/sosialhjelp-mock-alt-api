@@ -13,11 +13,12 @@ val springdocversion = "1.5.7"
 
 plugins {
     application
-	id("io.spring.dependency-management") version "1.0.10.RELEASE"
-	id("com.github.johnrengelman.shadow") version "5.2.0"
-	id("com.github.ben-manes.versions") version "0.36.0"
-	kotlin("jvm") version "1.4.21"
-	kotlin("plugin.spring") version "1.4.21"
+    id("io.spring.dependency-management") version "1.0.10.RELEASE"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("com.github.ben-manes.versions") version "0.36.0"
+    kotlin("jvm") version "1.4.21"
+    kotlin("plugin.spring") version "1.4.21"
+    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
 val mainClass = "no.nav.sbl.sosialhjelp_mock_alt.MockAltApplicationKt"
@@ -31,78 +32,81 @@ group = "no.nav.sbl"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+ktlint {
+    this.version.set("0.41.0")
+}
+
 val githubUser: String by project
 val githubPassword: String by project
 
 repositories {
-	mavenCentral()
-	maven {
-		url = uri("https://maven.pkg.github.com/navikt/sosialhjelp-common")
-		credentials {
-			username = githubUser
-			password = githubPassword
-		}
-	}
+    mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.github.com/navikt/sosialhjelp-common")
+        credentials {
+            username = githubUser
+            password = githubPassword
+        }
+    }
 }
 
 configurations {
-	"implementation" {
-		exclude(group = "javax.activation", module = "activation")
-		exclude(group = "javax.mail", module = "mailapi")
-		exclude(group = "javax.validation", module = "validation-api")
-	}
-	"testImplementation" {
-		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
-		exclude(group = "org.mockito", module = "mockito-core")
-		exclude(group = "org.mockito", module = "mockito-junit-jupiter")
-	}
+    "implementation" {
+        exclude(group = "javax.activation", module = "activation")
+        exclude(group = "javax.mail", module = "mailapi")
+        exclude(group = "javax.validation", module = "validation-api")
+    }
+    "testImplementation" {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(group = "org.mockito", module = "mockito-core")
+        exclude(group = "org.mockito", module = "mockito-junit-jupiter")
+    }
 }
 
 dependencies {
-	implementation(kotlin("stdlib"))
-	implementation(kotlin("stdlib-jdk8"))
-	implementation(kotlin("reflect"))
+    implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
 
-	implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
-	implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
 
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
-	implementation("no.nav.sosialhjelp:sosialhjelp-common-api:$sosialhjelpCommonVersion")
-	implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")
-	implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
-	implementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
+    implementation("no.nav.sosialhjelp:sosialhjelp-common-api:$sosialhjelpCommonVersion")
+    implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")
+    implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
+    implementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
 
-	implementation("org.springdoc:springdoc-openapi-ui:${springdocversion}")
+    implementation("org.springdoc:springdoc-openapi-ui:$springdocversion")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 }
 
 tasks {
-	withType<Test> {
-		useJUnitPlatform()
-	}
+    withType<Test> {
+        useJUnitPlatform()
+    }
 
-	withType<KotlinCompile> {
-		kotlinOptions {
-			freeCompilerArgs = listOf("-Xjsr305=strict")
-			jvmTarget = "1.8"
-		}
-	}
+    withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "1.8"
+        }
+    }
 
-	withType<ShadowJar> {
-		archiveClassifier.set("")
-		transform(ServiceFileTransformer::class.java) {
-			setPath("META-INF/cxf")
-			include("bus-extensions.txt")
-		}
-		transform(PropertiesFileTransformer::class.java) {
-			paths = listOf("META-INF/spring.factories")
-			mergeStrategy = "append"
-		}
-		mergeServiceFiles()
-	}
+    withType<ShadowJar> {
+        archiveClassifier.set("")
+        transform(ServiceFileTransformer::class.java) {
+            setPath("META-INF/cxf")
+            include("bus-extensions.txt")
+        }
+        transform(PropertiesFileTransformer::class.java) {
+            paths = listOf("META-INF/spring.factories")
+            mergeStrategy = "append"
+        }
+        mergeServiceFiles()
+    }
 }
