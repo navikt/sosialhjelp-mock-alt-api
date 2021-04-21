@@ -155,7 +155,7 @@ class FrontendController(
 //        zipArchive.closeEntry()
 
         val ettersendelsePdf = soknadService.hentEttersendelsePdf(fiksDigisosId)
-        if(ettersendelsePdf != null) {
+        if (ettersendelsePdf != null) {
             val zipFile = ZipEntry(ettersendelsePdf.filnavn)
             zipArchive.putNextEntry(zipFile)
             zipArchive.write(ettersendelsePdf.bytes)

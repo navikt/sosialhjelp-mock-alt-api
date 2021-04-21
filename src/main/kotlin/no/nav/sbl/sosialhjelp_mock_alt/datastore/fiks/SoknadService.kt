@@ -240,7 +240,7 @@ class SoknadService {
         var sha512 = "dummySha512"
         if (vedleggsJson != null) {
             if (vedleggMetadata.filnavn!!.contentEquals(ettersendelseFilnavn)) {
-                if(file != null) {
+                if (file != null) {
                     ettersendelsePdfLager.add(fiksDigisosId, ettersendelseFilnavn, file.bytes)
                 }
             } else {
