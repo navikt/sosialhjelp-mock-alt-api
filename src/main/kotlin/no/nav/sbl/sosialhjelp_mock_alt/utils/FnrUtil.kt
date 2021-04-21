@@ -82,4 +82,3 @@ private fun beregnKontrollsiffer(fnr: String, multiplikatorTabell: IntArray): In
     if (rest == 0) return 0
     return 11 - rest
 }
-

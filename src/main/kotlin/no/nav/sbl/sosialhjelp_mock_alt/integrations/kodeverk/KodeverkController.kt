@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class KodeverkController(
-        kommuneInfoService: KommuneInfoService,
+    kommuneInfoService: KommuneInfoService,
 ) {
     final val kommuner: KodeverkDto
     final val landkoder: KodeverkDto
@@ -21,11 +21,11 @@ class KodeverkController(
         kommuner = lesKodeverk("kommuner")
         landkoder = lesKodeverk("landkoder")
         postnummer = lesKodeverk("postnummer")
-        kommuner.betydninger.keys.forEach{kommuneInfoService.addKommunieInfo(it)}
+        kommuner.betydninger.keys.forEach { kommuneInfoService.addKommunieInfo(it) }
     }
 
     private fun lesKodeverk(navn: String): KodeverkDto {
-        val string: String = this::class.java.classLoader.getResource("kodeverk/kodeverk_${navn}.json")!!.readText()
+        val string: String = this::class.java.classLoader.getResource("kodeverk/kodeverk_$navn.json")!!.readText()
         return objectMapper.readValue(string, KodeverkDto::class.java)
     }
 

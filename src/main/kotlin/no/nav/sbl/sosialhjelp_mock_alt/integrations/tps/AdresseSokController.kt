@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.tps
 
-
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.adresse.AdresseService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import org.springframework.util.MultiValueMap
@@ -16,5 +15,4 @@ class AdresseSokController(private val adresseService: AdresseService) {
         val postnummer = parameters["postnr"]
         return objectMapper.writeValueAsString(adresseService.getAdresseInfo(postnummer!![0]))
     }
-
 }

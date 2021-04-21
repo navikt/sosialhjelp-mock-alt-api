@@ -24,10 +24,10 @@ class FeilService {
 
     fun eventueltLagFeil(fnr: String, className: String, functionName: String) {
         val feilsituasjoner = hentFeil(fnr)
-        feilsituasjoner.forEach{feilsituasjon ->
+        feilsituasjoner.forEach { feilsituasjon ->
             if (feilsituasjon.className.contentEquals(className) || feilsituasjon.className.contentEquals("*")) {
                 if (functionName.startsWith(feilsituasjon.functionName) || feilsituasjon.functionName.contentEquals("*")) {
-                    if(feilsituasjon.timeout > 0 && feilsituasjon.timeoutSansynlighet > randomInt(2)) {
+                    if (feilsituasjon.timeout > 0 && feilsituasjon.timeoutSansynlighet > randomInt(2)) {
                         var sleep = 0
                         log.info("Timeout er konfigurert for $className.$functionName")
                         while (sleep < feilsituasjon.timeout) {
@@ -35,7 +35,7 @@ class FeilService {
                             sleep += 10
                         }
                     }
-                    if(feilsituasjon.feilkodeSansynlighet > randomInt(2)) {
+                    if (feilsituasjon.feilkodeSansynlighet > randomInt(2)) {
                         if (feilsituasjon.feilkode != null && feilsituasjon.feilkode > 0) {
                             log.info("Error er konfigurert for $className.$functionName -> ${feilsituasjon.feilkode}")
                             throw KonfigurertFeil(feilsituasjon.feilkode, feilsituasjon.feilmelding)
@@ -50,7 +50,7 @@ class FeilService {
         return feilsituasjoner[fnr] ?: emptyList()
     }
 
-    fun hentAlleFeilene() : HashMap<String, List<Feilsituasjon>> {
+    fun hentAlleFeilene(): HashMap<String, List<Feilsituasjon>> {
         return feilsituasjoner
     }
 
@@ -60,8 +60,12 @@ class FeilService {
 }
 
 class Feilsituasjon(
-        val fnr: String,
-        val timeout: Int, val timeoutSansynlighet: Int,
-        val feilkode: Int?, val feilmelding: String, val feilkodeSansynlighet: Int,
-        val className: String, val functionName: String,
+    val fnr: String,
+    val timeout: Int,
+    val timeoutSansynlighet: Int,
+    val feilkode: Int?,
+    val feilmelding: String,
+    val feilkodeSansynlighet: Int,
+    val className: String,
+    val functionName: String,
 )

@@ -23,7 +23,7 @@ class DkifController(private val dkifService: DkifService) {
     fun getKontaktinfo(@RequestHeader headers: HttpHeaders): ResponseEntity<DigitalKontaktinfoBolk> {
         val fnr = hentFnrFraHeaders(headers)
         var kontaktinfo = dkifService.getDigitalKontaktinfoBolk(fnr)
-        if(kontaktinfo == null) {
+        if (kontaktinfo == null) {
             kontaktinfo = DigitalKontaktinfoBolk(defaultKontaktinfo(fnr), null)
         }
         val returnValue = objectMapper.writeValueAsString(kontaktinfo)

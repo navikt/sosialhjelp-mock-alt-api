@@ -18,8 +18,8 @@ class SkatteetatenService {
     fun getSkattbarInntekt(fnr: String): SkattbarInntekt {
         if (autoGenerationSet.contains(fnr)) {
             return SkattbarInntekt.Builder()
-                    .leggTilOppgave(OppgaveInntektsmottaker.Builder().standardOppgave().build())
-                    .build()
+                .leggTilOppgave(OppgaveInntektsmottaker.Builder().standardOppgave().build())
+                .build()
         }
         return skattelisten[fnr] ?: SkattbarInntekt()
     }
