@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class SkatteetatenController(
-        private val skatteetatenService: SkatteetatenService,
-        private val feilService: FeilService,
+    private val skatteetatenService: SkatteetatenService,
+    private val feilService: FeilService,
 ) {
     companion object {
         private val log by logger()
@@ -22,9 +22,10 @@ class SkatteetatenController(
 
     @GetMapping("/skatteetaten/{fnr}/oppgave/inntekt")
     fun getStatteetatenInntekt(
-            @PathVariable fnr: String,
-            @RequestParam fraOgMed: String,
-            @RequestParam tilOgMed: String): ResponseEntity<SkattbarInntekt> {
+        @PathVariable fnr: String,
+        @RequestParam fraOgMed: String,
+        @RequestParam tilOgMed: String
+    ): ResponseEntity<SkattbarInntekt> {
         feilService.eventueltLagFeil(fnr, "SkatteetatenController", "getStatteetatenInntekt")
         val skattbarInntekt = skatteetatenService.getSkattbarInntekt(fnr)
         log.info("Henter skattbar inntekt: ${objectMapper.writeValueAsString(skattbarInntekt)}")

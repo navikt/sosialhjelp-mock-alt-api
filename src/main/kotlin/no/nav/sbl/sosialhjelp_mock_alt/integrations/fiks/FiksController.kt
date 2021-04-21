@@ -46,11 +46,11 @@ import java.util.UUID
 
 @RestController
 class FiksController(
-        private val soknadService: SoknadService,
-        private val dokumentKrypteringsService: DokumentKrypteringsService,
-        private val feilService: FeilService,
-        private val pdlService: PdlService,
-        private val kommuneInfoService: KommuneInfoService,
+    private val soknadService: SoknadService,
+    private val dokumentKrypteringsService: DokumentKrypteringsService,
+    private val feilService: FeilService,
+    private val pdlService: PdlService,
+    private val kommuneInfoService: KommuneInfoService,
 ) {
     companion object {
         private val log by logger()
@@ -74,47 +74,47 @@ class FiksController(
 
     @GetMapping("/fiks/dokumentlager/dokumentlager/nedlasting/niva4/{dokumentlagerId}")
     fun hentDokumentFraLagerInnsynNiva4(
-            @PathVariable dokumentlagerId: String,
-            @RequestHeader headers: HttpHeaders,
+        @PathVariable dokumentlagerId: String,
+        @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<ByteArray> {
         feilService.eventueltLagFeil(headers, "FixController", "hentSoknad")
         val fil = soknadService.hentFil(dokumentlagerId)
-        if(fil != null) {
-            val mediaType = if(fil.filnavn.toLowerCase().endsWith(".png"))
+        if (fil != null) {
+            val mediaType = if (fil.filnavn.toLowerCase().endsWith(".png"))
                 MediaType.IMAGE_PNG
-            else if(fil.filnavn.toLowerCase().endsWith(".jpeg") || fil.filnavn.toLowerCase().endsWith(".jpg"))
+            else if (fil.filnavn.toLowerCase().endsWith(".jpeg") || fil.filnavn.toLowerCase().endsWith(".jpg"))
                 MediaType.IMAGE_JPEG
             else
                 MediaType.APPLICATION_PDF
             return ResponseEntity.ok()
-                    .contentType(mediaType)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fil.filnavn + "\"")
-                    .body(fil.bytes)
+                .contentType(mediaType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fil.filnavn + "\"")
+                .body(fil.bytes)
         }
         val dokumentString = soknadService.hentDokument(null, dokumentlagerId)
-                ?: return ResponseEntity.notFound().build()
+            ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(dokumentString.toByteArray())
     }
 
     @GetMapping("/fiks/digisos/api/v1/soknader/{digisosId}/dokumenter/{dokumentlagerId}")
     fun hentDokumentFraLagerInnsyn(
-            @PathVariable digisosId: String,
-            @PathVariable dokumentlagerId: String,
-            @RequestHeader headers: HttpHeaders,
+        @PathVariable digisosId: String,
+        @PathVariable dokumentlagerId: String,
+        @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "hentDokument")
         val dokumentString = soknadService.hentDokument(digisosId, dokumentlagerId)
-                ?: return ResponseEntity.notFound().build()
+            ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(dokumentString)
     }
 
     @PostMapping("/fiks/digisos/api/v1/{fiksOrgId}/{digisosId}/filer")
     fun lastOppFilerInnsyn(
-            @PathVariable digisosId: String,
-            @PathVariable(required = false) fiksOrgId: String?,
-            @RequestParam body: LinkedMultiValueMap<String, Any>,
-            @RequestHeader headers: HttpHeaders,
-            request: StandardMultipartHttpServletRequest
+        @PathVariable digisosId: String,
+        @PathVariable(required = false) fiksOrgId: String?,
+        @RequestParam body: LinkedMultiValueMap<String, Any>,
+        @RequestHeader headers: HttpHeaders,
+        request: StandardMultipartHttpServletRequest
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "lastOpp")
         return lastOppFiler("", digisosId, "", body, headers, request)
@@ -122,10 +122,10 @@ class FiksController(
 
     @PostMapping("/fiks/digisos/api/v1/{fiksOrgId}/{fiksDigisosId}") // tar også /ny
     fun oppdaterSoknadInnsyn(
-            @PathVariable fiksOrgId: String,
-            @PathVariable(required = false) fiksDigisosId: String?,
-            @RequestBody(required = false) body: String?,
-            @RequestHeader headers: HttpHeaders,
+        @PathVariable fiksOrgId: String,
+        @PathVariable(required = false) fiksDigisosId: String?,
+        @RequestBody(required = false) body: String?,
+        @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         var id = fiksDigisosId
         val fnr = hentFnrFraHeaders(headers)
@@ -141,55 +141,62 @@ class FiksController(
             ResponseEntity.ok("$id")
         } else {
             val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
-            soknadService.oppdaterDigisosSak(kommuneNr = kommuneNr, fiksOrgId = fiksOrgId,
-                    fnr = fnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper)
+            soknadService.oppdaterDigisosSak(
+                kommuneNr = kommuneNr, fiksOrgId = fiksOrgId,
+                fnr = fnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper
+            )
             ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
         }
     }
 
     // Soknad
     @PostMapping("/fiks/digisos/api/v1/soknader/{kommuneNr}/{fiksDigisosId}")
-    fun lastOppSoknad(@PathVariable kommuneNr: String,
-                              @PathVariable(required = false) fiksDigisosId: String?,
-                              request: StandardMultipartHttpServletRequest): ResponseEntity<String> {
+    fun lastOppSoknad(
+        @PathVariable kommuneNr: String,
+        @PathVariable(required = false) fiksDigisosId: String?,
+        request: StandardMultipartHttpServletRequest
+    ): ResponseEntity<String> {
 
         val id = fiksDigisosId ?: UUID.randomUUID().toString()
         val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
-        digisosApiWrapper.sak.soker.hendelser.add(JsonSoknadsStatus()
+        digisosApiWrapper.sak.soker.hendelser.add(
+            JsonSoknadsStatus()
                 .withHendelsestidspunkt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
-                .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT))
+                .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT)
+        )
 
         val soknadJson = objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
         val vedleggJson = objectMapper.readValue(request.parameterMap["vedleggJson"]!![0], JsonVedleggSpesifikasjon::class.java)
         val fnr = soknadJson.data.personalia.personIdentifikator.verdi
         feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
         val tilleggsinformasjonJson = objectMapper.readValue(
-                request.parameterMap["tilleggsinformasjonJson"]!![0],
-                JsonTilleggsinformasjon::class.java)
+            request.parameterMap["tilleggsinformasjonJson"]!![0],
+            JsonTilleggsinformasjon::class.java
+        )
         val enhetsnummer = tilleggsinformasjonJson.enhetsnummer
 
         val dokumenter = mutableListOf<DokumentInfo>()
         request.fileMap.forEach { (filnavn, fil) ->
             val dokumentLagerId = soknadService.leggInnIDokumentlager(filnavn, fil.bytes)
             val dokumentInfo = DokumentInfo(
-                    filnavn = filnavn,
-                    dokumentlagerDokumentId = dokumentLagerId,
-                    storrelse = fil.size,
+                filnavn = filnavn,
+                dokumentlagerDokumentId = dokumentLagerId,
+                storrelse = fil.size,
             )
             dokumenter.add(dokumentInfo)
         }
 
         soknadService.oppdaterDigisosSak(
-                kommuneNr = kommuneNr,
-                fiksOrgId = null,
-                fnr = fnr!!,
-                fiksDigisosIdInput = id,
-                enhetsnummer = enhetsnummer,
-                digisosApiWrapper = digisosApiWrapper,
-                jsonSoknad = soknadJson,
-                jsonVedlegg = vedleggJson,
-                dokumenter = dokumenter,
-                soknadDokument = dokumenter.firstOrNull { it.filnavn.toLowerCase() == "soknad.pdf" }
+            kommuneNr = kommuneNr,
+            fiksOrgId = null,
+            fnr = fnr!!,
+            fiksDigisosIdInput = id,
+            enhetsnummer = enhetsnummer,
+            digisosApiWrapper = digisosApiWrapper,
+            jsonSoknad = soknadJson,
+            jsonVedlegg = vedleggJson,
+            dokumenter = dokumenter,
+            soknadDokument = dokumenter.firstOrNull { it.filnavn.toLowerCase() == "soknad.pdf" }
         )
         return ResponseEntity.ok(id)
     }
@@ -197,9 +204,9 @@ class FiksController(
     //    ======== Modia =========
     @PostMapping("/fiks/digisos/api/v1/nav/soknader/soknader")
     fun listSoknaderModia(
-            @RequestBody body: String,
-            @RequestParam(name = "sporingsId") sporingsId: String,
-            @RequestHeader headers: HttpHeaders,
+        @RequestBody body: String,
+        @RequestParam(name = "sporingsId") sporingsId: String,
+        @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "hentSoknad")
         val soknadsListe = soknadService.listSoknader(hentFnrFraBody(body))
@@ -208,9 +215,9 @@ class FiksController(
 
     @GetMapping("/fiks/digisos/api/v1/nav/soknader/{digisosId}")
     fun hentSoknadModia(
-            @PathVariable digisosId: String,
-            @RequestParam(name = "sporingsId") sporingsId: String,
-            @RequestHeader headers: HttpHeaders,
+        @PathVariable digisosId: String,
+        @RequestParam(name = "sporingsId") sporingsId: String,
+        @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<DigisosSak> {
         feilService.eventueltLagFeil(headers, "FixController", "hentSoknad")
         val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.notFound().build()
@@ -219,22 +226,22 @@ class FiksController(
 
     @GetMapping("/fiks/digisos/api/v1/nav/soknader/{digisosId}/dokumenter/{dokumentlagerId}")
     fun hentDokumentFraLagerModia(
-            @PathVariable digisosId: String,
-            @PathVariable dokumentlagerId: String,
-            @RequestParam(name = "sporingsId") sporingsId: String,
-            @RequestHeader headers: HttpHeaders,
+        @PathVariable digisosId: String,
+        @PathVariable dokumentlagerId: String,
+        @RequestParam(name = "sporingsId") sporingsId: String,
+        @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "hentDokument")
         val dokumentString = soknadService.hentDokument(digisosId, dokumentlagerId)
-                ?: return ResponseEntity.notFound().build()
+            ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(dokumentString)
     }
 
     //    ======= KommuneInfo =======
     @GetMapping("/fiks/digisos/api/v1/nav/kommuner/{kommunenummer}")
     fun hentKommuneInfo(
-            @PathVariable kommunenummer: String,
-            @RequestHeader headers: HttpHeaders,
+        @PathVariable kommunenummer: String,
+        @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "kommuneinfo")
         val kommuneInfo = kommuneInfoService.getKommuneInfo(kommunenummer)
@@ -260,12 +267,12 @@ class FiksController(
     //    ======== Last opp filer ========
     @PostMapping("/fiks/digisos/api/v1/soknader/{kommunenummer}/{digisosId}/{navEksternRefId}")
     fun lastOppFiler(
-            @PathVariable kommunenummer: String,
-            @PathVariable digisosId: String,
-            @PathVariable navEksternRefId: String,
-            @RequestParam body: LinkedMultiValueMap<String, Any>,
-            @RequestHeader headers: HttpHeaders,
-            request: StandardMultipartHttpServletRequest,
+        @PathVariable kommunenummer: String,
+        @PathVariable digisosId: String,
+        @PathVariable navEksternRefId: String,
+        @RequestParam body: LinkedMultiValueMap<String, Any>,
+        @RequestHeader headers: HttpHeaders,
+        request: StandardMultipartHttpServletRequest,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "lastOpp")
         log.info("Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId")
@@ -277,10 +284,10 @@ class FiksController(
                 val vedleggMetadata = objectMapper.readValue(json, object : TypeReference<List<VedleggMetadata>>() {}).first()
                 val file = request.fileMap.values.find { it.originalFilename == vedleggMetadata.filnavn }
                 soknadService.lastOppFil(
-                        fiksDigisosId = digisosId,
-                        vedleggMetadata = vedleggMetadata,
-                        vedleggsJson = vedleggsJson,
-                        file = file,
+                    fiksDigisosId = digisosId,
+                    vedleggMetadata = vedleggMetadata,
+                    vedleggsJson = vedleggsJson,
+                    file = file,
                 )
             }
         }
@@ -289,17 +296,17 @@ class FiksController(
 
     @PostMapping("/{fiksDigisosId}/filOpplasting", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun filOpplasting(
-            @PathVariable fiksDigisosId: String,
-            @RequestParam("file") file: MultipartFile,
-            @RequestHeader headers: HttpHeaders,
+        @PathVariable fiksDigisosId: String,
+        @RequestParam("file") file: MultipartFile,
+        @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "lastOpp")
         log.info("Laster opp fil for fiksDigisosId: $fiksDigisosId")
         val vedleggMetadata = VedleggMetadata(file.originalFilename, file.contentType, file.size)
         val dokumentlagerId = soknadService.lastOppFil(
-                fiksDigisosId = fiksDigisosId,
-                vedleggMetadata = vedleggMetadata,
-                file = file,
+            fiksDigisosId = fiksDigisosId,
+            vedleggMetadata = vedleggMetadata,
+            file = file,
         )
         return ResponseEntity.ok(dokumentlagerId)
     }
@@ -309,7 +316,6 @@ class FiksController(
     fun getTilfeldigOrgnummer(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
         return ResponseEntity.ok(genererTilfeldigOrganisasjonsnummer())
     }
-
 
     @GetMapping("/fiks/tilfeldig/fnr")
     fun getTilfeldigFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {

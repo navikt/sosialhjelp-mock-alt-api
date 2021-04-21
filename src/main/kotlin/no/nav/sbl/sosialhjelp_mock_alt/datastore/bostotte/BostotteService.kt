@@ -24,15 +24,19 @@ class BostotteService {
             val sakDato = DateTime.now().minusDays(2)
             val utbetalingDato = LocalDate.now().minusDays(7)
             return BostotteDto(
-                    mutableListOf(SakerDto(
-                            ar = sakDato.year,
-                            mnd = sakDato.monthOfYear,
-                            status = BostotteStatus.UNDER_BEHANDLING,
-                    )),
-                    mutableListOf(UtbetalingerDto(
-                            belop = 14000.0,
-                            utbetalingsdato = utbetalingDato
-                    ))
+                mutableListOf(
+                    SakerDto(
+                        ar = sakDato.year,
+                        mnd = sakDato.monthOfYear,
+                        status = BostotteStatus.UNDER_BEHANDLING,
+                    )
+                ),
+                mutableListOf(
+                    UtbetalingerDto(
+                        belop = 14000.0,
+                        utbetalingsdato = utbetalingDato
+                    )
+                )
             )
         }
         val bostotteDto = bostotteMap[fnr]

@@ -33,55 +33,55 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.toIsoString
 import java.time.LocalDate
 
 data class FrontendPersonalia(
-        val fnr: String = genererTilfeldigPersonnummer(),
-        val navn: PdlPersonNavn = PdlPersonNavn(),
-        var adressebeskyttelse: Gradering = Gradering.UGRADERT,
-        var sivilstand: String = "UOPPGITT",
-        var ektefelle: String? = null,
-        var barn: List<FrontendBarn>,
-        var starsborgerskap: String = "NOR",
-        var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Gateveien", 1, "0101", "0301"),
-        var telefonnummer: String = "",
-        var kontonummer: String = "",
-        var arbeidsforhold: List<FrontendArbeidsforhold>,
-        var bostotteSaker: List<SakerDto>,
-        var bostotteUtbetalinger: List<UtbetalingerDto>,
-        var skattetatenUtbetalinger: List<FrontendSkattbarInntekt>,
-        var utbetalingerFraNav: List<FrontendUtbetalingFraNav>,
-        var locked: Boolean = false,
+    val fnr: String = genererTilfeldigPersonnummer(),
+    val navn: PdlPersonNavn = PdlPersonNavn(),
+    var adressebeskyttelse: Gradering = Gradering.UGRADERT,
+    var sivilstand: String = "UOPPGITT",
+    var ektefelle: String? = null,
+    var barn: List<FrontendBarn>,
+    var starsborgerskap: String = "NOR",
+    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Gateveien", 1, "0101", "0301"),
+    var telefonnummer: String = "",
+    var kontonummer: String = "",
+    var arbeidsforhold: List<FrontendArbeidsforhold>,
+    var bostotteSaker: List<SakerDto>,
+    var bostotteUtbetalinger: List<UtbetalingerDto>,
+    var skattetatenUtbetalinger: List<FrontendSkattbarInntekt>,
+    var utbetalingerFraNav: List<FrontendUtbetalingFraNav>,
+    var locked: Boolean = false,
 ) {
     constructor(personalia: Personalia) : this(
-            fnr = personalia.fnr,
-            navn = personalia.navn,
-            adressebeskyttelse = personalia.adressebeskyttelse,
-            sivilstand = personalia.sivilstand,
-            ektefelle = personalia.ektefelle,
-            barn = emptyList(),
-            starsborgerskap = personalia.starsborgerskap,
-            bostedsadresse = personalia.bostedsadresse,
-            telefonnummer = "",
-            kontonummer = "",
-            arbeidsforhold = emptyList(),
-            bostotteSaker = emptyList(),
-            bostotteUtbetalinger = emptyList(),
-            skattetatenUtbetalinger = emptyList(),
-            utbetalingerFraNav = emptyList(),
-            locked = personalia.locked,
+        fnr = personalia.fnr,
+        navn = personalia.navn,
+        adressebeskyttelse = personalia.adressebeskyttelse,
+        sivilstand = personalia.sivilstand,
+        ektefelle = personalia.ektefelle,
+        barn = emptyList(),
+        starsborgerskap = personalia.starsborgerskap,
+        bostedsadresse = personalia.bostedsadresse,
+        telefonnummer = "",
+        kontonummer = "",
+        arbeidsforhold = emptyList(),
+        bostotteSaker = emptyList(),
+        bostotteUtbetalinger = emptyList(),
+        skattetatenUtbetalinger = emptyList(),
+        utbetalingerFraNav = emptyList(),
+        locked = personalia.locked,
     )
 
     companion object {
         fun pdlPersonalia(personalia: FrontendPersonalia): Personalia {
             val forelderBarnRelasjon = personalia.barn.map { ForelderBarnRelasjon(it.fnr, "barn", "forelder") }
             return Personalia(
-                    fnr = personalia.fnr,
-                    navn = personalia.navn,
-                    adressebeskyttelse = personalia.adressebeskyttelse,
-                    sivilstand = personalia.sivilstand,
-                    ektefelle = personalia.ektefelle,
-                    forelderBarnRelasjon = forelderBarnRelasjon,
-                    starsborgerskap = personalia.starsborgerskap,
-                    bostedsadresse = personalia.bostedsadresse,
-                    locked = personalia.locked,
+                fnr = personalia.fnr,
+                navn = personalia.navn,
+                adressebeskyttelse = personalia.adressebeskyttelse,
+                sivilstand = personalia.sivilstand,
+                ektefelle = personalia.ektefelle,
+                forelderBarnRelasjon = forelderBarnRelasjon,
+                starsborgerskap = personalia.starsborgerskap,
+                bostedsadresse = personalia.bostedsadresse,
+                locked = personalia.locked,
             )
         }
 
@@ -98,12 +98,12 @@ data class FrontendPersonalia(
                 }
             }
             return ArbeidsforholdDto.nyttArbeidsforhold(
-                    fnr = fnr,
-                    fom = textToLocalDate(frontendArbeidsforhold.startDato),
-                    tom = textToLocalDate(frontendArbeidsforhold.sluttDato),
-                    stillingsprosent = frontendArbeidsforhold.stillingsProsent.toDouble(),
-                    arbeidsforholdId = frontendArbeidsforhold.id,
-                    arbeidsgiver = arbeidsgiver,
+                fnr = fnr,
+                fom = textToLocalDate(frontendArbeidsforhold.startDato),
+                tom = textToLocalDate(frontendArbeidsforhold.sluttDato),
+                stillingsprosent = frontendArbeidsforhold.stillingsProsent.toDouble(),
+                arbeidsforholdId = frontendArbeidsforhold.id,
+                arbeidsgiver = arbeidsgiver,
             )
         }
 
@@ -114,31 +114,31 @@ data class FrontendPersonalia(
 }
 
 data class FrontendBarn(
-        val fnr: String,
-        var adressebeskyttelse: Gradering = Gradering.UGRADERT,
-        var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
-        var folkeregisterpersonstatus: String = "bosatt",
-        val foedsel: LocalDate = LocalDate.now().minusYears(10),
-        val navn: PdlPersonNavn = PdlPersonNavn(),
+    val fnr: String,
+    var adressebeskyttelse: Gradering = Gradering.UGRADERT,
+    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
+    var folkeregisterpersonstatus: String = "bosatt",
+    val foedsel: LocalDate = LocalDate.now().minusYears(10),
+    val navn: PdlPersonNavn = PdlPersonNavn(),
 ) {
 
     fun pdlBarn(): PdlSoknadBarn {
         val vegadresse = PdlVegadresse(
-                randomInt(7).toString(),
-                bostedsadresse.adressenavn,
-                bostedsadresse.husnummer,
-                bostedsadresse.adressenavn,
-                null,
-                bostedsadresse.postnummer,
-                bostedsadresse.kommunenummer,
-                null,
+            randomInt(7).toString(),
+            bostedsadresse.adressenavn,
+            bostedsadresse.husnummer,
+            bostedsadresse.adressenavn,
+            null,
+            bostedsadresse.postnummer,
+            bostedsadresse.kommunenummer,
+            null,
         )
         return PdlSoknadBarn(
-                adressebeskyttelse = listOf(Adressebeskyttelse(adressebeskyttelse)),
-                bostedsadresse = listOf(PdlBostedsadresse(null, vegadresse, null, null)),
-                folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus(folkeregisterpersonstatus)),
-                foedsel = listOf(PdlFoedsel(foedsel)),
-                navn = listOf(PdlSoknadPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn)),
+            adressebeskyttelse = listOf(Adressebeskyttelse(adressebeskyttelse)),
+            bostedsadresse = listOf(PdlBostedsadresse(null, vegadresse, null, null)),
+            folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus(folkeregisterpersonstatus)),
+            foedsel = listOf(PdlFoedsel(foedsel)),
+            navn = listOf(PdlSoknadPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn)),
         )
     }
 
@@ -147,64 +147,65 @@ data class FrontendBarn(
             val bostedsadresse = pdlBarn.bostedsadresse!!.first()
             val navn = pdlBarn.navn?.first() ?: PdlSoknadPersonNavn("", "", "")
             return FrontendBarn(
-                    fnr = fnr,
-                    adressebeskyttelse = pdlBarn.adressebeskyttelse!!.first().gradering,
-                    bostedsadresse = ForenkletBostedsadresse(
-                            adressenavn = bostedsadresse.vegadresse?.adressenavn ?: "",
-                            husnummer = bostedsadresse.vegadresse?.husnummer ?: 1,
-                            postnummer = bostedsadresse.vegadresse?.postnummer ?: "",
-                            kommunenummer = bostedsadresse.vegadresse?.kommunenummer ?: "",
-                    ),
-                    folkeregisterpersonstatus = pdlBarn.folkeregisterpersonstatus?.first()?.status ?: "bosatt",
-                    foedsel = pdlBarn.foedsel?.first()?.foedselsdato ?: LocalDate.now().minusYears(10),
-                    navn = PdlPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn)
+                fnr = fnr,
+                adressebeskyttelse = pdlBarn.adressebeskyttelse!!.first().gradering,
+                bostedsadresse = ForenkletBostedsadresse(
+                    adressenavn = bostedsadresse.vegadresse?.adressenavn ?: "",
+                    husnummer = bostedsadresse.vegadresse?.husnummer ?: 1,
+                    postnummer = bostedsadresse.vegadresse?.postnummer ?: "",
+                    kommunenummer = bostedsadresse.vegadresse?.kommunenummer ?: "",
+                ),
+                folkeregisterpersonstatus = pdlBarn.folkeregisterpersonstatus?.first()?.status ?: "bosatt",
+                foedsel = pdlBarn.foedsel?.first()?.foedselsdato ?: LocalDate.now().minusYears(10),
+                navn = PdlPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn)
             )
         }
     }
 }
 
 class FrontendSkattbarInntekt(
-        val beloep: String,
-        val trekk: String,
-        val orgnummer: String,
-        val maned: String,
-        val type: Inntektstype,
+    val beloep: String,
+    val trekk: String,
+    val orgnummer: String,
+    val maned: String,
+    val type: Inntektstype,
 ) {
     companion object {
         fun oversettTilInntektsmottaker(frontEnd: FrontendSkattbarInntekt): OppgaveInntektsmottaker {
             return OppgaveInntektsmottaker.Builder()
-                    .kalendermaaned(frontEnd.maned)
-                    .opplysningspliktigId(frontEnd.orgnummer)
-                    .leggTilForskuddstrekk(Forskuddstrekk.Builder().beloep(-frontEnd.trekk.toInt()).build())
-                    .leggTilInntekt(Inntekt.Builder()
-                            .skatteOgAvgiftsregel("hm...")
-                            .fordel("kontantytelse")
-                            .beloep(frontEnd.beloep.toInt())
-                            .type(frontEnd.type)
-                            .build())
-                    .build()
+                .kalendermaaned(frontEnd.maned)
+                .opplysningspliktigId(frontEnd.orgnummer)
+                .leggTilForskuddstrekk(Forskuddstrekk.Builder().beloep(-frontEnd.trekk.toInt()).build())
+                .leggTilInntekt(
+                    Inntekt.Builder()
+                        .skatteOgAvgiftsregel("hm...")
+                        .fordel("kontantytelse")
+                        .beloep(frontEnd.beloep.toInt())
+                        .type(frontEnd.type)
+                        .build()
+                )
+                .build()
         }
 
         fun skattUtbetaling(backend: OppgaveInntektsmottaker): FrontendSkattbarInntekt {
             return FrontendSkattbarInntekt(
-                    beloep = backend.inntekt[0].beloep.toString(),
-                    trekk = backend.forskuddstrekk[0].beloep.toString(),
-                    orgnummer = backend.opplysningspliktigId,
-                    maned = backend.kalendermaaned,
-                    type = backend.inntekt[0].type(),
+                beloep = backend.inntekt[0].beloep.toString(),
+                trekk = backend.forskuddstrekk[0].beloep.toString(),
+                orgnummer = backend.opplysningspliktigId,
+                maned = backend.kalendermaaned,
+                type = backend.inntekt[0].type(),
             )
         }
-
     }
 }
 
 data class FrontendUtbetalingFraNav(
-        val belop: Double,
-        val dato: LocalDate,
-        val ytelsestype: String,
-        val melding: String,
-        val skattebelop: Double,
-        val ytelseskomponenttype: String,
+    val belop: Double,
+    val dato: LocalDate,
+    val ytelsestype: String,
+    val melding: String,
+    val skattebelop: Double,
+    val ytelseskomponenttype: String,
 ) {
 
     fun toUtbetalingDto(): UtbetalingDto {
@@ -232,14 +233,14 @@ data class FrontendUtbetalingFraNav(
 }
 
 class FrontendArbeidsforhold(
-        val type: String,
-        val id: String,
-        val startDato: String,
-        val sluttDato: String,
-        val stillingsProsent: String,
-        val ident: String,
-        val orgnummer: String,
-        val orgnavn: String,
+    val type: String,
+    val id: String,
+    val startDato: String,
+    val sluttDato: String,
+    val stillingsProsent: String,
+    val ident: String,
+    val orgnummer: String,
+    val orgnavn: String,
 ) {
     companion object {
         fun arbeidsforhold(dto: ArbeidsforholdDto, eregService: EregService): FrontendArbeidsforhold {
@@ -255,14 +256,14 @@ class FrontendArbeidsforhold(
             }
             val orgnavn = eregService.getOrganisasjonNoekkelinfo(orgnummer)?.navn?.navnelinje1 ?: ""
             return FrontendArbeidsforhold(
-                    type = dto.arbeidsgiver.type,
-                    id = dto.arbeidsforholdId,
-                    startDato = dto.ansettelsesperiode.periode.fom.toIsoString(),
-                    sluttDato = sluttDato,
-                    stillingsProsent = dto.arbeidsavtaler[0].stillingsprosent.toString(),
-                    ident = ident,
-                    orgnummer = orgnummer,
-                    orgnavn = orgnavn,
+                type = dto.arbeidsgiver.type,
+                id = dto.arbeidsforholdId,
+                startDato = dto.ansettelsesperiode.periode.fom.toIsoString(),
+                sluttDato = sluttDato,
+                stillingsProsent = dto.arbeidsavtaler[0].stillingsprosent.toString(),
+                ident = ident,
+                orgnummer = orgnummer,
+                orgnavn = orgnavn,
             )
         }
     }

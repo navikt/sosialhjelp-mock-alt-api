@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 
 class SkattbarInntekt(val oppgaveInntektsmottaker: MutableList<OppgaveInntektsmottaker> = mutableListOf()) {
     data class Builder(
-            var oppgaver: MutableList<OppgaveInntektsmottaker> = mutableListOf()
+        var oppgaver: MutableList<OppgaveInntektsmottaker> = mutableListOf()
     ) {
         fun leggTilOppgave(oppgave: OppgaveInntektsmottaker) = apply { oppgaver.add(oppgave) }
 
@@ -15,33 +15,33 @@ class SkattbarInntekt(val oppgaveInntektsmottaker: MutableList<OppgaveInntektsmo
 }
 
 class OppgaveInntektsmottaker(
-        val kalendermaaned: String,
-        val opplysningspliktigId: String,
-        val inntekt: List<Inntekt>,
-        val forskuddstrekk: List<Forskuddstrekk>,
+    val kalendermaaned: String,
+    val opplysningspliktigId: String,
+    val inntekt: List<Inntekt>,
+    val forskuddstrekk: List<Forskuddstrekk>,
 ) {
     data class Builder(
-            var kalendermaaned: String = "",
-            var opplysningspliktigId: String? = null,
-            val inntektsListe: MutableList<Inntekt> = mutableListOf(),
-            val forskuddstrekksListe: MutableList<Forskuddstrekk> = mutableListOf(),
+        var kalendermaaned: String = "",
+        var opplysningspliktigId: String? = null,
+        val inntektsListe: MutableList<Inntekt> = mutableListOf(),
+        val forskuddstrekksListe: MutableList<Forskuddstrekk> = mutableListOf(),
     ) {
         fun kalendermaaned(kalendermaaned: String) = apply { this.kalendermaaned = kalendermaaned }
         fun opplysningspliktigId(opplysningspliktigId: String) = apply { this.opplysningspliktigId = opplysningspliktigId }
         fun leggTilInntekt(inntekt: Inntekt) = apply { inntektsListe.add(inntekt) }
         fun leggTilForskuddstrekk(trekk: Forskuddstrekk) = apply { forskuddstrekksListe.add(trekk) }
         fun standardOppgave(
-                dato: LocalDate = LocalDate.now().minusDays(14),
-                belop: Int = 15000,
-                trekk: Int = 5000
+            dato: LocalDate = LocalDate.now().minusDays(14),
+            belop: Int = 15000,
+            trekk: Int = 5000
         ) = apply {
             kalendermaaned = DateTimeFormatter.ofPattern("yyyy-MM").format(dato)
             opplysningspliktigId = randomInt(5).toString()
             leggTilInntekt(
-                    Inntekt.Builder()
-                            .type(Inntektstype.Loennsinntekt)
-                            .beloep(belop)
-                            .build()
+                Inntekt.Builder()
+                    .type(Inntektstype.Loennsinntekt)
+                    .beloep(belop)
+                    .build()
             )
             leggTilForskuddstrekk(Forskuddstrekk.Builder().beloep(trekk).build())
         }
@@ -51,12 +51,12 @@ class OppgaveInntektsmottaker(
 }
 
 class Forskuddstrekk(
-        val beskrivelse: String,
-        val beloep: Int,
+    val beskrivelse: String,
+    val beloep: Int,
 ) {
     data class Builder(
-            var beskrivelse: String = "",
-            var beloep: Int = 0,
+        var beskrivelse: String = "",
+        var beloep: Int = 0,
     ) {
         fun beskrivelse(beskrivelse: String) = apply { this.beskrivelse = beskrivelse }
         fun beloep(beloep: Int) = apply { this.beloep = beloep }
@@ -66,18 +66,18 @@ class Forskuddstrekk(
 }
 
 class Inntekt(
-        val skatteOgAvgiftsregel: String,
-        val fordel: String,
-        val utloeserArbeidsgiveravgift: Boolean,
-        val inngaarIGrunnlagForTrekk: Boolean,
-        val beloep: Int,
-        val loennsinntekt: Loennsinntekt?,
-        val ytelseFraOffentlige: YtelseFraOffentlige?,
-        val pensjonEllerTrygd: PensjonEllerTrygd?,
-        val lottOgPartInnenFiske: LottOgPartInnenFiske?,
-        val dagmammaIEgenBolig: DagmammaIEgenBolig?,
-        val naeringsinntekt: Naeringsinntekt?,
-        val aldersUfoereEtterlatteAvtalefestetOgKrigspensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon?,
+    val skatteOgAvgiftsregel: String,
+    val fordel: String,
+    val utloeserArbeidsgiveravgift: Boolean,
+    val inngaarIGrunnlagForTrekk: Boolean,
+    val beloep: Int,
+    val loennsinntekt: Loennsinntekt?,
+    val ytelseFraOffentlige: YtelseFraOffentlige?,
+    val pensjonEllerTrygd: PensjonEllerTrygd?,
+    val lottOgPartInnenFiske: LottOgPartInnenFiske?,
+    val dagmammaIEgenBolig: DagmammaIEgenBolig?,
+    val naeringsinntekt: Naeringsinntekt?,
+    val aldersUfoereEtterlatteAvtalefestetOgKrigspensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon?,
 ) {
     fun type(): Inntektstype {
         return when {
@@ -93,18 +93,18 @@ class Inntekt(
     }
 
     data class Builder(
-            var skatteOgAvgiftsregel: String = "",
-            var fordel: String = "",
-            var utloeserArbeidsgiveravgift: Boolean = true,
-            var inngaarIGrunnlagForTrekk: Boolean = true,
-            var beloep: Int = 0,
-            var loennsinntekt: Loennsinntekt? = null,
-            var ytelseFraOffentlige: YtelseFraOffentlige? = null,
-            var pensjonEllerTrygd: PensjonEllerTrygd? = null,
-            var lottOgPartInnenFiske: LottOgPartInnenFiske? = null,
-            var dagmammaIEgenBolig: DagmammaIEgenBolig? = null,
-            var naeringsinntekt: Naeringsinntekt? = null,
-            var aldersUfoereEtterlatteAvtalefestetOgKrigspensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon? = null,
+        var skatteOgAvgiftsregel: String = "",
+        var fordel: String = "",
+        var utloeserArbeidsgiveravgift: Boolean = true,
+        var inngaarIGrunnlagForTrekk: Boolean = true,
+        var beloep: Int = 0,
+        var loennsinntekt: Loennsinntekt? = null,
+        var ytelseFraOffentlige: YtelseFraOffentlige? = null,
+        var pensjonEllerTrygd: PensjonEllerTrygd? = null,
+        var lottOgPartInnenFiske: LottOgPartInnenFiske? = null,
+        var dagmammaIEgenBolig: DagmammaIEgenBolig? = null,
+        var naeringsinntekt: Naeringsinntekt? = null,
+        var aldersUfoereEtterlatteAvtalefestetOgKrigspensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon? = null,
     ) {
         fun skatteOgAvgiftsregel(skatteOgAvgiftsregel: String) = apply { this.skatteOgAvgiftsregel = skatteOgAvgiftsregel }
         fun fordel(fordel: String) = apply { this.fordel = fordel }
@@ -115,11 +115,14 @@ class Inntekt(
         fun type(type: Inntektstype, subType: Inntektstype? = null) = apply {
             when (type) {
                 Inntektstype.Loennsinntekt -> loennsinntekt = Loennsinntekt(
-                        Tilleggsinformasjon.Builder().ofType(subType).build())
+                    Tilleggsinformasjon.Builder().ofType(subType).build()
+                )
                 Inntektstype.YtelseFraOffentlige -> ytelseFraOffentlige = YtelseFraOffentlige(
-                        Tilleggsinformasjon.Builder().ofType(subType).build())
+                    Tilleggsinformasjon.Builder().ofType(subType).build()
+                )
                 Inntektstype.PensjonEllerTrygd -> pensjonEllerTrygd = PensjonEllerTrygd(
-                        Tilleggsinformasjon.Builder().ofType(subType).build())
+                    Tilleggsinformasjon.Builder().ofType(subType).build()
+                )
                 Inntektstype.LottOgPartInnenFiske -> lottOgPartInnenFiske = LottOgPartInnenFiske()
                 Inntektstype.DagmammaIEgenBolig -> dagmammaIEgenBolig = DagmammaIEgenBolig()
                 Inntektstype.Naeringsinntekt -> naeringsinntekt = Naeringsinntekt()
@@ -129,18 +132,18 @@ class Inntekt(
         }
 
         fun build() = Inntekt(
-                skatteOgAvgiftsregel,
-                fordel,
-                utloeserArbeidsgiveravgift,
-                inngaarIGrunnlagForTrekk,
-                beloep,
-                loennsinntekt,
-                ytelseFraOffentlige,
-                pensjonEllerTrygd,
-                lottOgPartInnenFiske,
-                dagmammaIEgenBolig,
-                naeringsinntekt,
-                aldersUfoereEtterlatteAvtalefestetOgKrigspensjon,
+            skatteOgAvgiftsregel,
+            fordel,
+            utloeserArbeidsgiveravgift,
+            inngaarIGrunnlagForTrekk,
+            beloep,
+            loennsinntekt,
+            ytelseFraOffentlige,
+            pensjonEllerTrygd,
+            lottOgPartInnenFiske,
+            dagmammaIEgenBolig,
+            naeringsinntekt,
+            aldersUfoereEtterlatteAvtalefestetOgKrigspensjon,
         )
     }
 }
@@ -156,26 +159,26 @@ enum class Inntektstype {
 }
 
 class Loennsinntekt(
-        val tilleggsinformasjon: Tilleggsinformasjon
+    val tilleggsinformasjon: Tilleggsinformasjon
 )
 
 class YtelseFraOffentlige(
-        val tilleggsinformasjon: Tilleggsinformasjon
+    val tilleggsinformasjon: Tilleggsinformasjon
 )
 
 class PensjonEllerTrygd(
-        val tilleggsinformasjon: Tilleggsinformasjon
+    val tilleggsinformasjon: Tilleggsinformasjon
 )
 
 class Tilleggsinformasjon(
-        val dagmammaIEgenBolig: DagmammaIEgenBolig?,
-        val lottOgPart: LottOgPartInnenFiske?,
-        val pensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon?,
+    val dagmammaIEgenBolig: DagmammaIEgenBolig?,
+    val lottOgPart: LottOgPartInnenFiske?,
+    val pensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon?,
 ) {
     data class Builder(
-            var dagmammaIEgenBolig: DagmammaIEgenBolig? = null,
-            var lottOgPart: LottOgPartInnenFiske? = null,
-            var pensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon? = null,
+        var dagmammaIEgenBolig: DagmammaIEgenBolig? = null,
+        var lottOgPart: LottOgPartInnenFiske? = null,
+        var pensjon: AldersUfoereEtterlatteAvtalefestetOgKrigspensjon? = null,
     ) {
         fun ofType(type: Inntektstype? = null) = apply {
             if (type != null) {

@@ -29,5 +29,4 @@ class UtbetalingService {
     companion object {
         private val log by logger()
     }
-
 }

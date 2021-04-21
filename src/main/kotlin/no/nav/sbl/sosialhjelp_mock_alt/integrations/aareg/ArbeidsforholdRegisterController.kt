@@ -27,7 +27,7 @@ class ArbeidsforholdRegisterController(private val aaregService: AaregService) {
     }
 
     @GetMapping("/aareg/v1/arbeidstaker/arbeidsforhold")
-    //?sporingsinformasjon=false&regelverk=A_ORDNINGEN&ansettelsesperiodeFom=2020-07-29&ansettelsesperiodeTom=2020-10-29
+    // ?sporingsinformasjon=false&regelverk=A_ORDNINGEN&ansettelsesperiodeFom=2020-07-29&ansettelsesperiodeTom=2020-10-29
     fun getArbeidsforhold(@RequestHeader headers: HttpHeaders): ResponseEntity<List<ArbeidsforholdDto>> {
         val fnr = hentFnrFraHeaders(headers)
         val arbaidsforhold = aaregService.getArbeidsforhold(fnr)

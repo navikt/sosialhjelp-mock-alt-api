@@ -40,15 +40,15 @@ import java.util.zip.ZipOutputStream
 
 @RestController
 class FrontendController(
-        private val pdlService: PdlService,
-        private val aaregService: AaregService,
-        private val skatteetatenService: SkatteetatenService,
-        private val bostotteService: BostotteService,
-        private val utbetalingService: UtbetalingService,
-        private val eregService: EregService,
-        private val dkifService: DkifService,
-        private val soknadService: SoknadService,
-        private val kontonummerService: KontonummerService,
+    private val pdlService: PdlService,
+    private val aaregService: AaregService,
+    private val skatteetatenService: SkatteetatenService,
+    private val bostotteService: BostotteService,
+    private val utbetalingService: UtbetalingService,
+    private val eregService: EregService,
+    private val dkifService: DkifService,
+    private val soknadService: SoknadService,
+    private val kontonummerService: KontonummerService,
 ) {
     companion object {
         private val log by logger()
@@ -72,7 +72,7 @@ class FrontendController(
             kontonummerService.putKontonummer(personalia.fnr, personalia.kontonummer)
         }
         aaregService.setArbeidsforholdForFnr(
-                personalia.fnr, personalia.arbeidsforhold.map { aaregArbeidsforhold(personalia.fnr, it) }
+            personalia.fnr, personalia.arbeidsforhold.map { aaregArbeidsforhold(personalia.fnr, it) }
         )
         personalia.arbeidsforhold.forEach {
             eregService.putOrganisasjonNoekkelinfo(it.orgnummer, it.orgnavn)
@@ -105,12 +105,12 @@ class FrontendController(
         log.info("Henter ned personalia for fnr: $ident")
         val frontendPersonalia = FrontendPersonalia(personalia)
         frontendPersonalia.barn =
-                personalia.forelderBarnRelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
+            personalia.forelderBarnRelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
         frontendPersonalia.telefonnummer =
-                dkifService.getDigitalKontaktinfo(personalia.fnr)?.mobiltelefonnummer ?: ""
+            dkifService.getDigitalKontaktinfo(personalia.fnr)?.mobiltelefonnummer ?: ""
         frontendPersonalia.kontonummer = kontonummerService.getKontonummer(personalia.fnr)?.kontonummer ?: ""
         frontendPersonalia.arbeidsforhold = aaregService.getArbeidsforhold(personalia.fnr)
-                .map { FrontendArbeidsforhold.arbeidsforhold(it, eregService) }
+            .map { FrontendArbeidsforhold.arbeidsforhold(it, eregService) }
         val skattbarInntekt = skatteetatenService.getSkattbarInntekt(personalia.fnr)
         frontendPersonalia.skattetatenUtbetalinger = skattbarInntekt.oppgaveInntektsmottaker.map {
             FrontendSkattbarInntekt.skattUtbetaling(it)
@@ -164,7 +164,7 @@ class FrontendController(
 
         soknadsInfo.vedlegg.forEach { vedlegg ->
             val fil = soknadService.hentFil(vedlegg.id)
-            if(fil != null) {
+            if (fil != null) {
                 val zipFile = ZipEntry(fil.filnavn)
                 zipArchive.putNextEntry(zipFile)
                 zipArchive.write(fil.bytes)
@@ -175,9 +175,11 @@ class FrontendController(
         zipArchive.close()
         bytebuffer.close()
         return ResponseEntity.ok()
-                .header("Content-Disposition",
-                        "attachment; filename=soknad_$fiksDigisosId.zip")
-                .body(bytebuffer.toByteArray())
+            .header(
+                "Content-Disposition",
+                "attachment; filename=soknad_$fiksDigisosId.zip"
+            )
+            .body(bytebuffer.toByteArray())
     }
 
     @GetMapping("/mock-alt/soknad/liste")
@@ -185,12 +187,12 @@ class FrontendController(
         return ResponseEntity.ok(soknadService.listSoknader(null).map { toFrontendSoknad(it) })
     }
 
-    private fun toFrontendSoknad(soknad: DigisosSak) : FrontendSoknad {
+    private fun toFrontendSoknad(soknad: DigisosSak): FrontendSoknad {
         soknadService.hentSoknadstittel(soknad.fiksDigisosId)
         val vedlegg = mutableListOf<FrontendVedlegg>()
         vedlegg.addAll(soknad.digisosSoker!!.dokumenter.map { toVedlegg(it) })
         soknad.ettersendtInfoNAV!!.ettersendelser.forEach { ettersendelse ->
-            ettersendelse.vedlegg.forEach { vedlegg.add(toVedlegg(it))}
+            ettersendelse.vedlegg.forEach { vedlegg.add(toVedlegg(it)) }
         }
         val sokerNavn = try {
             pdlService.getPersonalia(soknad.sokerFnr).navn.toString()
@@ -199,16 +201,16 @@ class FrontendController(
         }
 
         return FrontendSoknad(
-                sokerFnr = soknad.sokerFnr,
-                sokerNavn = sokerNavn,
-                fiksDigisosId = soknad.fiksDigisosId,
-                tittel = soknadService.hentSoknadstittel(soknad.fiksDigisosId),
-                vedlegg = vedlegg,
-                vedleggSomMangler = vedlegg.filter { !it.kanLastesned }.size
+            sokerFnr = soknad.sokerFnr,
+            sokerNavn = sokerNavn,
+            fiksDigisosId = soknad.fiksDigisosId,
+            tittel = soknadService.hentSoknadstittel(soknad.fiksDigisosId),
+            vedlegg = vedlegg,
+            vedleggSomMangler = vedlegg.filter { !it.kanLastesned }.size
         )
     }
 
-    private fun toVedlegg(dokument: DokumentInfo) : FrontendVedlegg {
+    private fun toVedlegg(dokument: DokumentInfo): FrontendVedlegg {
         val kanLastesned = soknadService.hentFil(dokument.dokumentlagerDokumentId) != null
         return FrontendVedlegg(dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse, kanLastesned)
     }
