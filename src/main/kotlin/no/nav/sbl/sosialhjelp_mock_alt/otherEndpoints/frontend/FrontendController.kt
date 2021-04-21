@@ -149,6 +149,19 @@ class FrontendController(
         zipArchive.write(vedleggJson!!.toByteArray())
         zipArchive.closeEntry()
 
+//        val forsendelseZip = ZipEntry("forsendelse.metadata.json")
+//        zipArchive.putNextEntry(forsendelseZip)
+//        zipArchive.write("{\"eksternRef\": \"$fiksDigisosId\", \"digisosId\": \"$fiksDigisosId\"}".toByteArray())
+//        zipArchive.closeEntry()
+
+        val ettersendelsePdf = soknadService.hentEttersendelsePdf(fiksDigisosId)
+        if(ettersendelsePdf != null) {
+            val zipFile = ZipEntry(ettersendelsePdf.filnavn)
+            zipArchive.putNextEntry(zipFile)
+            zipArchive.write(ettersendelsePdf.bytes)
+            zipArchive.closeEntry()
+        }
+
         soknadsInfo.vedlegg.forEach { vedlegg ->
             val fil = soknadService.hentFil(vedlegg.id)
             if(fil != null) {
