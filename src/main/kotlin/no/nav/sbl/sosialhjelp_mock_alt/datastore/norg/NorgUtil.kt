@@ -24,7 +24,7 @@ private val sosialetjenesterInfo: String = """
         Fast utbetalingsdato: 27-30 i mnd
         Siste tidspunkt for kjøring: 1030
         Utbetaling når utbetaling havner på helg/helligdag: siste virkedag før Utbetalingsmåter for nødhjelp: kronekort/rekvisisjon Kvalifiseringsstønad og introduksjonsstønad: 28 i mnd
-    """.trimIndent()
+""".trimIndent()
 
 fun leggTilNavenhet(navEnheter: MutableMap<String, NavEnhet>, enhetsnr: String, navn: String) {
     navEnheter[enhetsnr] = lagMockNavEnhet(enhetsnr, navn)
@@ -33,13 +33,13 @@ fun leggTilNavenhet(navEnheter: MutableMap<String, NavEnhet>, enhetsnr: String, 
 fun lagMockNavEnhet(enhetsnr: String, navn: String): NavEnhet {
     val enhetId = (enhetsnr + enhetsnr).toInt()
     return NavEnhet(
-            enhetId = enhetId,
-            navn = navn,
-            enhetNr = enhetsnr,
-            status = "20",
-            antallRessurser = 25,
-            aktiveringsdato = "1999-10-10",
-            nedleggelsesdato = "null",
-            sosialeTjenester = sosialetjenesterInfo
+        enhetId = enhetId,
+        navn = navn,
+        enhetNr = enhetsnr,
+        status = "20",
+        antallRessurser = 25,
+        aktiveringsdato = "1999-10-10",
+        nedleggelsesdato = "null",
+        sosialeTjenester = sosialetjenesterInfo
     )
 }

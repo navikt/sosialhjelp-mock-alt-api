@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class PdlController(
-        private val pdlService: PdlService,
-        private val feilService: FeilService,
+    private val pdlService: PdlService,
+    private val feilService: FeilService,
 ) {
     @PostMapping("/pdl_endpoint_url", produces = ["application/json;charset=UTF-8"])
     fun pdlEndpoint(
-            @RequestParam parameters: MultiValueMap<String, String>,
-            @RequestBody body: String,
+        @RequestParam parameters: MultiValueMap<String, String>,
+        @RequestBody body: String,
     ): String {
         val pdlRequest = objectMapper.readValue(body, PdlRequest::class.java)
         return decideResponse(pdlRequest)

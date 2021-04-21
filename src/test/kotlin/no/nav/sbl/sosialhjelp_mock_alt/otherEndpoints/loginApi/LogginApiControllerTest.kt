@@ -7,28 +7,37 @@ internal class LogginApiControllerTest {
 
     @Test
     fun cookieTest() {
-        val token = LogginApiController.extractToken(listOf(
+        val token = LogginApiController.extractToken(
+            listOf(
                 "other=0; " +
-                        "localhost-idtoken=ourTokenString; " +
-                        "something=1111111"))
+                    "localhost-idtoken=ourTokenString; " +
+                    "something=1111111"
+            )
+        )
         assertEquals("ourTokenString", token)
     }
 
     @Test
     fun cookieTest_firstPosition() {
-        val token = LogginApiController.extractToken(listOf(
+        val token = LogginApiController.extractToken(
+            listOf(
                 "localhost-idtoken=ourTokenString; " +
-                        "other=0; " +
-                        "something=1111111"))
+                    "other=0; " +
+                    "something=1111111"
+            )
+        )
         assertEquals("ourTokenString", token)
     }
 
     @Test
     fun cookieTest_lastPosition() {
-        val token = LogginApiController.extractToken(listOf(
+        val token = LogginApiController.extractToken(
+            listOf(
                 "other=0; " +
-                        "something=1111111" +
-                        "localhost-idtoken=ourTokenString; "))
+                    "something=1111111" +
+                    "localhost-idtoken=ourTokenString; "
+            )
+        )
         assertEquals("ourTokenString", token)
     }
 }

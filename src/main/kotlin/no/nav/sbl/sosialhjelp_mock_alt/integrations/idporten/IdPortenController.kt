@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class IdPortenController(
-        @Value("\${host_address}") private val host_address: String
+    @Value("\${host_address}") private val host_address: String
 ) {
     companion object {
         private val log by logger()
@@ -22,9 +22,9 @@ class IdPortenController(
     @PostMapping("/idporten/idporten-oidc-provider/token")
     fun getToken(@RequestParam parameters: MultiValueMap<String, String>, @RequestBody body: String): IdPortenAccessTokenResponse {
         val token = IdPortenAccessTokenResponse(
-                accessToken = "",
-                expiresIn = 999999,
-                scope = "ks:fiks"
+            accessToken = "",
+            expiresIn = 999999,
+            scope = "ks:fiks"
         )
         log.info("Henter token: $token")
         return token
@@ -33,9 +33,9 @@ class IdPortenController(
     @GetMapping("/idporten/idporten-oidc-provider/.well-known/openid-configuration")
     fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): IdPortenOidcConfiguration {
         val config = IdPortenOidcConfiguration(
-                issuer = "iss-localhost",
-                tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token",
-                jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks"
+            issuer = "iss-localhost",
+            tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token",
+            jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks"
         )
         log.info("Henter konfigurasjon: $config")
         return config

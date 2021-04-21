@@ -23,7 +23,7 @@ val fastFnr = genererTilfeldigPersonnummer(dato = LocalDate.of(1945, 10, 26), Kj
 
 fun String.toLocalDateTime(): LocalDateTime {
     return ZonedDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
-            .withZoneSameInstant(ZoneId.of("Europe/Oslo")).toLocalDateTime()
+        .withZoneSameInstant(ZoneId.of("Europe/Oslo")).toLocalDateTime()
 }
 
 fun unixToLocalDateTime(tidspunkt: Long): LocalDateTime {

@@ -33,9 +33,9 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 class LogginApiController(
-        @Autowired val restTemplate: RestTemplate,
-        @Autowired val pdlService: PdlService,
-        @Value("\${loginurl}") private val loginurl: String,
+    @Autowired val restTemplate: RestTemplate,
+    @Autowired val pdlService: PdlService,
+    @Value("\${loginurl}") private val loginurl: String,
 ) {
     companion object {
         private val log by logger()
@@ -61,9 +61,11 @@ class LogginApiController(
         }
         val eksternResponse = sendRequests(body, method, request, response)
         log.debug("SoknadProxy response: $eksternResponse")
-        log.debug("SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, " +
+        log.debug(
+            "SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, " +
                 "body: ${eksternResponse.body?.size},  " +
-                "headers: ${objectMapper.writeValueAsString(eksternResponse.headers)}")
+                "headers: ${objectMapper.writeValueAsString(eksternResponse.headers)}"
+        )
         return eksternResponse
     }
 
@@ -81,7 +83,7 @@ class LogginApiController(
                     log.debug("Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}")
                 val jwtToken = JwtToken(tokenString)
                 val expirationDate = jwtToken.jwtTokenClaims.expirationTime
-                if(Date().after(expirationDate)) {
+                if (Date().after(expirationDate)) {
                     log.info("Unauthorized: Token has expired: $expirationDate")
                     throw MockAltException("Unauthorized: Token has expired: $expirationDate")
                 }
@@ -121,8 +123,8 @@ class LogginApiController(
 
     private fun redirectToLoginPage(): ResponseEntity<ByteArray> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(objectMapper.writeValueAsString(UnauthorizedMelding("azuread_authentication_error", "Autentiseringsfeil", loginurl)).toByteArray())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(objectMapper.writeValueAsString(UnauthorizedMelding("azuread_authentication_error", "Autentiseringsfeil", loginurl)).toByteArray())
     }
 
     private fun getHeaders(request: HttpServletRequest): HttpHeaders {
@@ -143,7 +145,6 @@ class LogginApiController(
         response.reset()
         CORSFilter.setAllowOriginHeader(request, response)
     }
-
 
     private fun addAccessTokenHeader(httpHeaders: HttpHeaders): HttpHeaders {
         val cookie = httpHeaders[HttpHeaders.COOKIE]

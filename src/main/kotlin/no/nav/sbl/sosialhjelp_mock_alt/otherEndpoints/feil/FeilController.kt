@@ -17,7 +17,7 @@ class FeilController(val feilService: FeilService) {
     }
 
     @PostMapping("/feil")
-    fun editFeil(@RequestBody feilsituasjoner: FeilsituasjonerFrontend ) {
+    fun editFeil(@RequestBody feilsituasjoner: FeilsituasjonerFrontend) {
         feilService.setFeilForFnr(feilsituasjoner.fnr, feilsituasjoner.feilsituasjoner)
     }
 
@@ -34,6 +34,6 @@ class FeilController(val feilService: FeilService) {
 }
 
 data class FeilsituasjonerFrontend(
-        val fnr: String,
-        val feilsituasjoner: List<Feilsituasjon>
+    val fnr: String,
+    val feilsituasjoner: List<Feilsituasjon>
 )

@@ -17,8 +17,8 @@ class EregService {
 
     fun putOrganisasjonNoekkelinfo(orgnummer: String, orgnavn: String) {
         organisasjonNoekkelinfoMap[orgnummer] = OrganisasjonNoekkelinfoDto(
-                navn = NavnDto(orgnavn),
-                organisasjonsnummer = orgnummer,
+            navn = NavnDto(orgnavn),
+            organisasjonsnummer = orgnummer,
         )
     }
 

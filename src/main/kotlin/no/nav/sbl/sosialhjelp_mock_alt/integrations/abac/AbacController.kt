@@ -17,7 +17,7 @@ class AbacController {
     }
 
     @PostMapping("/abac/application/authorize")
-    fun getAuthorization(@RequestParam parameters:MultiValueMap<String, String>): String {
+    fun getAuthorization(@RequestParam parameters: MultiValueMap<String, String>): String {
         val authorization = XacmlResponse(response = listOf(AbacResponse(decision = Decision.Permit, associatedAdvice = emptyList())))
         log.info("Henter abac authorization: $authorization")
         return objectMapper.writeValueAsString(authorization)
