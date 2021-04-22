@@ -50,6 +50,7 @@ class SoknadService {
     val soknadsliste: HashMap<String, DigisosSak> = HashMap()
     val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
     val fillager: FixedFileStrorage = FixedFileStrorage()
+    val ettersendelsePdfLager: FixedFileStrorage = FixedFileStrorage()
 
     fun hentSoknad(fiksDigisosId: String): DigisosSak? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
@@ -186,6 +187,11 @@ class SoknadService {
         return fillager.find(dokumentlagerId)
     }
 
+    fun hentEttersendelsePdf(fiksDigisosId: String): FileEntry? {
+        log.debug("Henter $ettersendelseFilnavn for id: $fiksDigisosId")
+        return ettersendelsePdfLager.find(fiksDigisosId)
+    }
+
     fun hentDokument(digisosId: String?, dokumentlagerId: String): String? {
         log.debug("Henter dokument med id: $dokumentlagerId")
         return dokumentLager[dokumentlagerId] // Allerede lagret som json
@@ -232,12 +238,18 @@ class SoknadService {
         val vedleggsId = UUID.randomUUID().toString()
         var vedleggsInfo: JsonVedlegg? = null
         var sha512 = "dummySha512"
-        if (vedleggsJson != null && !vedleggMetadata.filnavn!!.contentEquals(ettersendelseFilnavn)) {
-            vedleggsInfo = vedleggsJson.vedlegg.firstOrNull { jsonVedlegg ->
-                jsonVedlegg.filer.any { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }
-            }
-            if (vedleggsInfo != null) {
-                sha512 = vedleggsInfo.filer.first { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.sha512
+        if (vedleggsJson != null) {
+            if (vedleggMetadata.filnavn!!.contentEquals(ettersendelseFilnavn)) {
+                if (file != null) {
+                    ettersendelsePdfLager.add(fiksDigisosId, ettersendelseFilnavn, file.bytes)
+                }
+            } else {
+                vedleggsInfo = vedleggsJson.vedlegg.firstOrNull { jsonVedlegg ->
+                    jsonVedlegg.filer.any { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }
+                }
+                if (vedleggsInfo != null) {
+                    sha512 = vedleggsInfo.filer.first { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }.sha512
+                }
             }
         }
         dokumentLager[vedleggsId] = objectMapper.writeValueAsString(
