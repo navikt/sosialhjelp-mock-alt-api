@@ -4,9 +4,13 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.PdlRequest
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
+import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
+import org.springframework.http.HttpHeaders
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
@@ -19,8 +23,13 @@ class PdlController(
     fun pdlEndpoint(
         @RequestParam parameters: MultiValueMap<String, String>,
         @RequestBody body: String,
+        @RequestHeader headers: HttpHeaders,
     ): String {
+        val tokenFnr = hentFnrFraToken(headers)
         val pdlRequest = objectMapper.readValue(body, PdlRequest::class.java)
+        if (tokenFnr != pdlRequest.variables.ident) {
+            log.warn("Token matcher ikke request! $tokenFnr != ${pdlRequest.variables.ident}")
+        }
         return decideResponse(pdlRequest)
     }
 
@@ -61,5 +70,9 @@ class PdlController(
             }
             else -> "OK"
         }
+    }
+
+    companion object {
+        private val log by logger()
     }
 }
