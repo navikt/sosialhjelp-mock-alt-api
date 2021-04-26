@@ -1,19 +1,19 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
 data class PdlInnsynPersonResponse(
-        val errors: List<PdlError>?,
-        val data: PdlInnsynHentPerson?
+    val errors: List<PdlError>?,
+    val data: PdlInnsynHentPerson?
 )
 
 data class PdlInnsynHentPerson(
-        val hentPerson: PdlInnsynPerson?
+    val hentPerson: PdlInnsynPerson?
 )
 
 data class PdlInnsynPerson(
-        val adressebeskyttelse: List<Adressebeskyttelse>,
-        val navn: List<PdlNavn>
+    val adressebeskyttelse: List<Adressebeskyttelse>,
+    val navn: List<PdlNavn>
 )
 
 data class PdlNavn(
-        val fornavn: String?
+    val fornavn: String?
 )

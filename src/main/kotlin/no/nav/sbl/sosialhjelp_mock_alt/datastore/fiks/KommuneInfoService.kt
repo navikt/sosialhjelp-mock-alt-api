@@ -22,15 +22,16 @@ class KommuneInfoService {
     }
 
     private fun lagKommuneInfo(id: String) = KommuneInfo(
-            kommunenummer = id,
-            kanMottaSoknader = true,
-            kanOppdatereStatus = true,
-            harMidlertidigDeaktivertOppdateringer = false,
-            harMidlertidigDeaktivertMottak = false,
-            kontaktpersoner = Kontaktpersoner(
-                    Collections.singletonList("Kontakt$id@navo.no"),
-                    Collections.singletonList("Test$id@navno.no")),
-            harNksTilgang = true,
-            behandlingsansvarlig = null
+        kommunenummer = id,
+        kanMottaSoknader = true,
+        kanOppdatereStatus = true,
+        harMidlertidigDeaktivertOppdateringer = false,
+        harMidlertidigDeaktivertMottak = false,
+        kontaktpersoner = Kontaktpersoner(
+            Collections.singletonList("Kontakt$id@navo.no"),
+            Collections.singletonList("Test$id@navno.no")
+        ),
+        harNksTilgang = true,
+        behandlingsansvarlig = null
     )
 }

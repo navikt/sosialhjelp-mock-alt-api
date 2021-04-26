@@ -58,20 +58,20 @@ data class Personalia(
     }
 
     fun withForelderBarnRelasjon(barnFnr: String): Personalia {
-        forelderBarnRelasjon = listOf( ForelderBarnRelasjon(barnFnr, "barn", "forelder"))
+        forelderBarnRelasjon = listOf(ForelderBarnRelasjon(barnFnr, "barn", "forelder"))
         return this
     }
 }
 
 data class ForelderBarnRelasjon(
-        val ident: String = genererTilfeldigPersonnummer(),
-        val rolle: String = "barn",
-        val motrolle: String = "forelder",
+    val ident: String = genererTilfeldigPersonnummer(),
+    val rolle: String = "barn",
+    val motrolle: String = "forelder",
 )
 
 data class ForenkletBostedsadresse(
-        val adressenavn: String,
-        val husnummer: Int,
-        val postnummer: String,
-        val kommunenummer: String
+    val adressenavn: String,
+    val husnummer: Int,
+    val postnummer: String,
+    val kommunenummer: String
 )
