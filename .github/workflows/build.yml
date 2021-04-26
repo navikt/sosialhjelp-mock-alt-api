@@ -51,6 +51,7 @@ jobs:
         if: github.ref != 'refs/heads/master'
         run: docker build -t ${{ env.DOCKER_TAG }} .
       - name: Build docker image (master)
+        if: github.ref == 'refs/heads/master'
         run: docker build -t ${{ env.DOCKER_TAG }} -t ${{ env.DOCKER_IMAGE }}:latest .
       - name: Push docker image
         run: |
