@@ -47,12 +47,11 @@ jobs:
       - name: Create docker image tags
         run: |
           echo "DOCKER_TAG=${{ env.DOCKER_IMAGE }}:${{ steps.artifact-version.outputs.version }}" >> $GITHUB_ENV
-      - name: Build docker image (not master)
-        if: github.ref != 'refs/heads/master'
-        run: docker build -t ${{ env.DOCKER_TAG }} .
-      - name: Build docker image (master)
+      - name: Add latest tag
         if: github.ref == 'refs/heads/master'
-        run: docker build -t ${{ env.DOCKER_TAG }} -t ${{ env.DOCKER_IMAGE }}:latest .
+        run: echo "DOCKER_TAG+= -t ${{ env.DOCKER_IMAGE }}:latest" >> $GITHUB_ENV
+      - name: Build docker image
+        run: docker build -t ${{ env.DOCKER_TAG }} .
       - name: Push docker image
         run: |
           docker push --all-tags ${{ env.DOCKER_IMAGE }}
