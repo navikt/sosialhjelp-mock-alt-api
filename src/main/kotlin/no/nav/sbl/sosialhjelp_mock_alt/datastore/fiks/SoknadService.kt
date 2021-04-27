@@ -295,7 +295,7 @@ class SoknadService {
         soknad.hendelser.filter { it.type == JsonHendelse.Type.SAKS_STATUS }
             .forEach {
                 if (it is JsonSaksStatus) {
-                    saksTittelMap[it.referanse] = it.tittel
+                    saksTittelMap[it.referanse] = it.tittel ?: ""
                 }
             }
         if (saksTittelMap.isNotEmpty()) {
