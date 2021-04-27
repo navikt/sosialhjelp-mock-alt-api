@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.sts
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.IdPortenOidcConfiguration
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.WellKnown
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.sts.model.STSResponse
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -34,7 +34,7 @@ class StsController(
 
     @RequestMapping("/sts_token_endpoint_url/.well-known/openid-configuration")
     fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): String {
-        val config = IdPortenOidcConfiguration(
+        val config = WellKnown(
             issuer = "digisos-mock-alt",
             tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
             jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks",
