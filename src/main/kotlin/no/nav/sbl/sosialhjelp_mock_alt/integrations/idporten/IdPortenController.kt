@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten
 
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.IdPortenAccessTokenResponse
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.IdPortenOidcConfiguration
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.WellKnown
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.util.MultiValueMap
@@ -31,8 +31,8 @@ class IdPortenController(
     }
 
     @GetMapping("/idporten/idporten-oidc-provider/.well-known/openid-configuration")
-    fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): IdPortenOidcConfiguration {
-        val config = IdPortenOidcConfiguration(
+    fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): WellKnown {
+        val config = WellKnown(
             issuer = "iss-localhost",
             tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token",
             jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks"

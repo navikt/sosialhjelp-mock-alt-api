@@ -11,16 +11,8 @@ data class IdPortenAccessTokenResponse(
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class IdPortenOidcConfiguration(
+data class WellKnown(
     @JsonProperty(value = "issuer", required = true) val issuer: String,
     @JsonProperty(value = "token_endpoint", required = true) val tokenEndpoint: String,
     @JsonProperty(value = "jwks_uri", required = false) val jwksURI: String?
 )
-
-// inline class AccessToken(val token: String) {
-//    override fun toString(): String = token
-// }
-//
-// inline class Jws(val token: String) {
-//    override fun toString(): String = token
-// }
