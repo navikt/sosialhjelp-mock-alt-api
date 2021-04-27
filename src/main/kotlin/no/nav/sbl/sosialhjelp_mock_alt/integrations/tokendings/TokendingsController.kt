@@ -3,7 +3,6 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.tokendings
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.type.TypeReference
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.WellKnown
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.sts.StsController
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.beans.factory.annotation.Value
@@ -27,7 +26,7 @@ class TokendingsController(
             tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/tokendings/token",
             jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks",
         )
-        StsController.log.info("Henter tokendings konfigurasjon: $config")
+        log.info("Henter tokendings konfigurasjon: $config")
         return config
     }
 
