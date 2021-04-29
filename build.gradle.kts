@@ -10,6 +10,7 @@ val filformatVersion = "1.2021.03.02-10.58-415c44e55124"
 val tokenValidationVersion = "1.3.5"
 val jacksonVersion = "2.12.0"
 val springdocversion = "1.5.7"
+val jsonSmartVersion = "2.4.2"
 
 plugins {
     application
@@ -78,12 +79,24 @@ dependencies {
     implementation("no.nav.sosialhjelp:sosialhjelp-common-api:$sosialhjelpCommonVersion")
     implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
-    implementation("no.nav.security:token-validation-test-support:$tokenValidationVersion")
+    implementation("no.nav.security:token-validation-test-support:$tokenValidationVersion") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-jersey") // Excluder da vi kun bruker Spring. Ved å exclude slutter snyk å klage på sårbarheter i jersey
+    }
 
     implementation("org.springdoc:springdoc-openapi-ui:$springdocversion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+
+    //    spesifikke versjoner oppgradert etter ønske fra snyk
+    constraints {
+        implementation("net.minidev:json-smart:$jsonSmartVersion") {
+            because("Setter transitiv avhengighet sin versjon eksplisitt til 2.4.2")
+        }
+    }
 }
+
+// override spring managed dependencies
+extra["json-smart.version"] = "2.4.2"
 
 tasks {
     withType<Test> {
