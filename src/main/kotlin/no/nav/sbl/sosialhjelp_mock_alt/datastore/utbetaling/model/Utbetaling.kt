@@ -25,3 +25,8 @@ data class KomponentDto(
     val satsbelop: Double = 21.0,
     val satsantall: Double = 2.0
 )
+
+data class UtbetalingerResponseDto(
+    val utbetalinger: List<UtbetalingDto>?,
+    val feilet: Boolean
+)
