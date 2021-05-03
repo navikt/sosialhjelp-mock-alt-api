@@ -69,7 +69,7 @@ class SoknadService(
         }
         val soknadslisteForFnr = soknadsliste.values.filter { it.sokerFnr.equals(fnr) }.toMutableList()
         log.info("Henter søknadsliste. Antall soknader for $fnr: ${soknadslisteForFnr.size}")
-        if(filter_soknader_on_fnr) {
+        if (filter_soknader_on_fnr) {
             return soknadslisteForFnr
         }
         log.info("- returnerer fortsatt alle. Antall soknader: ${soknadsliste.size}")
