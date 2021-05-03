@@ -7,7 +7,8 @@
     "GCP_PORT": "8989",
     "HOST_ADDRESS": "https://digisos.labs.nais.io/",
     "COOKIE_DOMAIN": "digisos.labs.nais.io",
-    "LOGINURL": "https://digisos.labs.nais.io/sosialhjelp/mock-alt/login"
+    "LOGINURL": "https://digisos.labs.nais.io/sosialhjelp/mock-alt/login",
+    "FILTER_SOKNADER_ON_FNR": "false"
   },
   "minReplicas": "1",
   "maxReplicas": "1",

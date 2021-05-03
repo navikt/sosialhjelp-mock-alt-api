@@ -76,7 +76,11 @@ fun hentFnrFraToken(headers: HttpHeaders): String {
     if (token != null) {
         if (token.isNotEmpty()) {
             val tokenString = token.first().split(" ")[1]
-            return JwtToken(tokenString).subject
+            return try {
+                JwtToken(tokenString).subject
+            } catch (e: RuntimeException) {
+                fastFnr
+            }
         }
     }
     return fastFnr

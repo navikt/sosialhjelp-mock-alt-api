@@ -25,6 +25,7 @@ import no.nav.sosialhjelp.api.fiks.EttersendtInfoNAV
 import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import org.joda.time.DateTime
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
@@ -41,7 +42,9 @@ import kotlin.collections.set
 const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 @Service
-class SoknadService {
+class SoknadService(
+    @Value("\${filter_soknader_on_fnr}") private val filter_soknader_on_fnr: Boolean,
+) {
     companion object {
         val log by logger()
     }
@@ -66,8 +69,11 @@ class SoknadService {
         }
         val soknadslisteForFnr = soknadsliste.values.filter { it.sokerFnr.equals(fnr) }.toMutableList()
         log.info("Henter søknadsliste. Antall soknader for $fnr: ${soknadslisteForFnr.size}")
+        if (filter_soknader_on_fnr) {
+            return soknadslisteForFnr
+        }
         log.info("- returnerer fortsatt alle. Antall soknader: ${soknadsliste.size}")
-        return soknadsliste.values // soknadslisteForFnr
+        return soknadsliste.values
     }
 
     fun opprettDigisosSak(fiksOrgId: String, kommuneNr: String, fnr: String, id: String) {
