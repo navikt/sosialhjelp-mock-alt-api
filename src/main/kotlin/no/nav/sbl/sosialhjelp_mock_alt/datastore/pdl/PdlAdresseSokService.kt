@@ -22,7 +22,7 @@ class PdlAdresseSokService {
     fun putAdresse(
         postnummer: String,
         adresse: ForenkletBostedsadresse,
-        geografiskTilknytning: String? = "030102"
+        geografiskTilknytning: String? = "0315"
     ) {
         adresseMap[postnummer] = PdlAdresseSokResponse(
             errors = null,
