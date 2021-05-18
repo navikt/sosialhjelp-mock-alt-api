@@ -80,9 +80,9 @@ class FiksController(
         feilService.eventueltLagFeil(headers, "FixController", "hentSoknad")
         val fil = soknadService.hentFil(dokumentlagerId)
         if (fil != null) {
-            val mediaType = if (fil.filnavn.toLowerCase().endsWith(".png"))
+            val mediaType = if (fil.filnavn.lowercase().endsWith(".png"))
                 MediaType.IMAGE_PNG
-            else if (fil.filnavn.toLowerCase().endsWith(".jpeg") || fil.filnavn.toLowerCase().endsWith(".jpg"))
+            else if (fil.filnavn.lowercase().endsWith(".jpeg") || fil.filnavn.lowercase().endsWith(".jpg"))
                 MediaType.IMAGE_JPEG
             else
                 MediaType.APPLICATION_PDF
@@ -135,7 +135,7 @@ class FiksController(
         } catch (e: MockAltException) {
             "0301"
         }
-        return if (id == null || id.toLowerCase().contentEquals("ny")) {
+        return if (id == null || id.lowercase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
             soknadService.opprettDigisosSak(fiksOrgId, kommuneNr, fnr, id)
             ResponseEntity.ok("$id")
@@ -196,7 +196,7 @@ class FiksController(
             jsonSoknad = soknadJson,
             jsonVedlegg = vedleggJson,
             dokumenter = dokumenter,
-            soknadDokument = dokumenter.firstOrNull { it.filnavn.toLowerCase() == "soknad.pdf" }
+            soknadDokument = dokumenter.firstOrNull { it.filnavn.lowercase() == "soknad.pdf" }
         )
         return ResponseEntity.ok(id)
     }
