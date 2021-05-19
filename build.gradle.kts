@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val springBootVersion = "2.4.5"
 val coroutinesVersion = "1.5.0"
-val sosialhjelpCommonVersion = "1.4ef74b4"
+val sosialhjelpCommonVersion = "1.05daec2"
 val filformatVersion = "1.2021.03.02-10.58-415c44e55124"
 val tokenValidationVersion = "1.3.7"
 val jacksonVersion = "2.12.3"
@@ -14,9 +14,9 @@ val jsonSmartVersion = "2.4.2"
 
 plugins {
     application
-    id("io.spring.dependency-management") version "1.0.10.RELEASE"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
-    id("com.github.ben-manes.versions") version "0.36.0"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("com.github.ben-manes.versions") version "0.38.0"
     kotlin("jvm") version "1.5.0"
     kotlin("plugin.spring") version "1.5.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
