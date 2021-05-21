@@ -8,7 +8,7 @@ jobs:
     name: Daglig restart
     runs-on: ubuntu-latest
     env:
-      DOCKER_IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}
+      DOCKER_IMAGE: docker.pkg.github.com/${{ github.repository }}/sosialhjelp-mock-alt-api
     steps:
       - uses: actions/checkout@v2
       - name: Create artifact version
