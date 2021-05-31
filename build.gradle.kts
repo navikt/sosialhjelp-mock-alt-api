@@ -3,7 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.4.5"
+val springBootVersion = "2.4.6"
 val coroutinesVersion = "1.5.0"
 val sosialhjelpCommonVersion = "1.05daec2"
 val filformatVersion = "1.2021.04.15-10.42-6eb47b47da27"
@@ -17,8 +17,8 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("com.github.ben-manes.versions") version "0.38.0"
-    kotlin("jvm") version "1.5.0"
-    kotlin("plugin.spring") version "1.5.0"
+    kotlin("jvm") version "1.5.10"
+    kotlin("plugin.spring") version "1.5.10"
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
