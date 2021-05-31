@@ -22,11 +22,9 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
-val mainClass = "no.nav.sbl.sosialhjelp_mock_alt.MockAltApplicationKt"
-
 application {
     applicationName = "sosialhjelp-mock-alt-api"
-    mainClassName = mainClass
+    mainClassName = "no.nav.sbl.sosialhjelp_mock_alt.MockAltApplicationKt"
 }
 
 group = "no.nav.sbl"
@@ -78,6 +76,7 @@ dependencies {
     implementation("no.nav.sosialhjelp:sosialhjelp-common-api:$sosialhjelpCommonVersion")
     implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
+//    implementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
     implementation("no.nav.security:token-validation-test-support:$tokenValidationVersion") {
         exclude(group = "org.springframework.boot", module = "spring-boot-starter-jersey") // Excluder da vi kun bruker Spring. Ved å exclude slutter snyk å klage på sårbarheter i jersey
     }
