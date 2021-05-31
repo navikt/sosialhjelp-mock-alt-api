@@ -24,7 +24,7 @@ plugins {
 
 application {
     applicationName = "sosialhjelp-mock-alt-api"
-    mainClassName = "no.nav.sbl.sosialhjelp_mock_alt.MockAltApplicationKt"
+    mainClass.set("no.nav.sbl.sosialhjelp_mock_alt.MockAltApplicationKt")
 }
 
 group = "no.nav.sbl"
