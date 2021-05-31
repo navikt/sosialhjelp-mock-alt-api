@@ -15,7 +15,7 @@ val jsonSmartVersion = "2.4.2"
 plugins {
     application
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
     id("com.github.ben-manes.versions") version "0.38.0"
     kotlin("jvm") version "1.5.0"
     kotlin("plugin.spring") version "1.5.0"
