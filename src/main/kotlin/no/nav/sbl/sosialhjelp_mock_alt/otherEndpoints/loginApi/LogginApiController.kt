@@ -151,7 +151,8 @@ class LogginApiController(
         if (cookie != null && cookie.isNotEmpty()) {
             val token = extractToken(cookie)
             httpHeaders.setBearerAuth(token)
-            httpHeaders[HttpHeaders.COOKIE] = null
+//            httpHeaders[HttpHeaders.COOKIE] = null
+            httpHeaders.remove(HttpHeaders.COOKIE)
         }
         return httpHeaders
     }
