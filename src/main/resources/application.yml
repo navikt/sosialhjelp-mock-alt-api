@@ -1,0 +1,24 @@
+server:
+  port: 8989
+  servlet:
+    context-path: '/sosialhjelp/mock-alt-api'
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+logging:
+  level:
+    no.nav.sbl.sosialhjelp_mock_alt: DEBUG
+    org.springframework.web: DEBUG
+
+host_address: ${HOST_ADDRESS:http://localhost:8989/}
+cookie_domain: ${COOKIE_DOMAIN:localhost}
+loginurl: ${LOGINURL:http://localhost:3009/sosialhjelp/mock-alt/login}
+filter_soknader_on_fnr: ${FILTER_SOKNADER_ON_FNR:true}
+
+springdoc:
+  swagger-ui.path: swagger-ui.html
+  pathsToMatch: /fiks/digisos/api/v1/**
