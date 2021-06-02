@@ -88,11 +88,12 @@ class LogginApiController(
                     throw MockAltException("Unauthorized: Token has expired: $expirationDate")
                 }
                 val fnr = jwtToken.subject
+                val issuer = jwtToken.issuer
                 if (!pdlService.finnesPersonMedFnr(fnr)) {
                     log.info("Unauthorized: Unknown subject: $fnr")
                     throw MockAltException("Unauthorized: Unknown subject: $fnr")
                 }
-                log.debug("Authorized ok med fnr: $fnr")
+                log.debug("Authorized ok med fnr: $fnr, issuer: $issuer")
             } catch (e: IndexOutOfBoundsException) {
                 log.info("Unauthorized: Bad Cookie: ${e.message}")
                 throw MockAltException("Unauthorized: Bad Cookie: ${e.message}")
