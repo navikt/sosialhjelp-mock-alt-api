@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.loginApi
 
-import no.nav.sbl.sosialhjelp_mock_alt.config.CORSFilter
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
@@ -144,7 +143,7 @@ class LogginApiController(
 
     private fun fixCorsHeadersInResponse(request: HttpServletRequest, response: HttpServletResponse) {
         response.reset()
-        CORSFilter.setAllowOriginHeader(request, response)
+//        CORSFilter.setAllowOriginHeader(request, response)
     }
 
     private fun addAccessTokenHeader(httpHeaders: HttpHeaders): HttpHeaders {
