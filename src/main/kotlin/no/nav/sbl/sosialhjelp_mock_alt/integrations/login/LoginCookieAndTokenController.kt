@@ -33,6 +33,7 @@ class LoginCookieAndTokenController(
         val wellknownUrl = mockOAuth2Server.wellKnownUrl(issuer)
         val metadata = proxyAwareResourceRetriever.retrieveResource(wellknownUrl.toUrl()).content
             .replace("http://view-localhost:4321/$issuer/jwks", "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer")
+            .replace("http://localhost:4321/$issuer/jwks", "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer")
         log.info("Metadata for issuer=$issuer: \n$metadata")
         return metadata
     }
