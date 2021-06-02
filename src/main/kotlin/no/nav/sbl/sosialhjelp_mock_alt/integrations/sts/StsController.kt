@@ -34,10 +34,11 @@ class StsController(
 
     @RequestMapping("/sts_token_endpoint_url/.well-known/openid-configuration")
     fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): String {
+        val issuer = "digisos-mock-alt"
         val config = WellKnown(
-            issuer = "digisos-mock-alt",
+            issuer = issuer,
             tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
-            jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks",
+            jwksURI = "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer",
 
         )
         log.info("Henter konfigurasjon: $config")
@@ -47,9 +48,10 @@ class StsController(
     @RequestMapping("/sts/authorisation")
     fun getStsAuthorisation(@RequestParam parameters: MultiValueMap<String, String>): String {
         val config = HashMap<String, Any>()
-        config["issuer"] = "iss-localhost"
+        val issuer = "iss-localhost"
+        config["issuer"] = issuer
         config["subject_types_supported"] = listOf("public", "pairwise")
-        config["jwks_uri"] = "${host_address}sosialhjelp/mock-alt-api/local/jwks"
+        config["jwks_uri"] = "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer"
         log.info("Henter authorisation: $config")
         return objectMapper.writeValueAsString(config)
     }
@@ -97,12 +99,13 @@ class StsController(
     @PostMapping("/sts/SecurityTokenServiceProvider")
     fun getSecurityTokenServiceProvider(@RequestParam parameters: MultiValueMap<String, String>, @RequestBody body: String): ResponseEntity<String> {
         log.debug("SecurityTokenServiceProvider request body: $body")
+        val issuer = "iss-localhost"
         val config =
             "<ns2:Envelope xmlns:ns2=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "    <response>\n" +
-                "        <issuer>iss-localhost</issuer>\n" +
+                "        <issuer>$issuer</issuer>\n" +
                 "        <subject_types_supported>[\"public\", \"pairwise\"]</subject_types_supported>\n" +
-                "        <jwks_uri>${host_address}sosialhjelp/mock-alt-api/local/jwks</jwks_uri>\n" +
+                "        <jwks_uri>${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer</jwks_uri>\n" +
                 "    </response>\n" +
                 "</ns2:Envelope>"
         // config.put("subject_types_supported", listOf("public", "pairwise"))
