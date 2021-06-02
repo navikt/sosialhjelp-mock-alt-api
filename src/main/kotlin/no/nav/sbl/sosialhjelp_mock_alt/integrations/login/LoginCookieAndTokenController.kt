@@ -32,10 +32,9 @@ class LoginCookieAndTokenController(
     ): String {
         val wellknownUrl = mockOAuth2Server.wellKnownUrl(issuer)
         val metadata = proxyAwareResourceRetriever.retrieveResource(wellknownUrl.toUrl()).content
-        log.info("Metdata: \n$metadata")
-        val replacedJwks = metadata.replace("http://view-localhost:4321/$issuer/jwks", "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer")
-        log.info("Metdata $issuer: \n$replacedJwks")
-        return replacedJwks
+            .replace("http://view-localhost:4321/$issuer/jwks", "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer")
+        log.info("Metadata for issuer=$issuer: \n$metadata")
+        return metadata
     }
 
     @GetMapping("/login/jwks/{issuer}")
@@ -44,6 +43,7 @@ class LoginCookieAndTokenController(
     ): String {
         val jwksUrl = mockOAuth2Server.jwksUrl(issuer)
         val data = proxyAwareResourceRetriever.retrieveResource(jwksUrl.toUrl())
+        log.info("Hetner jwks for issuer=$issuer")
         return data.content
     }
 
