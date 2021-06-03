@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.config
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
@@ -11,6 +12,8 @@ class LoginApiConfig : WebMvcConfigurer {
 
     @Bean
     fun restTemplate(): RestTemplate {
-        return RestTemplateBuilder().build()!!
+        return RestTemplateBuilder()
+            .requestFactory(OkHttp3ClientHttpRequestFactory::class.java)
+            .build()
     }
 }
