@@ -111,6 +111,7 @@ class LogginApiController(
         fixCorsHeadersInResponse(request, response)
 
         log.debug("sendRequests newUri: $newUri")
+        log.debug("sendRequests HttpEntity: " + objectMapper.writeValueAsString(HttpEntity(body, headers)))
         try {
             return restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
         } catch (e: HttpClientErrorException) {
