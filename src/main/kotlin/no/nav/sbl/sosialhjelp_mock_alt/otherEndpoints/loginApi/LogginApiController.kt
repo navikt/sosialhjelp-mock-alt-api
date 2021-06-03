@@ -88,12 +88,11 @@ class LogginApiController(
                     throw MockAltException("Unauthorized: Token has expired: $expirationDate")
                 }
                 val fnr = jwtToken.subject
-                val issuer = jwtToken.issuer
                 if (!pdlService.finnesPersonMedFnr(fnr)) {
                     log.info("Unauthorized: Unknown subject: $fnr")
                     throw MockAltException("Unauthorized: Unknown subject: $fnr")
                 }
-                log.debug("Authorized ok med fnr: $fnr, issuer: $issuer")
+                log.debug("Authorized ok med fnr: $fnr")
             } catch (e: IndexOutOfBoundsException) {
                 log.info("Unauthorized: Bad Cookie: ${e.message}")
                 throw MockAltException("Unauthorized: Bad Cookie: ${e.message}")
@@ -112,15 +111,11 @@ class LogginApiController(
         fixCorsHeadersInResponse(request, response)
 
         log.debug("sendRequests newUri: $newUri")
-        log.debug("sendRequests HttpEntity: " + objectMapper.writeValueAsString(HttpEntity(body, headers)))
         try {
             return restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
         } catch (e: HttpClientErrorException) {
             if (e.message?.contains("Unauthorized: 401 ") == true) {
                 throw MockAltException("Unauthorized: Client reported 401.")
-            }
-            if (e.statusCode == HttpStatus.NOT_FOUND) {
-                log.debug("404 feil - ${e.responseBodyAsString}")
             }
             throw e
         }
@@ -156,7 +151,6 @@ class LogginApiController(
         if (cookie != null && cookie.isNotEmpty()) {
             val token = extractToken(cookie)
             httpHeaders.setBearerAuth(token)
-//            httpHeaders[HttpHeaders.COOKIE] = null
             httpHeaders.remove(HttpHeaders.COOKIE)
         }
         return httpHeaders

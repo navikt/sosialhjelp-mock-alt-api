@@ -44,7 +44,7 @@ class LoginCookieAndTokenController(
     ): String {
         val jwksUrl = mockOAuth2Server.jwksUrl(issuer)
         val data = proxyAwareResourceRetriever.retrieveResource(jwksUrl.toUrl())
-        log.info("Hetner jwks for issuer=$issuer")
+        log.info("Henter jwks for issuer=$issuer")
         return data.content
     }
 

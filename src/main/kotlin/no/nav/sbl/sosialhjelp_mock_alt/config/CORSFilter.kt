@@ -34,9 +34,6 @@ class CORSFilter : Filter {
         fun setAllowOriginHeader(servletRequest: ServletRequest, httpResponse: HttpServletResponse): String {
             val origin = if (servletRequest is HttpServletRequest) (servletRequest.getHeader("Origin") ?: "*") else "*"
             httpResponse.setHeader("Access-Control-Allow-Origin", origin)
-            httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, X-XSRF-TOKEN, Authorization, Nav-Call-Id")
-            httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-            httpResponse.setHeader("Access-Control-Allow-Credentials", "true")
             return origin
         }
     }
