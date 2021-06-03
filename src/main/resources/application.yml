@@ -3,14 +3,20 @@
 server:
   port: 8989
   servlet:
-    context-path: /sosialhjelp/mock-alt-api
+    context-path: '/sosialhjelp/mock-alt-api'
 
 spring:
   servlet:
-    multipart.max-file-size: 10MB
-    multipart.max-request-size: 20MB
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
 
-logging.level.no.nav.sbl.sosialhjelp_mock_alt: DEBUG
+logging:
+  level:
+    root: INFO
+    no.nav.sbl.sosialhjelp_mock_alt: DEBUG
+    org.springframework.web: DEBUG
+
 host_address: ${HOST_ADDRESS:http://localhost:8989/}
 cookie_domain: ${COOKIE_DOMAIN:localhost}
 loginurl: ${LOGINURL:http://localhost:3009/sosialhjelp/mock-alt/login}
