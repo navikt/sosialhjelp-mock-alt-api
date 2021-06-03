@@ -112,11 +112,15 @@ class LogginApiController(
         fixCorsHeadersInResponse(request, response)
 
         log.debug("sendRequests newUri: $newUri")
+        log.debug("sendRequests HttpEntity: " + objectMapper.writeValueAsString(HttpEntity(body, headers)))
         try {
             return restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
         } catch (e: HttpClientErrorException) {
             if (e.message?.contains("Unauthorized: 401 ") == true) {
                 throw MockAltException("Unauthorized: Client reported 401.")
+            }
+            if (e.statusCode == HttpStatus.NOT_FOUND) {
+                log.debug("404 feil - ${e.responseBodyAsString}")
             }
             throw e
         }
