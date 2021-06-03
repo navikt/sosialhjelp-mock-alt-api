@@ -83,6 +83,8 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-ui:$springdocversion")
 
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 
     //    spesifikke versjoner oppgradert etter ønske fra snyk
