@@ -21,10 +21,11 @@ class TokendingsController(
 
     @GetMapping("/tokendings/metadata")
     fun getMockAltMetadate(): WellKnown {
+        val issuer = "digisos-mock-alt"
         val config = WellKnown(
-            issuer = "digisos-mock-alt",
+            issuer = issuer,
             tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/tokendings/token",
-            jwksURI = "${host_address}sosialhjelp/mock-alt-api/local/jwks",
+            jwksURI = "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer",
         )
         log.info("Henter tokendings konfigurasjon: $config")
         return config

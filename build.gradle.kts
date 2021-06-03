@@ -3,7 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.4.5"
+val springBootVersion = "2.4.6"
 val coroutinesVersion = "1.5.0"
 val sosialhjelpCommonVersion = "1.05daec2"
 val filformatVersion = "1.2021.04.15-10.42-6eb47b47da27"
@@ -11,14 +11,15 @@ val tokenValidationVersion = "1.3.7"
 val jacksonVersion = "2.12.3"
 val springdocversion = "1.5.7"
 val jsonSmartVersion = "2.4.2"
+val mockOauth2ServerVersion = "0.3.3"
 
 plugins {
     application
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("com.github.ben-manes.versions") version "0.38.0"
-    kotlin("jvm") version "1.5.0"
-    kotlin("plugin.spring") version "1.5.0"
+    kotlin("jvm") version "1.5.10"
+    kotlin("plugin.spring") version "1.5.10"
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
@@ -76,10 +77,8 @@ dependencies {
     implementation("no.nav.sosialhjelp:sosialhjelp-common-api:$sosialhjelpCommonVersion")
     implementation("no.nav.sbl.dialogarena:soknadsosialhjelp-filformat:$filformatVersion")
     implementation("no.nav.security:token-validation-spring:$tokenValidationVersion")
-//    implementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
-    implementation("no.nav.security:token-validation-test-support:$tokenValidationVersion") {
-        exclude(group = "org.springframework.boot", module = "spring-boot-starter-jersey") // Excluder da vi kun bruker Spring. Ved å exclude slutter snyk å klage på sårbarheter i jersey
-    }
+    implementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
+    implementation("no.nav.security:mock-oauth2-server:$mockOauth2ServerVersion")
 
     implementation("org.springdoc:springdoc-openapi-ui:$springdocversion")
 
