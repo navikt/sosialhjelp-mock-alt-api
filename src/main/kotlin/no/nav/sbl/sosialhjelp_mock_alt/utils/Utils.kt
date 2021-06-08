@@ -16,7 +16,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.pow
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
+import kotlin.random.Random.Default.nextLong
 import kotlin.reflect.full.companionObject
 
 val fastFnr = genererTilfeldigPersonnummer(dato = LocalDate.of(1945, 10, 26), Kjoenn.KVINNE)
@@ -90,8 +90,10 @@ fun randomInt(length: Int): Int {
     return (Math.random() * 10.0.pow(length.toDouble())).roundToInt()
 }
 
-fun randomLong(length: Int): Long {
-    return (Math.random() * 10.0.pow(length.toDouble())).roundToLong()
+fun genererTilfeldigKontonummer(): String {
+    val min = 10_000_000_000L
+    val max = 99_999_999_999L
+    return nextLong(min, max).toString()
 }
 
 fun <R : Any> R.logger(): Lazy<Logger> {

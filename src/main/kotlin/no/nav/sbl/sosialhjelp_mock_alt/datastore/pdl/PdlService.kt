@@ -49,11 +49,11 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenServic
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
+import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigKontonummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
-import no.nav.sbl.sosialhjelp_mock_alt.utils.randomLong
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -297,7 +297,7 @@ class PdlService(
         adresseService.putAdresseInfo(standardBruker.bostedsadresse.postnummer, standardBruker.bostedsadresse, enhetsnummer)
         pdlAdresseSokService.putAdresse(standardBruker.bostedsadresse.postnummer, standardBruker.bostedsadresse, enhetsnummer)
         dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
-        kontonummerService.putKontonummer(brukerFnr, randomLong(11).toString())
+        kontonummerService.putKontonummer(brukerFnr, genererTilfeldigKontonummer())
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
         eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")
         aaregService.leggTilEnkeltArbeidsforhold(

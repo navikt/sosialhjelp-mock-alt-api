@@ -91,7 +91,7 @@ class PdlController(
     }
 
     private fun handleSokAdresseRequest(sokAdresseRequest: SokAdresseRequest, ident: String): String {
-        val postnummer = sokAdresseRequest.variables.criteria.first { it.fieldName == "postnummer" }.searchRule["equals"] ?: ""
+        val postnummer = sokAdresseRequest.variables.criteria.first { it.fieldName == "vegadresse.postnummer" }.searchRule["equals"] ?: ""
         feilService.eventueltLagFeil(ident, "PdlController", "getSokAdresse")
         return objectMapper.writeValueAsString(pdlAdresseSokService.getAdresse(postnummer))
     }
