@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class WellKnownController(
-    @Value("\${host_address}") private val host_address: String,
+    @Value("\${host_address}") private val hostAddress: String,
     private val proxyAwareResourceRetriever: ProxyAwareResourceRetriever,
     private val mockOAuth2Server: MockOAuth2Server
 ) {
@@ -25,8 +25,8 @@ class WellKnownController(
         val wellknownUrl = mockOAuth2Server.wellKnownUrl(issuer)
 
         val metadata = proxyAwareResourceRetriever.retrieveResource(wellknownUrl.toUrl()).content
-            .replace("http://view-localhost:4321/$issuer/jwks", "${host_address}sosialhjelp/mock-alt-api/jwks/$issuer")
-            .replace("http://localhost:4321/$issuer/jwks", "${host_address}sosialhjelp/mock-alt-api/jwks/$issuer")
+            .replace("http://view-localhost:4321/$issuer/jwks", "${hostAddress}sosialhjelp/mock-alt-api/jwks/$issuer")
+            .replace("http://localhost:4321/$issuer/jwks", "${hostAddress}sosialhjelp/mock-alt-api/jwks/$issuer")
 
         val wellknown = objectMapper.readValue<WellKnown>(metadata)
         log.info("Metadata for issuer=$issuer: \n$wellknown")
