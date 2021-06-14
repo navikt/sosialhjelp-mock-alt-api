@@ -21,7 +21,7 @@ class TokendingsController(
 
     @GetMapping("/tokendings/metadata")
     fun getMockAltMetadate(): WellKnown {
-        val issuer = "digisos-mock-alt"
+        val issuer = "selvbetjening"
         val config = WellKnown(
             issuer = "http://localhost:4321/$issuer",
             tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/tokendings/token",
