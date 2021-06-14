@@ -32,9 +32,9 @@ class IdPortenController(
 
     @GetMapping("/idporten/idporten-oidc-provider/.well-known/openid-configuration")
     fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): WellKnown {
-        val issuer = "iss-localhost"
+        val issuer = "digisos-mock-alt"
         val config = WellKnown(
-            issuer = issuer,
+            issuer = "http://localhost:4321/$issuer",
             tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/idporten/idporten-oidc-provider/token",
             jwksURI = "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer"
         )
