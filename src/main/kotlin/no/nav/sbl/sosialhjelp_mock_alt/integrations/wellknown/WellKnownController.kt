@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.type.TypeReference
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown.model.TokenResponse
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown.model.WellKnown
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -57,11 +57,4 @@ class WellKnownController(
     companion object {
         private val log by logger()
     }
-
-    data class TokenResponse(
-        @JsonProperty("access_token") val accessToken: String,
-        @JsonProperty("issued_token_type") val issuedTokenType: String,
-        @JsonProperty("token_type") val tokenType: String,
-        @JsonProperty("expires_in") val expiresIn: Int
-    )
 }

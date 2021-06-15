@@ -1,9 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.login
 
-import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
-import no.nav.security.token.support.core.configuration.ProxyAwareResourceRetriever
 import no.nav.security.token.support.spring.test.MockLoginController
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,37 +14,10 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 
 @RestController
-class LoginCookieAndTokenController(
-    @Value("\${host_address}") private val host_address: String,
+class LoginCookieController(
     @Value("\${cookie_domain}") private val cookie_domain: String,
-    private val proxyAwareResourceRetriever: ProxyAwareResourceRetriever,
     private val mockOAuth2Server: MockOAuth2Server
 ) {
-    companion object {
-        private val log by logger()
-    }
-
-    @GetMapping("/login/metadata/{issuer}")
-    fun getMockAltMetadata(
-        @PathVariable(value = "issuer") issuer: String
-    ): String {
-        val wellknownUrl = mockOAuth2Server.wellKnownUrl(issuer)
-        val metadata = proxyAwareResourceRetriever.retrieveResource(wellknownUrl.toUrl()).content
-            .replace("http://view-localhost:4321/$issuer/jwks", "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer")
-            .replace("http://localhost:4321/$issuer/jwks", "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer")
-        log.info("Metadata for issuer=$issuer: \n$metadata")
-        return metadata
-    }
-
-    @GetMapping("/login/jwks/{issuer}")
-    fun getMockAltJwks(
-        @PathVariable(value = "issuer") issuer: String
-    ): String {
-        val jwksUrl = mockOAuth2Server.jwksUrl(issuer)
-        val data = proxyAwareResourceRetriever.retrieveResource(jwksUrl.toUrl())
-        log.info("Henter jwks for issuer=$issuer")
-        return data.content
-    }
 
     @GetMapping("/login/cookie")
     fun addCookie(
