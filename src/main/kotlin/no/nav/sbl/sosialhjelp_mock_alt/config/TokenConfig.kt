@@ -14,6 +14,6 @@ class TokenConfig {
     // - wellknown for issuer -> /well-known/{issuer}  -> gå til discoveryurl for issuer i mockOauth2Server
     // - jwks for issuer      -> /jwks/{issuer}      -> gå til jwks url for issuer i mockOauth2Server
     //
-    // LoginCookieAndTokenController
+    // LoginCookieController
     // - addCookie            -> /login/cookie/{issuer}    -> kopiert og tilpasset fra MockLoginController
 }
