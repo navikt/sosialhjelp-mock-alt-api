@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.sts
 
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.idporten.model.WellKnown
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.sts.model.STSResponse
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -30,19 +29,6 @@ class StsController(
         )
         log.info("Henter token: $token")
         return token
-    }
-
-    @RequestMapping("/sts_token_endpoint_url/.well-known/openid-configuration")
-    fun getConfig(@RequestParam parameters: MultiValueMap<String, String>): String {
-        val issuer = "digisos-mock-alt"
-        val config = WellKnown(
-            issuer = issuer,
-            tokenEndpoint = "${host_address}sosialhjelp/mock-alt-api/sts_token_endpoint_url/token",
-            jwksURI = "${host_address}sosialhjelp/mock-alt-api/login/jwks/$issuer",
-
-        )
-        log.info("Henter konfigurasjon: $config")
-        return objectMapper.writeValueAsString(config)
     }
 
     @RequestMapping("/sts/authorisation")
