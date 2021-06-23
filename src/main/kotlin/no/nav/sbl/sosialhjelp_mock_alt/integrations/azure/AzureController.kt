@@ -5,6 +5,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.integrations.azure.model.AzureAdBruker
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraCookieNoDefault
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeadersNoDefault
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraTokenNoDefault
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.HttpHeaders
 import org.springframework.web.bind.annotation.CookieValue
@@ -24,8 +25,8 @@ class AzureController(val pdlService: PdlService) {
         @RequestHeader headers: HttpHeaders,
         @CookieValue(name = "localhost-idtoken") cookie: String?,
     ): AzureAdBruker {
-        val id = hentFnrFraHeadersNoDefault(headers) ?: hentFnrFraCookieNoDefault(cookie) ?: throw MockAltException("Klarte ikke å finne id.")
-        return getAzureBruker(id)
+        val id = hentFnrFraTokenNoDefault(headers) ?: hentFnrFraHeadersNoDefault(headers) ?: hentFnrFraCookieNoDefault(cookie)
+        return getAzureBruker(id ?: throw MockAltException("Klarte ikke å finne id."))
     }
 
     @GetMapping("/azuread/graph/users/{id}")
