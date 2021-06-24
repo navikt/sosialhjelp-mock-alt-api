@@ -72,6 +72,10 @@ fun hentFnrFraCookieNoDefault(cookie: String?): String? {
 }
 
 fun hentFnrFraToken(headers: HttpHeaders): String {
+    return hentFnrFraTokenNoDefault(headers) ?: fastFnr
+}
+
+fun hentFnrFraTokenNoDefault(headers: HttpHeaders): String? {
     val token = headers[HttpHeaders.AUTHORIZATION]
     if (token != null) {
         if (token.isNotEmpty()) {
@@ -79,11 +83,11 @@ fun hentFnrFraToken(headers: HttpHeaders): String {
             return try {
                 JwtToken(tokenString).subject
             } catch (e: RuntimeException) {
-                fastFnr
+                null
             }
         }
     }
-    return fastFnr
+    return null
 }
 
 fun randomInt(length: Int): Int {

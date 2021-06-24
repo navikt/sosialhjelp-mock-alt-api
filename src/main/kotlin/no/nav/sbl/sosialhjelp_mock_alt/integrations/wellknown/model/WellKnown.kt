@@ -16,3 +16,12 @@ data class TokenResponse(
     @JsonProperty("token_type") val tokenType: String,
     @JsonProperty("expires_in") val expiresIn: Int
 )
+
+data class AzuredingsResponse(
+    @JsonProperty("token_type") val tokenType: String,
+    @JsonProperty("scope") val scope: String,
+    @JsonProperty("expires_in") val expiresIn: Int,
+    @JsonProperty("ext_expires_in") val extExpiresIn: Int,
+    @JsonProperty("access_token") val accessToken: String,
+    @JsonProperty("refresh_token") val refreshToken: String = "",
+)
