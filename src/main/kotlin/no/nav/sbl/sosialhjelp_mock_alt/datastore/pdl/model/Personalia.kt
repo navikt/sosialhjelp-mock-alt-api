@@ -11,7 +11,7 @@ data class Personalia(
     var ektefelle: String? = null,
     var forelderBarnRelasjon: List<ForelderBarnRelasjon> = emptyList(),
     var starsborgerskap: String = "NOR",
-    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
+    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse(adressenavn = "Hovedveien", husnummer = 42, postnummer = "0101", kommunenummer = "0301"),
     var locked: Boolean = false,
     var opprettetTidspunkt: Long = DateTime.now().millis
 ) {
@@ -72,6 +72,7 @@ data class ForelderBarnRelasjon(
 data class ForenkletBostedsadresse(
     val adressenavn: String,
     val husnummer: Int,
+    val husbokstav: String? = null,
     val postnummer: String,
     val kommunenummer: String
 )

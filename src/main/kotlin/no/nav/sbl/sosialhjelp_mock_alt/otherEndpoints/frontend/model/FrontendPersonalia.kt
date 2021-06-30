@@ -40,7 +40,12 @@ data class FrontendPersonalia(
     var ektefelle: String? = null,
     var barn: List<FrontendBarn>,
     var starsborgerskap: String = "NOR",
-    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Gateveien", 1, "0101", "0301"),
+    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse(
+        adressenavn = "Gateveien",
+        husnummer = 1,
+        postnummer = "0101",
+        kommunenummer = "0301"
+    ),
     var telefonnummer: String = "",
     var kontonummer: String = "",
     var arbeidsforhold: List<FrontendArbeidsforhold>,
@@ -116,7 +121,12 @@ data class FrontendPersonalia(
 data class FrontendBarn(
     val fnr: String,
     var adressebeskyttelse: Gradering = Gradering.UGRADERT,
-    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse("Hovedveien", 42, "0101", "0301"),
+    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse(
+        adressenavn = "Hovedveien",
+        husnummer = 42,
+        postnummer = "0101",
+        kommunenummer = "0301"
+    ),
     var folkeregisterpersonstatus: String = "bosatt",
     val foedsel: LocalDate = LocalDate.now().minusYears(10),
     val navn: PdlPersonNavn = PdlPersonNavn(),
@@ -124,14 +134,14 @@ data class FrontendBarn(
 
     fun pdlBarn(): PdlSoknadBarn {
         val vegadresse = PdlVegadresse(
-            randomInt(7).toString(),
-            bostedsadresse.adressenavn,
-            bostedsadresse.husnummer,
-            bostedsadresse.adressenavn,
-            null,
-            bostedsadresse.postnummer,
-            bostedsadresse.kommunenummer,
-            null,
+            matrikkelId = randomInt(7).toString(),
+            adressenavn = bostedsadresse.adressenavn,
+            husnummer = bostedsadresse.husnummer,
+            husbokstav = if (bostedsadresse.husbokstav.isNullOrBlank()) null else bostedsadresse.husbokstav,
+            tilleggsnavn = null,
+            postnummer = bostedsadresse.postnummer,
+            kommunenummer = bostedsadresse.kommunenummer,
+            bruksenhetsnummer = null,
         )
         return PdlSoknadBarn(
             adressebeskyttelse = listOf(Adressebeskyttelse(adressebeskyttelse)),
