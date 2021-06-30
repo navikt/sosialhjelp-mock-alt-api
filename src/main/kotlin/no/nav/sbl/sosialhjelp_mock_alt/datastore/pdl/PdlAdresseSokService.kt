@@ -34,7 +34,7 @@ class PdlAdresseSokService {
                             vegadresse = AdresseDto(
                                 matrikkelId = "matrikkelId",
                                 husnummer = adresse.husnummer,
-                                husbokstav = "",
+                                husbokstav = if (adresse.husbokstav.isNullOrBlank()) null else adresse.husbokstav,
                                 adressenavn = adresse.adressenavn,
                                 kommunenavn = "Test kommune",
                                 kommunenummer = adresse.kommunenummer,

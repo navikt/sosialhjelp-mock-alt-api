@@ -32,7 +32,7 @@ class AdresseService {
                     gatekode = "gatekode",
                     bydel = "",
                     husnummer = adresse.husnummer.toString(),
-                    husbokstav = null,
+                    husbokstav = if (adresse.husbokstav.isNullOrBlank()) null else adresse.husbokstav,
                 )
             )
         )

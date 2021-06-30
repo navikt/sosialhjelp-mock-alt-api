@@ -163,7 +163,7 @@ class PdlService(
                     "matrikkelId",
                     personalia.bostedsadresse.adressenavn,
                     personalia.bostedsadresse.husnummer,
-                    null,
+                    if (personalia.bostedsadresse.husbokstav.isNullOrBlank()) null else personalia.bostedsadresse.husbokstav,
                     null,
                     personalia.bostedsadresse.postnummer,
                     personalia.bostedsadresse.kommunenummer,
@@ -287,7 +287,14 @@ class PdlService(
             .withEktefelle("EKTEFELLE_SAMME_BOSTED")
             .withSivilstand("GIFT")
             .withForelderBarnRelasjon(barnFnr)
-            .withBostedsadresse(ForenkletBostedsadresse("Gateveien", 1, postnummer, kommuneNummer))
+            .withBostedsadresse(
+                ForenkletBostedsadresse(
+                    adressenavn = "Gateveien",
+                    husnummer = 1,
+                    postnummer = postnummer,
+                    kommunenummer = kommuneNummer
+                )
+            )
             .withStarsborgerskap(statsborgerskap)
             .locked()
         personListe[brukerFnr] = standardBruker
