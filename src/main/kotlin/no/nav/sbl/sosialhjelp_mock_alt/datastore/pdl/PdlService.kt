@@ -24,7 +24,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlKjoenn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaHentPerson
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaPerson
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaPersonResponse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlNavn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlPersonNavn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSivilstand
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadAdressebeskyttelse
@@ -95,10 +94,10 @@ class PdlService(
         log.info("Henter PDL innsyns data for $ident")
         val personalia = personListe[ident]
         var adressebeskyttelseList: List<Adressebeskyttelse> = emptyList()
-        var navnList: List<PdlNavn> = emptyList()
+        var navnList: List<PdlPersonNavn> = emptyList()
         if (personalia != null) {
             adressebeskyttelseList = listOf(Adressebeskyttelse(personalia.adressebeskyttelse))
-            navnList = listOf(PdlNavn(personalia.navn.fornavn))
+            navnList = listOf(PdlPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn))
         }
         return PdlInnsynPersonResponse(
             errors = emptyList(),
@@ -248,11 +247,11 @@ class PdlService(
     }
 
     fun getPersonalia(ident: String): Personalia {
-        return personListe.getOrElse(ident, { throw MockAltException("Ident $ident not found!") })
+        return personListe[ident] ?: throw MockAltException("Ident $ident not found!")
     }
 
     fun getBarn(ident: String): PdlSoknadBarn {
-        return barnMap.getOrElse(ident, { throw MockAltException("Barn with ident $ident not found!") })
+        return barnMap[ident] ?: throw MockAltException("Barn with ident $ident not found!")
     }
 
     fun veryfyNotLocked(fnr: String) {
