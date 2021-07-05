@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown
 
+import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.type.TypeReference
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown.model.AzuredingsResponse
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown.model.TokenResponse
@@ -63,7 +64,11 @@ class WellKnownController(
         @RequestBody body: String,
     ): TokenResponse {
         val typeRef = object : TypeReference<HashMap<String, String>>() {}
-        val params = objectMapper.readValue(body, typeRef)
+        val params = try {
+            objectMapper.readValue(body, typeRef)
+        } catch (e: JsonParseException) {
+            splitFormParams(body)
+        }
         log.info("Utveksler token: audience: ${params["audience"]}\n")
         return TokenResponse(params["subject_token"]!!, "JWT", "JWT", 60)
     }
@@ -72,14 +77,19 @@ class WellKnownController(
     fun exchangeAzuretoken(
         @RequestBody body: String,
     ): AzuredingsResponse {
+        val formsMap: HashMap<String, String> = splitFormParams(body)
+        log.info("Utveksler azure token: audience: ${formsMap["audience"]}\n")
+        return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, formsMap["assertion"]!!)
+    }
+
+    private fun splitFormParams(body: String): HashMap<String, String> {
         val formsMap: HashMap<String, String> = hashMapOf()
         val split = body.split("&")
         split.forEach {
             val innerSplit = it.split("=")
             formsMap[innerSplit[0]] = innerSplit[1]
         }
-        log.info("Utveksler azure token: audience: ${formsMap["audience"]}\n")
-        return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, formsMap["assertion"]!!)
+        return formsMap
     }
 
     companion object {

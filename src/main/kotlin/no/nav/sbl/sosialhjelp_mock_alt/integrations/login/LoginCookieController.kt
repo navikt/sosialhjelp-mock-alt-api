@@ -29,14 +29,17 @@ class LoginCookieController(
         @RequestParam(value = "expiry", required = false) expiry: String?,
         response: HttpServletResponse
     ): Cookie? {
+        val claims = mutableMapOf<String, String>()
+        claims["acr"] = "Level4"
+        claims["pid"] = subject!!
         val token = mockOAuth2Server.issueToken(
             issuerId!!,
             MockLoginController::class.java.simpleName,
             DefaultOAuth2TokenCallback(
                 issuerId,
-                subject!!,
+                subject,
                 listOf(audience),
-                java.util.Map.of("acr", "Level4"),
+                claims,
                 expiry?.toLong() ?: 3600
             )
         ).serialize()
