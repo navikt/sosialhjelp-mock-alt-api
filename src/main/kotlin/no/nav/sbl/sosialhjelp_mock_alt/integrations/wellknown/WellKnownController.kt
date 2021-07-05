@@ -67,7 +67,7 @@ class WellKnownController(
         val params = try {
             objectMapper.readValue(body, typeRef)
         } catch (e: JsonParseException) {
-            spitFormParams(body)
+            splitFormParams(body)
         }
         log.info("Utveksler token: audience: ${params["audience"]}\n")
         return TokenResponse(params["subject_token"]!!, "JWT", "JWT", 60)
@@ -77,7 +77,7 @@ class WellKnownController(
     fun exchangeAzuretoken(
         @RequestBody body: String,
     ): AzuredingsResponse {
-        val formsMap: HashMap<String, String> = spitFormParams(body)
+        val formsMap: HashMap<String, String> = splitFormParams(body)
         log.info("Utveksler azure token: audience: ${formsMap["audience"]}\n")
         return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, formsMap["assertion"]!!)
     }
