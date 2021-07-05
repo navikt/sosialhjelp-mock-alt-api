@@ -82,7 +82,7 @@ class WellKnownController(
         return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, formsMap["assertion"]!!)
     }
 
-    private fun spitFormParams(body: String): HashMap<String, String> {
+    private fun splitFormParams(body: String): HashMap<String, String> {
         val formsMap: HashMap<String, String> = hashMapOf()
         val split = body.split("&")
         split.forEach {
