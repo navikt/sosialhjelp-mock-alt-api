@@ -7,11 +7,11 @@ val springBootVersion = "2.4.6"
 val coroutinesVersion = "1.5.0"
 val sosialhjelpCommonVersion = "1.05daec2"
 val filformatVersion = "1.2021.04.15-10.42-6eb47b47da27"
-val tokenValidationVersion = "1.3.7"
+val tokenValidationVersion = "1.3.8"
 val jacksonVersion = "2.12.3"
 val springdocversion = "1.5.7"
 val jsonSmartVersion = "2.4.2"
-val mockOauth2ServerVersion = "0.3.3"
+val mockOauth2ServerVersion = "0.3.4"
 
 plugins {
     application
