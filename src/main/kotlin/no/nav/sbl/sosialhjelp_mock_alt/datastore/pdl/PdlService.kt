@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.adresse.AdresseService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
@@ -65,7 +64,6 @@ class PdlService(
     val utbetalingService: UtbetalingService,
     val bostotteService: BostotteService,
     val soknadService: SoknadService,
-    val adresseService: AdresseService,
     val kontonummerService: KontonummerService,
     val pdlAdresseSokService: PdlAdresseSokService,
 ) {
@@ -238,7 +236,6 @@ class PdlService(
             throw MockAltException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
         personListe[personalia.fnr] = personalia
-        adresseService.putAdresseInfo(personalia.bostedsadresse.postnummer, personalia.bostedsadresse)
         pdlAdresseSokService.putAdresse(personalia.bostedsadresse.postnummer, personalia.bostedsadresse)
     }
 
@@ -300,7 +297,6 @@ class PdlService(
         ektefelleMap[brukerFnr] = ektefelleSammeBosted
         barnMap[barnFnr] = defaultBarn(etternavn)
 
-        adresseService.putAdresseInfo(standardBruker.bostedsadresse.postnummer, standardBruker.bostedsadresse, enhetsnummer)
         pdlAdresseSokService.putAdresse(standardBruker.bostedsadresse.postnummer, standardBruker.bostedsadresse, enhetsnummer)
         dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
         kontonummerService.putKontonummer(brukerFnr, genererTilfeldigKontonummer())
