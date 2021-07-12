@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.azure
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.azure.model.AzureAdBruker
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.azure.model.AzureAdBrukere
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraCookieNoDefault
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeadersNoDefault
@@ -33,12 +34,16 @@ class AzureController(val pdlService: PdlService) {
     fun getAzureBruker(@PathVariable id: String): AzureAdBruker {
         val personalia = pdlService.getPersonalia(id)
         log.info("Henter azureAd bruker med id $id")
-        return AzureAdBruker(
-            personalia.fnr,
-            "${personalia.navn.fornavn} ${personalia.navn.mellomnavn} ${personalia.navn.etternavn}"
-                .replace("  ", " ").trim(),
-            "${personalia.navn.fornavn} ${personalia.navn.mellomnavn}".trim(),
-            personalia.navn.etternavn
+        return AzureAdBruker(personalia)
+    }
+
+    @GetMapping("/azuread/graph/groups/{id}/members")
+    fun getAzureGruppeBrukere(@PathVariable id: String): AzureAdBrukere {
+        val personaListe = pdlService.getPersonListe()
+        log.info("Henter azureAd brukere i gruppe $id")
+
+        return AzureAdBrukere(
+            value = personaListe.map { AzureAdBruker(it) }
         )
     }
 }
