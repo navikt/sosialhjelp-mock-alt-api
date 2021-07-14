@@ -98,8 +98,13 @@ class PdlController(
     }
 
     private fun handleHentGeografiskTilknytningRequest(hentGeografiskTilknytningRequest: HentGeografiskTilknytningRequest, ident: String): String {
-        pdlGeografiskTilknytningService.getGeografiskTilknytning(ident)
-        return ""
+        if (ident != hentGeografiskTilknytningRequest.variables.ident) {
+            log.warn("Token matcher ikke request! $ident != ${hentGeografiskTilknytningRequest.variables.ident}")
+        }
+
+        val response = pdlGeografiskTilknytningService.getGeografiskTilknytning(ident)
+        feilService.eventueltLagFeil(ident, "PdlController", "getGeografiskTilknytning")
+        return objectMapper.writeValueAsString(response)
     }
 
     private fun handleSokAdresseRequest(sokAdresseRequest: SokAdresseRequest, ident: String): String {
