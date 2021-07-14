@@ -66,6 +66,7 @@ class PdlService(
     val soknadService: SoknadService,
     val kontonummerService: KontonummerService,
     val pdlAdresseSokService: PdlAdresseSokService,
+    val pdlGeografiskTilknytningService: PdlGeografiskTilknytningService,
 ) {
 
     private val personListe: HashMap<String, Personalia> = HashMap()
@@ -237,6 +238,7 @@ class PdlService(
         }
         personListe[personalia.fnr] = personalia
         pdlAdresseSokService.putAdresse(personalia.bostedsadresse.postnummer, personalia.bostedsadresse)
+        pdlGeografiskTilknytningService.putGeografiskTilknytning(personalia.fnr, personalia.bostedsadresse.kommunenummer)
     }
 
     fun leggTilBarn(fnr: String, pdlBarn: PdlSoknadBarn) {
@@ -298,6 +300,7 @@ class PdlService(
         barnMap[barnFnr] = defaultBarn(etternavn)
 
         pdlAdresseSokService.putAdresse(standardBruker.bostedsadresse.postnummer, standardBruker.bostedsadresse, enhetsnummer)
+        pdlGeografiskTilknytningService.putGeografiskTilknytning(enhetsnummer, standardBruker.bostedsadresse.kommunenummer)
         dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
         kontonummerService.putKontonummer(brukerFnr, genererTilfeldigKontonummer())
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()

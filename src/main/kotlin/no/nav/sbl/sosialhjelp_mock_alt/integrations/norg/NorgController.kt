@@ -30,6 +30,7 @@ class NorgController(val norgService: NorgService) {
 
     @GetMapping("/norg_endpoint_url/enhet/navkontor/{geografiskTilknytning}", produces = ["application/json;charset=UTF-8"])
     fun getEnhetForGt(@PathVariable geografiskTilknytning: String): String {
+        // later som at geografiskTilknytning = enhetsnr
         val navEnhet = norgService.getNavenhet(geografiskTilknytning)
         log.info("Henter nav enhet for gt: $geografiskTilknytning")
         return objectMapper.writeValueAsString(navEnhet)
