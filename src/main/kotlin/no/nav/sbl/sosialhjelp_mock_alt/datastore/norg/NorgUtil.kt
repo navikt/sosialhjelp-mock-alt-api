@@ -1,6 +1,7 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.norg
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.norg
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.norg.model.NavEnhet
+import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 
 private val sosialetjenesterInfo: String = """
         Til saksbehandler:
@@ -31,9 +32,8 @@ fun leggTilNavenhet(navEnheter: MutableMap<String, NavEnhet>, enhetsnr: String, 
 }
 
 fun lagMockNavEnhet(enhetsnr: String, navn: String): NavEnhet {
-    val enhetId = (enhetsnr + enhetsnr).toInt()
     return NavEnhet(
-        enhetId = enhetId,
+        enhetId = randomInt(8),
         navn = navn,
         enhetNr = enhetsnr,
         status = "20",
