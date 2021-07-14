@@ -9,6 +9,11 @@ data class Variables(
     val ident: String
 )
 
+data class HentGeografiskTilknytningRequest(
+    val query: String,
+    val variables: Variables
+)
+
 data class SokAdresseRequest(
     val query: String,
     val variables: SokAdresseVariables
