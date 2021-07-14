@@ -13,7 +13,7 @@ data class PdlGeografiskTilknytningResponse(
                         gtType = GtType.KOMMUNE,
                         gtKommune = "0301",
                         gtBydel = null,
-                        gtUtland = null
+                        gtLand = null
                     )
                 )
             )
@@ -29,7 +29,7 @@ data class PdlGeografiskTilknytning(
     val gtType: GtType,
     val gtKommune: String?,
     val gtBydel: String?,
-    val gtUtland: String?
+    val gtLand: String?
 )
 
 enum class GtType {
