@@ -102,7 +102,7 @@ class PdlController(
             log.warn("Token matcher ikke request! $ident != ${hentGeografiskTilknytningRequest.variables.ident}")
         }
 
-        val response = pdlGeografiskTilknytningService.getGeografiskTilknytning(ident)
+        val response = pdlGeografiskTilknytningService.getGeografiskTilknytning(hentGeografiskTilknytningRequest.variables.ident)
         feilService.eventueltLagFeil(ident, "PdlController", "getGeografiskTilknytning")
         return objectMapper.writeValueAsString(response)
     }
