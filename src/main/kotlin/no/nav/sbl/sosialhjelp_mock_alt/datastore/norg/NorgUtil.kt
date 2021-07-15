@@ -1,6 +1,7 @@
-package no.nav.sbl.sosialhjelp_mock_alt.integrations.norg
+package no.nav.sbl.sosialhjelp_mock_alt.datastore.norg
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.norg.model.NavEnhet
+import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 
 private val sosialetjenesterInfo: String = """
         Til saksbehandler:
@@ -26,14 +27,9 @@ private val sosialetjenesterInfo: String = """
         Utbetaling når utbetaling havner på helg/helligdag: siste virkedag før Utbetalingsmåter for nødhjelp: kronekort/rekvisisjon Kvalifiseringsstønad og introduksjonsstønad: 28 i mnd
 """.trimIndent()
 
-fun leggTilNavenhet(navEnheter: MutableMap<String, NavEnhet>, enhetsnr: String, navn: String) {
-    navEnheter[enhetsnr] = lagMockNavEnhet(enhetsnr, navn)
-}
-
 fun lagMockNavEnhet(enhetsnr: String, navn: String): NavEnhet {
-    val enhetId = (enhetsnr + enhetsnr).toInt()
     return NavEnhet(
-        enhetId = enhetId,
+        enhetId = randomInt(8),
         navn = navn,
         enhetNr = enhetsnr,
         status = "20",

@@ -2,7 +2,9 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlAdresseSokService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlGeografiskTilknytningService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.HentGeografiskTilknytningRequest
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.HentPersonRequest
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.SokAdresseRequest
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class PdlController(
     private val pdlService: PdlService,
     private val pdlAdresseSokService: PdlAdresseSokService,
+    private val pdlGeografiskTilknytningService: PdlGeografiskTilknytningService,
     private val feilService: FeilService,
 ) {
     @PostMapping("/pdl_endpoint_url", produces = ["application/json;charset=UTF-8"])
@@ -36,6 +39,10 @@ class PdlController(
         if (body.contains("ident") && body.contains("historikk")) {
             val hentPersonRequest = objectMapper.readValue(body, HentPersonRequest::class.java)
             return handleHentPersonRequest(hentPersonRequest, ident)
+        }
+        if (body.contains("hentGeografiskTilknytning")) {
+            val hentGeografiskTilknytningRequest = objectMapper.readValue(body, HentGeografiskTilknytningRequest::class.java)
+            return handleHentGeografiskTilknytningRequest(hentGeografiskTilknytningRequest, ident)
         }
         if (body.contains("paging") && body.contains("criteria")) {
             val sokAdresseRequest = objectMapper.readValue(body, SokAdresseRequest::class.java)
@@ -88,6 +95,16 @@ class PdlController(
             }
             else -> "OK"
         }
+    }
+
+    private fun handleHentGeografiskTilknytningRequest(hentGeografiskTilknytningRequest: HentGeografiskTilknytningRequest, ident: String): String {
+        if (ident != hentGeografiskTilknytningRequest.variables.ident) {
+            log.warn("Token matcher ikke request! $ident != ${hentGeografiskTilknytningRequest.variables.ident}")
+        }
+
+        val response = pdlGeografiskTilknytningService.getGeografiskTilknytning(hentGeografiskTilknytningRequest.variables.ident)
+        feilService.eventueltLagFeil(ident, "PdlController", "getGeografiskTilknytning")
+        return objectMapper.writeValueAsString(response)
     }
 
     private fun handleSokAdresseRequest(sokAdresseRequest: SokAdresseRequest, ident: String): String {
