@@ -300,7 +300,7 @@ class PdlService(
         barnMap[barnFnr] = defaultBarn(etternavn)
 
         pdlAdresseSokService.putAdresse(standardBruker.bostedsadresse.postnummer, standardBruker.bostedsadresse, enhetsnummer)
-        pdlGeografiskTilknytningService.putGeografiskTilknytning(enhetsnummer, standardBruker.bostedsadresse.kommunenummer)
+        pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
         dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
         kontonummerService.putKontonummer(brukerFnr, genererTilfeldigKontonummer())
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()

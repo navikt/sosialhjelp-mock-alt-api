@@ -7,17 +7,31 @@ import org.springframework.stereotype.Service
 class NorgService {
 
     private val navEnheter = mutableMapOf<String, NavEnhet>()
+    private val gtNavEnheter = mutableMapOf<String, NavEnhet>()
 
     init {
-        leggTilNavenhet(navEnheter, "0301", "Sentrum, Oslo kommune")
-        leggTilNavenhet(navEnheter, "0315", "Grünerløkka, Oslo kommune")
-        leggTilNavenhet(navEnheter, "1208", "NAV Årstad, Årstad kommune")
-        leggTilNavenhet(navEnheter, "1209", "NAV Bergenhus, Bergen kommune")
-        leggTilNavenhet(navEnheter, "1210", "NAV Ytrebygda, Bergen kommune")
+        val sentrum = lagMockNavEnhet("0301", "Sentrum, Oslo kommune")
+        val grunerokka = lagMockNavEnhet("0315", "Grünerløkka, Oslo kommune")
+        val aarstad = lagMockNavEnhet("1208", "NAV Årstad, Årstad kommune")
+        val bergenhus = lagMockNavEnhet("1209", "NAV Bergenhus, Bergen kommune")
+        val ytrebygda = lagMockNavEnhet("1210", "NAV Ytrebygda, Bergen kommune")
+
+        navEnheter[sentrum.enhetNr] = sentrum
+        navEnheter[grunerokka.enhetNr] = grunerokka
+        navEnheter[aarstad.enhetNr] = aarstad
+        navEnheter[bergenhus.enhetNr] = bergenhus
+        navEnheter[ytrebygda.enhetNr] = ytrebygda
+
+        gtNavEnheter["0301"] = sentrum
+        gtNavEnheter["4601"] = bergenhus
     }
 
     fun getNavenhet(enhetsnr: String): NavEnhet? {
         return navEnheter[enhetsnr] ?: lagMockNavEnhet(enhetsnr, "Generert mockenhet $enhetsnr, Mock kommune")
+    }
+
+    fun getNavEnhetForGt(geografiskTilknytning: String): NavEnhet {
+        return gtNavEnheter[geografiskTilknytning] ?: lagMockNavEnhet(geografiskTilknytning, "Generert mockenhet for gt $geografiskTilknytning, Mock kommune")
     }
 
     fun getAlleNavenheter(): Collection<NavEnhet> {

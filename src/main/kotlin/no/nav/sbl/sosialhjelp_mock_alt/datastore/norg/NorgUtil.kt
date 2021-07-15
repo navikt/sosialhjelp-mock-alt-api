@@ -27,10 +27,6 @@ private val sosialetjenesterInfo: String = """
         Utbetaling når utbetaling havner på helg/helligdag: siste virkedag før Utbetalingsmåter for nødhjelp: kronekort/rekvisisjon Kvalifiseringsstønad og introduksjonsstønad: 28 i mnd
 """.trimIndent()
 
-fun leggTilNavenhet(navEnheter: MutableMap<String, NavEnhet>, enhetsnr: String, navn: String) {
-    navEnheter[enhetsnr] = lagMockNavEnhet(enhetsnr, navn)
-}
-
 fun lagMockNavEnhet(enhetsnr: String, navn: String): NavEnhet {
     return NavEnhet(
         enhetId = randomInt(8),
