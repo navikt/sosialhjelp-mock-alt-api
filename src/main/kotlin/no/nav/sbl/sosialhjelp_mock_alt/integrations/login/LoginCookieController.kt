@@ -31,7 +31,8 @@ class LoginCookieController(
     ): Cookie? {
         val claims = mutableMapOf<String, String>()
         claims["acr"] = "Level4"
-        claims["pid"] = subject!!
+        claims["pid"] = subject!! // idporten
+        claims["oid"] = subject // azure ad
         val token = mockOAuth2Server.issueToken(
             issuerId!!,
             MockLoginController::class.java.simpleName,
