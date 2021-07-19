@@ -9,6 +9,8 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeadersNoDefault
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraTokenNoDefault
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,16 +27,23 @@ class AzureController(val pdlService: PdlService) {
     fun getCurrentAzureBruker(
         @RequestHeader headers: HttpHeaders,
         @CookieValue(name = "localhost-idtoken") cookie: String?,
-    ): AzureAdBruker {
-        val id = hentFnrFraTokenNoDefault(headers) ?: hentFnrFraHeadersNoDefault(headers) ?: hentFnrFraCookieNoDefault(cookie)
-        return getAzureBruker(id ?: throw MockAltException("Klarte ikke å finne id."))
+    ): ResponseEntity<AzureAdBruker> {
+        val id = hentFnrFraTokenNoDefault(headers)
+            ?: hentFnrFraHeadersNoDefault(headers)
+            ?: hentFnrFraCookieNoDefault(cookie)
+        return getAzureBruker(id ?: throw MockAltException("Klarte ikke å finne id i request."))
     }
 
     @GetMapping("/azuread/graph/users/{id}")
-    fun getAzureBruker(@PathVariable id: String): AzureAdBruker {
-        val personalia = pdlService.getPersonalia(id)
+    fun getAzureBruker(@PathVariable id: String): ResponseEntity<AzureAdBruker> {
         log.info("Henter azureAd bruker med id $id")
-        return AzureAdBruker(personalia)
+        return try {
+            val personalia = pdlService.getPersonalia(id)
+            ResponseEntity.ok(AzureAdBruker(personalia))
+        } catch (e: MockAltException) {
+            log.info("Feil ved henting av bruker: ${e.message}")
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        }
     }
 
     @GetMapping("/azuread/graph/groups/{id}/members")
