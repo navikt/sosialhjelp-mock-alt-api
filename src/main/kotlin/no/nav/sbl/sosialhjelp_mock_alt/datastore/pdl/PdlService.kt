@@ -80,11 +80,12 @@ class PdlService(
             postnummer = "5005", kommuneNummer = "4601", enhetsnummer = "1209"
         )
         opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 3)
+        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4)
 
         val hemmeligBruker = Personalia()
             .withNavn("Hemmelig", "", "Adressesen")
             .withAdressebeskyttelse(Gradering.STRENGT_FORTROLIG)
-            .withOpprettetTidspunkt(3)
+            .withOpprettetTidspunkt(5)
             .locked()
         personListe[hemmeligBruker.fnr] = hemmeligBruker
     }
