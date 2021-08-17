@@ -33,7 +33,7 @@ class InnsynController(private val soknadService: SoknadService) {
         @CookieValue(name = "localhost-idtoken") cookie: String?,
     ): ResponseEntity<String> {
         var id = fiksDigisosId
-        if (id == null) {
+        if (id == null || id == "001" || id == "002" || id == "003") {
             id = UUID.randomUUID().toString()
         }
         val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
