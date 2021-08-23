@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend
 
+import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
@@ -27,6 +28,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
+import no.nav.sosialhjelp.api.fiks.Ettersendelse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -179,6 +181,58 @@ class FrontendController(
             .body(bytebuffer.toByteArray())
     }
 
+    @GetMapping("/mock-alt/ettersendelse/{fiksDigisosId}", produces = arrayOf("application/zip"))
+    fun zipEttersendelse(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
+        val soknad = soknadService.hentSoknad(fiksDigisosId)!!
+        val bytebuffer = ByteArrayOutputStream()
+        val zipArchive = ZipOutputStream(bytebuffer)
+
+        // Henter ut vedleggSpesifikasjoner ut fra ettersendelser
+        val vedleggSpesifikasjoner = soknad.ettersendtInfoNAV?.ettersendelser
+            ?.map { soknadService.hentDokument(fiksDigisosId, it.vedleggMetadata) }
+            ?.map { objectMapper.readValue(it, JsonVedleggSpesifikasjon::class.java) }
+
+        val sammenslattVedleggJson = JsonVedleggSpesifikasjon()
+            .withVedlegg(vedleggSpesifikasjoner?.flatMap { it.vedlegg })
+
+        val vedleggZip = ZipEntry("vedlegg.json")
+        zipArchive.putNextEntry(vedleggZip)
+        zipArchive.write(objectMapper.writeValueAsBytes(sammenslattVedleggJson))
+        zipArchive.closeEntry()
+
+        val ettersendelsePdf = soknadService.hentEttersendelsePdf(fiksDigisosId)
+        if (ettersendelsePdf != null) {
+            val zipFile = ZipEntry(ettersendelsePdf.filnavn)
+            zipArchive.putNextEntry(zipFile)
+            zipArchive.write(ettersendelsePdf.bytes)
+            zipArchive.closeEntry()
+        }
+
+        // Brukerkvittering.pdf mangler?
+
+        soknad.ettersendtInfoNAV?.ettersendelser
+            ?.flatMap { it.vedlegg }
+            ?.forEach {
+                val fil = soknadService.hentFil(it.dokumentlagerDokumentId)
+                if (fil != null) {
+                    val zipFile = ZipEntry(fil.filnavn)
+                    zipArchive.putNextEntry(zipFile)
+                    zipArchive.write(fil.bytes)
+                    zipArchive.closeEntry()
+                }
+            }
+
+        zipArchive.finish()
+        zipArchive.close()
+        bytebuffer.close()
+        return ResponseEntity.ok()
+            .header(
+                "Content-Disposition",
+                "attachment; filename=ettersendelse_$fiksDigisosId.zip"
+            )
+            .body(bytebuffer.toByteArray())
+    }
+
     @GetMapping("/mock-alt/soknad/liste")
     fun soknadsListe(): ResponseEntity<Collection<FrontendSoknad>> {
         return ResponseEntity.ok(soknadService.listSoknader(null).map { toFrontendSoknad(it) })
@@ -210,5 +264,28 @@ class FrontendController(
     private fun toVedlegg(dokument: DokumentInfo): FrontendVedlegg {
         val kanLastesned = soknadService.hentFil(dokument.dokumentlagerDokumentId) != null
         return FrontendVedlegg(dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse, kanLastesned)
+    }
+
+    private fun oppdaterMedVedleggFraInnsyn(vedleggJson: String, vedlegg: Collection<FrontendVedlegg>, ettersendelser: List<Ettersendelse>): String {
+        val ettersendteVedlegg = vedlegg
+            .filter { v -> v.id in ettersendelser.map { it.vedleggMetadata } }
+        val ettersendteEttersendelser = ettersendelser
+            .filter { v -> v.vedleggMetadata in vedlegg.map { it.id } }
+
+//        JsonVedleggSpesifikasjon()
+//            .withVedlegg(ettersendteEttersendelser.map { ettersendelse ->
+//                JsonVedlegg()
+//                    .withType("type")
+//                    .withTilleggsinfo("tilleggsinfo")
+//                    .withStatus("LastetOpp")
+//                    .withHendelseType(JsonVedlegg.HendelseType.BRUKER)
+//                    .withFiler(ettersendelse.vedlegg.map {
+//                        JsonFiler()
+//                            .withFilnavn(it.filnavn)
+//                            .withSha512(it.)
+//                    })
+//            })
+
+        return ""
     }
 }
