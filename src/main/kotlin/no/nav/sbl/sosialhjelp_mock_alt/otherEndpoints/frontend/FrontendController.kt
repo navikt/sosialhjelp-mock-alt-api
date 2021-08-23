@@ -198,7 +198,6 @@ class FrontendController(
         val vedlegg = mutableListOf<FrontendVedlegg>()
         vedlegg.addAll(soknad.digisosSoker!!.dokumenter.map { toVedlegg(it) })
         soknad.ettersendtInfoNAV!!.ettersendelser.forEach { ettersendelse ->
-            // todo -> ikke legg til ettersendelser fra innsyn her?
             ettersendelse.vedlegg.forEach { vedlegg.add(toVedlegg(it)) }
         }
         val sokerNavn = try {
