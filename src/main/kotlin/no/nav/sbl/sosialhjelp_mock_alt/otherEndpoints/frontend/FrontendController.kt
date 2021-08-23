@@ -154,23 +154,29 @@ class FrontendController(
 //        zipArchive.write("{\"eksternRef\": \"$fiksDigisosId\", \"digisosId\": \"$fiksDigisosId\"}".toByteArray())
 //        zipArchive.closeEntry()
 
-        val ettersendelsePdf = soknadService.hentEttersendelsePdf(fiksDigisosId)
+        // ettersendelse.pdf trenger kun å være del av zip som gjelder en ettersendelse
+        /*val ettersendelsePdf = soknadService.hentEttersendelsePdf(fiksDigisosId)
         if (ettersendelsePdf != null) {
             val zipFile = ZipEntry(ettersendelsePdf.filnavn)
             zipArchive.putNextEntry(zipFile)
             zipArchive.write(ettersendelsePdf.bytes)
             zipArchive.closeEntry()
-        }
+        }*/
 
-        soknadsInfo.vedlegg.forEach { vedlegg ->
-            val fil = soknadService.hentFil(vedlegg.id)
-            if (fil != null) {
-                val zipFile = ZipEntry(fil.filnavn)
-                zipArchive.putNextEntry(zipFile)
-                zipArchive.write(fil.bytes)
-                zipArchive.closeEntry()
+        soknadsInfo.vedlegg
+            .filterNot { vedlegg ->
+                // filtrer vekk vedlegg sendt via innsyn
+                vedlegg.id in soknad.ettersendtInfoNAV?.ettersendelser?.map { it.vedleggMetadata } ?: emptyList()
             }
-        }
+            .forEach { vedlegg ->
+                val fil = soknadService.hentFil(vedlegg.id)
+                if (fil != null) {
+                    val zipFile = ZipEntry(fil.filnavn)
+                    zipArchive.putNextEntry(zipFile)
+                    zipArchive.write(fil.bytes)
+                    zipArchive.closeEntry()
+                }
+            }
         zipArchive.finish()
         zipArchive.close()
         bytebuffer.close()
@@ -192,6 +198,7 @@ class FrontendController(
         val vedlegg = mutableListOf<FrontendVedlegg>()
         vedlegg.addAll(soknad.digisosSoker!!.dokumenter.map { toVedlegg(it) })
         soknad.ettersendtInfoNAV!!.ettersendelser.forEach { ettersendelse ->
+            // todo -> ikke legg til ettersendelser fra innsyn her?
             ettersendelse.vedlegg.forEach { vedlegg.add(toVedlegg(it)) }
         }
         val sokerNavn = try {
