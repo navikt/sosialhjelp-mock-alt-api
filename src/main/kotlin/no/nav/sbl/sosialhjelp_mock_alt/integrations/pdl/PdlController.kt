@@ -36,6 +36,9 @@ class PdlController(
     }
 
     private fun handleRequest(body: String, ident: String): String {
+        if (body.contains("hentIdenter")) {
+            return "{\"data\":{\"hentIdenter\":{\"identer\":[{\"ident\":\"$ident\"}]}}}"
+        }
         if (body.contains("ident") && body.contains("historikk")) {
             val hentPersonRequest = objectMapper.readValue(body, HentPersonRequest::class.java)
             return handleHentPersonRequest(hentPersonRequest, ident)
