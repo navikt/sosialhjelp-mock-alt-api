@@ -154,23 +154,20 @@ class FrontendController(
 //        zipArchive.write("{\"eksternRef\": \"$fiksDigisosId\", \"digisosId\": \"$fiksDigisosId\"}".toByteArray())
 //        zipArchive.closeEntry()
 
-        val ettersendelsePdf = soknadService.hentEttersendelsePdf(fiksDigisosId)
-        if (ettersendelsePdf != null) {
-            val zipFile = ZipEntry(ettersendelsePdf.filnavn)
-            zipArchive.putNextEntry(zipFile)
-            zipArchive.write(ettersendelsePdf.bytes)
-            zipArchive.closeEntry()
-        }
-
-        soknadsInfo.vedlegg.forEach { vedlegg ->
-            val fil = soknadService.hentFil(vedlegg.id)
-            if (fil != null) {
-                val zipFile = ZipEntry(fil.filnavn)
-                zipArchive.putNextEntry(zipFile)
-                zipArchive.write(fil.bytes)
-                zipArchive.closeEntry()
+        soknadsInfo.vedlegg
+            .filterNot { vedlegg ->
+                // filtrer vekk vedlegg sendt via innsyn
+                vedlegg.id in soknad.ettersendtInfoNAV?.ettersendelser?.map { it.vedleggMetadata } ?: emptyList()
             }
-        }
+            .forEach { vedlegg ->
+                val fil = soknadService.hentFil(vedlegg.id)
+                if (fil != null) {
+                    val zipFile = ZipEntry(fil.filnavn)
+                    zipArchive.putNextEntry(zipFile)
+                    zipArchive.write(fil.bytes)
+                    zipArchive.closeEntry()
+                }
+            }
         zipArchive.finish()
         zipArchive.close()
         bytebuffer.close()
