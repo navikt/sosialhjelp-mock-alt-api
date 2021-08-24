@@ -28,7 +28,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
-import no.nav.sosialhjelp.api.fiks.Ettersendelse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -264,28 +263,5 @@ class FrontendController(
     private fun toVedlegg(dokument: DokumentInfo): FrontendVedlegg {
         val kanLastesned = soknadService.hentFil(dokument.dokumentlagerDokumentId) != null
         return FrontendVedlegg(dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse, kanLastesned)
-    }
-
-    private fun oppdaterMedVedleggFraInnsyn(vedleggJson: String, vedlegg: Collection<FrontendVedlegg>, ettersendelser: List<Ettersendelse>): String {
-        val ettersendteVedlegg = vedlegg
-            .filter { v -> v.id in ettersendelser.map { it.vedleggMetadata } }
-        val ettersendteEttersendelser = ettersendelser
-            .filter { v -> v.vedleggMetadata in vedlegg.map { it.id } }
-
-//        JsonVedleggSpesifikasjon()
-//            .withVedlegg(ettersendteEttersendelser.map { ettersendelse ->
-//                JsonVedlegg()
-//                    .withType("type")
-//                    .withTilleggsinfo("tilleggsinfo")
-//                    .withStatus("LastetOpp")
-//                    .withHendelseType(JsonVedlegg.HendelseType.BRUKER)
-//                    .withFiler(ettersendelse.vedlegg.map {
-//                        JsonFiler()
-//                            .withFilnavn(it.filnavn)
-//                            .withSha512(it.)
-//                    })
-//            })
-
-        return ""
     }
 }
