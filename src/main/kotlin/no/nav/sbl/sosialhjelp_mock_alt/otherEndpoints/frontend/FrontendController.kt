@@ -154,15 +154,6 @@ class FrontendController(
 //        zipArchive.write("{\"eksternRef\": \"$fiksDigisosId\", \"digisosId\": \"$fiksDigisosId\"}".toByteArray())
 //        zipArchive.closeEntry()
 
-        // ettersendelse.pdf trenger kun å være del av zip som gjelder en ettersendelse
-        /*val ettersendelsePdf = soknadService.hentEttersendelsePdf(fiksDigisosId)
-        if (ettersendelsePdf != null) {
-            val zipFile = ZipEntry(ettersendelsePdf.filnavn)
-            zipArchive.putNextEntry(zipFile)
-            zipArchive.write(ettersendelsePdf.bytes)
-            zipArchive.closeEntry()
-        }*/
-
         soknadsInfo.vedlegg
             .filterNot { vedlegg ->
                 // filtrer vekk vedlegg sendt via innsyn
