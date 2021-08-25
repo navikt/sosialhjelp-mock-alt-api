@@ -1,0 +1,431 @@
+{
+  "data": {
+    "sokAdresse": {
+      "hits": [
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd1",
+            "husnummer": 1,
+            "husbokstav": "B",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd2",
+            "husnummer": 10,
+            "husbokstav": null,
+            "adressenavn": "Sannerudvegen",
+            "postnummer": "2055",
+            "poststed": "NORDKISA",
+            "kommunenavn": "ULLENSAKER",
+            "kommunenummer": "3033",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd3",
+            "husnummer": 10,
+            "husbokstav": "B",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd4",
+            "husnummer": 10,
+            "husbokstav": null,
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd5",
+            "husnummer": 10,
+            "husbokstav": "A",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd6",
+            "husnummer": 11,
+            "husbokstav": null,
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd7",
+            "husnummer": 12,
+            "husbokstav": null,
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd8",
+            "husnummer": 12,
+            "husbokstav": null,
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd9",
+            "husnummer": 12,
+            "husbokstav": null,
+            "adressenavn": "Sannerudvegen",
+            "postnummer": "2055",
+            "poststed": "NORDKISA",
+            "kommunenavn": "ULLENSAKER",
+            "kommunenummer": "3033",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd10",
+            "husnummer": 13,
+            "husbokstav": "B",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd11",
+            "husnummer": 13,
+            "husbokstav": "A",
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd12",
+            "husnummer": 13,
+            "husbokstav": "C",
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd13",
+            "husnummer": 13,
+            "husbokstav": "B",
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd14",
+            "husnummer": 13,
+            "husbokstav": "D",
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd15",
+            "husnummer": 13,
+            "husbokstav": "A",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd16",
+            "husnummer": 14,
+            "husbokstav": null,
+            "adressenavn": "Sannerudvegen",
+            "postnummer": "2055",
+            "poststed": "NORDKISA",
+            "kommunenavn": "ULLENSAKER",
+            "kommunenummer": "3033",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd17",
+            "husnummer": 14,
+            "husbokstav": null,
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd18",
+            "husnummer": 14,
+            "husbokstav": null,
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd19",
+            "husnummer": 15,
+            "husbokstav": "A",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd20",
+            "husnummer": 15,
+            "husbokstav": null,
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd21",
+            "husnummer": 15,
+            "husbokstav": "B",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd22",
+            "husnummer": 15,
+            "husbokstav": "C",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd23",
+            "husnummer": 16,
+            "husbokstav": null,
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd24",
+            "husnummer": 17,
+            "husbokstav": "A",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd25",
+            "husnummer": 17,
+            "husbokstav": "B",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd26",
+            "husnummer": 17,
+            "husbokstav": null,
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd27",
+            "husnummer": 18,
+            "husbokstav": null,
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd28",
+            "husnummer": 19,
+            "husbokstav": null,
+            "adressenavn": "Sannervegen",
+            "postnummer": "2335",
+            "poststed": "STANGE",
+            "kommunenavn": "STANGE",
+            "kommunenummer": "3413",
+            "bydelsnummer": null
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd29",
+            "husnummer": 19,
+            "husbokstav": "B",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd30",
+            "husnummer": 19,
+            "husbokstav": "C",
+            "adressenavn": "Sannergata",
+            "postnummer": "0557",
+            "poststed": "OSLO",
+            "kommunenavn": "OSLO",
+            "kommunenummer": "0301",
+            "bydelsnummer": "030102"
+          }
+        }
+      ],
+      "pageNumber": 1,
+      "totalPages": 2,
+      "totalHits": 31
+    }
+  }
+}
