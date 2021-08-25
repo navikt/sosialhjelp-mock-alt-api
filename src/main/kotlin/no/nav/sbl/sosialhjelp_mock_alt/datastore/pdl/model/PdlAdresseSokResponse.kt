@@ -1,37 +1,16 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
+import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+
 data class PdlAdresseSokResponse(
     val errors: List<PdlError>?,
     val data: PdlAdresseSok
 ) {
     companion object {
         fun defaultResponse(): PdlAdresseSokResponse {
-            return PdlAdresseSokResponse(
-                errors = null,
-                data = PdlAdresseSok(
-                    sokAdresse = PdlAdresseSokResult(
-                        hits = listOf(
-                            AdresseSokHit(
-                                score = 0f,
-                                vegadresse = AdresseDto(
-                                    matrikkelId = "matrikkelId123",
-                                    husnummer = 2,
-                                    husbokstav = null,
-                                    adressenavn = "Mock veien",
-                                    kommunenavn = "Mock Kommune",
-                                    kommunenummer = "1000",
-                                    postnummer = "0101",
-                                    poststed = "Mock by",
-                                    bydelsnummer = null
-                                )
-                            )
-                        ),
-                        pageNumber = 1,
-                        totalPages = 1,
-                        totalHits = 1
-                    )
-                )
-            )
+            val string: String = this::class.java.classLoader.getResource("adressesok/sanner_adressesok.json")!!.readText()
+            return objectMapper.readValue(string)
         }
     }
 }

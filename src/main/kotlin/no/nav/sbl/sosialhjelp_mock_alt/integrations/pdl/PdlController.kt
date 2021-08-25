@@ -111,9 +111,21 @@ class PdlController(
     }
 
     private fun handleSokAdresseRequest(sokAdresseRequest: SokAdresseRequest, ident: String): String {
-        val postnummer = sokAdresseRequest.variables.criteria.first { it.fieldName == "vegadresse.postnummer" }.searchRule["equals"] ?: ""
+        val criteria = sokAdresseRequest.variables.criteria
+        val isWildcardSok: Boolean = criteria.firstOrNull { it.fieldName == "vegadresse.adressenavn" }?.searchRule?.contains("wildcard") ?: false
+
         feilService.eventueltLagFeil(ident, "PdlController", "getSokAdresse")
-        return objectMapper.writeValueAsString(pdlAdresseSokService.getAdresse(postnummer))
+
+        return if (isWildcardSok) {
+            val wildcardSokestreng = criteria
+                .firstOrNull { it.fieldName == "vegadresse.adressenavn" }?.searchRule?.get("wildcard")?.removeSuffix("*") ?: ""
+            objectMapper.writeValueAsString(pdlAdresseSokService.getAdresse(wildcardSokestreng))
+        } else {
+            val adressenavn = criteria.firstOrNull { it.fieldName == "vegadresse.adressenavn" }?.searchRule?.get("contains") ?: ""
+            val husnummer = criteria.firstOrNull { it.fieldName == "vegadresse.husnummer" }?.searchRule?.get("equals") ?: ""
+            val husbokstav = criteria.firstOrNull { it.fieldName == "vegadresse.husbokstav" }?.searchRule?.get("equals") ?: ""
+            objectMapper.writeValueAsString(pdlAdresseSokService.getAdresse(adressenavn + husnummer + husbokstav))
+        }
     }
 
     companion object {

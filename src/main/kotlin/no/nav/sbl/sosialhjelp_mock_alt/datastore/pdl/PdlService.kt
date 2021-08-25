@@ -65,7 +65,6 @@ class PdlService(
     val bostotteService: BostotteService,
     val soknadService: SoknadService,
     val kontonummerService: KontonummerService,
-    val pdlAdresseSokService: PdlAdresseSokService,
     val pdlGeografiskTilknytningService: PdlGeografiskTilknytningService,
 ) {
 
@@ -238,7 +237,6 @@ class PdlService(
             throw MockAltException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
         personListe[personalia.fnr] = personalia
-        pdlAdresseSokService.putAdresse(personalia.bostedsadresse.postnummer, personalia.bostedsadresse)
         pdlGeografiskTilknytningService.putGeografiskTilknytning(personalia.fnr, personalia.bostedsadresse.kommunenummer)
     }
 
@@ -300,7 +298,6 @@ class PdlService(
         ektefelleMap[brukerFnr] = ektefelleSammeBosted
         barnMap[barnFnr] = defaultBarn(etternavn)
 
-        pdlAdresseSokService.putAdresse(standardBruker.bostedsadresse.postnummer, standardBruker.bostedsadresse, enhetsnummer)
         pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
         dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
         kontonummerService.putKontonummer(brukerFnr, genererTilfeldigKontonummer())
