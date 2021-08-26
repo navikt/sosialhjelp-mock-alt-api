@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend
 
+import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
@@ -27,6 +28,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
+import no.nav.sosialhjelp.api.fiks.Ettersendelse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -177,6 +179,61 @@ class FrontendController(
                 "attachment; filename=soknad_$fiksDigisosId.zip"
             )
             .body(bytebuffer.toByteArray())
+    }
+
+    @GetMapping("/mock-alt/ettersendelse/{fiksDigisosId}", produces = arrayOf("application/zip"))
+    fun zipEttersendelse(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
+        val soknad = soknadService.hentSoknad(fiksDigisosId)!!
+        val bytebuffer = ByteArrayOutputStream()
+        val zipArchive = ZipOutputStream(bytebuffer)
+
+        val sammenslattVedleggJson = slaSammenTilJsonVedleggSpesifikasjon(soknad.ettersendtInfoNAV?.ettersendelser, fiksDigisosId)
+        val vedleggZip = ZipEntry("vedlegg.json")
+        zipArchive.putNextEntry(vedleggZip)
+        zipArchive.write(objectMapper.writeValueAsBytes(sammenslattVedleggJson))
+        zipArchive.closeEntry()
+
+        val ettersendelsePdf = soknadService.hentEttersendelsePdf(fiksDigisosId)
+        if (ettersendelsePdf != null) {
+            val zipFile = ZipEntry(ettersendelsePdf.filnavn)
+            zipArchive.putNextEntry(zipFile)
+            zipArchive.write(ettersendelsePdf.bytes)
+            zipArchive.closeEntry()
+        }
+
+        soknad.ettersendtInfoNAV?.ettersendelser
+            ?.flatMap { it.vedlegg }
+            ?.forEach {
+                val fil = soknadService.hentFil(it.dokumentlagerDokumentId)
+                if (fil != null) {
+                    val zipFile = ZipEntry(fil.filnavn)
+                    zipArchive.putNextEntry(zipFile)
+                    zipArchive.write(fil.bytes)
+                    zipArchive.closeEntry()
+                }
+            }
+
+        zipArchive.finish()
+        zipArchive.close()
+        bytebuffer.close()
+        return ResponseEntity.ok()
+            .header(
+                "Content-Disposition",
+                "attachment; filename=ettersendelse_$fiksDigisosId.zip"
+            )
+            .body(bytebuffer.toByteArray())
+    }
+
+    private fun slaSammenTilJsonVedleggSpesifikasjon(
+        ettersendelser: List<Ettersendelse>?,
+        fiksDigisosId: String
+    ): JsonVedleggSpesifikasjon? {
+        val vedleggSpesifikasjoner = ettersendelser
+            ?.map { soknadService.hentDokument(fiksDigisosId, it.vedleggMetadata) }
+            ?.map { objectMapper.readValue(it, JsonVedleggSpesifikasjon::class.java) }
+
+        return JsonVedleggSpesifikasjon()
+            .withVedlegg(vedleggSpesifikasjoner?.flatMap { it.vedlegg })
     }
 
     @GetMapping("/mock-alt/soknad/liste")
