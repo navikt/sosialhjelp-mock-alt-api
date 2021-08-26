@@ -187,9 +187,7 @@ class FrontendController(
         val bytebuffer = ByteArrayOutputStream()
         val zipArchive = ZipOutputStream(bytebuffer)
 
-        // Henter ut vedleggSpesifikasjoner ut fra ettersendelser
         val sammenslattVedleggJson = slaSammenTilJsonVedleggSpesifikasjon(soknad.ettersendtInfoNAV?.ettersendelser, fiksDigisosId)
-
         val vedleggZip = ZipEntry("vedlegg.json")
         zipArchive.putNextEntry(vedleggZip)
         zipArchive.write(objectMapper.writeValueAsBytes(sammenslattVedleggJson))
