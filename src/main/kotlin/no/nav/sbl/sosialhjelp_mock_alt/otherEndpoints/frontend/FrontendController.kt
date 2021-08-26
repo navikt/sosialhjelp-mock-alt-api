@@ -28,6 +28,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
+import no.nav.sosialhjelp.api.fiks.Ettersendelse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -187,12 +188,7 @@ class FrontendController(
         val zipArchive = ZipOutputStream(bytebuffer)
 
         // Henter ut vedleggSpesifikasjoner ut fra ettersendelser
-        val vedleggSpesifikasjoner = soknad.ettersendtInfoNAV?.ettersendelser
-            ?.map { soknadService.hentDokument(fiksDigisosId, it.vedleggMetadata) }
-            ?.map { objectMapper.readValue(it, JsonVedleggSpesifikasjon::class.java) }
-
-        val sammenslattVedleggJson = JsonVedleggSpesifikasjon()
-            .withVedlegg(vedleggSpesifikasjoner?.flatMap { it.vedlegg })
+        val sammenslattVedleggJson = slaSammenTilJsonVedleggSpesifikasjon(soknad.ettersendtInfoNAV?.ettersendelser, fiksDigisosId)
 
         val vedleggZip = ZipEntry("vedlegg.json")
         zipArchive.putNextEntry(vedleggZip)
@@ -206,8 +202,6 @@ class FrontendController(
             zipArchive.write(ettersendelsePdf.bytes)
             zipArchive.closeEntry()
         }
-
-        // Brukerkvittering.pdf mangler?
 
         soknad.ettersendtInfoNAV?.ettersendelser
             ?.flatMap { it.vedlegg }
@@ -230,6 +224,18 @@ class FrontendController(
                 "attachment; filename=ettersendelse_$fiksDigisosId.zip"
             )
             .body(bytebuffer.toByteArray())
+    }
+
+    private fun slaSammenTilJsonVedleggSpesifikasjon(
+        ettersendelser: List<Ettersendelse>?,
+        fiksDigisosId: String
+    ): JsonVedleggSpesifikasjon? {
+        val vedleggSpesifikasjoner = ettersendelser
+            ?.map { soknadService.hentDokument(fiksDigisosId, it.vedleggMetadata) }
+            ?.map { objectMapper.readValue(it, JsonVedleggSpesifikasjon::class.java) }
+
+        return JsonVedleggSpesifikasjon()
+            .withVedlegg(vedleggSpesifikasjoner?.flatMap { it.vedlegg })
     }
 
     @GetMapping("/mock-alt/soknad/liste")
