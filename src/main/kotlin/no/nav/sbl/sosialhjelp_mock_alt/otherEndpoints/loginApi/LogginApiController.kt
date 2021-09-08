@@ -103,7 +103,7 @@ class LogginApiController(
     private fun sendRequests(body: Any?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
         var newUri = request.requestURL.toString().replace("/sosialhjelp/mock-alt-api/login-api", "")
         newUri = newUri.replace("localhost:8989", "localhost:8181")
-        newUri = newUri.replace("sosialhjelp-mock-alt-api-gcp.dev.nav.no", "digisos-gcp.dev.nav.no")
+        newUri = newUri.replace("sosialhjelp-mock-alt-api-gcp.dev.nav.no", "digisos.ekstern.dev.nav.no")
         newUri = newUri.replace("sosialhjelp-mock-alt-api.labs.nais.io", "digisos.labs.nais.io")
 
         val headers = getHeaders(request)

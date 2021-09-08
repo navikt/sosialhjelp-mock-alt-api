@@ -5,9 +5,9 @@
   ],
   "env": {
     "GCP_PORT": "8989",
-    "HOST_ADDRESS": "https://digisos-gcp.dev.nav.no/",
-    "COOKIE_DOMAIN": "digisos-gcp.dev.nav.no",
-    "LOGINURL": "https://digisos-gcp.dev.nav.no/sosialhjelp/mock-alt/login"
+    "HOST_ADDRESS": "https://digisos.ekstern.dev.nav.no/",
+    "COOKIE_DOMAIN": "digisos.ekstern.dev.nav.no",
+    "LOGINURL": "https://digisos.ekstern.dev.nav.no/sosialhjelp/mock-alt/login"
   },
   "minReplicas": "1",
   "maxReplicas": "1",
