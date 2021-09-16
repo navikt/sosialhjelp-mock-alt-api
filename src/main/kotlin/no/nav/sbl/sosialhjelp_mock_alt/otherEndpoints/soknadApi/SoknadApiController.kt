@@ -4,7 +4,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,7 +15,7 @@ import java.time.LocalDateTime
 
 @RestController
 class SoknadApiController(
-    @Autowired val pdlService: PdlService,
+    private val pdlService: PdlService,
 ) {
     companion object {
         private val log by logger()
