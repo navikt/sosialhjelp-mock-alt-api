@@ -6,7 +6,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.security.token.support.core.jwt.JwtToken
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpEntity
@@ -33,8 +32,8 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 class LogginApiController(
-    @Autowired val restTemplate: RestTemplate,
-    @Autowired val pdlService: PdlService,
+    private val restTemplate: RestTemplate,
+    private val pdlService: PdlService,
     @Value("\${loginurl}") private val loginurl: String,
 ) {
     companion object {
