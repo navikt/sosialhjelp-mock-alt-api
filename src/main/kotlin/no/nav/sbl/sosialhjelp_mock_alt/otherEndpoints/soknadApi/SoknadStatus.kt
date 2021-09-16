@@ -4,6 +4,6 @@ import java.time.LocalDateTime
 
 class SoknadStatus(
     val ident: String,
-    val enhetsnr: String,
+    val navEnhet: String,
     val innsendtDato: LocalDateTime
 )
