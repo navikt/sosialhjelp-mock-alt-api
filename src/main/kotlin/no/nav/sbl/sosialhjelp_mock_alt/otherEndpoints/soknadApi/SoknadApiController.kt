@@ -31,7 +31,7 @@ class SoknadApiController(
             val status = if (personalia.navn.mellomnavn == "IngenSoknader") {
                 null
             } else {
-                SoknadStatus(ident, "Grünerløkka, Oslo kommune", LocalDateTime.now())
+                SoknadStatus(ident, "Hamar kommune", LocalDateTime.now())
             }
             ResponseEntity.ok(status)
         } catch (e: MockAltException) {
