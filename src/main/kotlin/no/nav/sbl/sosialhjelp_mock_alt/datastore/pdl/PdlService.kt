@@ -120,7 +120,7 @@ class PdlService(
             navn = personalia.navn
         }
         return PdlModiaPersonResponse(
-            errors = emptyList(),
+            errors = null,
             data = PdlModiaHentPerson(
                 hentPerson = PdlModiaPerson(
                     navn = listOf(navn),
