@@ -14,7 +14,7 @@ class NorgController(val norgService: NorgService) {
         private val log by logger()
     }
 
-    @GetMapping("/norg_endpoint_url/enhet")
+    @GetMapping("/norg_endpoint_url/enhet", produces = ["application/json;charset=UTF-8"])
     fun getAlleEnheter(@RequestParam enhetStatusListe: String): String {
         val navEnheter = norgService.getAlleNavenheter()
         log.info("Henter alle nav enheter: ${navEnheter.size} status: $enhetStatusListe")
