@@ -21,7 +21,7 @@ class NorgController(val norgService: NorgService) {
         return objectMapper.writeValueAsString(navEnheter)
     }
 
-    @GetMapping("/norg_endpoint_url/enhet/{enhetsnr}")
+    @GetMapping("/norg_endpoint_url/enhet/{enhetsnr}", produces = ["application/json;charset=UTF-8"])
     fun getEnhet(@PathVariable enhetsnr: String): String {
         val navEnhet = norgService.getNavenhet(enhetsnr)
         log.info("Henter nav enhet for id: $enhetsnr")
