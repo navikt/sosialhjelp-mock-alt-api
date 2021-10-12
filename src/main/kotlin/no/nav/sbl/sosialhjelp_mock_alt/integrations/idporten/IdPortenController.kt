@@ -13,8 +13,8 @@ class IdPortenController {
 
     @PostMapping("/idporten/idporten-oidc-provider/token")
     fun getToken(
-        @RequestParam parameters: MultiValueMap<String, String>,
-        @RequestBody body: String
+        @RequestParam parameters: MultiValueMap<String, String>?,
+        @RequestBody body: String?
     ): IdPortenAccessTokenResponse {
         val token = IdPortenAccessTokenResponse(
             accessToken = "",
