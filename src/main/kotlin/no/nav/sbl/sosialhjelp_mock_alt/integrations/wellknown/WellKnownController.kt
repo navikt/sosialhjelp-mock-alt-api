@@ -69,6 +69,12 @@ class WellKnownController(
         } catch (e: JsonParseException) {
             splitFormParams(body)
         }
+
+        if (params.containsKey("assertion") && params.containsKey("grant_type")) {
+            log.info("Utveksler token for maskinporten")
+            return TokenResponse(params["assertion"]!!, "JWT", "JWT", 60)
+        }
+
         log.info("Utveksler token: audience: ${params["audience"]}\n")
         return TokenResponse(params["subject_token"]!!, "JWT", "JWT", 60)
     }
