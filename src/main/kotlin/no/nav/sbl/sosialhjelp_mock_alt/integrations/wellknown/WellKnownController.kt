@@ -62,6 +62,7 @@ class WellKnownController(
     @PostMapping("/token/{issuer}", produces = ["application/json;charset=UTF-8"])
     fun exchangeToken(
         @RequestBody body: String,
+        @PathVariable(value = "issuer") issuer: String
     ): TokenResponse {
         val typeRef = object : TypeReference<HashMap<String, String>>() {}
         val params = try {
@@ -69,7 +70,13 @@ class WellKnownController(
         } catch (e: JsonParseException) {
             splitFormParams(body)
         }
-        log.info("Utveksler token: audience: ${params["audience"]}\n")
+
+        if (params.containsKey("assertion") && params.containsKey("grant_type")) {
+            log.info("Utveksler token for $issuer")
+            return TokenResponse(params["assertion"]!!, "JWT", "JWT", 60)
+        }
+
+        log.info("Utveksler token for $issuer: audience: ${params["audience"]}\n")
         return TokenResponse(params["subject_token"]!!, "JWT", "JWT", 60)
     }
 

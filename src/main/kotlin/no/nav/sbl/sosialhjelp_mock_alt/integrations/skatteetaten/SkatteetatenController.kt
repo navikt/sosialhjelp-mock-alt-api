@@ -31,4 +31,16 @@ class SkatteetatenController(
         log.info("Henter skattbar inntekt: ${objectMapper.writeValueAsString(skattbarInntekt)}")
         return ResponseEntity.ok(skattbarInntekt)
     }
+
+    @GetMapping("/skatteetaten/{fnr}/inntekter")
+    fun getStatteetatenInntektNy(
+        @PathVariable fnr: String,
+        @RequestParam fraOgMed: String,
+        @RequestParam tilOgMed: String
+    ): ResponseEntity<SkattbarInntekt> {
+        feilService.eventueltLagFeil(fnr, "SkatteetatenController", "getStatteetatenInntektNy")
+        val skattbarInntekt = skatteetatenService.getSkattbarInntekt(fnr)
+        log.info("Henter skattbar inntekt (ny): ${objectMapper.writeValueAsString(skattbarInntekt)}")
+        return ResponseEntity.ok(skattbarInntekt)
+    }
 }
