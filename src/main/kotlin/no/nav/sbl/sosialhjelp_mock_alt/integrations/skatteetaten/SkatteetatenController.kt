@@ -20,7 +20,7 @@ class SkatteetatenController(
         private val log by logger()
     }
 
-    @GetMapping("/skatteetaten/{fnr}/oppgave/inntekt")
+    @GetMapping("/skatteetaten/{fnr}/inntekter")
     fun getStatteetatenInntekt(
         @PathVariable fnr: String,
         @RequestParam fraOgMed: String,
@@ -29,18 +29,6 @@ class SkatteetatenController(
         feilService.eventueltLagFeil(fnr, "SkatteetatenController", "getStatteetatenInntekt")
         val skattbarInntekt = skatteetatenService.getSkattbarInntekt(fnr)
         log.info("Henter skattbar inntekt: ${objectMapper.writeValueAsString(skattbarInntekt)}")
-        return ResponseEntity.ok(skattbarInntekt)
-    }
-
-    @GetMapping("/skatteetaten/{fnr}/inntekter")
-    fun getStatteetatenInntektNy(
-        @PathVariable fnr: String,
-        @RequestParam fraOgMed: String,
-        @RequestParam tilOgMed: String
-    ): ResponseEntity<SkattbarInntekt> {
-        feilService.eventueltLagFeil(fnr, "SkatteetatenController", "getStatteetatenInntektNy")
-        val skattbarInntekt = skatteetatenService.getSkattbarInntekt(fnr)
-        log.info("Henter skattbar inntekt (ny): ${objectMapper.writeValueAsString(skattbarInntekt)}")
         return ResponseEntity.ok(skattbarInntekt)
     }
 }
