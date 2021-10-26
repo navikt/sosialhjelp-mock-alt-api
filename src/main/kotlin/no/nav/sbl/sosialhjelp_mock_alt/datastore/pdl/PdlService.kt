@@ -99,7 +99,7 @@ class PdlService(
             navnList = listOf(PdlPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn))
         }
         return PdlInnsynPersonResponse(
-            errors = emptyList(),
+            errors = null,
             data = PdlInnsynHentPerson(
                 hentPerson = PdlInnsynPerson(
                     adressebeskyttelse = adressebeskyttelseList,
