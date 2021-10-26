@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -25,12 +26,14 @@ class WellKnownController(
 
     @GetMapping("/well-known/{issuer}")
     fun getMockAltMetadata(
-        @PathVariable(value = "issuer") issuer: String
+        @PathVariable(value = "issuer") issuer: String,
+        @RequestParam host: String?
     ): WellKnown {
+        val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
         val wellknown = WellKnown(
             issuer = mockOAuth2Server.issuerUrl(issuer).toString(),
-            tokenEndpoint = "${hostAddress}sosialhjelp/mock-alt-api/token/$issuer",
-            jwksURI = "${hostAddress}sosialhjelp/mock-alt-api/jwks/$issuer"
+            tokenEndpoint = "$baseUrl}sosialhjelp/mock-alt-api/token/$issuer",
+            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer"
         )
         log.info("Metadata for issuer=$issuer: \n$wellknown")
         return wellknown
@@ -38,12 +41,14 @@ class WellKnownController(
 
     @GetMapping("/azure-well-known/{issuer}")
     fun getAzureMetadata(
-        @PathVariable(value = "issuer") issuer: String
+        @PathVariable(value = "issuer") issuer: String,
+        @RequestParam host: String?
     ): WellKnown {
+        val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
         val wellknown = WellKnown(
             issuer = mockOAuth2Server.issuerUrl(issuer).toString(),
-            tokenEndpoint = "${hostAddress}sosialhjelp/mock-alt-api/azuretoken/$issuer",
-            jwksURI = "${hostAddress}sosialhjelp/mock-alt-api/jwks/$issuer"
+            tokenEndpoint = "${baseUrl}sosialhjelp/mock-alt-api/azuretoken/$issuer",
+            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer"
         )
         log.info("Metadata for issuer=$issuer: \n$wellknown")
         return wellknown
@@ -97,6 +102,13 @@ class WellKnownController(
             formsMap[innerSplit[0]] = innerSplit[1]
         }
         return formsMap
+    }
+
+    private fun hostAddress(hostFromQueryParam: String): String {
+        if (hostAddress.contains("localhost")) {
+            return "http://$hostFromQueryParam:8989/"
+        }
+        return hostAddress
     }
 
     companion object {
