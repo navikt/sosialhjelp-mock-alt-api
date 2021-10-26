@@ -32,7 +32,7 @@ class WellKnownController(
         val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
         val wellknown = WellKnown(
             issuer = mockOAuth2Server.issuerUrl(issuer).toString(),
-            tokenEndpoint = "$baseUrl}sosialhjelp/mock-alt-api/token/$issuer",
+            tokenEndpoint = "${baseUrl}sosialhjelp/mock-alt-api/token/$issuer",
             jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer"
         )
         log.info("Metadata for issuer=$issuer: \n$wellknown")
