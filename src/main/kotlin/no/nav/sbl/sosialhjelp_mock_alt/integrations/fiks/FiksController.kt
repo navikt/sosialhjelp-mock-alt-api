@@ -22,6 +22,8 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraBody
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeaders
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraHeadersNoDefault
+import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.DokumentInfo
@@ -59,7 +61,7 @@ class FiksController(
     //    ======== Innsyn =========
     @GetMapping("/fiks/digisos/api/v1/soknader/soknader")
     fun listSoknaderInnsyn(@RequestHeader headers: HttpHeaders): ResponseEntity<String> {
-        val fnr = hentFnrFraHeaders(headers)
+        val fnr = hentFnrFraHeadersNoDefault(headers) ?: hentFnrFraToken(headers)
         feilService.eventueltLagFeil(fnr, "FixController", "hentSoknad")
         val soknadsListe = soknadService.listSoknader(fnr)
         return ResponseEntity.ok(objectMapper.writeValueAsString(soknadsListe))
