@@ -100,7 +100,9 @@ class LogginApiController(
     }
 
     private fun sendRequests(body: Any?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
-        var newUri = request.requestURL.toString().replace("/sosialhjelp/mock-alt-api/login-api", "")
+        var newUri = request.requestURL.append(getQueryString(request)).toString()
+
+        newUri = newUri.replace("/sosialhjelp/mock-alt-api/login-api", "")
         newUri = if (newUri.contains("innsyn-api")) {
             newUri.replace("localhost:8989", "localhost:8080")
         } else {
@@ -109,24 +111,28 @@ class LogginApiController(
         newUri = newUri.replace("sosialhjelp-mock-alt-api-gcp.dev.nav.no", "digisos-gcp.dev.nav.no")
         newUri = newUri.replace("sosialhjelp-mock-alt-api.labs.nais.io", "digisos.labs.nais.io")
 
-        val queryString = if (request.queryString != null) {
-            "?${request.queryString}"
-        } else {
-            ""
-        }
         val headers = getHeaders(request)
         addAccessTokenHeader(headers)
         fixCorsHeadersInResponse(request, response)
 
-        log.debug("sendRequests newUri: $newUri$queryString")
+        log.debug("sendRequests newUri: $newUri")
         try {
-            return restTemplate.exchange("$newUri$queryString", method, HttpEntity(body, headers), ByteArray::class.java)
+            return restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
         } catch (e: HttpClientErrorException) {
             if (e.message?.contains("Unauthorized: 401 ") == true) {
                 throw MockAltException("Unauthorized: Client reported 401.")
             }
             throw e
         }
+    }
+
+    private fun getQueryString(request: HttpServletRequest): String {
+        val queryString = if (request.queryString != null) {
+            "?${request.queryString}"
+        } else {
+            ""
+        }
+        return queryString
     }
 
     private fun redirectToLoginPage(): ResponseEntity<ByteArray> {
