@@ -35,9 +35,14 @@ class LogginApiController(
     private val restTemplate: RestTemplate,
     private val pdlService: PdlService,
     @Value("\${loginurl}") private val loginurl: String,
+    @Value("\${innsyn-api-via-docker-compose}") private val innsynApiViaDockerCompose: Boolean,
+    @Value("\${soknad-api-via-docker-compose}") private val soknadApiViaDockerCompose: Boolean
 ) {
     companion object {
         private val log by logger()
+
+        private const val soknadApiDockerComposeHost = "sosialhjelp-soknad-api.digisos.docker-internal"
+        private const val innsynApiDockerComposeHost = "sosialhjelp-innsyn-api.digisos.docker-internal"
 
         fun extractToken(cookie: List<String>): String {
             return cookie.first().split("localhost-idtoken=")[1].split(";")[0]
@@ -103,10 +108,11 @@ class LogginApiController(
         var newUri = request.requestURL.append(getQueryString(request)).toString()
 
         newUri = newUri.replace("/sosialhjelp/mock-alt-api/login-api", "")
-        newUri = if (newUri.contains("innsyn-api")) {
-            newUri.replace("localhost:8989", "localhost:8080")
-        } else {
-            newUri.replace("localhost:8989", "localhost:8181")
+        newUri = when {
+            newUri.contains("innsyn-api") && innsynApiViaDockerCompose -> newUri.replace("localhost:8989", "$innsynApiDockerComposeHost:8080")
+            newUri.contains("innsyn-api") && !innsynApiViaDockerCompose -> newUri.replace("localhost:8989", "localhost:8080")
+            newUri.contains("soknad-api") && soknadApiViaDockerCompose -> newUri.replace("localhost:8989", "$soknadApiDockerComposeHost:8080")
+            else -> newUri.replace("localhost:8989", "localhost:8181")
         }
         newUri = newUri.replace("sosialhjelp-mock-alt-api-gcp.dev.nav.no", "digisos-gcp.dev.nav.no")
         newUri = newUri.replace("sosialhjelp-mock-alt-api.labs.nais.io", "digisos.labs.nais.io")
