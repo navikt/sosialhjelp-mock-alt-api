@@ -56,7 +56,7 @@ class PdlController(
 
     private fun handleHentPersonRequest(hentPersonRequest: HentPersonRequest, ident: String): String {
         if (ident != hentPersonRequest.variables.ident) {
-            log.warn("Token matcher ikke request! $ident != ${hentPersonRequest.variables.ident}")
+            log.warn("Token matcher ikke request! $ident (token) != ${hentPersonRequest.variables.ident} (person request)")
         }
         return decideResponse(hentPersonRequest)
     }
@@ -102,7 +102,7 @@ class PdlController(
 
     private fun handleHentGeografiskTilknytningRequest(hentGeografiskTilknytningRequest: HentGeografiskTilknytningRequest, ident: String): String {
         if (ident != hentGeografiskTilknytningRequest.variables.ident) {
-            log.warn("Token matcher ikke request! $ident != ${hentGeografiskTilknytningRequest.variables.ident}")
+            log.warn("Token matcher ikke request! $ident (token) != ${hentGeografiskTilknytningRequest.variables.ident} (GT request)")
         }
 
         val response = pdlGeografiskTilknytningService.getGeografiskTilknytning(hentGeografiskTilknytningRequest.variables.ident)

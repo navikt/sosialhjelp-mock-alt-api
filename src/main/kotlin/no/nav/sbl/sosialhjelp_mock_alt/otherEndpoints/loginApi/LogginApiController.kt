@@ -100,8 +100,14 @@ class LogginApiController(
     }
 
     private fun sendRequests(body: Any?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
-        var newUri = request.requestURL.toString().replace("/sosialhjelp/mock-alt-api/login-api", "")
-        newUri = newUri.replace("localhost:8989", "localhost:8181")
+        var newUri = request.requestURL.append(getQueryString(request)).toString()
+
+        newUri = newUri.replace("/sosialhjelp/mock-alt-api/login-api", "")
+        newUri = if (newUri.contains("innsyn-api")) {
+            newUri.replace("localhost:8989", "localhost:8080")
+        } else {
+            newUri.replace("localhost:8989", "localhost:8181")
+        }
         newUri = newUri.replace("sosialhjelp-mock-alt-api-gcp.dev.nav.no", "digisos-gcp.dev.nav.no")
         newUri = newUri.replace("sosialhjelp-mock-alt-api.labs.nais.io", "digisos.labs.nais.io")
 
@@ -118,6 +124,15 @@ class LogginApiController(
             }
             throw e
         }
+    }
+
+    private fun getQueryString(request: HttpServletRequest): String {
+        val queryString = if (request.queryString != null) {
+            "?${request.queryString}"
+        } else {
+            ""
+        }
+        return queryString
     }
 
     private fun redirectToLoginPage(): ResponseEntity<ByteArray> {
