@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.loginApi
 
-import no.nav.sbl.sosialhjelp_mock_alt.config.CORSFilter
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
@@ -44,9 +43,9 @@ class LogginApiController(
         private const val soknadApiDockerComposeHost = "sosialhjelp-soknad-api.digisos.docker-internal"
         private const val innsynApiDockerComposeHost = "sosialhjelp-innsyn-api.digisos.docker-internal"
 
-        fun extractToken(cookie: List<String>): String {
-            return cookie.first().split("localhost-idtoken=")[1].split(";")[0]
-        }
+//        fun extractToken(cookie: List<String>): String {
+//            return cookie.first().split("localhost-idtoken=")[1].split(";")[0]
+//        }
     }
 
     @RequestMapping("/login-api/**")
@@ -56,7 +55,7 @@ class LogginApiController(
         log.debug("SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
         log.debug("SoknadProxy request: $request")
         try {
-            checkAuthorized(getHeaders(request))
+            checkAuthorized(request)
         } catch (e: MockAltException) {
             return redirectToLoginPage()
         }
@@ -75,14 +74,14 @@ class LogginApiController(
 
     data class UnauthorizedMelding(val id: String, val message: String, val loginUrl: String)
 
-    private fun checkAuthorized(headers: HttpHeaders) {
-        val cookie = headers[HttpHeaders.COOKIE]
-        if (cookie == null || cookie.isEmpty()) {
+    private fun checkAuthorized(request: HttpServletRequest) {
+        val cookie = request.cookies
+        if (cookie.isNullOrEmpty()) {
             log.info("Unauthorized: No Cookie!")
             throw MockAltException("Unauthorized: No Cookie!")
         } else {
             try {
-                val tokenString = extractToken(cookie)
+                val tokenString = cookie.first { it.name == "localhost-idtoken" }.value
                 if (tokenString.isEmpty())
                     log.debug("Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}")
                 val jwtToken = JwtToken(tokenString)
@@ -162,10 +161,10 @@ class LogginApiController(
         return httpHeaders
     }
 
-    private fun fixCorsHeadersInResponse(request: HttpServletRequest, response: HttpServletResponse) {
-        response.reset()
-        CORSFilter.setAllowOriginHeader(request, response)
-    }
+//    private fun fixCorsHeadersInResponse(request: HttpServletRequest, response: HttpServletResponse) {
+//        response.reset()
+//        CORSFilter.setAllowOriginHeader(request, response)
+//    }
 
     private fun addAccessTokenHeader(request: HttpServletRequest, httpHeaders: HttpHeaders) {
         val cookie = request.cookies
