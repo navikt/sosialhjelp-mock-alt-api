@@ -47,13 +47,6 @@ class LogginApiController(
         fun extractToken(cookie: List<String>): String {
             return cookie.first().split("localhost-idtoken=")[1].split(";")[0]
         }
-
-//        fun extractTokenForName(cookie: List<String>, name: String): String {
-//            if (cookie[0].contains(name)) {
-//                return cookie.first().split("$name=")[1].split(";")[0]
-//            }
-//            return ""
-//        }
     }
 
     @RequestMapping("/login-api/**")
@@ -178,10 +171,10 @@ class LogginApiController(
         val cookie = request.cookies
         if (cookie != null && cookie.isNotEmpty()) {
             val token = cookie.first { it.name == "localhost-idtoken" }.value
-            val xsrfCookie = cookie.first { it.name == "XSRF-TOKEN-INNSYN-API" }.value
+            val xsrfCookie = cookie.firstOrNull { it.name == "XSRF-TOKEN-INNSYN-API" }?.value
             httpHeaders.setBearerAuth(token)
 
-            if (xsrfCookie.isEmpty()) {
+            if (xsrfCookie.isNullOrEmpty()) {
                 httpHeaders.remove(HttpHeaders.COOKIE)
             } else {
                 httpHeaders.set(HttpHeaders.COOKIE, "XSRF-TOKEN-INNSYN-API=$xsrfCookie")
