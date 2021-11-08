@@ -47,6 +47,13 @@ class LogginApiController(
         fun extractToken(cookie: List<String>): String {
             return cookie.first().split("localhost-idtoken=")[1].split(";")[0]
         }
+
+//        fun extractTokenForName(cookie: List<String>, name: String): String {
+//            if (cookie[0].contains(name)) {
+//                return cookie.first().split("$name=")[1].split(";")[0]
+//            }
+//            return ""
+//        }
     }
 
     @RequestMapping("/login-api/**")
@@ -118,8 +125,9 @@ class LogginApiController(
         newUri = newUri.replace("sosialhjelp-mock-alt-api.labs.nais.io", "digisos.labs.nais.io")
 
         val headers = getHeaders(request)
-        addAccessTokenHeader(headers)
-        fixCorsHeadersInResponse(request, response)
+
+        addAccessTokenHeader(request, headers)
+//        fixCorsHeadersInResponse(request, response)
 
         log.debug("sendRequests newUri: $newUri")
         try {
@@ -166,14 +174,19 @@ class LogginApiController(
         CORSFilter.setAllowOriginHeader(request, response)
     }
 
-    private fun addAccessTokenHeader(httpHeaders: HttpHeaders): HttpHeaders {
-        val cookie = httpHeaders[HttpHeaders.COOKIE]
+    private fun addAccessTokenHeader(request: HttpServletRequest, httpHeaders: HttpHeaders) {
+        val cookie = request.cookies
         if (cookie != null && cookie.isNotEmpty()) {
-            val token = extractToken(cookie)
+            val token = cookie.first { it.name == "localhost-idtoken" }.value
+            val xsrfCookie = cookie.first { it.name == "XSRF-TOKEN-INNSYN-API" }.value
             httpHeaders.setBearerAuth(token)
-            httpHeaders.remove(HttpHeaders.COOKIE, listOf("selvbetjening"))
+
+            if (xsrfCookie.isEmpty()) {
+                httpHeaders.remove(HttpHeaders.COOKIE)
+            } else {
+                httpHeaders.set(HttpHeaders.COOKIE, "XSRF-TOKEN-INNSYN-API=$xsrfCookie")
+            }
         }
-        return httpHeaders
     }
 
     private fun getMultipartBody(request: MultipartHttpServletRequest): LinkedMultiValueMap<String, Any> {
