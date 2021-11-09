@@ -216,8 +216,10 @@ class LogginApiController(
         return multipartBody
     }
 
-    internal inner class MultipartInputStreamFileResource(inputStream: InputStream, private val filename: String?) :
-        InputStreamResource(inputStream) {
+    internal inner class MultipartInputStreamFileResource(
+        inputStream: InputStream,
+        private val filename: String?
+    ) : InputStreamResource(inputStream) {
 
         override fun getFilename(): String? {
             return this.filename
