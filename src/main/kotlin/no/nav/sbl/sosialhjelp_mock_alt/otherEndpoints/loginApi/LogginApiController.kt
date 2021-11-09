@@ -42,10 +42,6 @@ class LogginApiController(
 
         private const val soknadApiDockerComposeHost = "sosialhjelp-soknad-api.digisos.docker-internal"
         private const val innsynApiDockerComposeHost = "sosialhjelp-innsyn-api.digisos.docker-internal"
-
-//        fun extractToken(cookie: List<String>): String {
-//            return cookie.first().split("localhost-idtoken=")[1].split(";")[0]
-//        }
     }
 
     @RequestMapping("/login-api/**")
@@ -119,7 +115,6 @@ class LogginApiController(
         val headers = getHeaders(request)
 
         addAccessTokenHeader(request, headers)
-//        fixCorsHeadersInResponse(request, response)
 
         log.debug("sendRequests newUri: $newUri")
         try {
@@ -160,11 +155,6 @@ class LogginApiController(
         }
         return httpHeaders
     }
-
-//    private fun fixCorsHeadersInResponse(request: HttpServletRequest, response: HttpServletResponse) {
-//        response.reset()
-//        CORSFilter.setAllowOriginHeader(request, response)
-//    }
 
     private fun addAccessTokenHeader(request: HttpServletRequest, httpHeaders: HttpHeaders) {
         val cookie = request.cookies
