@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.loginApi
 
+import no.nav.sbl.sosialhjelp_mock_alt.config.CORSFilter
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
@@ -47,7 +48,12 @@ class LogginApiController(
     @RequestMapping("/login-api/**")
     @ResponseBody
     @Throws(URISyntaxException::class)
-    fun soknadProxy(@RequestBody(required = false) body: String?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
+    fun soknadProxy(
+        @RequestBody(required = false) body: String?,
+        method: HttpMethod,
+        request: HttpServletRequest,
+        response: HttpServletResponse
+    ): ResponseEntity<ByteArray> {
         log.debug("SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
         log.debug("SoknadProxy request: $request")
         try {
@@ -99,14 +105,28 @@ class LogginApiController(
         }
     }
 
-    private fun sendRequests(body: Any?, method: HttpMethod, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<ByteArray> {
+    private fun sendRequests(
+        body: Any?,
+        method: HttpMethod,
+        request: HttpServletRequest,
+        response: HttpServletResponse
+    ): ResponseEntity<ByteArray> {
         var newUri = request.requestURL.append(getQueryString(request)).toString()
 
         newUri = newUri.replace("/sosialhjelp/mock-alt-api/login-api", "")
         newUri = when {
-            newUri.contains("innsyn-api") && innsynApiViaDockerCompose -> newUri.replace("localhost:8989", "$innsynApiDockerComposeHost:8080")
-            newUri.contains("innsyn-api") && !innsynApiViaDockerCompose -> newUri.replace("localhost:8989", "localhost:8080")
-            newUri.contains("soknad-api") && soknadApiViaDockerCompose -> newUri.replace("localhost:8989", "$soknadApiDockerComposeHost:8080")
+            newUri.contains("innsyn-api") && innsynApiViaDockerCompose -> newUri.replace(
+                "localhost:8989",
+                "$innsynApiDockerComposeHost:8080"
+            )
+            newUri.contains("innsyn-api") && !innsynApiViaDockerCompose -> newUri.replace(
+                "localhost:8989",
+                "localhost:8080"
+            )
+            newUri.contains("soknad-api") && soknadApiViaDockerCompose -> newUri.replace(
+                "localhost:8989",
+                "$soknadApiDockerComposeHost:8080"
+            )
             else -> newUri.replace("localhost:8989", "localhost:8181")
         }
         newUri = newUri.replace("sosialhjelp-mock-alt-api-gcp.dev.nav.no", "digisos-gcp.dev.nav.no")
@@ -115,6 +135,7 @@ class LogginApiController(
         val headers = getHeaders(request)
 
         addAccessTokenHeader(request, headers)
+        fixCorsHeadersInResponse(request, response)
 
         log.debug("sendRequests newUri: $newUri")
         try {
@@ -139,7 +160,15 @@ class LogginApiController(
     private fun redirectToLoginPage(): ResponseEntity<ByteArray> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(objectMapper.writeValueAsString(UnauthorizedMelding("azuread_authentication_error", "Autentiseringsfeil", loginurl)).toByteArray())
+            .body(
+                objectMapper.writeValueAsString(
+                    UnauthorizedMelding(
+                        "azuread_authentication_error",
+                        "Autentiseringsfeil",
+                        loginurl
+                    )
+                ).toByteArray()
+            )
     }
 
     private fun getHeaders(request: HttpServletRequest): HttpHeaders {
@@ -154,6 +183,11 @@ class LogginApiController(
             }
         }
         return httpHeaders
+    }
+
+    private fun fixCorsHeadersInResponse(request: HttpServletRequest, response: HttpServletResponse) {
+        response.reset()
+        CORSFilter.setAllowOriginHeader(request, response)
     }
 
     private fun addAccessTokenHeader(request: HttpServletRequest, httpHeaders: HttpHeaders) {
@@ -182,7 +216,10 @@ class LogginApiController(
         return multipartBody
     }
 
-    internal inner class MultipartInputStreamFileResource(inputStream: InputStream, private val filename: String?) : InputStreamResource(inputStream) {
+    internal inner class MultipartInputStreamFileResource(
+        inputStream: InputStream,
+        private val filename: String?
+    ) : InputStreamResource(inputStream) {
 
         override fun getFilename(): String? {
             return this.filename
