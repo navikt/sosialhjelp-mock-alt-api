@@ -3,23 +3,24 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.5.1"
+val springBootVersion = "2.5.2"
 val coroutinesVersion = "1.5.0"
 val sosialhjelpCommonVersion = "1.05daec2"
 val filformatVersion = "1.2021.07.07-09.02-3adcd1adc14b"
-val tokenValidationVersion = "1.3.8"
-val jacksonVersion = "2.12.3"
+val tokenValidationVersion = "1.3.9"
+val jacksonVersion = "2.13.0"
 val springdocversion = "1.5.7"
 val jsonSmartVersion = "2.4.7"
 val mockOauth2ServerVersion = "0.3.4"
+val junitVersion = "4.13.2"
 
 plugins {
     application
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("com.github.ben-manes.versions") version "0.38.0"
-    kotlin("jvm") version "1.5.20"
-    kotlin("plugin.spring") version "1.5.20"
+    kotlin("jvm") version "1.5.31"
+    kotlin("plugin.spring") version "1.5.31"
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
@@ -88,6 +89,10 @@ dependencies {
     constraints {
         implementation("net.minidev:json-smart:$jsonSmartVersion") {
             because("Snyk ønsker versjon 2.4.5 eller høyere")
+        }
+
+        implementation("junit:junit:$junitVersion") {
+            because("Snyk ønsker versjon 4.13.1 eller høyere")
         }
     }
 }
