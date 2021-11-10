@@ -12,6 +12,7 @@ val jacksonVersion = "2.13.0"
 val springdocversion = "1.5.7"
 val jsonSmartVersion = "2.4.7"
 val mockOauth2ServerVersion = "0.3.4"
+val junitVersion = "4.13.2"
 
 plugins {
     application
@@ -88,6 +89,10 @@ dependencies {
     constraints {
         implementation("net.minidev:json-smart:$jsonSmartVersion") {
             because("Snyk ønsker versjon 2.4.5 eller høyere")
+        }
+
+        implementation("junit:junit:$junitVersion") {
+            because("Snyk ønsker versjon 4.13.1 eller høyere")
         }
     }
 }
