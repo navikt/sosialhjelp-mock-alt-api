@@ -6,7 +6,7 @@ metadata:
   labels:
     team: teamdigisos
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "100M"
+    nginx.ingress.kubernetes.io/proxy-body-size: "150M"
 spec:
   image: {{image}}
   port: 8989
