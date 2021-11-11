@@ -19,7 +19,7 @@ logging:
 
 host_address: ${HOST_ADDRESS:http://localhost:8989/}
 cookie_domain: ${COOKIE_DOMAIN:localhost}
-loginurl: ${LOGINURL:http://localhost:3009/sosialhjelp/mock-alt/login}
+loginurl: ${LOGINURL:http://localhost:3008/sosialhjelp/mock-alt/login}
 filter_soknader_on_fnr: ${FILTER_SOKNADER_ON_FNR:true}
 
 springdoc:
