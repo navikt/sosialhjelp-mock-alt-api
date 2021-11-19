@@ -28,11 +28,7 @@ class CORSFilter : Filter {
     override fun destroy() {}
 
     companion object {
-        fun setAllowOriginHeader(servletRequest: ServletRequest, httpResponse: HttpServletResponse): String {
-            return setCorsHeaders(servletRequest, httpResponse)
-        }
-
-        private fun setCorsHeaders(servletRequest: ServletRequest, httpResponse: HttpServletResponse): String {
+        fun setCorsHeaders(servletRequest: ServletRequest, httpResponse: HttpServletResponse): String {
             val origin = if (servletRequest is HttpServletRequest) (servletRequest.getHeader("Origin") ?: "*") else "*"
             httpResponse.setHeader("Access-Control-Allow-Origin", origin)
             httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, X-XSRF-TOKEN, XSRF-TOKEN-INNSYN-API, Authorization, Nav-Call-Id")

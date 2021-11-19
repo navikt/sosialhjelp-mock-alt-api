@@ -189,7 +189,7 @@ class LogginApiController(
 
     private fun fixCorsHeadersInResponse(request: HttpServletRequest, response: HttpServletResponse) {
         response.reset()
-        CORSFilter.setAllowOriginHeader(request, response)
+        CORSFilter.setCorsHeaders(request, response)
     }
 
     private fun addAccessTokenHeader(request: HttpServletRequest, httpHeaders: HttpHeaders) {
