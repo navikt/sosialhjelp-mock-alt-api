@@ -19,12 +19,9 @@ class CORSFilter : Filter {
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
         val httpResponse = servletResponse as HttpServletResponse
-        val origin = if (servletRequest is HttpServletRequest) (servletRequest.getHeader("Origin")) else null
 
-        httpResponse.setHeader("Access-Control-Allow-Origin", origin ?: "*")
-        httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, X-XSRF-TOKEN, XSRF-TOKEN-INNSYN-API, Authorization, Nav-Call-Id")
-        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        httpResponse.setHeader("Access-Control-Allow-Credentials", "true")
+        setCorsHeaders(servletRequest, servletResponse)
+
         filterChain.doFilter(servletRequest, httpResponse)
     }
 
@@ -32,8 +29,15 @@ class CORSFilter : Filter {
 
     companion object {
         fun setAllowOriginHeader(servletRequest: ServletRequest, httpResponse: HttpServletResponse): String {
+            return setCorsHeaders(servletRequest, httpResponse)
+        }
+
+        private fun setCorsHeaders(servletRequest: ServletRequest, httpResponse: HttpServletResponse): String {
             val origin = if (servletRequest is HttpServletRequest) (servletRequest.getHeader("Origin") ?: "*") else "*"
             httpResponse.setHeader("Access-Control-Allow-Origin", origin)
+            httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, X-XSRF-TOKEN, XSRF-TOKEN-INNSYN-API, Authorization, Nav-Call-Id")
+            httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+            httpResponse.setHeader("Access-Control-Allow-Credentials", "true")
             return origin
         }
     }
