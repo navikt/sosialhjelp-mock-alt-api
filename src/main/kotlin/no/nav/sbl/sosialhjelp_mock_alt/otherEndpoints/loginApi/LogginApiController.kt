@@ -83,9 +83,11 @@ class LogginApiController(
             throw MockAltException("Unauthorized: No Cookie!")
         } else {
             try {
-                val tokenString = cookie.first { it.name == "localhost-idtoken" }.value
-                if (tokenString.isEmpty())
+                val tokenString = cookie.firstOrNull { it.name == "localhost-idtoken" }?.value ?: ""
+                if (tokenString.isEmpty()) {
                     log.debug("Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}")
+                    throw MockAltException("Unauthorized: No Cookie!")
+                }
                 val jwtToken = JwtToken(tokenString)
                 val expirationDate = jwtToken.jwtTokenClaims.expirationTime
                 if (Date().after(expirationDate)) {
@@ -187,7 +189,7 @@ class LogginApiController(
 
     private fun fixCorsHeadersInResponse(request: HttpServletRequest, response: HttpServletResponse) {
         response.reset()
-        CORSFilter.setAllowOriginHeader(request, response)
+        CORSFilter.setCorsHeaders(request, response)
     }
 
     private fun addAccessTokenHeader(request: HttpServletRequest, httpHeaders: HttpHeaders) {
