@@ -14,13 +14,18 @@ class KrrService {
         return defaultKRR
     }
 
+    fun leggTilKonfigurasjon(ident: String, kanVarsles: Boolean) {
+        krrKonfigursjoner[ident] = nyKontaktinformasjon(ident, kanVarsles = kanVarsles)
+    }
+
     private fun nyKontaktinformasjon(
         ident: String,
-        telefonnummer: String = "11112222"
+        telefonnummer: String = "11112222",
+        kanVarsles: Boolean = true,
     ) = DigitalKontaktinformasjon(
         ident,
         aktiv = true,
-        kanVarsles = true,
+        kanVarsles = kanVarsles,
         reservert = false,
         spraak = "no-nb",
         epostadresse = "epost@adresse.sen",
@@ -29,7 +34,8 @@ class KrrService {
     )
 
     fun setTelefonnummer(ident: String, telefonnummer: String) {
-        val kontaktinformasjon = nyKontaktinformasjon(ident, telefonnummer = telefonnummer)
+        val gammelKonfig = krrKonfigursjoner[ident]
+        val kontaktinformasjon = nyKontaktinformasjon(ident, telefonnummer = telefonnummer, kanVarsles = gammelKonfig?.kanVarsles ?: true)
         krrKonfigursjoner[ident] = kontaktinformasjon
     }
 }
