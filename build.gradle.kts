@@ -13,6 +13,7 @@ val springdocversion = "1.5.7"
 val jsonSmartVersion = "2.4.7"
 val mockOauth2ServerVersion = "0.3.4"
 val junitVersion = "4.13.2"
+val log4jVersion = "2.15.0"
 
 plugins {
     application
@@ -93,6 +94,13 @@ dependencies {
 
         implementation("junit:junit:$junitVersion") {
             because("Snyk ønsker versjon 4.13.1 eller høyere")
+        }
+
+        implementation("org.apache.logging.log4j:log4j-api:$log4jVersion") {
+            because("0-day exploit i version 2.0.0-2.14.1")
+        }
+        implementation("org.apache.logging.log4j:log4j-to-slf4j:$log4jVersion") {
+            because("0-day exploit i version 2.0.0-2.14.1")
         }
     }
 }
