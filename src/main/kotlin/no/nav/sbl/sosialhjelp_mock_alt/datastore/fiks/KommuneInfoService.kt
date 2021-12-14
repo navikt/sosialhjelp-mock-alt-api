@@ -21,6 +21,24 @@ class KommuneInfoService {
         kommuneInfoMap[kommunenummer] = lagKommuneInfo(kommunenummer)
     }
 
+    fun addSvarutKommuneInfo(kommunenummer: String) {
+        kommuneInfoMap[kommunenummer] = lagSvarUtKommune(kommunenummer)
+    }
+
+    private fun lagSvarUtKommune(id: String) = KommuneInfo(
+        kommunenummer = id,
+        kanMottaSoknader = false,
+        kanOppdatereStatus = false,
+        harMidlertidigDeaktivertOppdateringer = false,
+        harMidlertidigDeaktivertMottak = false,
+        kontaktpersoner = Kontaktpersoner(
+            Collections.singletonList("Kontakt$id@navo.no"),
+            Collections.singletonList("Test$id@navno.no")
+        ),
+        harNksTilgang = false,
+        behandlingsansvarlig = null
+    )
+
     private fun lagKommuneInfo(id: String) = KommuneInfo(
         kommunenummer = id,
         kanMottaSoknader = true,
