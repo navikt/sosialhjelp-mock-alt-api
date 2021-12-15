@@ -7,6 +7,19 @@
           "vegadresse": {
             "matrikkelId": "abcd1",
             "husnummer": 1,
+            "husbokstav": "A",
+            "adressenavn": "Svarutgata",
+            "postnummer": "9999",
+            "poststed": "SVARUT",
+            "kommunenavn": "SVARUT",
+            "kommunenummer": "0701"
+          }
+        },
+        {
+          "score": 2,
+          "vegadresse": {
+            "matrikkelId": "abcd1",
+            "husnummer": 1,
             "husbokstav": "B",
             "adressenavn": "Sannergata",
             "postnummer": "0557",
