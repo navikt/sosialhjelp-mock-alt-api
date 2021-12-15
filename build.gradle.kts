@@ -13,7 +13,7 @@ val springdocversion = "1.5.7"
 val jsonSmartVersion = "2.4.7"
 val mockOauth2ServerVersion = "0.3.4"
 val junitVersion = "4.13.2"
-val log4jVersion = "2.15.0"
+val log4jVersion = "2.16.0"
 
 plugins {
     application
