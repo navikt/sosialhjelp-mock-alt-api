@@ -3,25 +3,25 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.5.2"
-val coroutinesVersion = "1.5.0"
-val sosialhjelpCommonVersion = "1.05daec2"
+val springBootVersion = "2.6.2"
+val coroutinesVersion = "1.6.0"
+val sosialhjelpCommonVersion = "1.002ad25"
 val filformatVersion = "1.2021.07.07-09.02-3adcd1adc14b"
 val tokenValidationVersion = "1.3.9"
-val jacksonVersion = "2.13.0"
-val springdocversion = "1.5.7"
+val jacksonVersion = "2.13.1"
+val springdocversion = "1.6.0"
 val jsonSmartVersion = "2.4.7"
 val mockOauth2ServerVersion = "0.3.4"
 val junitVersion = "4.13.2"
-val log4jVersion = "2.17.0"
+val log4jVersion = "2.17.1"
 
 plugins {
     application
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("com.github.ben-manes.versions") version "0.38.0"
-    kotlin("jvm") version "1.5.31"
-    kotlin("plugin.spring") version "1.5.31"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.spring") version "1.6.10"
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
