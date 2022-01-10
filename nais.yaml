@@ -48,7 +48,7 @@ spec:
 {{/if}}
   resources:
     limits:
-      cpu: 200m
+      cpu: 500m
       memory: 512Mi
     requests:
       cpu: 2m
