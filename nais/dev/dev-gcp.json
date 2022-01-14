@@ -1,4 +1,5 @@
 {
+  "applicationName": "sosialhjelp-mock-alt-api",
   "namespace": "teamdigisos",
   "ingress": [
     "https://sosialhjelp-mock-alt-api-gcp.dev.nav.no/sosialhjelp/mock-alt-api"
