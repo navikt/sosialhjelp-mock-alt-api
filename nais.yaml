@@ -43,6 +43,7 @@ spec:
         - application: digisos
         - application: sosialhjelp-modia-api
         - application: sosialhjelp-innsyn-api
+        - application: sosialhjelp-innsyn-api-mock
         - application: sosialhjelp-soknad-api
         - application: sosialhjelp-dialog-api-gcp
 {{/if}}
@@ -51,7 +52,7 @@ spec:
       cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 200m
+      cpu: 2m
       memory: 256Mi
   env:
 {{#each env}}
