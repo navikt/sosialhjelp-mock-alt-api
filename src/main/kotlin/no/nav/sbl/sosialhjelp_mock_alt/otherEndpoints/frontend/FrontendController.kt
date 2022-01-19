@@ -9,6 +9,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.krr.KrrService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
@@ -49,6 +50,7 @@ class FrontendController(
     private val utbetalingService: UtbetalingService,
     private val eregService: EregService,
     private val dkifService: DkifService,
+    private val krrService: KrrService,
     private val soknadService: SoknadService,
     private val kontonummerService: KontonummerService,
 ) {
@@ -69,6 +71,7 @@ class FrontendController(
         pdlService.leggTilPerson(pdlPersonalia(personalia))
         if (personalia.telefonnummer.isNotEmpty()) {
             dkifService.putDigitalKontaktinfo(personalia.fnr, DigitalKontaktinfo(personalia.telefonnummer))
+            krrService.setTelefonnummer(personalia.fnr, personalia.telefonnummer)
         }
         if (personalia.kontonummer.isNotEmpty()) {
             kontonummerService.putKontonummer(personalia.fnr, personalia.kontonummer)
@@ -159,7 +162,7 @@ class FrontendController(
         soknadsInfo.vedlegg
             .filterNot { vedlegg ->
                 // filtrer vekk vedlegg sendt via innsyn
-                vedlegg.id in soknad.ettersendtInfoNAV?.ettersendelser?.map { it.vedleggMetadata } ?: emptyList()
+                vedlegg.id in (soknad.ettersendtInfoNAV?.ettersendelser?.map { it.vedleggMetadata } ?: emptyList())
             }
             .forEach { vedlegg ->
                 val fil = soknadService.hentFil(vedlegg.id)
