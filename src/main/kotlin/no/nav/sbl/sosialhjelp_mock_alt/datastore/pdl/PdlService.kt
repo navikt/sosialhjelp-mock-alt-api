@@ -7,6 +7,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.krr.KrrService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
@@ -57,15 +58,16 @@ import java.time.LocalDate
 
 @Service
 class PdlService(
-    val dkifService: DkifService,
-    val eregService: EregService,
-    val aaregService: AaregService,
-    val skatteetatenService: SkatteetatenService,
-    val utbetalingService: UtbetalingService,
-    val bostotteService: BostotteService,
-    val soknadService: SoknadService,
-    val kontonummerService: KontonummerService,
-    val pdlGeografiskTilknytningService: PdlGeografiskTilknytningService,
+    private val dkifService: DkifService,
+    private val eregService: EregService,
+    private val aaregService: AaregService,
+    private val skatteetatenService: SkatteetatenService,
+    private val utbetalingService: UtbetalingService,
+    private val bostotteService: BostotteService,
+    private val soknadService: SoknadService,
+    private val kontonummerService: KontonummerService,
+    private val pdlGeografiskTilknytningService: PdlGeografiskTilknytningService,
+    krrService: KrrService,
 ) {
 
     private val personListe: HashMap<String, Personalia> = HashMap()
@@ -74,10 +76,11 @@ class PdlService(
 
     init {
         opprettBrukerMedAlt(fastFnr, "Standard", "Standardsen", "NOR", 1)
-        opprettBrukerMedAlt(
+        val bergenFnr = opprettBrukerMedAlt(
             genererTilfeldigPersonnummer(), "Bergen", "Bergenhusen", "NOR", 2,
             postnummer = "5005", kommuneNummer = "4601", enhetsnummer = "1209"
         )
+        krrService.leggTilKonfigurasjon(bergenFnr, false)
         opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 3)
         opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4)
 
@@ -276,7 +279,7 @@ class PdlService(
         postnummer: String = "0101",
         kommuneNummer: String = "0301",
         enhetsnummer: String = "0315",
-    ) {
+    ): String {
         val barnFnr = genererTilfeldigPersonnummer()
         val standardBruker = Personalia(fnr = brukerFnr)
             .withNavn(fornavn, "", etternavn)
@@ -314,6 +317,7 @@ class PdlService(
         bostotteService.enableAutoGenerationFor(brukerFnr)
 
         soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, brukerFnr)
+        return brukerFnr
     }
 
     companion object {
