@@ -132,6 +132,7 @@ class LogginApiController(
             else -> newUri.replace("localhost:8989", "localhost:8181")
         }
         newUri = newUri.replace("sosialhjelp-mock-alt-api-gcp.dev.nav.no", "digisos-gcp.dev.nav.no")
+        newUri = newUri.replace("sosialhjelp-mock-alt-api-mock.dev.nav.no", "digisos.ekstern.dev.nav.no")
         newUri = newUri.replace("sosialhjelp-mock-alt-api.labs.nais.io", "digisos.labs.nais.io")
 
         val headers = getHeaders(request)

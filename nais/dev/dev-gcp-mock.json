@@ -1,0 +1,19 @@
+{
+  "applicationName": "sosialhjelp-mock-alt-api-mock",
+  "namespace": "teamdigisos",
+  "ingress": [
+    "https://sosialhjelp-mock-alt-api-mock.dev.nav.no/sosialhjelp/mock-alt-api"
+  ],
+  "env": {
+    "GCP_PORT": "8989",
+    "HOST_ADDRESS": "https://digisos.ekstern.dev.nav.no/",
+    "COOKIE_DOMAIN": "digisos.ekstern.dev.nav.no",
+    "LOGINURL": "https://digisos.ekstern.dev.nav.no/sosialhjelp/mock-alt/login"
+  },
+  "minReplicas": "1",
+  "maxReplicas": "1",
+  "prometheusEnabled": false,
+  "webProxyEnabled": false,
+  "isGcp": true,
+  "vaultEnabled": false
+}
