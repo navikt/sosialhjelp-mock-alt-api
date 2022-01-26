@@ -24,9 +24,9 @@ class KrrService {
         kanVarsles: Boolean = true,
     ) = DigitalKontaktinformasjon(
         ident,
-        aktiv = kanVarsles,
+        aktiv = true,
         kanVarsles = true,
-        reservert = false,
+        reservert = !kanVarsles,
         spraak = "no-nb",
         epostadresse = "epost@adresse.sen",
         mobiltelefonnummer = telefonnummer,
