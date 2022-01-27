@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: sosialhjelp-mock-alt-api
+  name: {{applicationName}}
   namespace: {{namespace}}
   labels:
     team: teamdigisos
@@ -45,7 +45,9 @@ spec:
         - application: sosialhjelp-innsyn-api
         - application: sosialhjelp-innsyn-api-mock
         - application: sosialhjelp-soknad-api
+        - application: sosialhjelp-soknad-api-mock
         - application: sosialhjelp-dialog-api-gcp
+        - application: sosialhjelp-dialog-api-mock
 {{/if}}
   resources:
     limits:
