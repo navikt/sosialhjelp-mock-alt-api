@@ -34,7 +34,7 @@ class KodeverkController(
         private val log by logger()
     }
 
-    @GetMapping("/kodeverk/api/v1/kodeverk/{kodeverknavn}/koder/betydninger")
+    @GetMapping("/kodeverk/{kodeverknavn}")
     fun hentKodeverk(@PathVariable kodeverknavn: String): ResponseEntity<KodeverkDto> {
         log.debug("Kodeverk request: $kodeverknavn")
         if (kodeverknavn == "Kommuner") {
