@@ -48,4 +48,19 @@ class KodeverkController(
         }
         return ResponseEntity.notFound().build()
     }
+
+    @GetMapping("/kodeverk/{kodeverknavn}")
+    fun hentKodeverkProxy(@PathVariable kodeverknavn: String): ResponseEntity<KodeverkDto> {
+        log.debug("Kodeverk request: $kodeverknavn")
+        if (kodeverknavn == "Kommuner") {
+            return ResponseEntity.ok(kommuner)
+        }
+        if (kodeverknavn == "Landkoder") {
+            return ResponseEntity.ok(landkoder)
+        }
+        if (kodeverknavn == "Postnummer") {
+            return ResponseEntity.ok(postnummer)
+        }
+        return ResponseEntity.notFound().build()
+    }
 }
