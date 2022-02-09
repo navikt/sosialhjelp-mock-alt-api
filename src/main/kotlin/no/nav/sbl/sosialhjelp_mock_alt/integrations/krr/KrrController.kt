@@ -18,4 +18,15 @@ class KrrController(val krrService: KrrService) {
         log.info("Henter KRR data for id: $ident")
         return krrService.hentKonfigurasjon(ident)
     }
+
+    @GetMapping("/krr/rest/v1/person")
+    fun getPerson(@RequestHeader(name = "Nav-Personident") ident: String): DigitalKontaktinformasjon {
+        log.info("Henter KRR data for id: $ident")
+        return krrService.hentKonfigurasjon(ident)
+    }
+
+    @GetMapping("/krr/rest/ping")
+    fun getPing(): String {
+        return "OK"
+    }
 }
