@@ -28,4 +28,15 @@ class EregController(private val eregService: EregService) {
         log.info("Henter ereg nøkkelinfo: ${objectMapper.writeValueAsString(nokkelinfo)}")
         return ResponseEntity.ok(nokkelinfo)
     }
+
+    @GetMapping("/ereg/organisasjon/{orgnr}")
+    fun getNokkelinfoProxy(@PathVariable orgnr: String, @RequestHeader headers: HttpHeaders):
+        ResponseEntity<OrganisasjonNoekkelinfoDto> {
+        val nokkelinfo = eregService.getOrganisasjonNoekkelinfo(orgnr) ?: OrganisasjonNoekkelinfoDto(
+            navn = NavnDto("Mock navn"),
+            organisasjonsnummer = orgnr,
+        )
+        log.info("Henter ereg nøkkelinfo: ${objectMapper.writeValueAsString(nokkelinfo)}")
+        return ResponseEntity.ok(nokkelinfo)
+    }
 }
