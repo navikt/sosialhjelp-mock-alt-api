@@ -42,6 +42,7 @@ spec:
       rules:
         - application: digisos
         - application: sosialhjelp-modia-api
+        - application: sosialhjelp-modia-api-mock
         - application: sosialhjelp-innsyn-api
         - application: sosialhjelp-innsyn-api-mock
         - application: sosialhjelp-soknad-api
