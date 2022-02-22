@@ -26,14 +26,10 @@ spec:
   replicas:
     min: {{minReplicas}}
     max: {{maxReplicas}}
-  webproxy: {{webProxyEnabled}}
-  vault:
-    enabled: {{vaultEnabled}}
   ingresses:
 {{#each ingress}}
     - "{{this}}"
 {{/each}}
-{{#if isGcp}}
   accessPolicy:
     outbound:
       rules:
@@ -49,7 +45,6 @@ spec:
         - application: sosialhjelp-soknad-api-mock
         - application: sosialhjelp-dialog-api-gcp
         - application: sosialhjelp-dialog-api-mock
-{{/if}}
   resources:
     limits:
       cpu: 500m
