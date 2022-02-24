@@ -2,8 +2,6 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
@@ -58,7 +56,6 @@ import java.time.LocalDate
 
 @Service
 class PdlService(
-    private val dkifService: DkifService,
     private val eregService: EregService,
     private val aaregService: AaregService,
     private val skatteetatenService: SkatteetatenService,
@@ -67,7 +64,7 @@ class PdlService(
     private val soknadService: SoknadService,
     private val kontonummerService: KontonummerService,
     private val pdlGeografiskTilknytningService: PdlGeografiskTilknytningService,
-    krrService: KrrService,
+    private val krrService: KrrService,
 ) {
 
     private val personListe: HashMap<String, Personalia> = HashMap()
@@ -302,7 +299,7 @@ class PdlService(
         barnMap[barnFnr] = defaultBarn(etternavn)
 
         pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
-        dkifService.putDigitalKontaktinfo(brukerFnr, DigitalKontaktinfo(mobiltelefonnummer = randomInt(8).toString()))
+        krrService.setTelefonnummer(brukerFnr, telefonnummer = randomInt(8).toString())
         kontonummerService.putKontonummer(brukerFnr, genererTilfeldigKontonummer())
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
         eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")

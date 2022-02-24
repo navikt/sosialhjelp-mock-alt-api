@@ -4,8 +4,6 @@ import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.DkifService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.dkif.model.DigitalKontaktinfo
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
@@ -49,7 +47,6 @@ class FrontendController(
     private val bostotteService: BostotteService,
     private val utbetalingService: UtbetalingService,
     private val eregService: EregService,
-    private val dkifService: DkifService,
     private val krrService: KrrService,
     private val soknadService: SoknadService,
     private val kontonummerService: KontonummerService,
@@ -70,7 +67,6 @@ class FrontendController(
         personalia.barn.forEach { pdlService.leggTilBarn(it.fnr, it.pdlBarn()) }
         pdlService.leggTilPerson(pdlPersonalia(personalia))
         if (personalia.telefonnummer.isNotEmpty()) {
-            dkifService.putDigitalKontaktinfo(personalia.fnr, DigitalKontaktinfo(personalia.telefonnummer))
             krrService.setTelefonnummer(personalia.fnr, personalia.telefonnummer)
         }
         if (personalia.kontonummer.isNotEmpty()) {
@@ -111,8 +107,7 @@ class FrontendController(
         val frontendPersonalia = FrontendPersonalia(personalia)
         frontendPersonalia.barn =
             personalia.forelderBarnRelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
-        frontendPersonalia.telefonnummer =
-            dkifService.getDigitalKontaktinfo(personalia.fnr)?.mobiltelefonnummer ?: ""
+        frontendPersonalia.telefonnummer = krrService.hentKonfigurasjon(personalia.fnr).mobiltelefonnummer ?: ""
         frontendPersonalia.kontonummer = kontonummerService.getKontonummer(personalia.fnr)?.kontonummer ?: ""
         frontendPersonalia.arbeidsforhold = aaregService.getArbeidsforhold(personalia.fnr)
             .map { FrontendArbeidsforhold.arbeidsforhold(it, eregService) }
