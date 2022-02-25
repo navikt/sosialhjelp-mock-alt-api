@@ -7,7 +7,7 @@ val springBootVersion = "2.6.2"
 val coroutinesVersion = "1.6.0"
 val sosialhjelpCommonVersion = "1.4204e7e"
 val filformatVersion = "1.2022.01.30-13.18-01cd95216e0b"
-val tokenValidationVersion = "1.3.9"
+val tokenValidationVersion = "1.3.19"
 val jacksonVersion = "2.13.1"
 val springdocversion = "1.6.0"
 val jsonSmartVersion = "2.4.7"
@@ -22,7 +22,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.38.0"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
 }
 
 application {
