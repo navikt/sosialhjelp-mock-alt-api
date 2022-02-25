@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val springBootVersion = "2.6.2"
 val coroutinesVersion = "1.6.0"
-val sosialhjelpCommonVersion = "1.002ad25"
+val sosialhjelpCommonVersion = "1.4204e7e"
 val filformatVersion = "1.2022.01.30-13.18-01cd95216e0b"
 val tokenValidationVersion = "1.3.9"
 val jacksonVersion = "2.13.1"
