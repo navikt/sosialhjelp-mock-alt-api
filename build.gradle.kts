@@ -11,9 +11,10 @@ val tokenValidationVersion = "1.3.19"
 val jacksonVersion = "2.13.1"
 val springdocversion = "1.6.0"
 val jsonSmartVersion = "2.4.7"
-val mockOauth2ServerVersion = "0.3.4"
+val mockOauth2ServerVersion = "0.4.3"
 val junitVersion = "4.13.2"
 val log4jVersion = "2.17.1"
+val ktlint = "0.44.0"
 
 plugins {
     application
@@ -35,7 +36,7 @@ version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 ktlint {
-    this.version.set("0.41.0")
+    this.version.set(ktlint)
 }
 
 val githubUser: String by project
@@ -84,6 +85,7 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-ui:$springdocversion")
 
+    testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 
     //    spesifikke versjoner oppgradert etter ønske fra snyk
