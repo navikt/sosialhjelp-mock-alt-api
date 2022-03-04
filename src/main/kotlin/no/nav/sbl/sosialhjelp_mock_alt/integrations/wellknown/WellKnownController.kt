@@ -90,6 +90,10 @@ class WellKnownController(
         @RequestBody body: String,
     ): AzuredingsResponse {
         val formsMap: HashMap<String, String> = splitFormParams(body)
+        if (formsMap.containsKey("grant_type") && formsMap["grant_type"]!! == "client_credentials") {
+            log.info("Utveklser azure token (client credentials flow), scope: ${formsMap["scope"]}")
+            return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, "token")
+        }
         log.info("Utveksler azure token: audience: ${formsMap["audience"]}\n")
         return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, formsMap["assertion"]!!)
     }
