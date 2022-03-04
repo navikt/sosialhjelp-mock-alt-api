@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.login
 
+import com.nimbusds.jose.JOSEObjectType
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.spring.test.MockLoginController
@@ -39,6 +40,7 @@ class LoginCookieController(
             DefaultOAuth2TokenCallback(
                 issuerId,
                 subject,
+                JOSEObjectType.JWT.type,
                 listOf(audience),
                 claims,
                 expiry?.toLong() ?: 3600
