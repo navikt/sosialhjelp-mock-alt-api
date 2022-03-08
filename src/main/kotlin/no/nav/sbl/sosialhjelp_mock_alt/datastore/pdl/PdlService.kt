@@ -314,6 +314,7 @@ class PdlService(
         bostotteService.enableAutoGenerationFor(brukerFnr)
 
         soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, brukerFnr)
+        if (fornavn == "Standard") soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, "15months")
         return brukerFnr
     }
 

@@ -78,9 +78,13 @@ class SoknadService(
 
     fun opprettDigisosSak(fiksOrgId: String, kommuneNr: String, fnr: String, id: String) {
         val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
+        var hendelsestidspunkt = ZonedDateTime.now(ZoneOffset.UTC)
+        if (id == "15months") {
+            hendelsestidspunkt = hendelsestidspunkt.minusMonths(15)
+        }
         digisosApiWrapper.sak.soker.hendelser.add(
             JsonSoknadsStatus()
-                .withHendelsestidspunkt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
+                .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
                 .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT)
         )
         oppdaterDigisosSak(
@@ -111,13 +115,17 @@ class SoknadService(
         val oldSoknad = soknadsliste.get(fiksDigisosId)
         if (oldSoknad == null) {
             log.info("Oppretter søknad med id: $fiksDigisosId")
+            var sistEndret = System.currentTimeMillis()
+            if (fiksDigisosId == "15months") {
+                sistEndret = DateTime.now().minusMonths(15).millis
+            }
             val vedleggMetadataId = UUID.randomUUID().toString()
             val digisosSak = DigisosSak(
                 fiksDigisosId = fiksDigisosId,
                 sokerFnr = fnr,
                 fiksOrgId = fiksOrgId ?: "",
                 kommunenummer = kommuneNr,
-                sistEndret = System.currentTimeMillis(),
+                sistEndret = sistEndret,
                 originalSoknadNAV = OriginalSoknadNAV(
                     navEksternRefId = "110000000",
                     metadata = metadataId,
@@ -135,7 +143,8 @@ class SoknadService(
             val dokumentlagerId = UUID.randomUUID().toString()
             log.info("Lagrer søker dokument med dokumentlagerId: $dokumentlagerId")
             dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
-            val updatedDigisosSak = digisosSak.updateDigisosSoker(DigisosSoker(dokumentlagerId, dokumenter, System.currentTimeMillis()))
+            val oppdatertTidspunkt = unixToLocalDateTime(sistEndret).plusSeconds(1).atZone(ZoneId.of("Europe/Oslo")).toInstant().toEpochMilli()
+            val updatedDigisosSak = digisosSak.updateDigisosSoker(DigisosSoker(dokumentlagerId, dokumenter, oppdatertTidspunkt))
             log.info("Lagrer søknad fiksDigisosId: $fiksDigisosId")
             log.debug(updatedDigisosSak.toString())
             soknadsliste[fiksDigisosId] = updatedDigisosSak
