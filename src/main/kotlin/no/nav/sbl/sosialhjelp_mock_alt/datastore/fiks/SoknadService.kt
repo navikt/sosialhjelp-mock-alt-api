@@ -144,7 +144,7 @@ class SoknadService(
             log.info("Lagrer søker dokument med dokumentlagerId: $dokumentlagerId")
             dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
             val oppdatertTidspunkt = unixToLocalDateTime(sistEndret).plusSeconds(1).atZone(ZoneId.of("Europe/Oslo")).toInstant().toEpochMilli()
-            val updatedDigisosSak = digisosSak.updateDigisosSoker(DigisosSoker(dokumentlagerId, dokumenter, oppdatertTidspunkt)) // pluss noen ms?
+            val updatedDigisosSak = digisosSak.updateDigisosSoker(DigisosSoker(dokumentlagerId, dokumenter, oppdatertTidspunkt))
             log.info("Lagrer søknad fiksDigisosId: $fiksDigisosId")
             log.debug(updatedDigisosSak.toString())
             soknadsliste[fiksDigisosId] = updatedDigisosSak
