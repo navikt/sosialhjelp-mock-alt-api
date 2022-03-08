@@ -78,9 +78,13 @@ class SoknadService(
 
     fun opprettDigisosSak(fiksOrgId: String, kommuneNr: String, fnr: String, id: String) {
         val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
+        var hendelsestidspunkt = ZonedDateTime.now(ZoneOffset.UTC)
+        if (id == "15months") {
+            hendelsestidspunkt = hendelsestidspunkt.minusMonths(15)
+        }
         digisosApiWrapper.sak.soker.hendelser.add(
             JsonSoknadsStatus()
-                .withHendelsestidspunkt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
+                .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
                 .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT)
         )
         oppdaterDigisosSak(
