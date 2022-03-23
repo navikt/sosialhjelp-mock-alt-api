@@ -5,11 +5,10 @@ on:
       config-file-name:
         description: 'Config-fil som skal deployes'
         required: true
-        default: 'dev-gcp'
+        default: 'mock'
         type: choice
         options: 
-          - 'dev-gcp'
-          - 'dev-gcp-mock'
+          - 'mock'
           - 'labs-gcp'
       cluster:
         description: 'Cluster å deploye til'
