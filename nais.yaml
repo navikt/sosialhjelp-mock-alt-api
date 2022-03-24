@@ -38,9 +38,13 @@ spec:
       rules:
         - application: digisos
         - application: sosialhjelp-modia-api-mock
+        - application: sosialhjelp-modia-api
         - application: sosialhjelp-innsyn-api-mock
+        - application: sosialhjelp-innsyn-api
         - application: sosialhjelp-soknad-api-mock
+        - application: sosialhjelp-soknad-api
         - application: sosialhjelp-dialog-api-mock
+        - application: sosialhjelp-dialog-api
   resources:
     limits:
       cpu: 500m
