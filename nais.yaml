@@ -31,8 +31,12 @@ spec:
     - "{{this}}"
 {{/each}}
   accessPolicy:
+    outbound:
+      rules:
+        - application: digisos
     inbound:
       rules:
+        - application: digisos
         - application: sosialhjelp-modia-api-mock
         - application: sosialhjelp-innsyn-api-mock
         - application: sosialhjelp-soknad-api-mock
