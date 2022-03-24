@@ -113,16 +113,19 @@ class PdlService(
         log.info("Henter PDL modia data for $ident")
         val personalia = personListe[ident]
         var navn = PdlPersonNavn("Person", "", "Testperson")
+        var adressebeskyttelse = Gradering.UGRADERT
         val kjoenn = PdlKjoenn(Kjoenn.KVINNE)
         val foedselsdato = PdlFoedselsdato("1945-10-26")
         val telefonnummer = PdlTelefonnummer("+47", "11112222", 1)
         if (personalia != null) {
+            adressebeskyttelse = personalia.adressebeskyttelse
             navn = personalia.navn
         }
         return PdlModiaPersonResponse(
             errors = null,
             data = PdlModiaHentPerson(
                 hentPerson = PdlModiaPerson(
+                    adressebeskyttelse = listOf(Adressebeskyttelse(adressebeskyttelse)),
                     navn = listOf(navn),
                     kjoenn = listOf(kjoenn),
                     foedsel = listOf(foedselsdato),
