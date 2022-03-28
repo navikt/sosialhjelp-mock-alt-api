@@ -42,9 +42,9 @@ spec:
         - application: sosialhjelp-proxy-dev
         - application: sosialhjelp-proxy-mock
         - application: sosialhjelp-modia-api-mock
-        - application: sosialhjelp-modia-api
+        - application: sosialhjelp-modia-api-dev
         - application: sosialhjelp-innsyn-api-mock
-        - application: sosialhjelp-innsyn-api
+        - application: sosialhjelp-innsyn-api-dev
         - application: sosialhjelp-soknad-api-mock
         - application: sosialhjelp-soknad-api
         - application: sosialhjelp-dialog-api-mock
