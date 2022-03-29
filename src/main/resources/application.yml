@@ -29,5 +29,6 @@ springdoc:
 mock-oauth2-server:
   port: 4321
 
-innsyn-api-via-docker-compose: ${INNSYN_API_VIA_DOCKER_COMPOSE:false}
 soknad-api-via-docker-compose: ${SOKNAD_API_VIA_DOCKER_COMPOSE:false}
+innsyn-api-via-docker-compose: ${INNSYN_API_VIA_DOCKER_COMPOSE:false}
+modia-api-via-docker-compose: ${MODIA_API_VIA_DOCKER_COMPOSE:false}
