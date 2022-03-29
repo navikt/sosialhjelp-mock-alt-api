@@ -50,7 +50,7 @@ class AzureController(val pdlService: PdlService) {
     }
 
     @GetMapping("/azuread/graph/me/memberOf")
-    fun getInloggetAzureBrukersGrupper(@RequestHeader headers: HttpHeaders): ResponseEntity<AzureAdGrupper> {
+    fun getInnloggetAzureBrukersGrupper(@RequestHeader headers: HttpHeaders): ResponseEntity<AzureAdGrupper> {
         val id = hentFnrFraToken(headers)
         log.info("Henter azureAd brukers grupper for \"me\" (id: $id)")
         return try {
