@@ -157,8 +157,7 @@ class LogginApiController(
 
         log.debug("sendRequests newUri: $newUri")
         try {
-            val exchangeResult = restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
-            return exchangeResult
+            return restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
         } catch (e: HttpClientErrorException) {
             if (e.message?.contains("Unauthorized: 401 ") == true) {
                 throw MockAltException("Unauthorized: Client reported 401.")
