@@ -35,14 +35,16 @@ class LogginApiController(
     private val restTemplate: RestTemplate,
     private val pdlService: PdlService,
     @Value("\${loginurl}") private val loginurl: String,
+    @Value("\${soknad-api-via-docker-compose}") private val soknadApiViaDockerCompose: Boolean,
     @Value("\${innsyn-api-via-docker-compose}") private val innsynApiViaDockerCompose: Boolean,
-    @Value("\${soknad-api-via-docker-compose}") private val soknadApiViaDockerCompose: Boolean
+    @Value("\${modia-api-via-docker-compose}") private val modiaApiViaDockerCompose: Boolean,
 ) {
     companion object {
         private val log by logger()
 
         private const val soknadApiDockerComposeHost = "sosialhjelp-soknad-api.digisos.docker-internal"
         private const val innsynApiDockerComposeHost = "sosialhjelp-innsyn-api.digisos.docker-internal"
+        private const val modiaApiDockerComposeHost = "sosialhjelp-modia-api.digisos.docker-internal"
     }
 
     @RequestMapping("/login-api/**")
@@ -65,6 +67,11 @@ class LogginApiController(
             return sendRequests(getMultipartBody(request), method, request, response)
         }
         val eksternResponse = sendRequests(body, method, request, response)
+        if (eksternResponse.headers.containsKey("Access-Control-Allow-Credentials")) {
+            response.reset()
+            val origin = request.getHeader("Origin") ?: "*"
+            response.setHeader("Access-Control-Allow-Origin", origin)
+        }
         log.debug("SoknadProxy response: $eksternResponse")
         log.debug(
             "SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, " +
@@ -117,6 +124,11 @@ class LogginApiController(
 
         newUri = newUri.replace("/sosialhjelp/mock-alt-api/login-api", "")
         newUri = when {
+            newUri.contains("soknad-api") && soknadApiViaDockerCompose -> newUri.replace(
+                "localhost:8989",
+                "$soknadApiDockerComposeHost:8080"
+            )
+            // Ikke Docker compose varianten av soknads-api blir fikset i else
             newUri.contains("innsyn-api") && innsynApiViaDockerCompose -> newUri.replace(
                 "localhost:8989",
                 "$innsynApiDockerComposeHost:8080"
@@ -125,9 +137,13 @@ class LogginApiController(
                 "localhost:8989",
                 "localhost:8080"
             )
-            newUri.contains("soknad-api") && soknadApiViaDockerCompose -> newUri.replace(
+            newUri.contains("modia-api") && modiaApiViaDockerCompose -> newUri.replace(
                 "localhost:8989",
-                "$soknadApiDockerComposeHost:8080"
+                "$modiaApiDockerComposeHost:8080"
+            )
+            newUri.contains("modia-api") && !modiaApiViaDockerCompose -> newUri.replace(
+                "localhost:8989",
+                "localhost:8383"
             )
             else -> newUri.replace("localhost:8989", "localhost:8181")
         }
