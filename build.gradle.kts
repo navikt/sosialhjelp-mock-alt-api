@@ -3,24 +3,23 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTra
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.6.4"
+val springBootVersion = "2.6.6"
 val coroutinesVersion = "1.6.0"
-val sosialhjelpCommonVersion = "1.4204e7e"
-val filformatVersion = "1.2022.01.30-13.18-01cd95216e0b"
-val tokenValidationVersion = "1.3.19"
-val jacksonVersion = "2.13.1"
+val sosialhjelpCommonVersion = "1.c57dc86"
+val filformatVersion = "1.2022.03.31-14.09-4daafcd63deb"
+val tokenValidationVersion = "2.0.14"
+val jacksonVersion = "2.13.2"
 val springdocversion = "1.6.6"
-val jsonSmartVersion = "2.4.7"
-val mockOauth2ServerVersion = "0.4.3"
+val jsonSmartVersion = "2.4.8"
+val mockOauth2ServerVersion = "0.4.4"
 val junitVersion = "4.13.2"
-val log4jVersion = "2.17.1"
-val ktlint = "0.44.0"
+val log4jVersion = "2.17.2"
+val ktlint = "0.45.1"
 
 plugins {
     application
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("com.github.ben-manes.versions") version "0.38.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.ben-manes.versions") version "0.42.0"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
