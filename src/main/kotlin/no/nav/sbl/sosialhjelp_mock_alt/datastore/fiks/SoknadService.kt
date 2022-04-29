@@ -275,6 +275,7 @@ class SoknadService(
                             .withType(vedleggsInfo?.type ?: "annet")
                             .withTilleggsinfo(vedleggsInfo?.tilleggsinfo)
                             .withStatus(vedleggsInfo?.status ?: "LastetOpp")
+                            .withHendelseType(vedleggsInfo?.hendelseType)
                             .withFiler(
                                 listOf(
                                     JsonFiler()
