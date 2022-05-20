@@ -1,33 +1,24 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.6.6"
+val springBootVersion = "2.7.0"
 val coroutinesVersion = "1.6.0"
-val sosialhjelpCommonVersion = "1.c57dc86"
-val filformatVersion = "1.2022.03.31-14.09-4daafcd63deb"
-val tokenValidationVersion = "2.0.14"
-val jacksonVersion = "2.13.2"
-val springdocversion = "1.6.6"
+val sosialhjelpCommonVersion = "1.2fac7a7"
+val filformatVersion = "1.2022.04.29-13.11-459bee049a7a"
+val tokenValidationVersion = "2.0.20"
+val jacksonVersion = "2.13.3"
+val springdocversion = "1.6.8"
 val jsonSmartVersion = "2.4.8"
-val mockOauth2ServerVersion = "0.4.4"
+val mockOauth2ServerVersion = "0.4.8"
 val junitVersion = "4.13.2"
 val log4jVersion = "2.17.2"
-val ktlint = "0.45.1"
+val ktlint = "0.45.2"
 
 plugins {
-    application
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("jvm") version "1.6.21"
+    kotlin("plugin.spring") version "1.6.21"
+    id("org.springframework.boot") version "2.7.0"
     id("com.github.ben-manes.versions") version "0.42.0"
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.spring") version "1.6.10"
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
-}
-
-application {
-    applicationName = "sosialhjelp-mock-alt-api"
-    mainClass.set("no.nav.sbl.sosialhjelp_mock_alt.MockAltApplicationKt")
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 group = "no.nav.sbl"
@@ -106,28 +97,17 @@ dependencies {
     }
 }
 
-tasks {
-    withType<Test> {
-        useJUnitPlatform()
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        jvmTarget = "17"
     }
+}
 
-    withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "17"
-        }
-    }
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
 
-    withType<ShadowJar> {
-        archiveClassifier.set("")
-        transform(ServiceFileTransformer::class.java) {
-            setPath("META-INF/cxf")
-            include("bus-extensions.txt")
-        }
-        transform(PropertiesFileTransformer::class.java) {
-            paths = listOf("META-INF/spring.factories")
-            mergeStrategy = "append"
-        }
-        mergeServiceFiles()
-    }
+tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    this.archiveFileName.set("app.jar")
 }
