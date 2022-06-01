@@ -52,8 +52,8 @@ class SoknadService(
     final val ettersendelseFilnavn = "ettersendelse.pdf"
     val soknadsliste: HashMap<String, DigisosSak> = HashMap()
     val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
-    val fillager: FixedFileStrorage = FixedFileStrorage()
-    val ettersendelsePdfLager: FixedFileStrorage = FixedFileStrorage()
+    val fillager: FixedFileStorage = FixedFileStorage()
+    val ettersendelsePdfLager: FixedFileStorage = FixedFileStorage()
 
     fun hentSoknad(fiksDigisosId: String): DigisosSak? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
@@ -321,7 +321,7 @@ class SoknadService(
     }
 }
 
-class FixedFileStrorage {
+class FixedFileStorage {
     private val maxSize = 200
     private val items: MutableList<FileEntry> = mutableListOf()
 
