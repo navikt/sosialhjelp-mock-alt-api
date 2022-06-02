@@ -5,6 +5,7 @@
     "https://sosialhjelp-mock-alt-api-mock.dev.nav.no/sosialhjelp/mock-alt-api"
   ],
   "env": {
+    "SPRING_PROFILES_ACTIVE": "digisos-ekstern",
     "GCP_PORT": "8989",
     "HOST_ADDRESS": "https://digisos.ekstern.dev.nav.no/",
     "COOKIE_DOMAIN": "digisos.ekstern.dev.nav.no",
