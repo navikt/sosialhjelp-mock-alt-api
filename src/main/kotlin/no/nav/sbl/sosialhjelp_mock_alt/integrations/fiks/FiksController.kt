@@ -10,6 +10,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.DokumentKrypteringsService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.KommuneInfoService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.mellomlagring.MellomlagringService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.JsonTilleggsinformasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.SakWrapper
@@ -53,6 +54,7 @@ class FiksController(
     private val feilService: FeilService,
     private val pdlService: PdlService,
     private val kommuneInfoService: KommuneInfoService,
+    private val mellomlagringService: MellomlagringService
 ) {
     companion object {
         private val log by logger()
@@ -187,6 +189,74 @@ class FiksController(
             )
             dokumenter.add(dokumentInfo)
         }
+
+        soknadService.oppdaterDigisosSak(
+            kommuneNr = kommuneNr,
+            fiksOrgId = null,
+            fnr = fnr!!,
+            fiksDigisosIdInput = id,
+            enhetsnummer = enhetsnummer,
+            digisosApiWrapper = digisosApiWrapper,
+            jsonSoknad = soknadJson,
+            jsonVedlegg = vedleggJson,
+            dokumenter = dokumenter,
+            soknadDokument = dokumenter.firstOrNull { it.filnavn.lowercase() == "soknad.pdf" }
+        )
+        return ResponseEntity.ok(id)
+    }
+
+    @PostMapping("/fiks/digisos/api/v2/soknader/{kommuneNr}/{fiksDigisosId}")
+    fun lastOppSoknadV2(
+        @PathVariable kommuneNr: String,
+        @PathVariable(required = false) fiksDigisosId: String?,
+        request: StandardMultipartHttpServletRequest
+    ): ResponseEntity<String> {
+
+        val id = fiksDigisosId ?: UUID.randomUUID().toString()
+        val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
+        digisosApiWrapper.sak.soker.hendelser.add(
+            JsonSoknadsStatus()
+                .withHendelsestidspunkt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
+                .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT)
+        )
+
+        val soknadJson = objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
+        val vedleggJson = objectMapper.readValue(request.parameterMap["vedleggJson"]!![0], JsonVedleggSpesifikasjon::class.java)
+        val fnr = soknadJson.data.personalia.personIdentifikator.verdi
+        feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
+        val tilleggsinformasjonJson = objectMapper.readValue(
+            request.parameterMap["tilleggsinformasjonJson"]!![0],
+            JsonTilleggsinformasjon::class.java
+        )
+        val enhetsnummer = tilleggsinformasjonJson.enhetsnummer
+
+        val dokumenter = mutableListOf<DokumentInfo>()
+        request.fileMap.forEach { (filnavn, fil) ->
+            val dokumentLagerId = soknadService.leggInnIDokumentlager(filnavn, fil.bytes)
+            val dokumentInfo = DokumentInfo(
+                filnavn = filnavn,
+                dokumentlagerDokumentId = dokumentLagerId,
+                storrelse = fil.size,
+            )
+            dokumenter.add(dokumentInfo)
+        }
+
+        // hent ut mellomlagrede vedlegg
+        val mellomlagringDto = mellomlagringService.getAll(navEksternRefId = id)
+        mellomlagringDto?.mellomlagringMetadataList?.forEach {
+            val dokumentlagerId = soknadService.leggInnIDokumentlager(
+                filnavn = it.filnavn,
+                bytes = mellomlagringService.get(navEksternRefId = id, digisosDokumentId = it.filId)
+            )
+            val dokumentInfo = DokumentInfo(
+                filnavn = it.filnavn,
+                dokumentlagerDokumentId = dokumentlagerId,
+                storrelse = it.storrelse,
+            )
+            dokumenter.add(dokumentInfo)
+        }
+        // fjern mellomlagrede vedlegg
+        mellomlagringService.deleteAll(navEksternRefId = id)
 
         soknadService.oppdaterDigisosSak(
             kommuneNr = kommuneNr,
