@@ -42,8 +42,11 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlTelefonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlVegadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.SivilstandType
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.model.AdminRolle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendAdminRoller
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigKontonummer
@@ -65,6 +68,7 @@ class PdlService(
     private val kontonummerService: KontonummerService,
     private val pdlGeografiskTilknytningService: PdlGeografiskTilknytningService,
     private val krrService: KrrService,
+    private val rolleService: RolleService,
 ) {
 
     private val personListe: HashMap<String, Personalia> = HashMap()
@@ -72,14 +76,14 @@ class PdlService(
     private val barnMap = mutableMapOf<String, PdlSoknadBarn>()
 
     init {
-        opprettBrukerMedAlt(fastFnr, "Standard", "Standardsen", "NOR", 1)
+        opprettBrukerMedAlt(fastFnr, "Standard", "Standardsen", "NOR", 1, adminRoller = AdminRolle.values().asList())
         val bergenFnr = opprettBrukerMedAlt(
             genererTilfeldigPersonnummer(), "Bergen", "Bergenhusen", "NOR", 2,
             postnummer = "5005", kommuneNummer = "4601", enhetsnummer = "1209"
         )
-        krrService.leggTilKonfigurasjon(bergenFnr, false)
+        krrService.oppdaterKonfigurasjon(bergenFnr, false)
         opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 3)
-        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4)
+        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4, adminRoller = AdminRolle.values().asList())
 
         val hemmeligBruker = Personalia()
             .withNavn("Hemmelig", "", "Adressesen")
@@ -279,6 +283,7 @@ class PdlService(
         postnummer: String = "0101",
         kommuneNummer: String = "0301",
         enhetsnummer: String = "0315",
+        adminRoller: List<AdminRolle> = emptyList()
     ): String {
         val barnFnr = genererTilfeldigPersonnummer()
         val standardBruker = Personalia(fnr = brukerFnr)
@@ -315,6 +320,7 @@ class PdlService(
         skatteetatenService.enableAutoGenerationFor(brukerFnr)
         utbetalingService.enableAutoGenerationFor(brukerFnr)
         bostotteService.enableAutoGenerationFor(brukerFnr)
+        rolleService.leggTilKonfigurasjon(brukerFnr, adminRoller.map { FrontendAdminRoller(it) })
 
         soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, brukerFnr)
         if (fornavn == "Standard") soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, "15months")

@@ -2,6 +2,7 @@
   "applicationName": "sosialhjelp-mock-alt-api-mock",
   "namespace": "teamdigisos",
   "ingress": [
+    "https://sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no/sosialhjelp/mock-alt-api",
     "https://sosialhjelp-mock-alt-api-mock.dev.nav.no/sosialhjelp/mock-alt-api"
   ],
   "env": {
