@@ -88,7 +88,7 @@ class AzureController(
             AdminRolle.DIALOG_VEILEDER -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-veileder", "Dialog-Veiledere")
             AdminRolle.DIALOG_ADMINISTRATOR -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-admin", "Dialog-Administratorer")
             AdminRolle.DIALOG_TEKNISK_ARKIV -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-arkiv", "Dialog-Teknisk-arkiv")
-            AdminRolle.DIALOG_INNSIKKT -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-innsikt", "Dialog-Innsikktere")
+            AdminRolle.DIALOG_INNSIKT -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-innsikt", "Dialog-Innsikktere")
             AdminRolle.MODIA_VEILEDER -> AzureAdGruppe("0000-MOCK-sosialhjelp-modia-veileder", "Modia-Veiledere")
         }
     }
