@@ -9,7 +9,7 @@ class SkjermedePersonerService {
     private val skjermedePersonerMap: HashMap<String, Boolean> = HashMap()
 
     fun getStatus(ident: String): Boolean {
-        log.info("Henter kontonummer for $ident")
+        log.info("Henter skermingsstatus for $ident")
         return skjermedePersonerMap[ident] ?: false
     }
 
