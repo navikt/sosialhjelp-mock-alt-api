@@ -1,6 +1,8 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.azure
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.model.AdminRolle
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.azure.model.AzureAdBruker
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.azure.model.AzureAdBrukere
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.azure.model.AzureAdGruppe
@@ -21,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class AzureController(val pdlService: PdlService) {
+class AzureController(
+    private val pdlService: PdlService,
+    private val rolleService: RolleService,
+) {
     companion object {
         private val log by logger()
     }
@@ -75,42 +80,25 @@ class AzureController(val pdlService: PdlService) {
     }
 
     private fun hentGrupper(id: String): List<AzureAdGruppe> {
-        val personalia = pdlService.getPersonalia(id)
-        val grupper = if (personalia.navn.fornavn == "Admin") {
-            if (personalia.navn.etternavn == "Admin") {
-                listOf(
-                    AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-veileder", "Veiledere"),
-                    AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-admin", "Administratorer"),
-                )
-            } else if (personalia.navn.etternavn == "Arkiv") {
-                listOf(
-                    AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-arkiv", "Teknisk-arkiv"),
-                )
-            } else if (personalia.navn.etternavn == "Innsikt") {
-                listOf(
-                    AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-innsikt", "Innsikktere"),
-                )
-            } else {
-                listOf(
-                    AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-veileder", "Veiledere"),
-                    AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-admin", "Administratorer"),
-                    AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-arkiv", "Teknisk-arkiv"),
-                    AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-innsikt", "Innsikktere"),
-                )
-            }
-        } else if (personalia.navn.fornavn == "Tyske") {
-            emptyList() // Ikke veileder
-        } else {
-            listOf(AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-veileder", "Veiledere"))
-        }
-        return grupper
+        return rolleService.hentKonfigurasjon(id).map { toAzureRolle(it) }
     }
 
-    @GetMapping("/azuread/graph/groups/{id}/members")
-    fun getAzureGruppeBrukere(@PathVariable id: String): AzureAdBrukere {
-        val personaListe = pdlService.getPersonListe()
-        log.info("Henter azureAd brukere i gruppe $id")
+    private fun toAzureRolle(rolle: AdminRolle): AzureAdGruppe {
+        return when (rolle) {
+            AdminRolle.DIALOG_VEILEDER -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-veileder", "Dialog-Veiledere")
+            AdminRolle.DIALOG_ADMINISTRATOR -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-admin", "Dialog-Administratorer")
+            AdminRolle.DIALOG_TEKNISK_ARKIV -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-arkiv", "Dialog-Teknisk-arkiv")
+            AdminRolle.DIALOG_INNSIKT -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-innsikt", "Dialog-Innsikktere")
+            AdminRolle.MODIA_VEILEDER -> AzureAdGruppe("0000-MOCK-sosialhjelp-modia-veileder", "Modia-Veiledere")
+        }
+    }
 
+    @GetMapping("/azuread/graph/groups/{gruppeId}/members")
+    fun getAzureGruppeBrukere(@PathVariable gruppeId: AdminRolle): AzureAdBrukere {
+        log.info("Henter azureAd brukere i gruppe $gruppeId")
+
+        val brukerIDer = rolleService.finnBrukerIDerForGruppe(gruppeId)
+        val personaListe = brukerIDer.map { pdlService.getPersonalia(it) }
         return AzureAdBrukere(
             value = personaListe.map { AzureAdBruker(it) }
         )

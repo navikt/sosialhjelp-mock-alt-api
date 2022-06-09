@@ -20,6 +20,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadBarn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadPersonNavn
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlVegadresse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.model.AdminRolle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Forskuddstrekk
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
@@ -53,6 +54,7 @@ data class FrontendPersonalia(
     var bostotteUtbetalinger: List<UtbetalingerDto>,
     var skattetatenUtbetalinger: List<FrontendSkattbarInntekt>,
     var utbetalingerFraNav: List<FrontendUtbetalingFraNav>,
+    var administratorRoller: List<FrontendAdminRoller>,
     var locked: Boolean = false,
 ) {
     constructor(personalia: Personalia) : this(
@@ -71,6 +73,7 @@ data class FrontendPersonalia(
         bostotteUtbetalinger = emptyList(),
         skattetatenUtbetalinger = emptyList(),
         utbetalingerFraNav = emptyList(),
+        administratorRoller = emptyList(),
         locked = personalia.locked,
     )
 
@@ -117,6 +120,8 @@ data class FrontendPersonalia(
         }
     }
 }
+
+data class FrontendAdminRoller(val rolle: AdminRolle)
 
 data class FrontendBarn(
     val fnr: String,

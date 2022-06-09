@@ -10,10 +10,12 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.krr.KrrService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendAdminRoller
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendBarn.Companion.frontendBarn
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia
@@ -50,6 +52,7 @@ class FrontendController(
     private val krrService: KrrService,
     private val soknadService: SoknadService,
     private val kontonummerService: KontonummerService,
+    private val rolleService: RolleService,
 ) {
     companion object {
         private val log by logger()
@@ -91,6 +94,7 @@ class FrontendController(
             ident = personalia.fnr,
             utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalingDto() }
         )
+        rolleService.leggTilKonfigurasjon(personalia.fnr, personalia.administratorRoller)
 
         return ResponseEntity.ok("OK")
     }
@@ -120,6 +124,7 @@ class FrontendController(
         frontendPersonalia.bostotteUtbetalinger = bostotteDto.utbetalinger
         frontendPersonalia.utbetalingerFraNav =
             utbetalingService.getUtbetalingerFraNav(personalia.fnr).map { mapToFrontend(it) }
+        frontendPersonalia.administratorRoller = rolleService.hentKonfigurasjon(personalia.fnr).map { FrontendAdminRoller(it) }
 
         return ResponseEntity.ok(frontendPersonalia)
     }
@@ -130,7 +135,7 @@ class FrontendController(
         return ResponseEntity.ok(personListe)
     }
 
-    @GetMapping("/mock-alt/soknad/{fiksDigisosId}", produces = arrayOf("application/zip"))
+    @GetMapping("/mock-alt/soknad/{fiksDigisosId}", produces = ["application/zip"])
     fun zipSoknad(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
         val soknad = soknadService.hentSoknad(fiksDigisosId)!!
         val soknadsInfo = toFrontendSoknad(soknad)
@@ -179,7 +184,7 @@ class FrontendController(
             .body(bytebuffer.toByteArray())
     }
 
-    @GetMapping("/mock-alt/ettersendelse/{fiksDigisosId}", produces = arrayOf("application/zip"))
+    @GetMapping("/mock-alt/ettersendelse/{fiksDigisosId}", produces = ["application/zip"])
     fun zipEttersendelse(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
         val soknad = soknadService.hentSoknad(fiksDigisosId)!!
         val bytebuffer = ByteArrayOutputStream()
