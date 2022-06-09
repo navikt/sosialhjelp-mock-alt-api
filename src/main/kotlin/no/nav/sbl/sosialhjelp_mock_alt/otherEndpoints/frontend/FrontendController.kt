@@ -13,6 +13,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skjermedepersoner.SkjermedePersonerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendAdminRoller
@@ -44,6 +45,7 @@ import java.util.zip.ZipOutputStream
 @RestController
 class FrontendController(
     private val pdlService: PdlService,
+    private val skjermedePersonerService: SkjermedePersonerService,
     private val aaregService: AaregService,
     private val skatteetatenService: SkatteetatenService,
     private val bostotteService: BostotteService,
@@ -69,6 +71,7 @@ class FrontendController(
         pdlService.veryfyNotLocked(personalia.fnr)
         personalia.barn.forEach { pdlService.leggTilBarn(it.fnr, it.pdlBarn()) }
         pdlService.leggTilPerson(pdlPersonalia(personalia))
+        skjermedePersonerService.setStatus(personalia.fnr, personalia.skjerming)
         if (personalia.telefonnummer.isNotEmpty()) {
             krrService.setTelefonnummer(personalia.fnr, personalia.telefonnummer)
         }
@@ -109,6 +112,7 @@ class FrontendController(
         }
         log.info("Henter ned personalia for fnr: $ident")
         val frontendPersonalia = FrontendPersonalia(personalia)
+        frontendPersonalia.skjerming = skjermedePersonerService.getStatus(ident)
         frontendPersonalia.barn =
             personalia.forelderBarnRelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
         frontendPersonalia.telefonnummer = krrService.hentKonfigurasjon(personalia.fnr).mobiltelefonnummer ?: ""
