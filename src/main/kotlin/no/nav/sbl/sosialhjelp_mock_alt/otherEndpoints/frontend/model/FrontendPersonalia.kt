@@ -37,6 +37,7 @@ data class FrontendPersonalia(
     val fnr: String = genererTilfeldigPersonnummer(),
     val navn: PdlPersonNavn = PdlPersonNavn(),
     var adressebeskyttelse: Gradering = Gradering.UGRADERT,
+    var skjerming: Boolean = false,
     var sivilstand: String = "UOPPGITT",
     var ektefelle: String? = null,
     var barn: List<FrontendBarn>,
