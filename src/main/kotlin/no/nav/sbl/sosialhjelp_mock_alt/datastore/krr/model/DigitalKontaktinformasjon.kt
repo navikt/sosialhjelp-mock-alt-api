@@ -9,7 +9,12 @@ data class DigitalKontaktinformasjon(
     val epostadresse: String?,
     val mobiltelefonnummer: String?,
     val sikkerDigitalPostkasse: SikkerDigitalPostkasse?,
-)
+) {
+    fun frontendKanVarsles(): Boolean {
+        reservert?.let { return !it }
+        return true
+    }
+}
 
 data class SikkerDigitalPostkasse(
     val adresse: String,

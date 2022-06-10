@@ -49,6 +49,8 @@ data class FrontendPersonalia(
         kommunenummer = "0301"
     ),
     var telefonnummer: String = "",
+    var epost: String = "",
+    var kanVarsles: Boolean = true,
     var kontonummer: String = "",
     var arbeidsforhold: List<FrontendArbeidsforhold>,
     var bostotteSaker: List<SakerDto>,

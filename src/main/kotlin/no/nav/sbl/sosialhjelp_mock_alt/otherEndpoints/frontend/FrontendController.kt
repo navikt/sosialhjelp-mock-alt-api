@@ -72,9 +72,7 @@ class FrontendController(
         personalia.barn.forEach { pdlService.leggTilBarn(it.fnr, it.pdlBarn()) }
         pdlService.leggTilPerson(pdlPersonalia(personalia))
         skjermedePersonerService.setStatus(personalia.fnr, personalia.skjerming)
-        if (personalia.telefonnummer.isNotEmpty()) {
-            krrService.setTelefonnummer(personalia.fnr, personalia.telefonnummer)
-        }
+        krrService.oppdaterKonfigurasjon(personalia.fnr, personalia.kanVarsles, personalia.epost, personalia.telefonnummer)
         if (personalia.kontonummer.isNotEmpty()) {
             kontonummerService.putKontonummer(personalia.fnr, personalia.kontonummer)
         }
@@ -115,7 +113,10 @@ class FrontendController(
         frontendPersonalia.skjerming = skjermedePersonerService.getStatus(ident)
         frontendPersonalia.barn =
             personalia.forelderBarnRelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
-        frontendPersonalia.telefonnummer = krrService.hentKonfigurasjon(personalia.fnr).mobiltelefonnummer ?: ""
+        val krrKonfigurasjon = krrService.hentKonfigurasjon(personalia.fnr)
+        frontendPersonalia.telefonnummer = krrKonfigurasjon.mobiltelefonnummer ?: ""
+        frontendPersonalia.epost = krrKonfigurasjon.epostadresse ?: ""
+        frontendPersonalia.kanVarsles = krrKonfigurasjon.frontendKanVarsles()
         frontendPersonalia.kontonummer = kontonummerService.getKontonummer(personalia.fnr)?.kontonummer ?: ""
         frontendPersonalia.arbeidsforhold = aaregService.getArbeidsforhold(personalia.fnr)
             .map { FrontendArbeidsforhold.arbeidsforhold(it, eregService) }

@@ -9,17 +9,13 @@ class KrrService {
 
     fun hentKonfigurasjon(ident: String): DigitalKontaktinformasjon {
         krrKonfigursjoner[ident]?.let { return it }
-        return oppdaterKonfigurasjon(ident, true) ?: throw RuntimeException("Problemer ved henting av KRR info")
+        val defaultKontaktinformasjon = nyKontaktinformasjon(ident, "epost@adrsse.sen", "11112222", true)
+        krrKonfigursjoner[ident] = defaultKontaktinformasjon
+        return defaultKontaktinformasjon
     }
 
-    fun oppdaterKonfigurasjon(
-        ident: String,
-        kanVarsles: Boolean,
-        epostadresse: String = "epost@adresse.sen",
-        telefonnummer: String = "11112222"
-    ): DigitalKontaktinformasjon? {
-        krrKonfigursjoner[ident] = nyKontaktinformasjon(ident, epostadresse, telefonnummer, kanVarsles)
-        return krrKonfigursjoner[ident]
+    fun oppdaterKonfigurasjon(ident: String, kanVarsles: Boolean, epost: String = "epost@adresse.sen", telefonnummer: String = "11112222") {
+        krrKonfigursjoner[ident] = nyKontaktinformasjon(ident, epost, telefonnummer, kanVarsles)
     }
 
     private fun nyKontaktinformasjon(
@@ -37,15 +33,4 @@ class KrrService {
         mobiltelefonnummer = telefonnummer,
         sikkerDigitalPostkasse = null
     )
-
-    fun setTelefonnummer(ident: String, telefonnummer: String) {
-        val gammelKonfig = krrKonfigursjoner[ident]
-        val kontaktinformasjon = nyKontaktinformasjon(
-            ident,
-            gammelKonfig?.epostadresse,
-            telefonnummer,
-            gammelKonfig?.kanVarsles ?: true
-        )
-        krrKonfigursjoner[ident] = kontaktinformasjon
-    }
 }

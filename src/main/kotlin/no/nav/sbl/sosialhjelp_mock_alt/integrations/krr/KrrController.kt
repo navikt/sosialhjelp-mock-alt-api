@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class KrrController(val krrService: KrrService) {
+class KrrController(private val krrService: KrrService) {
     companion object {
         private val log by logger()
     }
