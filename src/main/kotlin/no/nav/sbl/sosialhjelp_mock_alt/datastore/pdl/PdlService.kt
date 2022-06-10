@@ -81,7 +81,7 @@ class PdlService(
             genererTilfeldigPersonnummer(), "Bergen", "Bergenhusen", "NOR", 2,
             postnummer = "5005", kommuneNummer = "4601", enhetsnummer = "1209"
         )
-        krrService.oppdaterKonfigurasjon(bergenFnr, false)
+        krrService.oppdaterKonfigurasjon(bergenFnr, kanVarsles = false)
         opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 3)
         opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4, adminRoller = listOf(AdminRolle.DIALOG_VEILEDER, AdminRolle.DIALOG_ADMINISTRATOR, AdminRolle.MODIA_VEILEDER))
 
@@ -307,7 +307,7 @@ class PdlService(
         barnMap[barnFnr] = defaultBarn(etternavn)
 
         pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
-        krrService.setTelefonnummer(brukerFnr, telefonnummer = randomInt(8).toString())
+        krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = randomInt(8).toString())
         kontonummerService.putKontonummer(brukerFnr, genererTilfeldigKontonummer())
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
         eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")

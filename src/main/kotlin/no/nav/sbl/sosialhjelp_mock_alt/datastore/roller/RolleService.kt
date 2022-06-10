@@ -18,7 +18,7 @@ class RolleService {
         rolleKonfigursjoner[ident] = AzureAdRoller(roller.map { it.rolle })
     }
 
-    fun finnBrukerIDerForGruppe(rolle: AdminRolle): List<String> {
+    fun finnBrukerIDerForRolle(rolle: AdminRolle): List<String> {
         return rolleKonfigursjoner
             .filter { rolleKonfigursjoner[it.key]?.roller?.contains(rolle) ?: false }
             .map { it.key }

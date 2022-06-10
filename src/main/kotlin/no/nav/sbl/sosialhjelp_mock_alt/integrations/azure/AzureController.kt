@@ -94,13 +94,25 @@ class AzureController(
     }
 
     @GetMapping("/azuread/graph/groups/{gruppeId}/members")
-    fun getAzureGruppeBrukere(@PathVariable gruppeId: AdminRolle): AzureAdBrukere {
-        log.info("Henter azureAd brukere i gruppe $gruppeId")
+    fun getAzureGruppeBrukere(@PathVariable gruppeId: String): AzureAdBrukere {
+        val adminRolle = toAdminRolle(gruppeId) ?: throw RuntimeException("Ukjent gruppe: $gruppeId")
+        log.info("Henter azureAd brukere i gruppe $gruppeId -> $adminRolle")
 
-        val brukerIDer = rolleService.finnBrukerIDerForGruppe(gruppeId)
+        val brukerIDer = rolleService.finnBrukerIDerForRolle(adminRolle)
         val personaListe = brukerIDer.map { pdlService.getPersonalia(it) }
         return AzureAdBrukere(
             value = personaListe.map { AzureAdBruker(it) }
         )
+    }
+
+    private fun toAdminRolle(gruppeId: String): AdminRolle? {
+        return when (gruppeId) {
+            "0000-MOCK-sosialhjelp-dialog-veileder" -> AdminRolle.DIALOG_VEILEDER
+            "0000-MOCK-sosialhjelp-dialog-admin" -> AdminRolle.DIALOG_ADMINISTRATOR
+            "0000-MOCK-sosialhjelp-dialog-arkiv" -> AdminRolle.DIALOG_TEKNISK_ARKIV
+            "0000-MOCK-sosialhjelp-dialog-innsikt" -> AdminRolle.DIALOG_INNSIKT
+            "0000-MOCK-sosialhjelp-modia-veileder" -> AdminRolle.MODIA_VEILEDER
+            else -> null
+        }
     }
 }
