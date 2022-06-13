@@ -97,7 +97,7 @@ class PdlService(
         log.info("Henter PDL innsyns data for $ident")
         val personalia = personListe[ident]
         var adressebeskyttelseList: List<Adressebeskyttelse> = emptyList()
-        var navnList: List<PdlPersonNavn> = emptyList()
+        var navnList: List<PdlPersonNavn> = listOf(PdlPersonNavn("Ukjent", "PDL", "Person"))
         if (personalia != null) {
             adressebeskyttelseList = listOf(Adressebeskyttelse(personalia.adressebeskyttelse))
             navnList = listOf(PdlPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn))
