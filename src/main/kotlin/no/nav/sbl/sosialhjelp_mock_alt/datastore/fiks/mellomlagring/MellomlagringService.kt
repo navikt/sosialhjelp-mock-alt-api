@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import java.util.UUID
 
 @Component
-class MellomlagringService() {
+class MellomlagringService {
     private val mellomlager: MellomlagringStorage = MellomlagringStorage()
 
     fun getAll(navEksternRefId: String): MellomlagringDto? {
