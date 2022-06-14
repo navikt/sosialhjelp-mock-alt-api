@@ -4,6 +4,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.mellomlagring.MellomlagringService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
+import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.util.LinkedMultiValueMap
@@ -27,10 +28,24 @@ class FiksMellomlagringController(
     fun getAllMellomlagredeVedlegg(
         @RequestHeader headers: HttpHeaders,
         @PathVariable navEksternRefId: String
-    ): ResponseEntity<MellomlagringDto> {
+    ): ResponseEntity<Any> {
         feilService.eventueltLagFeil(headers, "FiksMellomlagringController", "getAllMellomlagredeVedlegg")
         val dto = mellomlagringService.getAll(navEksternRefId)
-        return ResponseEntity.ok(dto)
+        return dto?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.badRequest()
+                .body(
+                    ErrorMessage(
+                        error = null,
+                        errorCode = null,
+                        errorId = null,
+                        errorJson = null,
+                        message = "Fant ingen data i basen knytter til angitt id'en $navEksternRefId",
+                        originalPath = null,
+                        path = null,
+                        status = 400,
+                        timestamp = null
+                    )
+                )
     }
 
     @GetMapping("/fiks/digisos/api/v1/mellomlagring/{navEksternRefId}/{digisosDokumentId}")
