@@ -23,7 +23,7 @@ class KontonummerController(
         val ident = hentFnrFraToken(headers)
         val dto = kontonummerService.getKontonummer(ident)
         log.info("Henter kontonummer: ${objectMapper.writeValueAsString(dto)}")
-        return ResponseEntity.ok().body(dto)
+        return dto?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
     }
 
     companion object {
