@@ -1,7 +1,9 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
+import no.nav.sbl.sosialhjelp_mock_alt.utils.randomDate
 import org.joda.time.DateTime
+import java.time.LocalDate
 
 data class Personalia(
     val fnr: String = genererTilfeldigPersonnummer(),
@@ -9,6 +11,8 @@ data class Personalia(
     var adressebeskyttelse: Gradering = Gradering.UGRADERT,
     var sivilstand: String = "UOPPGITT",
     var ektefelle: String? = null,
+    var ektefelleFnr: String? = null,
+    var ektefelleFodselsdato: LocalDate = randomDate(),
     var forelderBarnRelasjon: List<ForelderBarnRelasjon> = emptyList(),
     var starsborgerskap: String = "NOR",
     var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse(adressenavn = "Hovedveien", husnummer = 42, postnummer = "0101", kommunenummer = "0301"),
@@ -34,6 +38,12 @@ data class Personalia(
 
     fun withEktefelle(nyVerdi: String): Personalia {
         ektefelle = nyVerdi
+        return this
+    }
+
+    fun withEktefelleFodselsDato(nyDato: LocalDate): Personalia {
+        ektefelleFodselsdato = nyDato
+        ektefelleFnr = genererTilfeldigPersonnummer(ektefelleFodselsdato)
         return this
     }
 
