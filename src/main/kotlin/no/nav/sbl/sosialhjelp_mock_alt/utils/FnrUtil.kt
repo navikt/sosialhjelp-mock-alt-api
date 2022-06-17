@@ -43,7 +43,7 @@ fun validerKjoenn(nummer: Int, kjoenn: Kjoenn?): Boolean {
 }
 
 fun randomDate(): LocalDate {
-    val year = (Math.random() * 100).roundToInt()
+    val year = 1900 + (Math.random() * 100).roundToInt()
     val dato = LocalDate.of(year, 1, 1)
     return dato.plusDays((Math.random() * 365).roundToLong())
 }
