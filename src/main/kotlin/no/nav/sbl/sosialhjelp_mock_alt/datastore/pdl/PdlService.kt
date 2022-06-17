@@ -53,6 +53,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigKontonummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
+import no.nav.sbl.sosialhjelp_mock_alt.utils.randomDate
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -152,13 +153,10 @@ class PdlService(
         if (personalia != null) {
             navn = PdlSoknadPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn)
             if (personalia.sivilstand.equals("GIFT", true) || personalia.sivilstand.equals("PARTNER", true)) {
-                val ektefelleIdent = genererTilfeldigPersonnummer()
-                sivilstand = PdlSivilstand(SivilstandType.valueOf(personalia.sivilstand), ektefelleIdent)
-                when (personalia.ektefelle) {
-                    "EKTEFELLE_SAMME_BOSTED" -> ektefelleMap[ident] = ektefelleSammeBosted
-                    "EKTEFELLE_ANNET_BOSTED" -> ektefelleMap[ident] = ektefelleAnnetBosted
-                    "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[ident] = ektefelleMedAdressebeskyttelse
+                if (personalia.ektefelleFnr.isNullOrEmpty()) {
+                    leggTilEktefelle(personalia)
                 }
+                sivilstand = PdlSivilstand(SivilstandType.valueOf(personalia.sivilstand), personalia.ektefelleFnr)
             }
             forelderBarnRelasjon = personalia.forelderBarnRelasjon.map { PdlForelderBarnRelasjon(it.ident, it.rolle, it.motrolle) }
             statsborgerskap = PdlStatsborgerskap(personalia.starsborgerskap)
@@ -197,7 +195,7 @@ class PdlService(
     fun getSoknadEktefelleResponseFor(ident: String): PdlSoknadEktefelleResponse {
         log.info("Henter PDL soknad data for (ektefelle) $ident")
 
-        val pdlEktefelle = ektefelleMap[ident] ?: defaultEktefelle()
+        val pdlEktefelle = ektefelleMap[ident] ?: defaultEktefelle(randomDate())
 
         return PdlSoknadEktefelleResponse(
             errors = null,
@@ -240,11 +238,23 @@ class PdlService(
     // Util:
 
     fun leggTilPerson(personalia: Personalia) {
+        leggTilEktefelle(personalia)
         if (personListe[personalia.fnr] != null && personListe[personalia.fnr]!!.locked) {
             throw MockAltException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
         personListe[personalia.fnr] = personalia
         pdlGeografiskTilknytningService.putGeografiskTilknytning(personalia.fnr, personalia.bostedsadresse.kommunenummer)
+    }
+
+    private fun leggTilEktefelle(personalia: Personalia) {
+        personalia.ektefelleFodselsdato = randomDate()
+        personalia.ektefelleFnr = genererTilfeldigPersonnummer(personalia.ektefelleFodselsdato)
+        when (personalia.ektefelle) {
+            "EKTEFELLE_SAMME_BOSTED" -> ektefelleMap[personalia.fnr] = ektefelleSammeBosted(personalia.ektefelleFodselsdato)
+            "EKTEFELLE_ANNET_BOSTED" -> ektefelleMap[personalia.fnr] = ektefelleAnnetBosted(personalia.ektefelleFodselsdato)
+            "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[personalia.fnr] = ektefelleMedAdressebeskyttelse
+            else -> ektefelleMap[personalia.fnr] = defaultEktefelle(personalia.ektefelleFodselsdato)
+        }
     }
 
     fun leggTilBarn(fnr: String, pdlBarn: PdlSoknadBarn) {
@@ -290,6 +300,7 @@ class PdlService(
             .withNavn(fornavn, "", etternavn)
             .withOpprettetTidspunkt(position)
             .withEktefelle("EKTEFELLE_SAMME_BOSTED")
+            .withEktefelleFodselsDato(randomDate())
             .withSivilstand("GIFT")
             .withForelderBarnRelasjon(barnFnr)
             .withBostedsadresse(
@@ -303,7 +314,7 @@ class PdlService(
             .withStarsborgerskap(statsborgerskap)
             .locked()
         personListe[brukerFnr] = standardBruker
-        ektefelleMap[brukerFnr] = ektefelleSammeBosted
+        ektefelleMap[brukerFnr] = ektefelleSammeBosted(standardBruker.ektefelleFodselsdato)
         barnMap[barnFnr] = defaultBarn(etternavn)
 
         pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
@@ -333,17 +344,17 @@ class PdlService(
         private val defaultAdresse = PdlVegadresse("matrikkelId", "Gateveien", 1, "A", null, "0101", "0301", "H101")
         private val annenAdresse = PdlVegadresse("matrikkelId2", "Karl Johans gate", 1, null, null, "0101", "0301", null)
 
-        private val ektefelleSammeBosted = PdlSoknadEktefelle(
+        private fun ektefelleSammeBosted(dato: LocalDate) = PdlSoknadEktefelle(
             adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
             bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
-            foedsel = listOf(PdlFoedsel(LocalDate.of(1955, 5, 5))),
+            foedsel = listOf(PdlFoedsel(dato)),
             navn = listOf(PdlSoknadPersonNavn("LILLA", "", "EKTEFELLE"))
         )
 
-        private val ektefelleAnnetBosted = PdlSoknadEktefelle(
+        private fun ektefelleAnnetBosted(dato: LocalDate) = PdlSoknadEktefelle(
             adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
             bostedsadresse = listOf(PdlBostedsadresse(null, annenAdresse, null, null)),
-            foedsel = listOf(PdlFoedsel(LocalDate.of(1966, 6, 6))),
+            foedsel = listOf(PdlFoedsel(dato)),
             navn = listOf(PdlSoknadPersonNavn("GUL", "", "EKTEFELLE"))
         )
 
@@ -354,11 +365,11 @@ class PdlService(
             navn = emptyList()
         )
 
-        private fun defaultEktefelle() =
+        private fun defaultEktefelle(dato: LocalDate) =
             PdlSoknadEktefelle(
                 adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
                 bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
-                foedsel = listOf(PdlFoedsel(LocalDate.of(1956, 4, 3))),
+                foedsel = listOf(PdlFoedsel(dato)),
                 navn = listOf(PdlSoknadPersonNavn("Ektefelle", "", "McEktefelle"))
             )
 

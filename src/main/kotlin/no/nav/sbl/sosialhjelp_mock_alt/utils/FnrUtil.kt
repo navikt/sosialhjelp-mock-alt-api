@@ -42,11 +42,10 @@ fun validerKjoenn(nummer: Int, kjoenn: Kjoenn?): Boolean {
     return true
 }
 
-private fun randomDate(): LocalDate {
+fun randomDate(): LocalDate {
     val year = (Math.random() * 100).roundToInt()
     val dato = LocalDate.of(year, 1, 1)
-    val randomDate = dato.plusDays((Math.random() * 365).roundToLong())
-    return randomDate
+    return dato.plusDays((Math.random() * 365).roundToLong())
 }
 
 fun genererTilfeldigOrganisasjonsnummer(): String {
