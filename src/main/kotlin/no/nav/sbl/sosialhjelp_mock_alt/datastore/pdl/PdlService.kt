@@ -248,12 +248,13 @@ class PdlService(
 
     private fun leggTilEktefelle(personalia: Personalia) {
         personalia.ektefelleFodselsdato = randomDate()
-        personalia.ektefelleFnr = genererTilfeldigPersonnummer(personalia.ektefelleFodselsdato)
+        val fnr = genererTilfeldigPersonnummer(personalia.ektefelleFodselsdato)
+        personalia.ektefelleFnr = fnr
         when (personalia.ektefelle) {
-            "EKTEFELLE_SAMME_BOSTED" -> ektefelleMap[personalia.fnr] = ektefelleSammeBosted(personalia.ektefelleFodselsdato)
-            "EKTEFELLE_ANNET_BOSTED" -> ektefelleMap[personalia.fnr] = ektefelleAnnetBosted(personalia.ektefelleFodselsdato)
-            "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[personalia.fnr] = ektefelleMedAdressebeskyttelse
-            else -> ektefelleMap[personalia.fnr] = defaultEktefelle(personalia.ektefelleFodselsdato)
+            "EKTEFELLE_SAMME_BOSTED" -> ektefelleMap[fnr] = ektefelleSammeBosted(personalia.ektefelleFodselsdato)
+            "EKTEFELLE_ANNET_BOSTED" -> ektefelleMap[fnr] = ektefelleAnnetBosted(personalia.ektefelleFodselsdato)
+            "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[fnr] = ektefelleMedAdressebeskyttelse
+            else -> ektefelleMap[fnr] = defaultEktefelle(personalia.ektefelleFodselsdato)
         }
     }
 
