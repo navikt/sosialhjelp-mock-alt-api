@@ -10,7 +10,7 @@ data class Personalia(
     val navn: PdlPersonNavn = PdlPersonNavn(),
     var adressebeskyttelse: Gradering = Gradering.UGRADERT,
     var sivilstand: String = "UOPPGITT",
-    var ektefelle: String? = null,
+    var ektefelleType: String? = null,
     var ektefelleFnr: String? = null,
     var ektefelleFodselsdato: LocalDate = randomDate(),
     var forelderBarnRelasjon: List<ForelderBarnRelasjon> = emptyList(),
@@ -36,8 +36,8 @@ data class Personalia(
         return this
     }
 
-    fun withEktefelle(nyVerdi: String): Personalia {
-        ektefelle = nyVerdi
+    fun withEktefelleType(nyVerdi: String): Personalia {
+        ektefelleType = nyVerdi
         return this
     }
 
