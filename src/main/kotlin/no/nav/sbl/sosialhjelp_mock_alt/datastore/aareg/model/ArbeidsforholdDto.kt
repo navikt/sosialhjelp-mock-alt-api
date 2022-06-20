@@ -10,7 +10,6 @@ data class ArbeidsforholdDto(
     val arbeidsforholdId: String,
     val arbeidsgiver: OpplysningspliktigArbeidsgiverDto,
     val arbeidstaker: PersonDto,
-    val navArbeidsforholdId: Long,
 ) {
     companion object {
         fun nyttArbeidsforhold(
@@ -22,7 +21,6 @@ data class ArbeidsforholdDto(
             arbeidsgiver: OpplysningspliktigArbeidsgiverDto = OrganisasjonDto(
                 organisasjonsnummer = genererTilfeldigOrganisasjonsnummer(),
             ),
-            navArbeidsforholdId: Long = randomInt(7).toLong(),
         ): ArbeidsforholdDto {
             val person = PersonDto(
                 offentligIdent = fnr,
@@ -40,7 +38,6 @@ data class ArbeidsforholdDto(
                 arbeidsforholdId = arbeidsforholdId,
                 arbeidsgiver = arbeidsgiver,
                 arbeidstaker = person,
-                navArbeidsforholdId = navArbeidsforholdId
             )
         }
     }
