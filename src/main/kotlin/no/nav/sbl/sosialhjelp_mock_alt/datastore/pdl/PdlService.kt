@@ -250,7 +250,7 @@ class PdlService(
         personalia.ektefelleFodselsdato = randomDate()
         val fnr = genererTilfeldigPersonnummer(personalia.ektefelleFodselsdato)
         personalia.ektefelleFnr = fnr
-        when (personalia.ektefelle) {
+        when (personalia.ektefelleType) {
             "EKTEFELLE_SAMME_BOSTED" -> ektefelleMap[fnr] = ektefelleSammeBosted(personalia.ektefelleFodselsdato)
             "EKTEFELLE_ANNET_BOSTED" -> ektefelleMap[fnr] = ektefelleAnnetBosted(personalia.ektefelleFodselsdato)
             "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[fnr] = ektefelleMedAdressebeskyttelse
@@ -300,7 +300,7 @@ class PdlService(
         val standardBruker = Personalia(fnr = brukerFnr)
             .withNavn(fornavn, "", etternavn)
             .withOpprettetTidspunkt(position)
-            .withEktefelle("EKTEFELLE_SAMME_BOSTED")
+            .withEktefelleType("EKTEFELLE_SAMME_BOSTED")
             .withEktefelleFodselsDato(randomDate())
             .withSivilstand("GIFT")
             .withForelderBarnRelasjon(barnFnr)
