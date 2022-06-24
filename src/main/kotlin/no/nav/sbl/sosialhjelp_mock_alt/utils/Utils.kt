@@ -37,7 +37,7 @@ fun LocalDate.toIsoString(): String {
 fun hentFnrFraBody(body: String?): String? {
     if (body != null) {
         val bodyMap: Map<String, String> = objectMapper.readValue(body)
-        return bodyMap.get("fnr")
+        return bodyMap["fnr"]
     }
     //  TODO throw exception?
     return fastFnr

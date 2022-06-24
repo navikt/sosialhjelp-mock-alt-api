@@ -4,7 +4,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteStatus
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
-import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.joda.time.DateTime
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -12,8 +11,8 @@ import java.time.LocalDate
 @Service
 class BostotteService {
 
-    final val bostotteMap: HashMap<String, BostotteDto> = HashMap()
-    final val autoGenerationSet: HashSet<String> = HashSet()
+    private val bostotteMap: HashMap<String, BostotteDto> = HashMap()
+    private val autoGenerationSet: HashSet<String> = HashSet()
 
     fun putBostotte(fnr: String, bostotteDto: BostotteDto) {
         bostotteMap[fnr] = bostotteDto
@@ -47,9 +46,5 @@ class BostotteService {
 
     fun enableAutoGenerationFor(fnr: String) {
         autoGenerationSet.add(fnr)
-    }
-
-    companion object {
-        private val log by logger()
     }
 }
