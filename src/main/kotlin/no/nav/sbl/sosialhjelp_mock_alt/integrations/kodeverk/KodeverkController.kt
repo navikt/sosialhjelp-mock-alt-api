@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController
 class KodeverkController(
     kommuneInfoService: KommuneInfoService,
 ) {
-    final val kommuner: KodeverkDto
-    final val landkoder: KodeverkDto
-    final val postnummer: KodeverkDto
+    private val kommuner: KodeverkDto
+    private val landkoder: KodeverkDto
+    private val postnummer: KodeverkDto
 
     init {
         kommuner = lesKodeverk("kommuner")

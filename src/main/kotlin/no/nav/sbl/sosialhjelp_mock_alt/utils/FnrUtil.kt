@@ -18,9 +18,9 @@ fun genererTilfeldigPersonnummer(dato: LocalDate = randomDate(), kjoenn: Kjoenn?
         } while (!validerKjoenn(randomNumber, kjoenn))
 
         if (randomNumber < 10) {
-            fnr += "00" + randomNumber
+            fnr += "00$randomNumber"
         } else if (randomNumber < 100) {
-            fnr += "0" + randomNumber
+            fnr += "0$randomNumber"
         } else {
             fnr += randomNumber
         }

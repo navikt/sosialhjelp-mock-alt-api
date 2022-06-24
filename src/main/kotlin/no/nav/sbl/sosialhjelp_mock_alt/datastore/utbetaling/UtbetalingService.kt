@@ -7,8 +7,8 @@ import java.time.LocalDate
 
 @Service
 class UtbetalingService {
-    private final val utbetalingListMap: HashMap<String, List<UtbetalingDto>> = HashMap()
-    private final val autoGenerationSet: HashSet<String> = HashSet()
+    private val utbetalingListMap: HashMap<String, List<UtbetalingDto>> = HashMap()
+    private val autoGenerationSet: HashSet<String> = HashSet()
 
     fun getUtbetalingerFraNav(ident: String): List<UtbetalingDto> {
         log.info("Henter utbetalinger for $ident")

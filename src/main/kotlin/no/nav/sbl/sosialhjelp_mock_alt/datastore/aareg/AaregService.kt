@@ -10,7 +10,7 @@ import java.time.LocalDate
 @Service
 class AaregService {
 
-    private final val aaregMap: HashMap<String, List<ArbeidsforholdDto>> = HashMap()
+    private val aaregMap: HashMap<String, List<ArbeidsforholdDto>> = HashMap()
 
     fun leggTilEnkeltArbeidsforhold(
         personalia: Personalia,

@@ -49,11 +49,11 @@ class SoknadService(
         val log by logger()
     }
 
-    final val ettersendelseFilnavn = "ettersendelse.pdf"
-    val soknadsliste: HashMap<String, DigisosSak> = HashMap()
-    val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
-    val fillager: FixedFileStorage = FixedFileStorage()
-    val ettersendelsePdfLager: FixedFileStorage = FixedFileStorage()
+    private val ettersendelseFilnavn = "ettersendelse.pdf"
+    private val soknadsliste: HashMap<String, DigisosSak> = HashMap()
+    private val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
+    private val fillager: FixedFileStorage = FixedFileStorage()
+    private val ettersendelsePdfLager: FixedFileStorage = FixedFileStorage()
 
     fun hentSoknad(fiksDigisosId: String): DigisosSak? {
         log.info("Henter søknad med fiksDigisosId: $fiksDigisosId")
@@ -67,7 +67,7 @@ class SoknadService(
             log.info("Henter søknadsliste. Antall soknader: ${soknadsliste.size}")
             return soknadsliste.values
         }
-        val soknadslisteForFnr = soknadsliste.values.filter { it.sokerFnr.equals(fnr) }.toMutableList()
+        val soknadslisteForFnr = soknadsliste.values.filter { it.sokerFnr == fnr }.toMutableList()
         log.info("Henter søknadsliste. Antall soknader for $fnr: ${soknadslisteForFnr.size}")
         if (filter_soknader_on_fnr) {
             return soknadslisteForFnr
@@ -112,7 +112,7 @@ class SoknadService(
 
         val metadataId = UUID.randomUUID().toString()
 
-        val oldSoknad = soknadsliste.get(fiksDigisosId)
+        val oldSoknad = soknadsliste[fiksDigisosId]
         if (oldSoknad == null) {
             log.info("Oppretter søknad med id: $fiksDigisosId")
             var sistEndret = System.currentTimeMillis()

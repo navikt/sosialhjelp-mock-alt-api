@@ -3,7 +3,6 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks.mellomlagring
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.mellomlagring.MellomlagringService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
-import java.io.InputStream
 
 @RestController
 class FiksMellomlagringController(
@@ -100,16 +98,6 @@ class FiksMellomlagringController(
         )
         return ResponseEntity.ok().build()
     }
-
-    companion object {
-        private val log by logger()
-    }
-
-    data class FilForOpplasting(
-        val filnavn: String,
-        val metadata: FilMetadata,
-        val data: InputStream
-    )
 
     data class FilMetadata(
         val filnavn: String,
