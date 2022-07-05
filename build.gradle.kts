@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.7.0"
+val springBootVersion = "2.7.1"
 val coroutinesVersion = "1.6.3"
-val sosialhjelpCommonVersion = "1.2fac7a7"
+val sosialhjelpCommonVersion = "1.20220629.1332-dfb4541"
 val filformatVersion = "1.2022.04.29-13.11-459bee049a7a"
-val tokenValidationVersion = "2.1.0"
+val tokenValidationVersion = "2.1.1"
 val jacksonVersion = "2.13.3"
 val springdocversion = "1.6.9"
 val jsonSmartVersion = "2.4.8"
@@ -16,7 +16,7 @@ val ktlint = "0.45.2"
 plugins {
     kotlin("jvm") version "1.7.0"
     kotlin("plugin.spring") version "1.7.0"
-    id("org.springframework.boot") version "2.7.0"
+    id("org.springframework.boot") version "2.7.1"
     id("com.github.ben-manes.versions") version "0.42.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
