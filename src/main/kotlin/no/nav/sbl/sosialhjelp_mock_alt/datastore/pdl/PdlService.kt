@@ -52,9 +52,9 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigKontonummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
+import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigTelefonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomDate
-import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -319,7 +319,7 @@ class PdlService(
         barnMap[barnFnr] = defaultBarn(etternavn)
 
         pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
-        krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = randomInt(8).toString())
+        krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
         kontonummerService.putKontonummer(brukerFnr, genererTilfeldigKontonummer())
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
         eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")

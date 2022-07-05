@@ -94,6 +94,12 @@ fun randomInt(length: Int): Int {
     return (Math.random() * 10.0.pow(length.toDouble())).roundToInt()
 }
 
+fun genererTilfeldigTelefonnummer(): String {
+    val min = 10_000_000L
+    val max = 99_999_999L
+    return nextLong(min, max).toString()
+}
+
 fun genererTilfeldigKontonummer(): String {
     val min = 10_000_000_000L
     val max = 99_999_999_999L
