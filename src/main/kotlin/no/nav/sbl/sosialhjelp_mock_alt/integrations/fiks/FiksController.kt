@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks
 
 import com.fasterxml.jackson.core.type.TypeReference
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonAvsender
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSoknadsStatus
@@ -168,6 +169,9 @@ class FiksController(
                 .withHendelsestidspunkt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
                 .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT)
         )
+        digisosApiWrapper.sak.soker.avsender = JsonAvsender()
+            .withSystemnavn("mock-alt")
+            .withSystemversjon("1.0-MOCKVERSJON")
 
         val soknadJson = objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
         val vedleggJson = objectMapper.readValue(request.parameterMap["vedleggJson"]!![0], JsonVedleggSpesifikasjon::class.java)
@@ -219,6 +223,9 @@ class FiksController(
                 .withHendelsestidspunkt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
                 .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT)
         )
+        digisosApiWrapper.sak.soker.avsender = JsonAvsender()
+            .withSystemnavn("mock-alt")
+            .withSystemversjon("1.0-MOCKVERSJON")
 
         val soknadJson = objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
         val vedleggJson = objectMapper.readValue(request.parameterMap["vedleggJson"]!![0], JsonVedleggSpesifikasjon::class.java)
