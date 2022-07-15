@@ -36,7 +36,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Collections
 import java.util.UUID
-import kotlin.collections.get
 import kotlin.collections.set
 
 const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
