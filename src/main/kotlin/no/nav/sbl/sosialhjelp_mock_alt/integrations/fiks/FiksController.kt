@@ -72,7 +72,7 @@ class FiksController(
 
     @GetMapping("/fiks/digisos/api/v1/soknader/{digisosId}")
     fun hentSoknadInnsyn(@PathVariable digisosId: String): ResponseEntity<DigisosSak> {
-        val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.noContent().build()
+        val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.notFound().build()
         feilService.eventueltLagFeil(soknad.sokerFnr, "FixController", "hentSoknad")
         return ResponseEntity.ok(soknad)
     }
