@@ -1,23 +1,24 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.7.1"
-val coroutinesVersion = "1.6.3"
-val sosialhjelpCommonVersion = "1.20220629.1332-dfb4541"
-val filformatVersion = "1.2022.04.29-13.11-459bee049a7a"
-val tokenValidationVersion = "2.1.1"
-val jacksonVersion = "2.13.3"
-val springdocversion = "1.6.9"
+val springBootVersion = "2.7.3"
+val coroutinesVersion = "1.6.4"
+val sosialhjelpCommonVersion = "1.20220718.1347-2b1045d"
+val filformatVersion = "1.2022.07.19-14.28-614820e5640b"
+val tokenValidationVersion = "2.1.4"
+val jacksonVersion = "2.13.4"
+val springdocversion = "1.6.11"
 val jsonSmartVersion = "2.4.8"
 val mockOauth2ServerVersion = "0.5.1"
 val junitVersion = "4.13.2"
 val log4jVersion = "2.17.2"
+val snakeyamlVersion = "1.31"
 val ktlint = "0.45.2"
 
 plugins {
-    kotlin("jvm") version "1.7.0"
-    kotlin("plugin.spring") version "1.7.0"
-    id("org.springframework.boot") version "2.7.1"
+    kotlin("jvm") version "1.7.10"
+    kotlin("plugin.spring") version "1.7.10"
+    id("org.springframework.boot") version "2.7.3"
     id("com.github.ben-manes.versions") version "0.42.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
@@ -94,6 +95,9 @@ dependencies {
         }
         implementation("org.apache.logging.log4j:log4j-to-slf4j:$log4jVersion") {
             because("0-day exploit i version 2.0.0-2.14.1")
+        }
+        implementation("org.yaml:snakeyaml:$snakeyamlVersion") {
+            because("Snyk ønsker versjon 1.31 eller høyere")
         }
     }
 }
