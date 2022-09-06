@@ -12,6 +12,7 @@ val jsonSmartVersion = "2.4.8"
 val mockOauth2ServerVersion = "0.5.1"
 val junitVersion = "4.13.2"
 val log4jVersion = "2.17.2"
+val snakeyamlVersion = "1.31"
 val ktlint = "0.45.2"
 
 plugins {
@@ -94,6 +95,9 @@ dependencies {
         }
         implementation("org.apache.logging.log4j:log4j-to-slf4j:$log4jVersion") {
             because("0-day exploit i version 2.0.0-2.14.1")
+        }
+        implementation("org.yaml:snakeyaml:$snakeyamlVersion") {
+            because("Snyk ønsker versjon 1.31 eller høyere")
         }
     }
 }
