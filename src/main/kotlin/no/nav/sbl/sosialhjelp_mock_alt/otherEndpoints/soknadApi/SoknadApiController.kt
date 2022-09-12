@@ -23,7 +23,7 @@ class SoknadApiController(
 
     @GetMapping("soknad-api/dialog/sistInnsendteSoknad")
     @ResponseBody
-    fun soknadStatus(@RequestHeader headers: HttpHeaders): ResponseEntity<SoknadStatus> {
+    fun soknadStatus(@RequestHeader headers: HttpHeaders): ResponseEntity<SoknadStatusDto> {
         val ident = hentFnrFraToken(headers)
         log.info("Henter soknadsstatus for brukerId $ident")
         return try {
@@ -31,12 +31,19 @@ class SoknadApiController(
             val status = if (personalia.navn.mellomnavn == "IngenSoknader") {
                 null
             } else {
-                SoknadStatus(ident, "Hamar kommune", LocalDateTime.now())
+                SoknadStatusDto(ident, "Hamar kommune", LocalDateTime.now())
             }
             ResponseEntity.ok(status)
         } catch (e: MockAltException) {
             log.info("Feil ved henting av brukers soknadsstatus: ${e.message}")
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
+    }
+
+    @GetMapping("soknad-api/soknadoversikt/soknader")
+    @ResponseBody
+    fun soknadoversikt(@RequestHeader headers: HttpHeaders): ResponseEntity<List<SaksListeDto>> {
+        // dummy endepunkt som returnerer 200 OK med en tom liste.
+        return ResponseEntity.ok(emptyList())
     }
 }
