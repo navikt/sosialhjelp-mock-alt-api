@@ -14,6 +14,7 @@ val junitVersion = "4.13.2"
 val log4jVersion = "2.17.2"
 val snakeyamlVersion = "1.31"
 val ktlint = "0.45.2"
+val svarUtVersion = "1.1.0"
 
 plugins {
     kotlin("jvm") version "1.7.10"
@@ -76,6 +77,9 @@ dependencies {
     implementation("no.nav.security:mock-oauth2-server:$mockOauth2ServerVersion")
 
     implementation("org.springdoc:springdoc-openapi-ui:$springdocversion")
+
+    // SvarUt
+    implementation("no.ks.fiks.svarut:svarut-rest-klient:$svarUtVersion")
 
     testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
