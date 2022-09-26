@@ -17,7 +17,6 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Date
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 class SoknadApiController(
@@ -50,7 +49,7 @@ class SoknadApiController(
 
     @GetMapping("soknad-api/soknadoversikt/soknader")
     @ResponseBody
-    fun soknadoversikt(@RequestHeader headers: HttpHeaders, request: HttpServletRequest): ResponseEntity<List<SaksListeDto>> {
+    fun soknadoversikt(@RequestHeader headers: HttpHeaders): ResponseEntity<List<SaksListeDto>> {
         val ident = hentFnrFraToken(headers)
         val list = svarUtService.getSvarUtSoknader(ident)
             .map {
