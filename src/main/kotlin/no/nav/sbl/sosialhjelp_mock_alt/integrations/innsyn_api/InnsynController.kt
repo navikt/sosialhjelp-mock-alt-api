@@ -22,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @RestController
-class InnsynController(private val soknadService: SoknadService) {
+class InnsynController(
+    private val soknadService: SoknadService
+) {
 
     @PostMapping("/innsyn-api/api/v1/digisosapi/oppdaterDigisosSak")
     fun oppdaterSoknad(
@@ -57,7 +59,7 @@ class InnsynController(private val soknadService: SoknadService) {
     }
 
     @GetMapping("/innsyn-api/api/v1/digisosapi/{digisosId}/innsynsfil")
-    fun hentInnsynsfilWoldena(@PathVariable digisosId: String): ResponseEntity<ByteArray> {
+    fun hentInnsynsfil(@PathVariable digisosId: String): ResponseEntity<ByteArray> {
         val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.noContent().build()
         val innsynsfil = soknadService.hentDokument(digisosId, soknad.digisosSoker!!.metadata)
             ?: return ResponseEntity.noContent().build()
