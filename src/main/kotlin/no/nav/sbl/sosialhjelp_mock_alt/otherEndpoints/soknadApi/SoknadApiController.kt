@@ -54,7 +54,7 @@ class SoknadApiController(
     @ResponseBody
     fun soknadoversikt(@RequestHeader headers: HttpHeaders): ResponseEntity<List<SaksListeDto>> {
         val ident = hentFnrFraToken(headers)
-        val list = svarUtService.getSvarUtSoknader(ident)
+        val svarUtSoknader = svarUtService.getSvarUtSoknader(ident)
             .map {
                 val soknadId = it.first.eksternReferanse.removePrefix("-")
                 SaksListeDto(
@@ -65,6 +65,6 @@ class SoknadApiController(
                     url = "$soknadFrontendBaseUrl/skjema/$soknadId/ettersendelse"
                 )
             }
-        return ResponseEntity.ok(list)
+        return ResponseEntity.ok(svarUtSoknader)
     }
 }
