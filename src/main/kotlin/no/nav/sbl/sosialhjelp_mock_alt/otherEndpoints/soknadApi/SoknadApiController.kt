@@ -59,7 +59,7 @@ class SoknadApiController(
                     soknadTittel = "Økonomisk sosialhjelp ($soknadId)",
                     sistOppdatert = Date.from(LocalDateTime.parse(it.second.innsendingstidspunkt, DateTimeFormatter.ISO_DATE_TIME).toInstant(ZoneOffset.UTC)),
                     kilde = "soknad-api",
-                    url = "$soknadFrontendBaseUrl/sosialhjelp/soknad/skjema/$soknadId/ettersendelse"
+                    url = "$soknadFrontendBaseUrl/skjema/$soknadId/ettersendelse"
                 )
             }
         return ResponseEntity.ok(list)

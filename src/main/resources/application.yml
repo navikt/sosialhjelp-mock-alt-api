@@ -33,4 +33,5 @@ soknad-api-via-docker-compose: ${SOKNAD_API_VIA_DOCKER_COMPOSE:false}
 innsyn-api-via-docker-compose: ${INNSYN_API_VIA_DOCKER_COMPOSE:false}
 modia-api-via-docker-compose: ${MODIA_API_VIA_DOCKER_COMPOSE:false}
 
-soknad-frontend-baseurl: ${HOST_ADDRESS:http://localhost:3000}
+# sett SOKNAD_FRONTEND_BASEURL som env variabel hvis lenke til ettersendelse-side skal bli korrekt ved lokal kjøring, eks: http://localhost:3000/sosialhjelp/soknad
+soknad-frontend-baseurl: ${SOKNAD_FRONTEND_BASEURL:https://digisos.ekstern.dev.nav.no/sosialhjelp/soknad}
