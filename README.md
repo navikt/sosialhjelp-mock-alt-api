@@ -17,19 +17,5 @@ Interne henvendelser kan sendes via Slack i kanalen #team_digisos.
 ### Krav
 - JDK 17
 
-## Teknisk info
-
-### Ktlint
-Hvordan kjøre Ktlint:
-* Fra IDEA: Kjør Gradle Task: sosialhjelp-mock-alt-api -> Tasks -> formatting -> ktlintFormat
-* Fra terminal:
-    * Kun formater: `./gradlew ktlintFormat`
-    * Formater og bygg: `./gradlew ktlintFormat build`
-    * Hvis IntelliJ begynner å hikke, kan en kjøre `./gradlew clean ktlintFormat build`
-
-Endre IntelliJ autoformateringskonfigurasjon for dette prosjektet:
-* `./gradlew ktlintApplyToIdea`
-
-Legg til pre-commit check/format hooks:
-* `./gradlew addKtlintCheckGitPreCommitHook`
-* `./gradlew addKtlintFormatGitPreCommitHook`
+## Hvordan komme i gang
+### [Felles dokumentasjon for våre backend apper](https://teamdigisos.intern.nav.no/docs/utviklerdokumentasjon/kom%20igang%20med%20utvikling#backend-gradle)
