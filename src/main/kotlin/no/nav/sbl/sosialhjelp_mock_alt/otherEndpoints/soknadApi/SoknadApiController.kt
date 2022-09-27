@@ -47,6 +47,9 @@ class SoknadApiController(
         }
     }
 
+    /**
+     * Endepunktet kalles kun ved av innsyn-api ved lokal kjøring
+     */
     @GetMapping("soknad-api/soknadoversikt/soknader")
     @ResponseBody
     fun soknadoversikt(@RequestHeader headers: HttpHeaders): ResponseEntity<List<SaksListeDto>> {
