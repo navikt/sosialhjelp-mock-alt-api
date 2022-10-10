@@ -124,7 +124,6 @@ data class FrontendPersonalia(
     }
 }
 
-
 data class FrontendBarn(
     val fnr: String,
     var adressebeskyttelse: Gradering = Gradering.UGRADERT,

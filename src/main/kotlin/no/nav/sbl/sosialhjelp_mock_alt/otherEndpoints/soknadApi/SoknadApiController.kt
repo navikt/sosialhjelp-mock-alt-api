@@ -2,12 +2,10 @@ package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.soknadApi
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SvarUtService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
-import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
@@ -20,14 +18,12 @@ import java.util.Date
 
 @RestController
 class SoknadApiController(
-    private val pdlService: PdlService,
     private val svarUtService: SvarUtService,
     @Value("\${soknad-frontend-baseurl}") private val soknadFrontendBaseUrl: String
 ) {
     companion object {
         private val log by logger()
     }
-
 
     /**
      * Endepunktet kalles kun av innsyn-api ved lokal kjøring
