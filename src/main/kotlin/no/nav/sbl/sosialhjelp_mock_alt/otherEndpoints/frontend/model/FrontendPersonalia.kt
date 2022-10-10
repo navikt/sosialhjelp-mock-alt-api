@@ -57,7 +57,7 @@ data class FrontendPersonalia(
     var bostotteUtbetalinger: List<UtbetalingerDto>,
     var skattetatenUtbetalinger: List<FrontendSkattbarInntekt>,
     var utbetalingerFraNav: List<FrontendUtbetalingFraNav>,
-    var administratorRoller: List<FrontendAdminRoller>,
+    var administratorRoller: List<AdminRolle>,
     var locked: Boolean = false,
 ) {
     constructor(personalia: Personalia) : this(
@@ -124,7 +124,6 @@ data class FrontendPersonalia(
     }
 }
 
-data class FrontendAdminRoller(val rolle: AdminRolle)
 
 data class FrontendBarn(
     val fnr: String,

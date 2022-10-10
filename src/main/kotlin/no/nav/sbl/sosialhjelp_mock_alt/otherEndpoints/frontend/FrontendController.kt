@@ -16,7 +16,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInnt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skjermedepersoner.SkjermedePersonerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendAdminRoller
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendBarn.Companion.frontendBarn
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia
@@ -129,7 +128,7 @@ class FrontendController(
         frontendPersonalia.bostotteUtbetalinger = bostotteDto.utbetalinger
         frontendPersonalia.utbetalingerFraNav =
             utbetalingService.getUtbetalingerFraNav(personalia.fnr).map { mapToFrontend(it) }
-        frontendPersonalia.administratorRoller = rolleService.hentKonfigurasjon(personalia.fnr).map { FrontendAdminRoller(it) }
+        frontendPersonalia.administratorRoller = rolleService.hentKonfigurasjon(personalia.fnr)
 
         return ResponseEntity.ok(frontendPersonalia)
     }
