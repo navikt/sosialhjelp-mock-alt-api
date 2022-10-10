@@ -28,24 +28,6 @@ class SoknadApiController(
         private val log by logger()
     }
 
-    @GetMapping("soknad-api/dialog/sistInnsendteSoknad")
-    @ResponseBody
-    fun soknadStatus(@RequestHeader headers: HttpHeaders): ResponseEntity<SoknadStatusDto> {
-        val ident = hentFnrFraToken(headers)
-        log.info("Henter soknadsstatus for brukerId $ident")
-        return try {
-            val personalia = pdlService.getPersonalia(ident)
-            val status = if (personalia.navn.mellomnavn == "IngenSoknader") {
-                null
-            } else {
-                SoknadStatusDto(ident, "Hamar kommune", LocalDateTime.now())
-            }
-            ResponseEntity.ok(status)
-        } catch (e: MockAltException) {
-            log.info("Feil ved henting av brukers soknadsstatus: ${e.message}")
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        }
-    }
 
     /**
      * Endepunktet kalles kun av innsyn-api ved lokal kjøring
