@@ -5,9 +5,5 @@ data class AzureAdRoller(
 )
 
 enum class AdminRolle {
-    DIALOG_VEILEDER,
-    DIALOG_ADMINISTRATOR,
-    DIALOG_TEKNISK_ARKIV,
-    DIALOG_INNSIKT,
     MODIA_VEILEDER,
 }

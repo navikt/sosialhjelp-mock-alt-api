@@ -83,7 +83,7 @@ class PdlService(
         )
         krrService.oppdaterKonfigurasjon(bergenFnr, kanVarsles = false)
         opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 3)
-        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4, adminRoller = listOf(AdminRolle.DIALOG_VEILEDER, AdminRolle.DIALOG_ADMINISTRATOR, AdminRolle.MODIA_VEILEDER))
+        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4, adminRoller = listOf(AdminRolle.MODIA_VEILEDER))
 
         val hemmeligBruker = Personalia()
             .withNavn("Hemmelig", "", "Adressesen")

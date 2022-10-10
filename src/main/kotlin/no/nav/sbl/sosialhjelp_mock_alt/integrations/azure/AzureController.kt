@@ -85,10 +85,6 @@ class AzureController(
 
     private fun toAzureRolle(rolle: AdminRolle): AzureAdGruppe {
         return when (rolle) {
-            AdminRolle.DIALOG_VEILEDER -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-veileder", "Dialog-Veiledere")
-            AdminRolle.DIALOG_ADMINISTRATOR -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-admin", "Dialog-Administratorer")
-            AdminRolle.DIALOG_TEKNISK_ARKIV -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-arkiv", "Dialog-Teknisk-arkiv")
-            AdminRolle.DIALOG_INNSIKT -> AzureAdGruppe("0000-MOCK-sosialhjelp-dialog-innsikt", "Dialog-Innsikktere")
             AdminRolle.MODIA_VEILEDER -> AzureAdGruppe("0000-MOCK-sosialhjelp-modia-veileder", "Modia-Veiledere")
         }
     }
@@ -107,10 +103,6 @@ class AzureController(
 
     private fun toAdminRolle(gruppeId: String): AdminRolle? {
         return when (gruppeId) {
-            "0000-MOCK-sosialhjelp-dialog-veileder" -> AdminRolle.DIALOG_VEILEDER
-            "0000-MOCK-sosialhjelp-dialog-admin" -> AdminRolle.DIALOG_ADMINISTRATOR
-            "0000-MOCK-sosialhjelp-dialog-arkiv" -> AdminRolle.DIALOG_TEKNISK_ARKIV
-            "0000-MOCK-sosialhjelp-dialog-innsikt" -> AdminRolle.DIALOG_INNSIKT
             "0000-MOCK-sosialhjelp-modia-veileder" -> AdminRolle.MODIA_VEILEDER
             else -> null
         }
