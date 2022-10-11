@@ -6,10 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/gradle-jdk16@master
+      - uses: actions/setup-java@v2
         with:
-          args: --org=teamdigisos --project-name=${{ github.event.repository.name }} --remote-repo-url=${{ github.event.repository.name }}
+          java-version: "17"
+          distribution: "adopt"
+          cache: "gradle"
+      - name: Install Snyk CLI
+        uses: snyk/actions/setup@master
+      - name: Run Snyk to check for vulnerabilities
+        run: snyk monitor --org=teamdigisos --project-name=${{ env.REPOSITORY_NAME }} --remote-repo-url=${{ env.REPOSITORY_NAME }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           ORG_GRADLE_PROJECT_githubUser: x-access-token
