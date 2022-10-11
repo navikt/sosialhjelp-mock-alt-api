@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.soknadApi
 
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SvarUtService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.beans.factory.annotation.Value
