@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.core.type.TypeReference
+import com.nimbusds.jwt.SignedJWT
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown.model.AzuredingsResponse
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown.model.TokenResponse
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.wellknown.model.WellKnown
@@ -82,7 +83,15 @@ class WellKnownController(
         }
 
         log.info("Utveksler token for $issuer: audience: ${params["audience"]}\n")
-        return TokenResponse(params["subject_token"]!!, "JWT", "JWT", 60)
+        val subjectToken = params["subject_token"]!!
+
+        val newToken = mockOAuth2Server.issueToken(
+            issuerId = issuer,
+            subject = SignedJWT.parse(subjectToken).jwtClaimsSet.subject,
+            audience = params["audience"],
+            claims = mapOf("acr" to "Level4")
+        )
+        return TokenResponse(newToken.serialize(), "JWT", "JWT", 60)
     }
 
     @PostMapping("/azuretoken/{issuer}", produces = ["application/json;charset=UTF-8"])
