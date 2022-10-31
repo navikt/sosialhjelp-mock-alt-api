@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model
 
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.Utbetaling
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import java.time.LocalDate
 
@@ -29,10 +28,5 @@ data class KomponentDto(
 
 data class UtbetalingerResponseDto(
     val utbetalinger: List<UtbetalingDto>?,
-    val feilet: Boolean
-)
-
-data class UtbetalingDataResponseDto(
-    val utbetalinger: List<Utbetaling>?,
     val feilet: Boolean
 )
