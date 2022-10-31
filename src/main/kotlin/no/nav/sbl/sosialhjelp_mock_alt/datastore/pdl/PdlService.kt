@@ -46,7 +46,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.model.AdminRolle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendAdminRoller
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigKontonummer
@@ -84,7 +83,7 @@ class PdlService(
         )
         krrService.oppdaterKonfigurasjon(bergenFnr, kanVarsles = false)
         opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 3)
-        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4, adminRoller = listOf(AdminRolle.DIALOG_VEILEDER, AdminRolle.DIALOG_ADMINISTRATOR, AdminRolle.MODIA_VEILEDER))
+        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4, adminRoller = listOf(AdminRolle.MODIA_VEILEDER))
 
         val hemmeligBruker = Personalia()
             .withNavn("Hemmelig", "", "Adressesen")
@@ -332,7 +331,7 @@ class PdlService(
         skatteetatenService.enableAutoGenerationFor(brukerFnr)
         utbetalingService.enableAutoGenerationFor(brukerFnr)
         bostotteService.enableAutoGenerationFor(brukerFnr)
-        rolleService.leggTilKonfigurasjon(brukerFnr, adminRoller.map { FrontendAdminRoller(it) })
+        rolleService.leggTilKonfigurasjon(brukerFnr, adminRoller)
 
         soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, brukerFnr)
         if (fornavn == "Standard") soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, "15months")
