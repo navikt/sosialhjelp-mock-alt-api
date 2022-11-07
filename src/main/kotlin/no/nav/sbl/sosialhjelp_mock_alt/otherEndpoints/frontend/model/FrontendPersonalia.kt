@@ -26,10 +26,10 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.KomponentDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.UtbetalDataDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.Ytelse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.Ytelseskomponent
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalDataDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Ytelse
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Ytelseskomponent
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt

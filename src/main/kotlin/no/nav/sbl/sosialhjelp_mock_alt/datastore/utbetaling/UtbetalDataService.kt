@@ -1,6 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling
 
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.UtbetalDataDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalDataDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.stereotype.Service
 
