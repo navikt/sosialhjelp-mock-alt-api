@@ -26,11 +26,15 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.KomponentDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.UtbetalDataDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.Ytelse
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.Ytelseskomponent
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toIsoString
+import java.math.BigDecimal
 import java.time.LocalDate
 
 data class FrontendPersonalia(
@@ -119,7 +123,11 @@ data class FrontendPersonalia(
         }
 
         private fun textToLocalDate(string: String): LocalDate {
-            return LocalDate.of(string.substring(0, 4).toInt(), string.substring(5, 7).toInt(), string.substring(8).toInt())
+            return LocalDate.of(
+                string.substring(0, 4).toInt(),
+                string.substring(5, 7).toInt(),
+                string.substring(8).toInt()
+            )
         }
     }
 }
@@ -234,8 +242,23 @@ data class FrontendUtbetalingFraNav(
         )
     }
 
+    fun toUtbetalDataDto(): UtbetalDataDto {
+        return UtbetalDataDto(
+            ytelseListe = listOf(
+                Ytelse(
+                    ytelsestype = ytelsestype,
+                    skattsum = BigDecimal(skattebelop),
+                    ytelseskomponentListe = listOf(Ytelseskomponent(ytelseskomponenttype = ytelseskomponenttype))
+                )
+            ),
+            utbetalingNettobeloep = BigDecimal(belop),
+            utbetalingsdato = dato,
+            utbetalingsmelding = melding,
+        )
+    }
+
     companion object {
-        fun mapToFrontend(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
+        fun mapUtbetalingDtoToFrontendUtbelingFraNav(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
             return FrontendUtbetalingFraNav(
                 utbetaling.netto,
                 utbetaling.utbetalingsdato ?: LocalDate.now(),
@@ -243,6 +266,27 @@ data class FrontendUtbetalingFraNav(
                 "", // melding?
                 utbetaling.skattetrekk,
                 utbetaling.komponenter.first().type ?: ""
+            )
+        }
+
+        // TODO: bytt ut metode over med denne når vi har skrudd over til utbetalData. Pt ubrukt.
+        fun mapUtbetalDataDtoToFrontendUtbelingFraNav(utbetalData: UtbetalDataDto): FrontendUtbetalingFraNav {
+
+            // TODO  en del verdier her som er én verdi kommer fra lister. Velger nå første i liste, men hvordan skal logikken her henge sammen?
+
+            var skattsum = 0.00
+
+            for (ytelse in utbetalData.ytelseListe!!) {
+                skattsum += ytelse.skattsum?.toDouble() ?: 0.0
+            }
+
+            return FrontendUtbetalingFraNav(
+                utbetalData.utbetalingNettobeloep?.toDouble() ?: 0.00,
+                utbetalData.utbetalingsdato ?: LocalDate.now(),
+                utbetalData.ytelseListe.first().ytelsestype ?: "",
+                utbetalData.utbetalingsmelding ?: "",
+                skattsum,
+                utbetalData.ytelseListe.first().ytelseskomponentListe?.first()?.ytelseskomponenttype ?: ""
             )
         }
     }
