@@ -24,7 +24,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPer
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.pdlPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSoknad
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapUtbetalingDtoToFrontendUtbelingFraNav
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapUtbetalingDtoToFrontendUtbetalingFraNav
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendVedlegg
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -133,7 +133,7 @@ class FrontendController(
         frontendPersonalia.bostotteSaker = bostotteDto.saker
         frontendPersonalia.bostotteUtbetalinger = bostotteDto.utbetalinger
         frontendPersonalia.utbetalingerFraNav =
-            utbetalingService.getUtbetalingerFraNav(personalia.fnr).map { mapUtbetalingDtoToFrontendUtbelingFraNav(it) }
+            utbetalingService.getUtbetalingerFraNav(personalia.fnr).map { mapUtbetalingDtoToFrontendUtbetalingFraNav(it) }
         frontendPersonalia.administratorRoller = rolleService.hentKonfigurasjon(personalia.fnr)
 
         return ResponseEntity.ok(frontendPersonalia)

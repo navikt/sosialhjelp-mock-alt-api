@@ -258,7 +258,7 @@ data class FrontendUtbetalingFraNav(
     }
 
     companion object {
-        fun mapUtbetalingDtoToFrontendUtbelingFraNav(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
+        fun mapUtbetalingDtoToFrontendUtbetalingFraNav(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
             return FrontendUtbetalingFraNav(
                 utbetaling.netto,
                 utbetaling.utbetalingsdato ?: LocalDate.now(),
