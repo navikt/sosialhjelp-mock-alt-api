@@ -1,7 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model
 
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.Periode
-
 data class Utbetalingsoppslag(
     val ident: String,
     val rolle: Rolle,

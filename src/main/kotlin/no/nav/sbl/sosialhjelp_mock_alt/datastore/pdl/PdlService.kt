@@ -45,6 +45,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.SivilstandType
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.model.AdminRolle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalDataService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
@@ -63,6 +64,7 @@ class PdlService(
     private val aaregService: AaregService,
     private val skatteetatenService: SkatteetatenService,
     private val utbetalingService: UtbetalingService,
+    private val utbetalDataService: UtbetalDataService,
     private val bostotteService: BostotteService,
     private val soknadService: SoknadService,
     private val kontonummerService: KontonummerService,
@@ -330,6 +332,7 @@ class PdlService(
 
         skatteetatenService.enableAutoGenerationFor(brukerFnr)
         utbetalingService.enableAutoGenerationFor(brukerFnr)
+        utbetalDataService.enableAutoGenerationFor(brukerFnr)
         bostotteService.enableAutoGenerationFor(brukerFnr)
         rolleService.leggTilKonfigurasjon(brukerFnr, adminRoller)
 

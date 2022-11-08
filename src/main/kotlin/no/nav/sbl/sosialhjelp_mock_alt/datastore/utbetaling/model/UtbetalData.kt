@@ -1,75 +1,77 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model
 
+import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigOrganisasjonsnummer
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class UtbetalData {
+data class UtbetalDataDto(
+    val utbetaltTil: Aktoer? = Aktoer(),
+    val utbetalingsmetode: String? = "metode",
+    val utbetalingsstatus: String? = "status",
+    val posteringsdato: LocalDate? = LocalDate.now().minusDays(2),
+    val forfallsdato: LocalDate? = LocalDate.now().minusDays(3),
+    val utbetalingsdato: LocalDate? = LocalDate.now().minusDays(2),
+    val utbetalingNettobeloep: BigDecimal? = BigDecimal("1500.00"),
+    val utbetalingsmelding: String? = "melding",
+    val utbetaltTilKonto: Bankkonto? = Bankkonto(),
+    val ytelseListe: List<Ytelse>? = listOf(Ytelse()),
+)
 
-    data class Utbetaling(
-        val utbetaltTil: Aktoer,
-        val utbetalingsmetode: String,
-        val utbetalingsstatus: String,
-        val posteringsdato: LocalDate,
-        val forfallsdato: LocalDate?,
-        val utbetalingsdato: LocalDate?,
-        val utbetalingNettobeloep: BigDecimal?,
-        val utbetalingsmelding: String?,
-        val utbetaltTilKonto: Bankkonto?,
-        val ytelseListe: List<Ytelse> = emptyList(),
-    )
+data class Ytelse(
+    val ytelsestype: String? = "Barnetrygd",
+    val ytelsesperiode: Periode? = Periode(),
+    val ytelseNettobeloep: BigDecimal? = BigDecimal("1500.00"),
+    val rettighetshaver: Aktoer? = Aktoer(),
+    val skattsum: BigDecimal? = BigDecimal("500.00"),
+    val trekksum: BigDecimal? = BigDecimal("0"),
+    val ytelseskomponentersum: BigDecimal? = BigDecimal("2000"),
+    val skattListe: List<Skatt>? = listOf(Skatt()),
+    val trekkListe: List<Trekk>? = listOf(Trekk()),
+    val ytelseskomponentListe: List<Ytelseskomponent>? = listOf(Ytelseskomponent()),
+    val bilagsnummer: String? = "bilagsnummer",
+    val refundertForOrg: Aktoer? = Aktoer(
+        Aktoertype.ORGANISASJON,
+        genererTilfeldigOrganisasjonsnummer(),
+        "refundert organisasjon"
+    ),
+)
 
-    data class Ytelse(
-        val ytelsestype: String?,
-        val ytelsesperiode: Periode,
-        val ytelseNettobeloep: BigDecimal,
-        val rettighetshaver: Aktoer,
-        val skattsum: BigDecimal,
-        val trekksum: BigDecimal,
-        val ytelseskomponentersum: BigDecimal,
+data class Aktoer(
+    val aktoertype: Aktoertype = Aktoertype.PERSON,
+    val ident: String = "aktoerident",
+    val navn: String? = "aktoernavn",
+)
 
-        val skattListe: List<Skatt>? = null,
-        val trekkListe: List<Trekk>? = null,
-        val ytelseskomponentListe: List<Ytelseskomponent>? = null,
+data class Ytelseskomponent(
+    val ytelseskomponenttype: String? = "Ytelseskomponenttype",
+    val satsbeloep: BigDecimal? = BigDecimal("1500"),
+    val satstype: String? = "satstype",
+    val satsantall: Double? = 2.0,
+    val ytelseskomponentbeloep: BigDecimal? = BigDecimal("2000"),
+)
 
-        val bilagsnummer: String?,
-        val refundertForOrg: Aktoer?,
-    )
+data class Skatt(
+    val skattebeloep: BigDecimal? = BigDecimal("500")
+)
 
-    data class Aktoer(
-        val aktoertype: Aktoertype,
-        val ident: String,
-        val navn: String?,
-    )
+data class Trekk(
+    val trekktype: String? = "Trekktype",
+    val trekkbeloep: BigDecimal? = BigDecimal("0"),
+    val kreditor: String? = "Kreditor",
+)
 
-    data class Ytelseskomponent(
-        val ytelseskomponenttype: String?,
-        val satsbeloep: BigDecimal?,
-        val satstype: String?,
-        val satsantall: Double?,
-        val ytelseskomponentbeloep: BigDecimal?,
-    )
+data class Bankkonto(
+    val kontonummer: String? = "1234567811",
+    val kontotype: String? = "kontotype",
+)
 
-    data class Skatt(val skattebeloep: BigDecimal?)
+data class Periode(
+    val fom: LocalDate = LocalDate.now().minusDays(25),
+    val tom: LocalDate = LocalDate.now().minusDays(5),
+)
 
-    data class Trekk(
-        val trekktype: String?,
-        val trekkbeloep: BigDecimal?,
-        val kreditor: String?,
-    )
-
-    data class Bankkonto(
-        val kontonummer: String,
-        val kontotype: String,
-    )
-
-    data class Periode(
-        val fom: LocalDate,
-        val tom: LocalDate,
-    )
-
-    enum class Aktoertype {
-        PERSON,
-        ORGANISASJON,
-        SAMHANDLER,
-    }
+enum class Aktoertype {
+    PERSON,
+    ORGANISASJON,
+    SAMHANDLER,
 }

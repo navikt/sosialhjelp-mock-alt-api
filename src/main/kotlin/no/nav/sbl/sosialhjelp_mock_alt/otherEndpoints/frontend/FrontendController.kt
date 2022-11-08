@@ -14,6 +14,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skjermedepersoner.SkjermedePersonerService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalDataService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
@@ -23,7 +24,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPer
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.pdlPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSoknad
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapToFrontend
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapUtbetalingDtoToFrontendUtbetalingFraNav
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendVedlegg
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -49,6 +50,7 @@ class FrontendController(
     private val skatteetatenService: SkatteetatenService,
     private val bostotteService: BostotteService,
     private val utbetalingService: UtbetalingService,
+    private val utbetalDataService: UtbetalDataService,
     private val eregService: EregService,
     private val krrService: KrrService,
     private val soknadService: SoknadService,
@@ -94,6 +96,10 @@ class FrontendController(
             ident = personalia.fnr,
             utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalingDto() }
         )
+        utbetalDataService.putUtbetalingerFraNav(
+            ident = personalia.fnr,
+            utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalDataDto() }
+        )
         rolleService.leggTilKonfigurasjon(personalia.fnr, personalia.administratorRoller)
 
         return ResponseEntity.ok("OK")
@@ -127,7 +133,7 @@ class FrontendController(
         frontendPersonalia.bostotteSaker = bostotteDto.saker
         frontendPersonalia.bostotteUtbetalinger = bostotteDto.utbetalinger
         frontendPersonalia.utbetalingerFraNav =
-            utbetalingService.getUtbetalingerFraNav(personalia.fnr).map { mapToFrontend(it) }
+            utbetalingService.getUtbetalingerFraNav(personalia.fnr).map { mapUtbetalingDtoToFrontendUtbetalingFraNav(it) }
         frontendPersonalia.administratorRoller = rolleService.hentKonfigurasjon(personalia.fnr)
 
         return ResponseEntity.ok(frontendPersonalia)

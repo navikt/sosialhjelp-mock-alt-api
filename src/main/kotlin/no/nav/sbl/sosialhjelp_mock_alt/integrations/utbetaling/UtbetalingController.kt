@@ -3,7 +3,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.utbetaling
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalDataService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalData.Utbetaling
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalDataDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingerResponseDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Utbetalingsoppslag
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
@@ -41,7 +41,7 @@ class UtbetalingController(
     fun getUtbetalingerFraNavUtbetaldata(
         @RequestBody body: Utbetalingsoppslag,
         @RequestHeader headers: HttpHeaders
-    ): ResponseEntity<List<Utbetaling>> {
+    ): ResponseEntity<List<UtbetalDataDto>> {
         log.info("RequestBody for hentUtbetalinger fra Utbetaldata: $body")
         val ident = hentFnrFraToken(headers)
         feilService.eventueltLagFeil(ident, "UtbetalingController", "getUtbetalingerFraNav")
