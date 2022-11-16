@@ -1,27 +1,27 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "2.7.3"
+val springBootVersion = "2.7.5"
 val coroutinesVersion = "1.6.4"
-val sosialhjelpCommonVersion = "1.20220718.1347-2b1045d"
-val filformatVersion = "1.2022.07.19-14.28-614820e5640b"
+val sosialhjelpCommonVersion = "1.20221108.1040-97f1b80"
+val filformatVersion = "1.2022.11.11-08.08-6af9f821a746"
 val tokenValidationVersion = "2.1.4"
-val jacksonVersion = "2.13.4"
+val jacksonVersion = "2.14.0"
 val springdocversion = "1.6.11"
 val jsonSmartVersion = "2.4.8"
 val mockOauth2ServerVersion = "0.5.1"
 val junitVersion = "4.13.2"
-val log4jVersion = "2.17.2"
-val snakeyamlVersion = "1.31"
+val log4jVersion = "2.19.0"
+val snakeyamlVersion = "1.33"
 val ktlint = "0.45.2"
 val svarUtVersion = "1.1.0"
 
 plugins {
-    kotlin("jvm") version "1.7.10"
-    kotlin("plugin.spring") version "1.7.10"
-    id("org.springframework.boot") version "2.7.3"
-    id("com.github.ben-manes.versions") version "0.42.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    kotlin("jvm") version "1.7.21"
+    kotlin("plugin.spring") version "1.7.21"
+    id("org.springframework.boot") version "2.7.5"
+    id("com.github.ben-manes.versions") version "0.43.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
 
 group = "no.nav.sbl"
