@@ -244,6 +244,7 @@ data class FrontendUtbetalingFraNav(
 
     fun toUtbetalDataDto(): UtbetalDataDto {
         return UtbetalDataDto(
+            posteringsdato = dato,
             ytelseListe = listOf(
                 Ytelse(
                     ytelsestype = ytelsestype,
