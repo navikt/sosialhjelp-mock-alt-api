@@ -155,62 +155,8 @@ class FiksController(
     }
 
     // Soknad
-    @PostMapping("/fiks/digisos/api/v1/soknader/{kommuneNr}/{fiksDigisosId}")
-    fun lastOppSoknad(
-        @PathVariable kommuneNr: String,
-        @PathVariable(required = false) fiksDigisosId: String?,
-        request: StandardMultipartHttpServletRequest
-    ): ResponseEntity<String> {
-
-        val id = fiksDigisosId ?: UUID.randomUUID().toString()
-        val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
-        digisosApiWrapper.sak.soker.hendelser.add(
-            JsonSoknadsStatus()
-                .withHendelsestidspunkt(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
-                .withType(JsonHendelse.Type.SOKNADS_STATUS).withStatus(JsonSoknadsStatus.Status.MOTTATT)
-        )
-        digisosApiWrapper.sak.soker.avsender = JsonAvsender()
-            .withSystemnavn("mock-alt")
-            .withSystemversjon("1.0-MOCKVERSJON")
-
-        val soknadJson = objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
-        val vedleggJson = objectMapper.readValue(request.parameterMap["vedleggJson"]!![0], JsonVedleggSpesifikasjon::class.java)
-        val fnr = soknadJson.data.personalia.personIdentifikator.verdi
-        feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
-        val tilleggsinformasjonJson = objectMapper.readValue(
-            request.parameterMap["tilleggsinformasjonJson"]!![0],
-            JsonTilleggsinformasjon::class.java
-        )
-        val enhetsnummer = tilleggsinformasjonJson.enhetsnummer
-
-        val dokumenter = mutableListOf<DokumentInfo>()
-        request.fileMap.forEach { (filnavn, fil) ->
-            val dokumentLagerId = soknadService.leggInnIDokumentlager(filnavn, fil.bytes)
-            val dokumentInfo = DokumentInfo(
-                filnavn = filnavn,
-                dokumentlagerDokumentId = dokumentLagerId,
-                storrelse = fil.size,
-            )
-            dokumenter.add(dokumentInfo)
-        }
-
-        soknadService.oppdaterDigisosSak(
-            kommuneNr = kommuneNr,
-            fiksOrgId = null,
-            fnr = fnr!!,
-            fiksDigisosIdInput = id,
-            enhetsnummer = enhetsnummer,
-            digisosApiWrapper = digisosApiWrapper,
-            jsonSoknad = soknadJson,
-            jsonVedlegg = vedleggJson,
-            dokumenter = dokumenter,
-            soknadDokument = dokumenter.firstOrNull { it.filnavn.lowercase() == "soknad.pdf" }
-        )
-        return ResponseEntity.ok(id)
-    }
-
     @PostMapping("/fiks/digisos/api/v2/soknader/{kommuneNr}/{fiksDigisosId}")
-    fun lastOppSoknadV2(
+    fun lastOppSoknad(
         @PathVariable kommuneNr: String,
         @PathVariable(required = false) fiksDigisosId: String?,
         request: StandardMultipartHttpServletRequest
