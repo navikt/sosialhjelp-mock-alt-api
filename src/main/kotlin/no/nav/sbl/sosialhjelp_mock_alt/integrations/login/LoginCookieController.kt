@@ -1,6 +1,8 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.login
 
 import com.nimbusds.jose.JOSEObjectType
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.spring.test.MockLoginController
@@ -11,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletResponse
 
 @RestController
 class LoginCookieController(
