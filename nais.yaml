@@ -46,7 +46,7 @@ spec:
         - application: sosialhjelp-innsyn-api
         - application: sosialhjelp-soknad-api-mock
         - application: sosialhjelp-soknad-api
-        - application: sosialhjelp-avtaler-api
+        - application: sosialhjelp-avtaler-api-dev
   resources:
     limits:
       cpu: 750m
