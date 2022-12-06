@@ -1,5 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.loginApi
 
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import no.nav.sbl.sosialhjelp_mock_alt.config.CORSFilter
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
@@ -27,8 +29,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.net.URISyntaxException
 import java.util.Date
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @RestController
 class LogginApiController(
