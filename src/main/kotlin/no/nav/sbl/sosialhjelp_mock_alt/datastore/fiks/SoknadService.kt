@@ -102,7 +102,8 @@ class SoknadService(
         jsonSoknad: JsonSoknad? = null,
         jsonVedlegg: JsonVedleggSpesifikasjon? = null,
         dokumenter: MutableList<DokumentInfo> = mutableListOf(),
-        soknadDokument: DokumentInfo? = null
+        soknadDokument: DokumentInfo? = null,
+        isPapirSoknad: Boolean = false
     ): String? {
         var fiksDigisosId = fiksDigisosIdInput
         if (fiksDigisosId == null) {
@@ -131,7 +132,7 @@ class SoknadService(
                     vedleggMetadata = vedleggMetadataId,
                     soknadDokument = soknadDokument ?: DokumentInfo("", "", 0L),
                     vedlegg = Collections.emptyList(),
-                    timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper)
+                    timestampSendt = if (isPapirSoknad) null else femMinutterForMottattSoknad(digisosApiWrapper)
                 ),
                 ettersendtInfoNAV = EttersendtInfoNAV(Collections.emptyList()),
                 digisosSoker = null,
@@ -224,7 +225,7 @@ class SoknadService(
         val digisosSak = hentSak(id)
         val timestampSendt = digisosSak.originalSoknadNAV!!.timestampSendt
         val tidligsteHendelsetidspunkt = digisosApiWrapper.sak.soker.hendelser.minByOrNull { it.hendelsestidspunkt }!!.hendelsestidspunkt
-        if (unixToLocalDateTime(timestampSendt).isAfter(tidligsteHendelsetidspunkt.toLocalDateTime())) {
+        if (timestampSendt != null && unixToLocalDateTime(timestampSendt).isAfter(tidligsteHendelsetidspunkt.toLocalDateTime())) {
             val oppdatertDigisosSak = digisosSak.updateOriginalSoknadNAV(digisosSak.originalSoknadNAV!!.copy(timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper)))
             soknadsliste[id] = oppdatertDigisosSak
         }
