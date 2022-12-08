@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val springBootVersion = "2.7.5"
 val coroutinesVersion = "1.6.4"
-val sosialhjelpCommonVersion = "1.20221108.1040-97f1b80"
+val sosialhjelpCommonVersion = "1.20221214.0749-b633a3e"
 val filformatVersion = "1.2022.11.16-08.18-c36037400819"
 val tokenValidationVersion = "2.1.7"
 val jacksonVersion = "2.14.0"
@@ -36,6 +36,7 @@ val githubUser: String by project
 val githubPassword: String by project
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         url = uri("https://maven.pkg.github.com/navikt/sosialhjelp-common")

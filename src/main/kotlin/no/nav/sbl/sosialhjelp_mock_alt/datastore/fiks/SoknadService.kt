@@ -102,7 +102,8 @@ class SoknadService(
         jsonSoknad: JsonSoknad? = null,
         jsonVedlegg: JsonVedleggSpesifikasjon? = null,
         dokumenter: MutableList<DokumentInfo> = mutableListOf(),
-        soknadDokument: DokumentInfo? = null
+        soknadDokument: DokumentInfo? = null,
+        isPapirSoknad: Boolean = false
     ): String? {
         var fiksDigisosId = fiksDigisosIdInput
         if (fiksDigisosId == null) {
@@ -125,14 +126,18 @@ class SoknadService(
                 fiksOrgId = fiksOrgId ?: "",
                 kommunenummer = kommuneNr,
                 sistEndret = sistEndret,
-                originalSoknadNAV = OriginalSoknadNAV(
-                    navEksternRefId = "110000000",
-                    metadata = metadataId,
-                    vedleggMetadata = vedleggMetadataId,
-                    soknadDokument = soknadDokument ?: DokumentInfo("", "", 0L),
-                    vedlegg = Collections.emptyList(),
-                    timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper)
-                ),
+                originalSoknadNAV = if (isPapirSoknad) {
+                    null
+                } else {
+                    OriginalSoknadNAV(
+                        navEksternRefId = "110000000",
+                        metadata = metadataId,
+                        vedleggMetadata = vedleggMetadataId,
+                        soknadDokument = soknadDokument ?: DokumentInfo("", "", 0L),
+                        vedlegg = Collections.emptyList(),
+                        timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper)
+                    )
+                },
                 ettersendtInfoNAV = EttersendtInfoNAV(Collections.emptyList()),
                 digisosSoker = null,
                 tilleggsinformasjon = Tilleggsinformasjon(
@@ -163,7 +168,13 @@ class SoknadService(
                 dokumentlagerId = UUID.randomUUID().toString()
                 log.info("Lag nytt søker dokument med dokumentlagerId: $dokumentlagerId")
                 dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
-                val updatedDigisosSak = oldSoknad.updateDigisosSoker(DigisosSoker(dokumentlagerId, Collections.emptyList(), System.currentTimeMillis()))
+                val updatedDigisosSak = oldSoknad.updateDigisosSoker(
+                    DigisosSoker(
+                        dokumentlagerId,
+                        Collections.emptyList(),
+                        System.currentTimeMillis()
+                    )
+                )
                 soknadsliste.replace(fiksDigisosId, updatedDigisosSak)
             } else {
                 log.info("Oppdaterer søker dokument med dokumentlagerId: $dokumentlagerId")
@@ -184,7 +195,8 @@ class SoknadService(
             val navEksternRefId = "ettersendelseNavEksternRef$idNumber"
             val dokumentInfo = DokumentInfo(nyttVedlegg.filnavn, dokumentId, nyttVedlegg.storrelse)
             val ettersendelse = Ettersendelse(navEksternRefId, dokumentId, listOf(dokumentInfo), timestamp)
-            val nyListe: List<Ettersendelse> = listOf(digisosSak.ettersendtInfoNAV!!.ettersendelser, listOf(ettersendelse)).flatten()
+            val nyListe: List<Ettersendelse> =
+                listOf(digisosSak.ettersendtInfoNAV!!.ettersendelser, listOf(ettersendelse)).flatten()
 
             val updatedDigisosSak = digisosSak.updateEttersendtInfoNAV(EttersendtInfoNAV(nyListe))
             soknadsliste[id] = updatedDigisosSak
@@ -212,20 +224,30 @@ class SoknadService(
     }
 
     private fun femMinutterForMottattSoknad(digisosApiWrapper: DigisosApiWrapper): Long {
-        val mottattTidspunkt = digisosApiWrapper.sak.soker.hendelser.minByOrNull { it.hendelsestidspunkt }!!.hendelsestidspunkt
+        val mottattTidspunkt =
+            digisosApiWrapper.sak.soker.hendelser.minByOrNull { it.hendelsestidspunkt }!!.hendelsestidspunkt
         return try {
-            mottattTidspunkt.toLocalDateTime().minusMinutes(5).atZone(ZoneId.of("Europe/Oslo")).toInstant().toEpochMilli()
+            mottattTidspunkt.toLocalDateTime().minusMinutes(5).atZone(ZoneId.of("Europe/Oslo")).toInstant()
+                .toEpochMilli()
         } catch (e: DateTimeParseException) {
             LocalDateTime.now().minusMinutes(5).atZone(ZoneId.of("Europe/Oslo")).toInstant().toEpochMilli()
         }
     }
 
-    private fun oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(id: String, digisosApiWrapper: DigisosApiWrapper) {
+    private fun oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(
+        id: String,
+        digisosApiWrapper: DigisosApiWrapper
+    ) {
         val digisosSak = hentSak(id)
-        val timestampSendt = digisosSak.originalSoknadNAV!!.timestampSendt
-        val tidligsteHendelsetidspunkt = digisosApiWrapper.sak.soker.hendelser.minByOrNull { it.hendelsestidspunkt }!!.hendelsestidspunkt
-        if (unixToLocalDateTime(timestampSendt).isAfter(tidligsteHendelsetidspunkt.toLocalDateTime())) {
-            val oppdatertDigisosSak = digisosSak.updateOriginalSoknadNAV(digisosSak.originalSoknadNAV!!.copy(timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper)))
+        val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
+        val tidligsteHendelsetidspunkt =
+            digisosApiWrapper.sak.soker.hendelser.minByOrNull { it.hendelsestidspunkt }!!.hendelsestidspunkt
+        if (timestampSendt != null && unixToLocalDateTime(timestampSendt).isAfter(tidligsteHendelsetidspunkt.toLocalDateTime())) {
+            val oppdatertDigisosSak = digisosSak.updateOriginalSoknadNAV(
+                digisosSak.originalSoknadNAV!!.copy(
+                    timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper)
+                )
+            )
             soknadsliste[id] = oppdatertDigisosSak
         }
     }
