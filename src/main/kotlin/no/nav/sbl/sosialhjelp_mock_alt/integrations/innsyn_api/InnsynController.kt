@@ -30,6 +30,7 @@ class InnsynController(
     fun oppdaterSoknad(
         @RequestParam(required = false) fiksDigisosId: String?,
         @RequestParam(required = false) fnr: String?,
+        @RequestParam(required = false) isPapirSoknad: String?,
         @RequestBody body: String,
         @RequestHeader headers: HttpHeaders,
         @CookieValue(name = "localhost-idtoken") cookie: String?,
@@ -43,7 +44,8 @@ class InnsynController(
         val faktiskFnr = hentFnrFraInputOrTokenOrCookieOrDefault(fnr, headers, cookie)
         soknadService.oppdaterDigisosSak(
             kommuneNr = "0301", fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
-            fnr = faktiskFnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper
+            fnr = faktiskFnr, fiksDigisosIdInput = id, digisosApiWrapper = digisosApiWrapper,
+            isPapirSoknad = isPapirSoknad.toBoolean()
         )
         return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
     }
