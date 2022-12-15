@@ -9,14 +9,17 @@ data class AzureAdBruker(
     val surname: String,
     val onPremisesSamAccountName: String,
 ) {
-    constructor(personalia: Personalia) : this(
-        id = personalia.fnr,
-        userPrincipalName = "${personalia.navn.fornavn} ${personalia.navn.mellomnavn} ${personalia.navn.etternavn}"
-            .replace("  ", " ").trim(),
-        givenName = "${personalia.navn.fornavn} ${personalia.navn.mellomnavn}".trim(),
-        surname = personalia.navn.etternavn,
-        onPremisesSamAccountName = "${personalia.navn.etternavn.subSequence(0,1)}123456"
-    )
+  constructor(
+      personalia: Personalia
+  ) : this(
+      id = personalia.fnr,
+      userPrincipalName =
+          "${personalia.navn.fornavn} ${personalia.navn.mellomnavn} ${personalia.navn.etternavn}"
+              .replace("  ", " ")
+              .trim(),
+      givenName = "${personalia.navn.fornavn} ${personalia.navn.mellomnavn}".trim(),
+      surname = personalia.navn.etternavn,
+      onPremisesSamAccountName = "${personalia.navn.etternavn.subSequence(0,1)}123456")
 }
 
 class AzureAdBrukere(val value: List<AzureAdBruker>)

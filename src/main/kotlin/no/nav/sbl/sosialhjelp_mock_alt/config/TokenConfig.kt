@@ -8,12 +8,15 @@ import org.springframework.context.annotation.Import
 @Import(MockOAuth2ServerAutoConfiguration::class)
 class TokenConfig {
 
-    // Mulig starte mockOAuth2Server manuelt fremfor med AutoConfiguration.
-    //
-    // WellKnownController
-    // - wellknown for issuer -> /well-known/{issuer}  -> gå til discoveryurl for issuer i mockOauth2Server
-    // - jwks for issuer      -> /jwks/{issuer}      -> gå til jwks url for issuer i mockOauth2Server
-    //
-    // LoginCookieController
-    // - addCookie            -> /login/cookie/{issuer}    -> kopiert og tilpasset fra MockLoginController
+  // Mulig starte mockOAuth2Server manuelt fremfor med AutoConfiguration.
+  //
+  // WellKnownController
+  // - wellknown for issuer -> /well-known/{issuer}  -> gå til discoveryurl for issuer i
+  // mockOauth2Server
+  // - jwks for issuer      -> /jwks/{issuer}      -> gå til jwks url for issuer i
+  // mockOauth2Server
+  //
+  // LoginCookieController
+  // - addCookie            -> /login/cookie/{issuer}    -> kopiert og tilpasset fra
+  // MockLoginController
 }

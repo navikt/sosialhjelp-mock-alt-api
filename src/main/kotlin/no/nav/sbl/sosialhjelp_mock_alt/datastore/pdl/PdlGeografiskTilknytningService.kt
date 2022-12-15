@@ -10,30 +10,30 @@ import org.springframework.stereotype.Component
 @Component
 class PdlGeografiskTilknytningService {
 
-    private val gtMap: HashMap<String, PdlGeografiskTilknytningResponse> = HashMap()
+  private val gtMap: HashMap<String, PdlGeografiskTilknytningResponse> = HashMap()
 
-    fun getGeografiskTilknytning(ident: String): PdlGeografiskTilknytningResponse {
-        log.info("Henter PDL GT for ident: $ident")
-        return gtMap[ident] ?: PdlGeografiskTilknytningResponse.defaultResponse()
-    }
+  fun getGeografiskTilknytning(ident: String): PdlGeografiskTilknytningResponse {
+    log.info("Henter PDL GT for ident: $ident")
+    return gtMap[ident] ?: PdlGeografiskTilknytningResponse.defaultResponse()
+  }
 
-    fun putGeografiskTilknytning(ident: String, gt: String) {
-        val type = if (gt.length == 6) GtType.BYDEL else GtType.KOMMUNE
+  fun putGeografiskTilknytning(ident: String, gt: String) {
+    val type = if (gt.length == 6) GtType.BYDEL else GtType.KOMMUNE
 
-        gtMap[ident] = PdlGeografiskTilknytningResponse(
+    gtMap[ident] =
+        PdlGeografiskTilknytningResponse(
             errors = null,
-            data = PdlHentGeografiskTilknytning(
-                hentGeografiskTilknytning = PdlGeografiskTilknytning(
-                    gtType = type,
-                    gtKommune = if (type == GtType.KOMMUNE) gt else null,
-                    gtBydel = if (type == GtType.BYDEL) gt else null,
-                    gtLand = null
-                )
-            )
-        )
-    }
+            data =
+                PdlHentGeografiskTilknytning(
+                    hentGeografiskTilknytning =
+                        PdlGeografiskTilknytning(
+                            gtType = type,
+                            gtKommune = if (type == GtType.KOMMUNE) gt else null,
+                            gtBydel = if (type == GtType.BYDEL) gt else null,
+                            gtLand = null)))
+  }
 
-    companion object {
-        private val log by logger()
-    }
+  companion object {
+    private val log by logger()
+  }
 }

@@ -1,9 +1,9 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
+import java.time.LocalDate
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomDate
 import org.joda.time.DateTime
-import java.time.LocalDate
 
 data class Personalia(
     val fnr: String = genererTilfeldigPersonnummer(),
@@ -15,62 +15,67 @@ data class Personalia(
     var ektefelleFodselsdato: LocalDate = randomDate(),
     var forelderBarnRelasjon: List<ForelderBarnRelasjon> = emptyList(),
     var starsborgerskap: String = "NOR",
-    var bostedsadresse: ForenkletBostedsadresse = ForenkletBostedsadresse(adressenavn = "Hovedveien", husnummer = 42, postnummer = "0101", kommunenummer = "0301"),
+    var bostedsadresse: ForenkletBostedsadresse =
+        ForenkletBostedsadresse(
+            adressenavn = "Hovedveien",
+            husnummer = 42,
+            postnummer = "0101",
+            kommunenummer = "0301"),
     var locked: Boolean = false,
     var opprettetTidspunkt: Long = DateTime.now().millis
 ) {
-    fun withNavn(fornavn: String, mellomnavn: String, etternavn: String): Personalia {
-        navn.fornavn = fornavn
-        navn.mellomnavn = mellomnavn
-        navn.etternavn = etternavn
-        return this
-    }
+  fun withNavn(fornavn: String, mellomnavn: String, etternavn: String): Personalia {
+    navn.fornavn = fornavn
+    navn.mellomnavn = mellomnavn
+    navn.etternavn = etternavn
+    return this
+  }
 
-    fun withAdressebeskyttelse(nyVerdi: Gradering): Personalia {
-        adressebeskyttelse = nyVerdi
-        return this
-    }
+  fun withAdressebeskyttelse(nyVerdi: Gradering): Personalia {
+    adressebeskyttelse = nyVerdi
+    return this
+  }
 
-    fun withSivilstand(nyVerdi: String): Personalia {
-        sivilstand = nyVerdi
-        return this
-    }
+  fun withSivilstand(nyVerdi: String): Personalia {
+    sivilstand = nyVerdi
+    return this
+  }
 
-    fun withEktefelleType(nyVerdi: String): Personalia {
-        ektefelleType = nyVerdi
-        return this
-    }
+  fun withEktefelleType(nyVerdi: String): Personalia {
+    ektefelleType = nyVerdi
+    return this
+  }
 
-    fun withEktefelleFodselsDato(nyDato: LocalDate): Personalia {
-        ektefelleFodselsdato = nyDato
-        ektefelleFnr = genererTilfeldigPersonnummer(ektefelleFodselsdato)
-        return this
-    }
+  fun withEktefelleFodselsDato(nyDato: LocalDate): Personalia {
+    ektefelleFodselsdato = nyDato
+    ektefelleFnr = genererTilfeldigPersonnummer(ektefelleFodselsdato)
+    return this
+  }
 
-    fun withStarsborgerskap(nyVerdi: String): Personalia {
-        starsborgerskap = nyVerdi
-        return this
-    }
+  fun withStarsborgerskap(nyVerdi: String): Personalia {
+    starsborgerskap = nyVerdi
+    return this
+  }
 
-    fun locked(): Personalia {
-        locked = true
-        return this
-    }
+  fun locked(): Personalia {
+    locked = true
+    return this
+  }
 
-    fun withOpprettetTidspunkt(tidspunkt: Long): Personalia {
-        opprettetTidspunkt = tidspunkt
-        return this
-    }
+  fun withOpprettetTidspunkt(tidspunkt: Long): Personalia {
+    opprettetTidspunkt = tidspunkt
+    return this
+  }
 
-    fun withBostedsadresse(nyBostedsadresse: ForenkletBostedsadresse): Personalia {
-        bostedsadresse = nyBostedsadresse
-        return this
-    }
+  fun withBostedsadresse(nyBostedsadresse: ForenkletBostedsadresse): Personalia {
+    bostedsadresse = nyBostedsadresse
+    return this
+  }
 
-    fun withForelderBarnRelasjon(barnFnr: String): Personalia {
-        forelderBarnRelasjon = listOf(ForelderBarnRelasjon(barnFnr, "barn", "forelder"))
-        return this
-    }
+  fun withForelderBarnRelasjon(barnFnr: String): Personalia {
+    forelderBarnRelasjon = listOf(ForelderBarnRelasjon(barnFnr, "barn", "forelder"))
+    return this
+  }
 }
 
 data class ForelderBarnRelasjon(

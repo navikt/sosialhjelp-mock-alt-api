@@ -8,11 +8,11 @@ data class Utbetalingsoppslag(
 )
 
 enum class Rolle(val databaseverdi: String) {
-    UTBETALT_TIL("UtbetaltTil"),
-    RETTIGHETSHAVER("Rettighetshaver")
+  UTBETALT_TIL("UtbetaltTil"),
+  RETTIGHETSHAVER("Rettighetshaver")
 }
 
 enum class Periodetype(val databaseverdi: String) {
-    UTBETALINGSPERIODE("Utbetalingsperiode"),
-    YTELSESPERIODE("Ytelsesperiode")
+  UTBETALINGSPERIODE("Utbetalingsperiode"),
+  YTELSESPERIODE("Ytelsesperiode")
 }

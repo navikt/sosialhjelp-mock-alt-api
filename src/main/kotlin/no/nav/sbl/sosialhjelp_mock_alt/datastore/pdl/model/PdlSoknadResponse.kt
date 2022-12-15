@@ -1,28 +1,20 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
-data class PdlSoknadPersonResponse(
-    val errors: List<PdlError>?,
-    val data: PdlSoknadHentPerson?
-)
+data class PdlSoknadPersonResponse(val errors: List<PdlError>?, val data: PdlSoknadHentPerson?)
 
 data class PdlSoknadEktefelleResponse(
     val errors: List<PdlError>?,
     val data: PdlSoknadHentEktefelle?
 )
 
-data class PdlSoknadBarnResponse(
-    val errors: List<PdlError>?,
-    val data: PdlSoknadHentBarn?
-)
+data class PdlSoknadBarnResponse(val errors: List<PdlError>?, val data: PdlSoknadHentBarn?)
 
 data class PdlSoknadAdressebeskyttelseResponse(
     val errors: List<PdlError>?,
     val data: PdlSoknadHentAdressebeskyttelse?
 )
 
-data class PdlSoknadHentPerson(
-    val hentPerson: PdlSoknadPerson?
-)
+data class PdlSoknadHentPerson(val hentPerson: PdlSoknadPerson?)
 
 data class PdlSoknadPerson(
     val bostedsadresse: List<PdlBostedsadresse>?,
@@ -33,9 +25,7 @@ data class PdlSoknadPerson(
     val statsborgerskap: List<PdlStatsborgerskap>?,
 )
 
-data class PdlSoknadHentEktefelle(
-    val hentPerson: PdlSoknadEktefelle?
-)
+data class PdlSoknadHentEktefelle(val hentPerson: PdlSoknadEktefelle?)
 
 data class PdlSoknadEktefelle(
     val adressebeskyttelse: List<Adressebeskyttelse>?,
@@ -44,9 +34,7 @@ data class PdlSoknadEktefelle(
     val navn: List<PdlSoknadPersonNavn>?,
 )
 
-data class PdlSoknadHentBarn(
-    val hentPerson: PdlSoknadBarn?
-)
+data class PdlSoknadHentBarn(val hentPerson: PdlSoknadBarn?)
 
 data class PdlSoknadBarn(
     val adressebeskyttelse: List<Adressebeskyttelse>?,
@@ -64,10 +52,6 @@ data class PdlSoknadPersonNavn(
     val folkeregistermetadata: PdlFolkeregistermetadata = defaultFolkeregistermetadata(),
 )
 
-data class PdlSoknadHentAdressebeskyttelse(
-    val hentPerson: PdlSoknadAdressebeskyttelse?
-)
+data class PdlSoknadHentAdressebeskyttelse(val hentPerson: PdlSoknadAdressebeskyttelse?)
 
-data class PdlSoknadAdressebeskyttelse(
-    val adressebeskyttelse: List<Adressebeskyttelse>?
-)
+data class PdlSoknadAdressebeskyttelse(val adressebeskyttelse: List<Adressebeskyttelse>?)

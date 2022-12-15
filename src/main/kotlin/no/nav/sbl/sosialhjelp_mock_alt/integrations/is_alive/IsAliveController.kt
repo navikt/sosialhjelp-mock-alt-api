@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class IsAliveController {
-    @GetMapping("/internal/isAlive")
-    fun isAlive(@RequestParam parameters: MultiValueMap<String, String>): String {
-        return "OK"
-    }
+  @GetMapping("/internal/isAlive")
+  fun isAlive(@RequestParam parameters: MultiValueMap<String, String>): String {
+    return "OK"
+  }
 
-    @GetMapping("/internal/isReady")
-    fun isReady(@RequestParam parameters: MultiValueMap<String, String>): String {
-        return "OK"
-    }
+  @GetMapping("/internal/isReady")
+  fun isReady(@RequestParam parameters: MultiValueMap<String, String>): String {
+    return "OK"
+  }
 }

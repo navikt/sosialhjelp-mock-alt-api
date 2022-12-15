@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class PrometheusController {
-    @RequestMapping("/internal/prometheus")
-    fun fakePrometheus(request: RequestEntity<String>): ResponseEntity<String> {
-        return ResponseEntity.ok().build()
-    }
+  @RequestMapping("/internal/prometheus")
+  fun fakePrometheus(request: RequestEntity<String>): ResponseEntity<String> {
+    return ResponseEntity.ok().build()
+  }
 }

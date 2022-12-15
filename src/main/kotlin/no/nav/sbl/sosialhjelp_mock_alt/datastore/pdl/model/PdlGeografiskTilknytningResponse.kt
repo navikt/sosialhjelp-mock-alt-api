@@ -4,26 +4,23 @@ data class PdlGeografiskTilknytningResponse(
     val errors: List<PdlError>?,
     val data: PdlHentGeografiskTilknytning?
 ) {
-    companion object {
-        fun defaultResponse(): PdlGeografiskTilknytningResponse {
-            return PdlGeografiskTilknytningResponse(
-                errors = null,
-                data = PdlHentGeografiskTilknytning(
-                    hentGeografiskTilknytning = PdlGeografiskTilknytning(
-                        gtType = GtType.KOMMUNE,
-                        gtKommune = "0301",
-                        gtBydel = null,
-                        gtLand = null
-                    )
-                )
-            )
-        }
+  companion object {
+    fun defaultResponse(): PdlGeografiskTilknytningResponse {
+      return PdlGeografiskTilknytningResponse(
+          errors = null,
+          data =
+              PdlHentGeografiskTilknytning(
+                  hentGeografiskTilknytning =
+                      PdlGeografiskTilknytning(
+                          gtType = GtType.KOMMUNE,
+                          gtKommune = "0301",
+                          gtBydel = null,
+                          gtLand = null)))
     }
+  }
 }
 
-data class PdlHentGeografiskTilknytning(
-    val hentGeografiskTilknytning: PdlGeografiskTilknytning?
-)
+data class PdlHentGeografiskTilknytning(val hentGeografiskTilknytning: PdlGeografiskTilknytning?)
 
 data class PdlGeografiskTilknytning(
     val gtType: GtType,
@@ -33,5 +30,8 @@ data class PdlGeografiskTilknytning(
 )
 
 enum class GtType {
-    KOMMUNE, BYDEL, UTLAND, UDEFINERT
+  KOMMUNE,
+  BYDEL,
+  UTLAND,
+  UDEFINERT
 }
