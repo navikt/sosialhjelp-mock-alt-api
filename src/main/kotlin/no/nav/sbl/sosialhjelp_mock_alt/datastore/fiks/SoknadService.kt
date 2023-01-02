@@ -34,7 +34,6 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-import java.util.Collections
 import java.util.UUID
 import kotlin.collections.set
 
@@ -134,11 +133,11 @@ class SoknadService(
                         metadata = metadataId,
                         vedleggMetadata = vedleggMetadataId,
                         soknadDokument = soknadDokument ?: DokumentInfo("", "", 0L),
-                        vedlegg = Collections.emptyList(),
+                        vedlegg = emptyList(),
                         timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper)
                     )
                 },
-                ettersendtInfoNAV = EttersendtInfoNAV(Collections.emptyList()),
+                ettersendtInfoNAV = EttersendtInfoNAV(emptyList()),
                 digisosSoker = null,
                 tilleggsinformasjon = Tilleggsinformasjon(
                     enhetsnummer = enhetsnummer
@@ -171,7 +170,7 @@ class SoknadService(
                 val updatedDigisosSak = oldSoknad.updateDigisosSoker(
                     DigisosSoker(
                         dokumentlagerId,
-                        Collections.emptyList(),
+                        emptyList(),
                         System.currentTimeMillis()
                     )
                 )

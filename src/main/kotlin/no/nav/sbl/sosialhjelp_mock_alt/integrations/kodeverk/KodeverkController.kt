@@ -22,7 +22,7 @@ class KodeverkController(
         landkoder = lesKodeverk("landkoder")
         postnummer = lesKodeverk("postnummer")
         kommuner.betydninger.keys.forEach { kommuneInfoService.addKommunieInfo(it) }
-        kommuneInfoService.addSvarutKommuneInfo("0701")
+        kommuneInfoService.addSvarutKommuneInfo("3801")
     }
 
     private fun lesKodeverk(navn: String): KodeverkDto {

@@ -25,7 +25,7 @@ class NorgService {
 
         gtNavEnheter["0301"] = sentrum
         gtNavEnheter["4601"] = bergenhus
-        gtNavEnheter["0701"] = horten
+        gtNavEnheter["3801"] = horten
     }
 
     fun getNavenhet(enhetsnr: String): NavEnhet? {
