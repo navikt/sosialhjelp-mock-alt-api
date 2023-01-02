@@ -3,7 +3,6 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks
 import no.nav.sosialhjelp.api.fiks.KommuneInfo
 import no.nav.sosialhjelp.api.fiks.Kontaktpersoner
 import org.springframework.stereotype.Service
-import java.util.Collections
 
 @Service
 class KommuneInfoService {
@@ -32,8 +31,8 @@ class KommuneInfoService {
         harMidlertidigDeaktivertOppdateringer = false,
         harMidlertidigDeaktivertMottak = false,
         kontaktpersoner = Kontaktpersoner(
-            Collections.singletonList("Kontakt$id@navo.no"),
-            Collections.singletonList("Test$id@navno.no")
+            listOf("Kontakt$id@navo.no"),
+            listOf("Test$id@navno.no")
         ),
         harNksTilgang = false,
         behandlingsansvarlig = null
@@ -46,8 +45,8 @@ class KommuneInfoService {
         harMidlertidigDeaktivertOppdateringer = false,
         harMidlertidigDeaktivertMottak = false,
         kontaktpersoner = Kontaktpersoner(
-            Collections.singletonList("Kontakt$id@navo.no"),
-            Collections.singletonList("Test$id@navno.no")
+            listOf("Kontakt$id@navo.no"),
+            listOf("Test$id@navno.no")
         ),
         harNksTilgang = true,
         behandlingsansvarlig = null
