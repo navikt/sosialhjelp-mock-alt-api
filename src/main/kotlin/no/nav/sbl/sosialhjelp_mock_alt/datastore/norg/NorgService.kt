@@ -15,7 +15,7 @@ class NorgService {
         val aarstad = lagMockNavEnhet("1208", "NAV Årstad, Årstad kommune")
         val bergenhus = lagMockNavEnhet("1209", "NAV Bergenhus, Bergen kommune")
         val ytrebygda = lagMockNavEnhet("1210", "NAV Ytrebygda, Bergen kommune")
-        val horten = lagMockNavEnhet("0701", "NAV Horten")
+        val horten = lagMockNavEnhet("3801", "NAV Horten")
 
         navEnheter[sentrum.enhetNr] = sentrum
         navEnheter[grunerokka.enhetNr] = grunerokka
@@ -25,7 +25,7 @@ class NorgService {
 
         gtNavEnheter["0301"] = sentrum
         gtNavEnheter["4601"] = bergenhus
-        gtNavEnheter["0701"] = horten
+        gtNavEnheter["3801"] = horten
     }
 
     fun getNavenhet(enhetsnr: String): NavEnhet? {
