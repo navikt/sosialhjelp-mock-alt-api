@@ -7,6 +7,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontoregisterService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.krr.KrrService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
@@ -55,6 +56,7 @@ class FrontendController(
     private val krrService: KrrService,
     private val soknadService: SoknadService,
     private val kontonummerService: KontonummerService,
+    private val kontoregisterService: KontoregisterService,
     private val rolleService: RolleService,
 ) {
     companion object {
@@ -76,6 +78,7 @@ class FrontendController(
         krrService.oppdaterKonfigurasjon(personalia.fnr, personalia.kanVarsles, personalia.epost, personalia.telefonnummer)
         if (personalia.kontonummer.isNotEmpty()) {
             kontonummerService.putKontonummer(personalia.fnr, personalia.kontonummer)
+            kontoregisterService.putKonto(personalia.fnr, personalia.kontonummer)
         }
         aaregService.setArbeidsforholdForFnr(
             personalia.fnr, personalia.arbeidsforhold.map { aaregArbeidsforhold(personalia.fnr, it) }
