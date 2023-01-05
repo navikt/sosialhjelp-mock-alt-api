@@ -31,13 +31,13 @@ class KontonummerController(
 
     @GetMapping("/api/borger/v1/hent-aktiv-konto")
     fun hentKontoNummerFraKontoRegister(
-        @RequestHeader headers: HttpHeaders) : ResponseEntity<KontoDto>{
+        @RequestHeader headers: HttpHeaders
+    ): ResponseEntity<KontoDto> {
         val ident = hentFnrFraToken(headers)
         val responseDto = kontoregisterService.getKonto(ident)
         log.info("Henter konto: ${objectMapper.writeValueAsString(responseDto)}")
 
         return responseDto?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
-
     }
 
     companion object {

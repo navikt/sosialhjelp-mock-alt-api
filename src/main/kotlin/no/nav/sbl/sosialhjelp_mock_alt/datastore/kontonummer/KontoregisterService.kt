@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component
 @Component
 class KontoregisterService {
 
-
     private val kontoMap: HashMap<String, KontoDto> = HashMap()
 
     fun getKonto(ident: String): KontoDto? {
