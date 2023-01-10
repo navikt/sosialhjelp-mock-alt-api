@@ -80,14 +80,40 @@ class PdlService(
     private val barnMap = mutableMapOf<String, PdlSoknadBarn>()
 
     init {
-        opprettBrukerMedAlt(fastFnr, "Standard", "Standardsen", "NOR", 1, adminRoller = AdminRolle.values().asList())
+        opprettBrukerMedAlt(
+            brukerFnr = fastFnr,
+            fornavn = "Standard",
+            etternavn = "Standardsen",
+            statsborgerskap = "NOR",
+            position = 1,
+            adminRoller = AdminRolle.values().asList()
+        )
         val bergenFnr = opprettBrukerMedAlt(
-            genererTilfeldigPersonnummer(), "Bergen", "Bergenhusen", "NOR", 2,
-            postnummer = "5005", kommuneNummer = "4601", enhetsnummer = "1209"
+            brukerFnr = genererTilfeldigPersonnummer(),
+            fornavn = "Bergen",
+            etternavn = "Bergenhusen",
+            statsborgerskap = "NOR",
+            position = 2,
+            postnummer = "5005",
+            kommuneNummer = "4601",
+            enhetsnummer = "1209"
         )
         krrService.oppdaterKonfigurasjon(bergenFnr, kanVarsles = false)
-        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Tyske", "Tyskersen", "GER", 3)
-        opprettBrukerMedAlt(genererTilfeldigPersonnummer(), "Admin", "Adminsen", "NOR", 4, adminRoller = listOf(AdminRolle.MODIA_VEILEDER))
+        opprettBrukerMedAlt(
+            brukerFnr = genererTilfeldigPersonnummer(),
+            fornavn = "Tyske",
+            etternavn = "Tyskersen",
+            statsborgerskap = "DEU",
+            position = 3
+        )
+        opprettBrukerMedAlt(
+            brukerFnr = genererTilfeldigPersonnummer(),
+            fornavn = "Admin",
+            etternavn = "Adminsen",
+            statsborgerskap = "NOR",
+            position = 4,
+            adminRoller = listOf(AdminRolle.MODIA_VEILEDER)
+        )
 
         val hemmeligBruker = Personalia()
             .withNavn("Hemmelig", "", "Adressesen")
