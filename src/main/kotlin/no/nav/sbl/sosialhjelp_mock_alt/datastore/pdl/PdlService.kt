@@ -111,7 +111,8 @@ class PdlService(
             fornavn = "Admin",
             etternavn = "Adminsen",
             statsborgerskap = "NOR",
-            position = 4, adminRoller = listOf(AdminRolle.MODIA_VEILEDER)
+            position = 4,
+            adminRoller = listOf(AdminRolle.MODIA_VEILEDER)
         )
 
         val hemmeligBruker = Personalia()
