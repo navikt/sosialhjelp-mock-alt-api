@@ -25,9 +25,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Forskuddstre
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.KomponentDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalDataDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalingDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Ytelse
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Ytelseskomponent
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
@@ -232,16 +230,6 @@ data class FrontendUtbetalingFraNav(
     val ytelseskomponenttype: String,
 ) {
 
-    fun toUtbetalingDto(): UtbetalingDto {
-        return UtbetalingDto(
-            tittel = ytelsestype,
-            netto = belop,
-            skattetrekk = skattebelop,
-            utbetalingsdato = dato,
-            komponenter = listOf(KomponentDto(type = ytelseskomponenttype))
-        )
-    }
-
     fun toUtbetalDataDto(): UtbetalDataDto {
         return UtbetalDataDto(
             posteringsdato = dato,
@@ -259,36 +247,21 @@ data class FrontendUtbetalingFraNav(
     }
 
     companion object {
-        fun mapUtbetalingDtoToFrontendUtbetalingFraNav(utbetaling: UtbetalingDto): FrontendUtbetalingFraNav {
-            return FrontendUtbetalingFraNav(
-                utbetaling.netto,
-                utbetaling.utbetalingsdato ?: LocalDate.now(),
-                utbetaling.tittel,
-                "", // melding?
-                utbetaling.skattetrekk,
-                utbetaling.komponenter.first().type ?: ""
-            )
-        }
+        fun mapUtbetalingDtoListeTilFrontendUtbetalingerFraNavListe(utbetalingerFraNav: List<UtbetalDataDto>): List<FrontendUtbetalingFraNav> {
 
-        // TODO: bytt ut metode over med denne når vi har skrudd over til utbetalData. Pt ubrukt.
-        fun mapUtbetalDataDtoToFrontendUtbelingFraNav(utbetalData: UtbetalDataDto): FrontendUtbetalingFraNav {
-
-            // TODO  en del verdier her som er én verdi kommer fra lister. Velger nå første i liste, men hvordan skal logikken her henge sammen?
-
-            var skattsum = 0.00
-
-            for (ytelse in utbetalData.ytelseListe!!) {
-                skattsum += ytelse.skattsum?.toDouble() ?: 0.0
+            return utbetalingerFraNav.flatMap { utbetalingFraNav ->
+                utbetalingFraNav.ytelseListe
+                    ?.map {
+                        FrontendUtbetalingFraNav(
+                            belop = it.ytelseNettobeloep?.toDouble() ?: 0.00,
+                            dato = utbetalingFraNav.utbetalingsdato ?: LocalDate.now(),
+                            ytelsestype = it.ytelsestype ?: "",
+                            melding = utbetalingFraNav.utbetalingsmelding ?: "",
+                            skattebelop = it.skattsum?.toDouble() ?: 0.00,
+                            ytelseskomponenttype = it.ytelseskomponentListe?.first()?.ytelseskomponenttype ?: ""
+                        )
+                    } ?: emptyList()
             }
-
-            return FrontendUtbetalingFraNav(
-                utbetalData.utbetalingNettobeloep?.toDouble() ?: 0.00,
-                utbetalData.utbetalingsdato ?: LocalDate.now(),
-                utbetalData.ytelseListe.first().ytelsestype ?: "",
-                utbetalData.utbetalingsmelding ?: "",
-                skattsum,
-                utbetalData.ytelseListe.first().ytelseskomponentListe?.first()?.ytelseskomponenttype ?: ""
-            )
         }
     }
 }

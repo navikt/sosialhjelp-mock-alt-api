@@ -47,7 +47,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.model.AdminRolle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalDataService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigKontonummer
@@ -64,7 +63,6 @@ class PdlService(
     private val eregService: EregService,
     private val aaregService: AaregService,
     private val skatteetatenService: SkatteetatenService,
-    private val utbetalingService: UtbetalingService,
     private val utbetalDataService: UtbetalDataService,
     private val bostotteService: BostotteService,
     private val soknadService: SoknadService,
@@ -130,7 +128,8 @@ class PdlService(
         var navnList: List<PdlPersonNavn> = listOf(PdlPersonNavn("Ukjent", "PDL", "Person"))
         if (personalia != null) {
             adressebeskyttelseList = listOf(Adressebeskyttelse(personalia.adressebeskyttelse))
-            navnList = listOf(PdlPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn))
+            navnList =
+                listOf(PdlPersonNavn(personalia.navn.fornavn, personalia.navn.mellomnavn, personalia.navn.etternavn))
         }
         return PdlInnsynPersonResponse(
             errors = null,
@@ -187,7 +186,8 @@ class PdlService(
                 }
                 sivilstand = PdlSivilstand(SivilstandType.valueOf(personalia.sivilstand), personalia.ektefelleFnr)
             }
-            forelderBarnRelasjon = personalia.forelderBarnRelasjon.map { PdlForelderBarnRelasjon(it.ident, it.rolle, it.motrolle) }
+            forelderBarnRelasjon =
+                personalia.forelderBarnRelasjon.map { PdlForelderBarnRelasjon(it.ident, it.rolle, it.motrolle) }
             statsborgerskap = PdlStatsborgerskap(personalia.starsborgerskap)
             bostedsadresse = PdlBostedsadresse(
                 null,
@@ -272,7 +272,10 @@ class PdlService(
             throw MockAltException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
         personListe[personalia.fnr] = personalia
-        pdlGeografiskTilknytningService.putGeografiskTilknytning(personalia.fnr, personalia.bostedsadresse.kommunenummer)
+        pdlGeografiskTilknytningService.putGeografiskTilknytning(
+            personalia.fnr,
+            personalia.bostedsadresse.kommunenummer
+        )
     }
 
     private fun leggTilEktefelle(personalia: Personalia) {
@@ -360,7 +363,6 @@ class PdlService(
         )
 
         skatteetatenService.enableAutoGenerationFor(brukerFnr)
-        utbetalingService.enableAutoGenerationFor(brukerFnr)
         utbetalDataService.enableAutoGenerationFor(brukerFnr)
         bostotteService.enableAutoGenerationFor(brukerFnr)
         rolleService.leggTilKonfigurasjon(brukerFnr, adminRoller)
@@ -374,7 +376,8 @@ class PdlService(
         private val log by logger()
 
         private val defaultAdresse = PdlVegadresse("matrikkelId", "Gateveien", 1, "A", null, "0101", "0301", "H101")
-        private val annenAdresse = PdlVegadresse("matrikkelId2", "Karl Johans gate", 1, null, null, "0101", "0301", null)
+        private val annenAdresse =
+            PdlVegadresse("matrikkelId2", "Karl Johans gate", 1, null, null, "0101", "0301", null)
 
         private fun ektefelleSammeBosted(dato: LocalDate) = PdlSoknadEktefelle(
             adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),

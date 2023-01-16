@@ -16,7 +16,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenServic
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skjermedepersoner.SkjermedePersonerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalDataService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalingService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendBarn.Companion.frontendBarn
@@ -25,7 +24,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPer
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.pdlPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSoknad
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapUtbetalingDtoToFrontendUtbetalingFraNav
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapUtbetalingDtoListeTilFrontendUtbetalingerFraNavListe
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendVedlegg
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -50,7 +49,6 @@ class FrontendController(
     private val aaregService: AaregService,
     private val skatteetatenService: SkatteetatenService,
     private val bostotteService: BostotteService,
-    private val utbetalingService: UtbetalingService,
     private val utbetalDataService: UtbetalDataService,
     private val eregService: EregService,
     private val krrService: KrrService,
@@ -75,7 +73,12 @@ class FrontendController(
         personalia.barn.forEach { pdlService.leggTilBarn(it.fnr, it.pdlBarn()) }
         pdlService.leggTilPerson(pdlPersonalia(personalia))
         skjermedePersonerService.setStatus(personalia.fnr, personalia.skjerming)
-        krrService.oppdaterKonfigurasjon(personalia.fnr, personalia.kanVarsles, personalia.epost, personalia.telefonnummer)
+        krrService.oppdaterKonfigurasjon(
+            personalia.fnr,
+            personalia.kanVarsles,
+            personalia.epost,
+            personalia.telefonnummer
+        )
         if (personalia.kontonummer.isNotEmpty()) {
             kontonummerService.putKontonummer(personalia.fnr, personalia.kontonummer)
             kontoregisterService.putKonto(personalia.fnr, personalia.kontonummer)
@@ -95,10 +98,6 @@ class FrontendController(
         personalia.bostotteSaker.forEach { bostotteDto.saker.add(it) }
         personalia.bostotteUtbetalinger.forEach { bostotteDto.utbetalinger.add(it) }
         bostotteService.putBostotte(personalia.fnr, bostotteDto)
-        utbetalingService.putUtbetalingerFraNav(
-            ident = personalia.fnr,
-            utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalingDto() }
-        )
         utbetalDataService.putUtbetalingerFraNav(
             ident = personalia.fnr,
             utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalDataDto() }
@@ -136,7 +135,7 @@ class FrontendController(
         frontendPersonalia.bostotteSaker = bostotteDto.saker
         frontendPersonalia.bostotteUtbetalinger = bostotteDto.utbetalinger
         frontendPersonalia.utbetalingerFraNav =
-            utbetalingService.getUtbetalingerFraNav(personalia.fnr).map { mapUtbetalingDtoToFrontendUtbetalingFraNav(it) }
+            mapUtbetalingDtoListeTilFrontendUtbetalingerFraNavListe(utbetalDataService.getUtbetalingerFraNav(personalia.fnr))
         frontendPersonalia.administratorRoller = rolleService.hentKonfigurasjon(personalia.fnr)
 
         return ResponseEntity.ok(frontendPersonalia)
@@ -203,7 +202,8 @@ class FrontendController(
         val bytebuffer = ByteArrayOutputStream()
         val zipArchive = ZipOutputStream(bytebuffer)
 
-        val sammenslattVedleggJson = slaSammenTilJsonVedleggSpesifikasjon(soknad.ettersendtInfoNAV?.ettersendelser, fiksDigisosId)
+        val sammenslattVedleggJson =
+            slaSammenTilJsonVedleggSpesifikasjon(soknad.ettersendtInfoNAV?.ettersendelser, fiksDigisosId)
         val vedleggZip = ZipEntry("vedlegg.json")
         zipArchive.putNextEntry(vedleggZip)
         zipArchive.write(objectMapper.writeValueAsBytes(sammenslattVedleggJson))
