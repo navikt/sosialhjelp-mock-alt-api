@@ -4,7 +4,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontoregisterService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.krr.KrrService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
@@ -66,7 +65,6 @@ class PdlService(
     private val utbetalDataService: UtbetalDataService,
     private val bostotteService: BostotteService,
     private val soknadService: SoknadService,
-    private val kontonummerService: KontonummerService,
     private val kontoregisterService: KontoregisterService,
     private val pdlGeografiskTilknytningService: PdlGeografiskTilknytningService,
     private val krrService: KrrService,
@@ -352,7 +350,6 @@ class PdlService(
 
         pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
         krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
-        kontonummerService.putKontonummer(brukerFnr, genererTilfeldigKontonummer())
         kontoregisterService.putKonto(brukerFnr, genererTilfeldigKontonummer())
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
         eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")
