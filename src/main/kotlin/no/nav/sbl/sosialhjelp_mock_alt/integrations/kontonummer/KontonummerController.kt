@@ -1,9 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.kontonummer
 
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontoregisterService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.model.KontoDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.model.KontonummerDto
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
@@ -15,19 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class KontonummerController(
-    private val kontonummerService: KontonummerService,
     private val kontoregisterService: KontoregisterService
 ) {
-
-    @GetMapping("/oppslag-api/kontonummer")
-    fun kontonummerEndpoint(
-        @RequestHeader headers: HttpHeaders
-    ): ResponseEntity<KontonummerDto> {
-        val ident = hentFnrFraToken(headers)
-        val dto = kontonummerService.getKontonummer(ident)
-        log.info("Henter kontonummer: ${objectMapper.writeValueAsString(dto)}")
-        return dto?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
-    }
 
     @GetMapping("/api/borger/v1/hent-aktiv-konto")
     fun hentKontoNummerFraKontoRegister(

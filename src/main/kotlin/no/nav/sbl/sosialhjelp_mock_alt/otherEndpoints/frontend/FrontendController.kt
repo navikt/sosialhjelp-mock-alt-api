@@ -6,7 +6,6 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontonummerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontoregisterService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.krr.KrrService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
@@ -53,7 +52,6 @@ class FrontendController(
     private val eregService: EregService,
     private val krrService: KrrService,
     private val soknadService: SoknadService,
-    private val kontonummerService: KontonummerService,
     private val kontoregisterService: KontoregisterService,
     private val rolleService: RolleService,
 ) {
@@ -80,7 +78,6 @@ class FrontendController(
             personalia.telefonnummer
         )
         if (personalia.kontonummer.isNotEmpty()) {
-            kontonummerService.putKontonummer(personalia.fnr, personalia.kontonummer)
             kontoregisterService.putKonto(personalia.fnr, personalia.kontonummer)
         }
         aaregService.setArbeidsforholdForFnr(
@@ -124,7 +121,7 @@ class FrontendController(
         frontendPersonalia.telefonnummer = krrKonfigurasjon.mobiltelefonnummer ?: ""
         frontendPersonalia.epost = krrKonfigurasjon.epostadresse ?: ""
         frontendPersonalia.kanVarsles = krrKonfigurasjon.frontendKanVarsles()
-        frontendPersonalia.kontonummer = kontonummerService.getKontonummer(personalia.fnr)?.kontonummer ?: ""
+        frontendPersonalia.kontonummer = kontoregisterService.getKonto(personalia.fnr)?.kontonummer ?: ""
         frontendPersonalia.arbeidsforhold = aaregService.getArbeidsforhold(personalia.fnr)
             .map { FrontendArbeidsforhold.arbeidsforhold(it, eregService) }
         val skattbarInntekt = skatteetatenService.getSkattbarInntekt(personalia.fnr)
