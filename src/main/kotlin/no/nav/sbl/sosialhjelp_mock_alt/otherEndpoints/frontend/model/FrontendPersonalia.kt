@@ -225,7 +225,6 @@ data class FrontendUtbetalingFraNav(
     val belop: Double,
     val dato: LocalDate,
     val ytelsestype: String,
-    val melding: String,
     val skattebelop: Double,
     val ytelseskomponenttype: String,
 ) {
@@ -258,7 +257,6 @@ data class FrontendUtbetalingFraNav(
                             belop = it.ytelseNettobeloep?.toDouble() ?: 0.00,
                             dato = utbetalingFraNav.utbetalingsdato ?: LocalDate.now(),
                             ytelsestype = it.ytelsestype ?: "",
-                            melding = "",
                             skattebelop = it.skattsum?.toDouble() ?: 0.00,
                             ytelseskomponenttype = it.ytelseskomponentListe?.first()?.ytelseskomponenttype ?: ""
                         )
