@@ -22,8 +22,16 @@ data class Ytelse(
 )
 
 data class Aktoer(
+    val aktoertype: Aktoertype = Aktoertype.PERSON,
+    val ident: String = "aktoerident",
     val navn: String? = "aktoernavn",
 )
+
+enum class Aktoertype {
+    PERSON,
+    ORGANISASJON,
+    SAMHANDLER,
+}
 
 data class Ytelseskomponent(
     val ytelseskomponenttype: String? = "Ytelseskomponenttype",
