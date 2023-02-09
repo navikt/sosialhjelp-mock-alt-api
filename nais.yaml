@@ -46,6 +46,7 @@ spec:
         - application: sosialhjelp-innsyn-api
         - application: sosialhjelp-soknad-api-mock
         - application: sosialhjelp-soknad-api
+        - application: sosialhjelp-kommune-service-mock
   resources:
     limits:
       cpu: 750m
