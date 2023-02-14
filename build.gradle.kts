@@ -7,7 +7,7 @@ val sosialhjelpCommonVersion = "1.20221214.0749-b633a3e"
 val filformatVersion = "1.2022.11.16-08.18-c36037400819"
 val tokenValidationVersion = "3.0.0"
 val jacksonVersion = "2.14.1"
-val springdocversion = "1.6.12"
+val springdocversion = "2.0.2"
 val jsonSmartVersion = "2.4.8"
 val mockOauth2ServerVersion = "0.5.6"
 val junitVersion = "4.13.2"
@@ -82,7 +82,8 @@ dependencies {
     implementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
     implementation("no.nav.security:mock-oauth2-server:$mockOauth2ServerVersion")
 
-    implementation("org.springdoc:springdoc-openapi-ui:$springdocversion")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocversion")
+    implementation("org.springdoc:springdoc-openapi-starter-common:$springdocversion")
 
     // SvarUt
     implementation("no.ks.fiks.svarut:svarut-rest-klient:$svarUtVersion")

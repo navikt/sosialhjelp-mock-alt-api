@@ -225,24 +225,25 @@ data class FrontendUtbetalingFraNav(
     val belop: Double,
     val dato: LocalDate,
     val ytelsestype: String,
-    val melding: String,
     val skattebelop: Double,
     val ytelseskomponenttype: String,
 ) {
 
     fun toUtbetalDataDto(): UtbetalDataDto {
         return UtbetalDataDto(
-            posteringsdato = dato,
+            utbetalingsdato = dato,
             ytelseListe = listOf(
                 Ytelse(
                     ytelsestype = ytelsestype,
+                    ytelseNettobeloep = BigDecimal(belop),
                     skattsum = BigDecimal(skattebelop),
-                    ytelseskomponentListe = listOf(Ytelseskomponent(ytelseskomponenttype = ytelseskomponenttype))
+                    ytelseskomponentListe = listOf(
+                        Ytelseskomponent(
+                            ytelseskomponenttype = ytelseskomponenttype
+                        )
+                    )
                 )
             ),
-            utbetalingNettobeloep = BigDecimal(belop),
-            utbetalingsdato = dato,
-            utbetalingsmelding = melding,
         )
     }
 
@@ -256,7 +257,6 @@ data class FrontendUtbetalingFraNav(
                             belop = it.ytelseNettobeloep?.toDouble() ?: 0.00,
                             dato = utbetalingFraNav.utbetalingsdato ?: LocalDate.now(),
                             ytelsestype = it.ytelsestype ?: "",
-                            melding = utbetalingFraNav.utbetalingsmelding ?: "",
                             skattebelop = it.skattsum?.toDouble() ?: 0.00,
                             ytelseskomponenttype = it.ytelseskomponentListe?.first()?.ytelseskomponenttype ?: ""
                         )
