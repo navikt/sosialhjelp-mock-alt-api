@@ -50,10 +50,10 @@ spec:
   resources:
     limits:
       cpu: 750m
-      memory: 2Gi
+      memory: 1Gi
     requests:
       cpu: 2m
-      memory: 512Mi
+      memory: 256Mi
   env:
 {{#each env}}
     - name: {{@key}}
