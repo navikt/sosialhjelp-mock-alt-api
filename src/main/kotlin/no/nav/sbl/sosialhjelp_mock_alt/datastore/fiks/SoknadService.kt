@@ -102,7 +102,7 @@ class SoknadService(
         jsonVedlegg: JsonVedleggSpesifikasjon? = null,
         dokumenter: MutableList<DokumentInfo> = mutableListOf(),
         soknadDokument: DokumentInfo? = null,
-        isPapirSoknad: Boolean = false
+        isPapirSoknad: Boolean = false,
     ): String? {
         var fiksDigisosId = fiksDigisosIdInput
         if (fiksDigisosId == null) {
@@ -177,6 +177,7 @@ class SoknadService(
                 soknadsliste.replace(fiksDigisosId, updatedDigisosSak)
             } else {
                 log.info("Oppdaterer søker dokument med dokumentlagerId: $dokumentlagerId")
+                oldSoknad.digisosSoker?.copy(timestampSistOppdatert = System.currentTimeMillis())?.let { soknadsliste.replace(fiksDigisosId, oldSoknad.updateDigisosSoker(it)) }
                 dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
             }
         }
@@ -235,7 +236,7 @@ class SoknadService(
 
     private fun oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(
         id: String,
-        digisosApiWrapper: DigisosApiWrapper
+        digisosApiWrapper: DigisosApiWrapper,
     ) {
         val digisosSak = hentSak(id)
         val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
