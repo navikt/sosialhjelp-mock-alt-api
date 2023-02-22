@@ -64,14 +64,6 @@ data class PdlBostedsadresse(
     val ukjentBosted: PdlUkjentBosted?
 )
 
-data class PdlKontaktadresse(
-    val type: String?,
-    val coAdressenavn: String?,
-    val vegadresse: PdlVegadresse?,
-    val metadata: PdlMetadata?,
-    val folkeregistermetadata: PdlFolkeregistermetadata?
-)
-
 data class PdlOppholdsadresse(
     val oppholdAnnetSted: String?,
     val coAdressenavn: String?,
