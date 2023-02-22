@@ -188,18 +188,19 @@ class PdlService(
                 personalia.forelderBarnRelasjon.map { PdlForelderBarnRelasjon(it.ident, it.rolle, it.motrolle) }
             statsborgerskap = PdlStatsborgerskap(personalia.starsborgerskap)
             bostedsadresse = PdlBostedsadresse(
-                null,
-                PdlVegadresse(
-                    "matrikkelId",
-                    personalia.bostedsadresse.adressenavn,
-                    personalia.bostedsadresse.husnummer,
-                    if (personalia.bostedsadresse.husbokstav.isNullOrBlank()) null else personalia.bostedsadresse.husbokstav,
-                    null,
-                    personalia.bostedsadresse.postnummer,
-                    personalia.bostedsadresse.kommunenummer,
-                    null,
+                coAdressenavn = null,
+                vegadresse = PdlVegadresse(
+                    matrikkelId = "matrikkelId",
+                    adressenavn = personalia.bostedsadresse.adressenavn,
+                    husnummer = personalia.bostedsadresse.husnummer,
+                    husbokstav = personalia.bostedsadresse.husbokstav,
+                    tilleggsnavn = null,
+                    postnummer = personalia.bostedsadresse.postnummer,
+                    kommunenummer = personalia.bostedsadresse.kommunenummer,
+                    bruksenhetsnummer = null,
                 ),
-                null, null
+                matrikkeladresse = null,
+                ukjentBosted = null
             )
         }
 
@@ -208,7 +209,6 @@ class PdlService(
             data = PdlSoknadHentPerson(
                 hentPerson = PdlSoknadPerson(
                     bostedsadresse = listOf(bostedsadresse),
-                    kontaktadresse = emptyList(),
                     oppholdsadresse = emptyList(),
                     forelderBarnRelasjon = forelderBarnRelasjon,
                     navn = listOf(navn),
