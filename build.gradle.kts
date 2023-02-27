@@ -1,20 +1,20 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "3.0.0"
+val springBootVersion = "3.0.3"
 val coroutinesVersion = "1.6.4"
-val sosialhjelpCommonVersion = "1.20221214.0749-b633a3e"
-val filformatVersion = "1.2022.11.16-08.18-c36037400819"
-val tokenValidationVersion = "3.0.0"
-val jacksonVersion = "2.14.1"
+val sosialhjelpCommonVersion = "1.20230209.0920-45d9782"
+val filformatVersion = "1.2023.02.09-08.34-aad9baa612d3"
+val tokenValidationVersion = "3.0.3"
+val jacksonVersion = "2.14.2"
 val springdocversion = "2.0.2"
 val jsonSmartVersion = "2.4.8"
-val mockOauth2ServerVersion = "0.5.6"
+val mockOauth2ServerVersion = "0.5.7"
 val junitVersion = "4.13.2"
 val log4jVersion = "2.19.0"
 val snakeyamlVersion = "1.33"
 val ktlint = "0.45.2"
-val svarUtVersion = "1.1.0"
+val svarUtVersion = "1.2.0"
 
 val jakartaActivationApiVersion = "2.1.0"
 val jakartaAnnotationApiVersion = "2.1.1"
@@ -22,10 +22,10 @@ val jakartaXmlBindApiVersion = "4.0.0"
 val jakartaValidationApiVersion = "3.0.2"
 
 plugins {
-    kotlin("jvm") version "1.7.21"
-    kotlin("plugin.spring") version "1.7.21"
-    id("org.springframework.boot") version "3.0.0"
-    id("com.github.ben-manes.versions") version "0.44.0"
+    kotlin("jvm") version "1.8.10"
+    kotlin("plugin.spring") version "1.8.10"
+    id("org.springframework.boot") version "3.0.3"
+    id("com.github.ben-manes.versions") version "0.46.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
 
