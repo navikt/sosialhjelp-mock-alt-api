@@ -24,8 +24,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
-      - name: Run lint
-        run: ./gradlew ktfmtCheck
       - name: compile and run tests
         run: ./gradlew build
       - name: Login to GitHub Docker Registry
