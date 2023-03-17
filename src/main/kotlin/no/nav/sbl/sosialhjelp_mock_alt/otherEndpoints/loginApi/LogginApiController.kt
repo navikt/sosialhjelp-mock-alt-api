@@ -75,7 +75,7 @@ class LogginApiController(
     }
     log.debug("SoknadProxy response: $eksternResponse")
     log.debug(
-        "SoknadProxy response statuscode: ${eksternResponse.statusCodeValue}, " +
+        "SoknadProxy response statuscode: ${eksternResponse.statusCode}, " +
             "body: ${eksternResponse.body?.size},  " +
             "headers: ${objectMapper.writeValueAsString(eksternResponse.headers)}")
     return eksternResponse
@@ -151,7 +151,7 @@ class LogginApiController(
     return try {
       restTemplate.exchange(newUri, method, HttpEntity(body, headers), ByteArray::class.java)
     } catch (e: HttpClientErrorException) {
-      ResponseEntity.status(e.rawStatusCode).body(e.responseBodyAsByteArray)
+      ResponseEntity.status(e.statusCode).body(e.responseBodyAsByteArray)
     }
   }
 
