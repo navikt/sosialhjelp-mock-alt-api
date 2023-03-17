@@ -25,106 +25,105 @@ class WellKnownController(
     private val mockOAuth2Server: MockOAuth2Server
 ) {
 
-    @GetMapping("/well-known/{issuer}")
-    fun getMockAltMetadata(
-        @PathVariable(value = "issuer") issuer: String,
-        @RequestParam host: String?
-    ): WellKnown {
-        val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
-        val wellknown = WellKnown(
+  @GetMapping("/well-known/{issuer}")
+  fun getMockAltMetadata(
+      @PathVariable(value = "issuer") issuer: String,
+      @RequestParam host: String?
+  ): WellKnown {
+    val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
+    val wellknown =
+        WellKnown(
             issuer = mockOAuth2Server.issuerUrl(issuer).toString(),
             tokenEndpoint = "${baseUrl}sosialhjelp/mock-alt-api/token/$issuer",
-            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer"
-        )
-        log.info("Metadata for issuer=$issuer: \n$wellknown")
-        return wellknown
-    }
+            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer")
+    log.info("Metadata for issuer=$issuer: \n$wellknown")
+    return wellknown
+  }
 
-    @GetMapping("/azure-well-known/{issuer}")
-    fun getAzureMetadata(
-        @PathVariable(value = "issuer") issuer: String,
-        @RequestParam host: String?
-    ): WellKnown {
-        val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
-        val wellknown = WellKnown(
+  @GetMapping("/azure-well-known/{issuer}")
+  fun getAzureMetadata(
+      @PathVariable(value = "issuer") issuer: String,
+      @RequestParam host: String?
+  ): WellKnown {
+    val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
+    val wellknown =
+        WellKnown(
             issuer = mockOAuth2Server.issuerUrl(issuer).toString(),
             tokenEndpoint = "${baseUrl}sosialhjelp/mock-alt-api/azuretoken/$issuer",
-            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer"
-        )
-        log.info("Metadata for issuer=$issuer: \n$wellknown")
-        return wellknown
-    }
+            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer")
+    log.info("Metadata for issuer=$issuer: \n$wellknown")
+    return wellknown
+  }
 
-    @GetMapping("/jwks/{issuer}")
-    fun getMockAltJwks(
-        @PathVariable(value = "issuer") issuer: String
-    ): String {
-        val jwksUrl = mockOAuth2Server.jwksUrl(issuer)
-        val data = proxyAwareResourceRetriever.retrieveResource(jwksUrl.toUrl())
-        log.info("Henter jwks for issuer=$issuer")
-        return data.content
-    }
+  @GetMapping("/jwks/{issuer}")
+  fun getMockAltJwks(@PathVariable(value = "issuer") issuer: String): String {
+    val jwksUrl = mockOAuth2Server.jwksUrl(issuer)
+    val data = proxyAwareResourceRetriever.retrieveResource(jwksUrl.toUrl())
+    log.info("Henter jwks for issuer=$issuer")
+    return data.content
+  }
 
-    @PostMapping("/token/{issuer}", produces = ["application/json;charset=UTF-8"])
-    fun exchangeToken(
-        @RequestBody body: String,
-        @PathVariable(value = "issuer") issuer: String
-    ): TokenResponse {
-        val typeRef = object : TypeReference<HashMap<String, String>>() {}
-        val params = try {
-            objectMapper.readValue(body, typeRef)
+  @PostMapping("/token/{issuer}", produces = ["application/json;charset=UTF-8"])
+  fun exchangeToken(
+      @RequestBody body: String,
+      @PathVariable(value = "issuer") issuer: String
+  ): TokenResponse {
+    val typeRef = object : TypeReference<HashMap<String, String>>() {}
+    val params =
+        try {
+          objectMapper.readValue(body, typeRef)
         } catch (e: JsonParseException) {
-            splitFormParams(body)
+          splitFormParams(body)
         }
 
-        if (params.containsKey("assertion") && params.containsKey("grant_type")) {
-            log.info("Utveksler token for $issuer")
-            return TokenResponse(params["assertion"]!!, "JWT", "JWT", 60)
-        }
+    if (params.containsKey("assertion") && params.containsKey("grant_type")) {
+      log.info("Utveksler token for $issuer")
+      return TokenResponse(params["assertion"]!!, "JWT", "JWT", 60)
+    }
 
-        log.info("Utveksler token for $issuer: audience: ${params["audience"]}\n")
-        val subjectToken = params["subject_token"]!!
+    log.info("Utveksler token for $issuer: audience: ${params["audience"]}\n")
+    val subjectToken = params["subject_token"]!!
 
-        val newToken = mockOAuth2Server.issueToken(
+    val newToken =
+        mockOAuth2Server.issueToken(
             issuerId = issuer,
             subject = SignedJWT.parse(subjectToken).jwtClaimsSet.subject,
             audience = params["audience"],
-            claims = mapOf("acr" to "Level4")
-        )
-        return TokenResponse(newToken.serialize(), "JWT", "JWT", 60)
-    }
+            claims = mapOf("acr" to "Level4"))
+    return TokenResponse(newToken.serialize(), "JWT", "JWT", 60)
+  }
 
-    @PostMapping("/azuretoken/{issuer}", produces = ["application/json;charset=UTF-8"])
-    fun exchangeAzuretoken(
-        @RequestBody body: String,
-    ): AzuredingsResponse {
-        val formsMap: HashMap<String, String> = splitFormParams(body)
-        if (formsMap.containsKey("grant_type") && formsMap["grant_type"]!! == "client_credentials") {
-            log.info("Utveklser azure token (client credentials flow), scope: ${formsMap["scope"]}")
-            return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, "token")
-        }
-        log.info("Utveksler azure token: audience: ${formsMap["audience"]}\n")
-        return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, formsMap["assertion"]!!)
+  @PostMapping("/azuretoken/{issuer}", produces = ["application/json;charset=UTF-8"])
+  fun exchangeAzuretoken(
+      @RequestBody body: String,
+  ): AzuredingsResponse {
+    val formsMap: HashMap<String, String> = splitFormParams(body)
+    if (formsMap.containsKey("grant_type") && formsMap["grant_type"]!! == "client_credentials") {
+      log.info("Utveklser azure token (client credentials flow), scope: ${formsMap["scope"]}")
+      return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, "token")
     }
+    log.info("Utveksler azure token: audience: ${formsMap["audience"]}\n")
+    return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, formsMap["assertion"]!!)
+  }
 
-    private fun splitFormParams(body: String): HashMap<String, String> {
-        val formsMap: HashMap<String, String> = hashMapOf()
-        val split = body.split("&")
-        split.forEach {
-            val innerSplit = it.split("=")
-            formsMap[innerSplit[0]] = innerSplit[1]
-        }
-        return formsMap
+  private fun splitFormParams(body: String): HashMap<String, String> {
+    val formsMap: HashMap<String, String> = hashMapOf()
+    val split = body.split("&")
+    split.forEach {
+      val innerSplit = it.split("=")
+      formsMap[innerSplit[0]] = innerSplit[1]
     }
+    return formsMap
+  }
 
-    private fun hostAddress(hostFromQueryParam: String): String {
-        if (hostAddress.contains("localhost")) {
-            return "http://$hostFromQueryParam:8989/"
-        }
-        return hostAddress
+  private fun hostAddress(hostFromQueryParam: String): String {
+    if (hostAddress.contains("localhost")) {
+      return "http://$hostFromQueryParam:8989/"
     }
+    return hostAddress
+  }
 
-    companion object {
-        private val log by logger()
-    }
+  companion object {
+    private val log by logger()
+  }
 }

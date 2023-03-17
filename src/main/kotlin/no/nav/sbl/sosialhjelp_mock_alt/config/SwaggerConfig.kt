@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Profile
 @Configuration
 @Profile("digisos-ekstern")
 class SwaggerConfig {
-    @Bean
-    fun customOpenAPI(): OpenAPI {
-        val server = Server()
-        server.url = "https://digisos.ekstern.dev.nav.no/sosialhjelp/mock-alt-api"
-        return OpenAPI().servers(listOf(server))
-    }
+  @Bean
+  fun customOpenAPI(): OpenAPI {
+    val server = Server()
+    server.url = "https://digisos.ekstern.dev.nav.no/sosialhjelp/mock-alt-api"
+    return OpenAPI().servers(listOf(server))
+  }
 }

@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class LoginApiConfig : WebMvcConfigurer {
 
-    @Bean
-    fun restTemplate(): RestTemplate {
-        return RestTemplateBuilder()
-            .requestFactory(SimpleClientHttpRequestFactory::class.java)
-            .build()!!
-    }
+  @Bean
+  fun restTemplate(): RestTemplate {
+    return RestTemplateBuilder()
+        .requestFactory(SimpleClientHttpRequestFactory::class.java)
+        .build()!!
+  }
 }

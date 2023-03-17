@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @Profile("no-swagger")
 class LoggUkjenteRequesterController {
-    companion object {
-        private val log by logger()
-    }
+  companion object {
+    private val log by logger()
+  }
 
-    @RequestMapping("/**")
-    fun loggUkjentRequest(request: RequestEntity<String>): ResponseEntity<String> {
-        log.debug("Ukjent URL i request: ${request.url}\n${objectMapper.writeValueAsString(request)}")
-        return ResponseEntity.notFound().build()
-    }
+  @RequestMapping("/**")
+  fun loggUkjentRequest(request: RequestEntity<String>): ResponseEntity<String> {
+    log.debug("Ukjent URL i request: ${request.url}\n${objectMapper.writeValueAsString(request)}")
+    return ResponseEntity.notFound().build()
+  }
 }

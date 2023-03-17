@@ -2,21 +2,21 @@
 
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model
 
+import java.time.LocalDate
 import no.nav.sbl.soknadsosialhjelp.soknad.okonomi.opplysning.JsonOkonomiOpplysningUtbetaling
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
-import java.time.LocalDate
 
 data class BostotteDto(
     val saker: MutableList<SakerDto> = mutableListOf(),
     val utbetalinger: MutableList<UtbetalingerDto> = mutableListOf(),
 ) {
-    fun withSak(sak: SakerDto) {
-        saker.add(sak)
-    }
+  fun withSak(sak: SakerDto) {
+    saker.add(sak)
+  }
 
-    fun withUtbetaling(utbetaling: UtbetalingerDto) {
-        utbetalinger.add(utbetaling)
-    }
+  fun withUtbetaling(utbetaling: UtbetalingerDto) {
+    utbetalinger.add(utbetaling)
+  }
 }
 
 data class SakerDto(
@@ -27,8 +27,15 @@ data class SakerDto(
     val rolle: BostotteRolle? = BostotteRolle.HOVEDPERSON,
 )
 
-enum class BostotteStatus { UNDER_BEHANDLING, VEDTATT }
-enum class BostotteRolle { HOVEDPERSON, BIPERSON }
+enum class BostotteStatus {
+  UNDER_BEHANDLING,
+  VEDTATT
+}
+
+enum class BostotteRolle {
+  HOVEDPERSON,
+  BIPERSON
+}
 
 data class VedtakDto(
     val kode: String,
@@ -44,6 +51,6 @@ data class UtbetalingerDto(
 )
 
 enum class BostotteMottaker(val value: String) {
-    KOMMUNE(JsonOkonomiOpplysningUtbetaling.Mottaker.KOMMUNE.value()),
-    HUSSTAND(JsonOkonomiOpplysningUtbetaling.Mottaker.HUSSTAND.value()),
+  KOMMUNE(JsonOkonomiOpplysningUtbetaling.Mottaker.KOMMUNE.value()),
+  HUSSTAND(JsonOkonomiOpplysningUtbetaling.Mottaker.HUSSTAND.value()),
 }

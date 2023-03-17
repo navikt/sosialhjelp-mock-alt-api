@@ -15,28 +15,28 @@ import org.springframework.context.annotation.Bean
 @SpringBootApplication
 class MockAltApplication {
 
-    @Bean
-    fun navCorsFilter(): CORSFilter {
-        return CORSFilter()
-    }
+  @Bean
+  fun navCorsFilter(): CORSFilter {
+    return CORSFilter()
+  }
 }
 
-val objectMapper: ObjectMapper = JsonSosialhjelpObjectMapper.createObjectMapper()
-    .registerModules(
-        JavaTimeModule(),
-        KotlinModule.Builder()
-            .withReflectionCacheSize(512)
-            .configure(KotlinFeature.NullToEmptyCollection, false)
-            .configure(KotlinFeature.NullToEmptyMap, false)
-            .configure(KotlinFeature.NullIsSameAsDefault, false)
-            .configure(KotlinFeature.SingletonSupport, false)
-            .configure(KotlinFeature.StrictNullChecks, false)
-            .build()
-    )
-    .configure(SerializationFeature.INDENT_OUTPUT, true)
-    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+val objectMapper: ObjectMapper =
+    JsonSosialhjelpObjectMapper.createObjectMapper()
+        .registerModules(
+            JavaTimeModule(),
+            KotlinModule.Builder()
+                .withReflectionCacheSize(512)
+                .configure(KotlinFeature.NullToEmptyCollection, false)
+                .configure(KotlinFeature.NullToEmptyMap, false)
+                .configure(KotlinFeature.NullIsSameAsDefault, false)
+                .configure(KotlinFeature.SingletonSupport, false)
+                .configure(KotlinFeature.StrictNullChecks, false)
+                .build())
+        .configure(SerializationFeature.INDENT_OUTPUT, true)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
 
 fun main(args: Array<String>) {
-    runApplication<MockAltApplication>(*args)
+  runApplication<MockAltApplication>(*args)
 }

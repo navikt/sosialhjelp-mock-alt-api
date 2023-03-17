@@ -12,24 +12,21 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class FeilController(val feilService: FeilService) {
 
-    @PostMapping("/feil")
-    fun editFeil(@RequestBody feilsituasjoner: FeilsituasjonerFrontend) {
-        feilService.setFeilForFnr(feilsituasjoner.fnr, feilsituasjoner.feilsituasjoner)
-    }
+  @PostMapping("/feil")
+  fun editFeil(@RequestBody feilsituasjoner: FeilsituasjonerFrontend) {
+    feilService.setFeilForFnr(feilsituasjoner.fnr, feilsituasjoner.feilsituasjoner)
+  }
 
-    @GetMapping("/feil")
-    fun hentFeil(@RequestParam ident: String): ResponseEntity<FeilsituasjonerFrontend> {
-        return ResponseEntity.ok(FeilsituasjonerFrontend(ident, feilService.hentFeil(ident)))
-    }
+  @GetMapping("/feil")
+  fun hentFeil(@RequestParam ident: String): ResponseEntity<FeilsituasjonerFrontend> {
+    return ResponseEntity.ok(FeilsituasjonerFrontend(ident, feilService.hentFeil(ident)))
+  }
 
-    @GetMapping("/alleFeilene")
-    fun hentAlleFeil(): ResponseEntity<List<FeilsituasjonerFrontend>> {
-        val alleFeilene = feilService.hentAlleFeilene()
-        return ResponseEntity.ok(alleFeilene.map { FeilsituasjonerFrontend(it.key, it.value) })
-    }
+  @GetMapping("/alleFeilene")
+  fun hentAlleFeil(): ResponseEntity<List<FeilsituasjonerFrontend>> {
+    val alleFeilene = feilService.hentAlleFeilene()
+    return ResponseEntity.ok(alleFeilene.map { FeilsituasjonerFrontend(it.key, it.value) })
+  }
 }
 
-data class FeilsituasjonerFrontend(
-    val fnr: String,
-    val feilsituasjoner: List<Feilsituasjon>
-)
+data class FeilsituasjonerFrontend(val fnr: String, val feilsituasjoner: List<Feilsituasjon>)

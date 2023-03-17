@@ -6,7 +6,5 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest
 class MockAltApplicationTests {
 
-    @Test
-    fun contextLoads() {
-    }
+  @Test fun contextLoads() {}
 }

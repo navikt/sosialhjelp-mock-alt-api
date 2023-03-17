@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class FssProxyController {
 
-    @RequestMapping("/fss-proxy/ping", method = [RequestMethod.OPTIONS])
-    fun ping(): String {
-        log.info("Ping \"fss-proxy\"")
-        return "OK"
-    }
+  @RequestMapping("/fss-proxy/ping", method = [RequestMethod.OPTIONS])
+  fun ping(): String {
+    log.info("Ping \"fss-proxy\"")
+    return "OK"
+  }
 
-    companion object {
-        private val log by logger()
-    }
+  companion object {
+    private val log by logger()
+  }
 }

@@ -3,7 +3,8 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.norg
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.norg.model.NavEnhet
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 
-private val sosialetjenesterInfo: String = """
+private val sosialetjenesterInfo: String =
+    """
         Til saksbehandler:
         Flere vakttelefoner:
         Mottak (nye brukere): 11112222
@@ -25,17 +26,17 @@ private val sosialetjenesterInfo: String = """
         Fast utbetalingsdato: 27-30 i mnd
         Siste tidspunkt for kjøring: 1030
         Utbetaling når utbetaling havner på helg/helligdag: siste virkedag før Utbetalingsmåter for nødhjelp: kronekort/rekvisisjon Kvalifiseringsstønad og introduksjonsstønad: 28 i mnd
-""".trimIndent()
+"""
+        .trimIndent()
 
 fun lagMockNavEnhet(enhetsnr: String, navn: String): NavEnhet {
-    return NavEnhet(
-        enhetId = randomInt(8),
-        navn = navn,
-        enhetNr = enhetsnr,
-        status = "20",
-        antallRessurser = 25,
-        aktiveringsdato = "1999-10-10",
-        nedleggelsesdato = "null",
-        sosialeTjenester = sosialetjenesterInfo
-    )
+  return NavEnhet(
+      enhetId = randomInt(8),
+      navn = navn,
+      enhetNr = enhetsnr,
+      status = "20",
+      antallRessurser = 25,
+      aktiveringsdato = "1999-10-10",
+      nedleggelsesdato = "null",
+      sosialeTjenester = sosialetjenesterInfo)
 }

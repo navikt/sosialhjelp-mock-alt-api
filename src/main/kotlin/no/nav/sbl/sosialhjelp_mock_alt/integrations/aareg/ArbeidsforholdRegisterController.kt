@@ -16,16 +16,19 @@ class ArbeidsforholdRegisterController(
     private val aaregService: AaregService,
 ) {
 
-    companion object {
-        private val log by logger()
-    }
+  companion object {
+    private val log by logger()
+  }
 
-    @GetMapping("/aareg/v1/arbeidstaker/arbeidsforhold")
-    // ?sporingsinformasjon=false&regelverk=A_ORDNINGEN&ansettelsesperiodeFom=2020-07-29&ansettelsesperiodeTom=2020-10-29
-    fun getArbeidsforhold(@RequestHeader headers: HttpHeaders): ResponseEntity<List<ArbeidsforholdDto>> {
-        val fnr = hentFnrFraHeaders(headers)
-        val arbeidsforhold = aaregService.getArbeidsforhold(fnr)
-        log.info("Henter aareg arbeidsforhold liste: ${objectMapper.writeValueAsString(arbeidsforhold)}")
-        return ResponseEntity.ok(arbeidsforhold)
-    }
+  @GetMapping("/aareg/v1/arbeidstaker/arbeidsforhold")
+  // ?sporingsinformasjon=false&regelverk=A_ORDNINGEN&ansettelsesperiodeFom=2020-07-29&ansettelsesperiodeTom=2020-10-29
+  fun getArbeidsforhold(
+      @RequestHeader headers: HttpHeaders
+  ): ResponseEntity<List<ArbeidsforholdDto>> {
+    val fnr = hentFnrFraHeaders(headers)
+    val arbeidsforhold = aaregService.getArbeidsforhold(fnr)
+    log.info(
+        "Henter aareg arbeidsforhold liste: ${objectMapper.writeValueAsString(arbeidsforhold)}")
+    return ResponseEntity.ok(arbeidsforhold)
+  }
 }

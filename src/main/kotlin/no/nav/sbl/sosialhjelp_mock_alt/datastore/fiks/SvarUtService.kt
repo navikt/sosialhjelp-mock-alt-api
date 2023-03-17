@@ -10,29 +10,29 @@ import org.springframework.stereotype.Component
 class SvarUtService(
     @Value("\${filter_soknader_on_fnr}") private val filterSoknaderOnFnr: Boolean,
 ) {
-    private val forsendelseSoknadMap: HashMap<String, Pair<Forsendelse, JsonSoknad>> = HashMap()
+  private val forsendelseSoknadMap: HashMap<String, Pair<Forsendelse, JsonSoknad>> = HashMap()
 
-    fun addSvarUtSoknad(fnr: String, forsendelse: Forsendelse, jsonSoknad: JsonSoknad) {
-        forsendelseSoknadMap[fnr] = forsendelse to jsonSoknad
+  fun addSvarUtSoknad(fnr: String, forsendelse: Forsendelse, jsonSoknad: JsonSoknad) {
+    forsendelseSoknadMap[fnr] = forsendelse to jsonSoknad
+  }
+
+  fun getSvarUtSoknader(fnr: String?): MutableCollection<Pair<Forsendelse, JsonSoknad>> {
+    if (fnr == null) {
+      log.info("Henter søknadsliste. Antall SvarUt-soknader: ${forsendelseSoknadMap.size}")
+      return forsendelseSoknadMap.values
+    }
+    if (filterSoknaderOnFnr) {
+      return forsendelseSoknadMap.values
+          .filter { it.second.data.personalia.personIdentifikator.verdi == fnr }
+          .toMutableList()
+          .also { log.info("Henter søknadsliste. Antall SvarUt-soknader for $fnr: ${it.size}") }
     }
 
-    fun getSvarUtSoknader(fnr: String?): MutableCollection<Pair<Forsendelse, JsonSoknad>> {
-        if (fnr == null) {
-            log.info("Henter søknadsliste. Antall SvarUt-soknader: ${forsendelseSoknadMap.size}")
-            return forsendelseSoknadMap.values
-        }
-        if (filterSoknaderOnFnr) {
-            return forsendelseSoknadMap.values
-                .filter { it.second.data.personalia.personIdentifikator.verdi == fnr }
-                .toMutableList()
-                .also { log.info("Henter søknadsliste. Antall SvarUt-soknader for $fnr: ${it.size}") }
-        }
+    log.info("- returnerer fortsatt alle. Antall SvarUt-soknader: ${forsendelseSoknadMap.size}")
+    return forsendelseSoknadMap.values
+  }
 
-        log.info("- returnerer fortsatt alle. Antall SvarUt-soknader: ${forsendelseSoknadMap.size}")
-        return forsendelseSoknadMap.values
-    }
-
-    companion object {
-        val log by logger()
-    }
+  companion object {
+    val log by logger()
+  }
 }
