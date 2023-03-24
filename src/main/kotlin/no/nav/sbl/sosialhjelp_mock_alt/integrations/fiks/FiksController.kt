@@ -375,7 +375,6 @@ class FiksController(
 
   @GetMapping("/fiks/fast/fnr")
   fun getFastFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
-
     return ResponseEntity.ok(fastFnr)
   }
 }
