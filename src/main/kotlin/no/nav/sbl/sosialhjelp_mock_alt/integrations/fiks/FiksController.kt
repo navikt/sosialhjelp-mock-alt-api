@@ -354,6 +354,11 @@ class FiksController(
   }
 
   //    ======== Util =========
+  @GetMapping("/fiks/ping")
+  fun ping(): ResponseEntity<String> {
+    return ResponseEntity.ok("pong")
+  }
+
   @GetMapping("/fiks/tilfeldig/orgnummer")
   fun getTilfeldigOrgnummer(
       @RequestParam parameters: MultiValueMap<String, String>
