@@ -30,12 +30,12 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: digisos
         - application: sosialhjelp-proxy-dev
         - application: sosialhjelp-proxy-mock
+      external:
+        - host: digisos.ekstern.dev.nav.no
     inbound:
       rules:
-        - application: digisos
         - application: sosialhjelp-proxy-dev
         - application: sosialhjelp-proxy-mock
         - application: sosialhjelp-modia-api-mock
