@@ -1,5 +1,5 @@
 # sosialhjelp-mock-alt-api
-En mock tjeneste for DIGISOS.
+En mock-tjeneste for DIGISOS.
 
 ## Henvendelser
 Spørsmål knyttet til koden eller teamet kan stilles til teamdigisos@nav.no.
