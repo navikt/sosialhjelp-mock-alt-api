@@ -5,6 +5,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.randomInt
 
 private val sosialetjenesterInfo: String =
     """
+        Sosialfaglige henvendelser
         Til saksbehandler:
         Flere vakttelefoner:
         Mottak (nye brukere): 11112222
@@ -21,7 +22,9 @@ private val sosialetjenesterInfo: String =
 
         Digital søknad på nav.no/sosialhjelp. Dokumentasjon av vilkår kan ettersendes digitalt. Papir søknadsskjema på kommunens nettside og i V/P - Nye søkere: Ønsker kontakt før innsending av digital søknad - Ønsker kontakt i forkant før søknad om nødhjelp (mat/bolig)
 
-        Saksbehandlingstider: Økonomisk sosialhjelp: 14 dager Startlån: 1mnd.
+        Saksbehandlingstider: 
+        Økonomisk sosialhjelp: 14 dager Startlån: 1mnd.
+        
         Utbetalinger:
         Fast utbetalingsdato: 27-30 i mnd
         Siste tidspunkt for kjøring: 1030
