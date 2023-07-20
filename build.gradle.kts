@@ -1,19 +1,21 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "3.0.3"
+val springBootVersion = "3.1.2"
 val coroutinesVersion = "1.6.4"
 val sosialhjelpCommonVersion = "1.20230209.0920-45d9782"
-val filformatVersion = "1.2023.02.09-08.34-aad9baa612d3"
+val filformatVersion = "1.2023.06.21-14.54-583dfcc41d77"
 val tokenValidationVersion = "3.0.3"
 val jacksonVersion = "2.14.2"
 val springdocversion = "2.0.2"
-val jsonSmartVersion = "2.4.8"
+val jsonSmartVersion = "2.5.0"
 val mockOauth2ServerVersion = "0.5.7"
 val junitVersion = "4.13.2"
 val log4jVersion = "2.19.0"
 val snakeyamlVersion = "2.0"
 val svarUtVersion = "1.2.0"
+val bouncyCastle = "1.74"
+val netty = "4.1.94.Final"
 
 val jakartaActivationApiVersion = "2.1.0"
 val jakartaAnnotationApiVersion = "2.1.1"
@@ -21,9 +23,9 @@ val jakartaXmlBindApiVersion = "4.0.0"
 val jakartaValidationApiVersion = "3.0.2"
 
 plugins {
-  kotlin("jvm") version "1.8.10"
-  kotlin("plugin.spring") version "1.8.10"
-  id("org.springframework.boot") version "3.0.3"
+  kotlin("jvm") version "1.9.0"
+  kotlin("plugin.spring") version "1.9.0"
+  id("org.springframework.boot") version "3.1.2"
   id("com.github.ben-manes.versions") version "0.46.0"
   id("com.diffplug.spotless") version "6.12.0"
 }
@@ -91,7 +93,7 @@ dependencies {
   // spesifikke versjoner oppgradert etter ønske fra snyk
   constraints {
     implementation("net.minidev:json-smart:$jsonSmartVersion") {
-      because("Snyk ønsker versjon 2.4.5 eller høyere")
+      because("Dependabot ønsker versjon 2.4.5 eller høyere")
     }
 
     implementation("junit:junit:$junitVersion") {
@@ -107,7 +109,12 @@ dependencies {
     implementation("org.yaml:snakeyaml:$snakeyamlVersion") {
       because("https://security.snyk.io/vuln/SNYK-JAVA-ORGYAML-3152153")
     }
-
+    implementation("org.bouncycastle:bcprov-jdk18on:$bouncyCastle") {
+      because("https://github.com/advisories/GHSA-hr8g-6v94-x4m9")
+    }
+    implementation("io.netty:netty-handler$netty") {
+      because("https://github.com/advisories/GHSA-6mjq-h674-j845")
+    }
     // spring boot 3.0.0 -> jakarta
     implementation("jakarta.activation:jakarta.activation-api:$jakartaActivationApiVersion")
     implementation("jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationApiVersion")
