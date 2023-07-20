@@ -22,7 +22,7 @@ val jakartaValidationApiVersion = "3.0.2"
 
 plugins {
   kotlin("jvm") version "1.8.10"
-  kotlin("plugin.spring") version "1.8.10"
+  kotlin("plugin.spring") version "1.9.0"
   id("org.springframework.boot") version "3.0.3"
   id("com.github.ben-manes.versions") version "0.46.0"
   id("com.diffplug.spotless") version "6.12.0"
