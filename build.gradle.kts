@@ -112,7 +112,7 @@ dependencies {
     implementation("org.bouncycastle:bcprov-jdk18on:$bouncyCastle") {
       because("https://github.com/advisories/GHSA-hr8g-6v94-x4m9")
     }
-    implementation("io.netty:netty-handler$netty") {
+    implementation("io.netty:netty-handler:$netty") {
       because("https://github.com/advisories/GHSA-6mjq-h674-j845")
     }
     // spring boot 3.0.0 -> jakarta
