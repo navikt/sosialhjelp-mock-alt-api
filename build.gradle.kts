@@ -1,7 +1,7 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "3.0.3"
+val springBootVersion = "3.1.2"
 val coroutinesVersion = "1.6.4"
 val sosialhjelpCommonVersion = "1.20230209.0920-45d9782"
 val filformatVersion = "1.2023.02.09-08.34-aad9baa612d3"
