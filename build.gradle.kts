@@ -14,7 +14,7 @@ val junitVersion = "4.13.2"
 val log4jVersion = "2.19.0"
 val snakeyamlVersion = "2.0"
 val svarUtVersion = "1.2.0"
-val bouncyCastle = "1.74"
+val bouncyCastle = "1.76"
 val netty = "4.1.94.Final"
 
 val jakartaActivationApiVersion = "2.1.0"
