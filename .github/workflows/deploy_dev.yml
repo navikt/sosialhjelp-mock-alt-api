@@ -6,7 +6,6 @@ on:
 jobs:
   deploy-to-dev:
     name: 'Deploy to dev'
-    needs: set-cluster
     permissions:
       packages: write
       contents: write
