@@ -28,9 +28,9 @@ data class Aktoer(
 )
 
 enum class Aktoertype {
-    PERSON,
-    ORGANISASJON,
-    SAMHANDLER,
+  PERSON,
+  ORGANISASJON,
+  SAMHANDLER,
 }
 
 data class Ytelseskomponent(

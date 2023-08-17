@@ -13,39 +13,40 @@ import org.springframework.web.bind.annotation.RestController
 class KodeverkController(
     kommuneInfoService: KommuneInfoService,
 ) {
-    private val kommuner: KodeverkDto
-    private val landkoder: KodeverkDto
-    private val postnummer: KodeverkDto
+  private val kommuner: KodeverkDto
+  private val landkoder: KodeverkDto
+  private val postnummer: KodeverkDto
 
-    init {
-        kommuner = lesKodeverk("kommuner")
-        landkoder = lesKodeverk("landkoder")
-        postnummer = lesKodeverk("postnummer")
-        kommuner.betydninger.keys.forEach { kommuneInfoService.addKommunieInfo(it) }
-        kommuneInfoService.addSvarutKommuneInfo("3801")
-    }
+  init {
+    kommuner = lesKodeverk("kommuner")
+    landkoder = lesKodeverk("landkoder")
+    postnummer = lesKodeverk("postnummer")
+    kommuner.betydninger.keys.forEach { kommuneInfoService.addKommunieInfo(it) }
+    kommuneInfoService.addSvarutKommuneInfo("3801")
+  }
 
-    private fun lesKodeverk(navn: String): KodeverkDto {
-        val string: String = this::class.java.classLoader.getResource("kodeverk/kodeverk_$navn.json")!!.readText()
-        return objectMapper.readValue(string, KodeverkDto::class.java)
-    }
+  private fun lesKodeverk(navn: String): KodeverkDto {
+    val string: String =
+        this::class.java.classLoader.getResource("kodeverk/kodeverk_$navn.json")!!.readText()
+    return objectMapper.readValue(string, KodeverkDto::class.java)
+  }
 
-    companion object {
-        private val log by logger()
-    }
+  companion object {
+    private val log by logger()
+  }
 
-    @GetMapping("/kodeverk/{kodeverknavn}/koder/betydninger")
-    fun hentKodeverk(@PathVariable kodeverknavn: String): ResponseEntity<KodeverkDto> {
-        log.debug("Kodeverk request: $kodeverknavn")
-        if (kodeverknavn == "Kommuner") {
-            return ResponseEntity.ok(kommuner)
-        }
-        if (kodeverknavn == "Landkoder") {
-            return ResponseEntity.ok(landkoder)
-        }
-        if (kodeverknavn == "Postnummer") {
-            return ResponseEntity.ok(postnummer)
-        }
-        return ResponseEntity.notFound().build()
+  @GetMapping("/kodeverk/{kodeverknavn}/koder/betydninger")
+  fun hentKodeverk(@PathVariable kodeverknavn: String): ResponseEntity<KodeverkDto> {
+    log.debug("Kodeverk request: $kodeverknavn")
+    if (kodeverknavn == "Kommuner") {
+      return ResponseEntity.ok(kommuner)
     }
+    if (kodeverknavn == "Landkoder") {
+      return ResponseEntity.ok(landkoder)
+    }
+    if (kodeverknavn == "Postnummer") {
+      return ResponseEntity.ok(postnummer)
+    }
+    return ResponseEntity.notFound().build()
+  }
 }

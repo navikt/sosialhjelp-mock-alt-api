@@ -20,20 +20,20 @@ class UtbetalingController(
     private val feilService: FeilService,
 ) {
 
-    @PostMapping("/utbetaldata/api/v2/hent-utbetalingsinformasjon/ekstern")
-    fun getUtbetalingerFraNavUtbetaldata(
-        @RequestBody body: Utbetalingsoppslag,
-        @RequestHeader headers: HttpHeaders
-    ): ResponseEntity<List<UtbetalDataDto>> {
-        log.info("RequestBody for hentUtbetalinger fra Utbetaldata: $body")
-        val ident = hentFnrFraToken(headers)
-        feilService.eventueltLagFeil(ident, "UtbetalingController", "getUtbetalingerFraNav")
-        val utbetalinger = utbetalDataService.getUtbetalingerFraNav(ident)
-        log.info("Henter utbetalinger fra nav: ${objectMapper.writeValueAsString(utbetalinger)}")
-        return ResponseEntity.ok(utbetalinger)
-    }
+  @PostMapping("/utbetaldata/api/v2/hent-utbetalingsinformasjon/ekstern")
+  fun getUtbetalingerFraNavUtbetaldata(
+      @RequestBody body: Utbetalingsoppslag,
+      @RequestHeader headers: HttpHeaders
+  ): ResponseEntity<List<UtbetalDataDto>> {
+    log.info("RequestBody for hentUtbetalinger fra Utbetaldata: $body")
+    val ident = hentFnrFraToken(headers)
+    feilService.eventueltLagFeil(ident, "UtbetalingController", "getUtbetalingerFraNav")
+    val utbetalinger = utbetalDataService.getUtbetalingerFraNav(ident)
+    log.info("Henter utbetalinger fra nav: ${objectMapper.writeValueAsString(utbetalinger)}")
+    return ResponseEntity.ok(utbetalinger)
+  }
 
-    companion object {
-        private val log by logger()
-    }
+  companion object {
+    private val log by logger()
+  }
 }

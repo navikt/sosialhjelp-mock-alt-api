@@ -148,7 +148,6 @@ tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar
 }
 
 spotless {
-  ratchetFrom = "origin/master"
   format("misc") {
     target("*.md", ".gitignore", "Dockerfile")
 
