@@ -12,22 +12,20 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class KontonummerController(
-    private val kontoregisterService: KontoregisterService
-) {
+class KontonummerController(private val kontoregisterService: KontoregisterService) {
 
-    @GetMapping("/api/borger/v1/hent-aktiv-konto")
-    fun hentKontoNummerFraKontoRegister(
-        @RequestHeader headers: HttpHeaders
-    ): ResponseEntity<KontoDto> {
-        val ident = hentFnrFraToken(headers)
-        val responseDto = kontoregisterService.getKonto(ident)
-        log.info("Henter konto: ${objectMapper.writeValueAsString(responseDto)}")
+  @GetMapping("/api/borger/v1/hent-aktiv-konto")
+  fun hentKontoNummerFraKontoRegister(
+      @RequestHeader headers: HttpHeaders
+  ): ResponseEntity<KontoDto> {
+    val ident = hentFnrFraToken(headers)
+    val responseDto = kontoregisterService.getKonto(ident)
+    log.info("Henter konto: ${objectMapper.writeValueAsString(responseDto)}")
 
-        return responseDto?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
-    }
+    return responseDto?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
+  }
 
-    companion object {
-        private val log by logger()
-    }
+  companion object {
+    private val log by logger()
+  }
 }
