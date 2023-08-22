@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class ApplicationExitJob {
   val log by logger()
 
-  @Scheduled(cron = "0 1 * * * *")
+  @Scheduled(cron = "0 0 1 * * *")
   fun exitApplication() {
     log.info("Avslutter applikasjonen for å resette data")
     exitProcess(0)
