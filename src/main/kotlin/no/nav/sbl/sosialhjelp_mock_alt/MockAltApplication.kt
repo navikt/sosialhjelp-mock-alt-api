@@ -11,8 +11,10 @@ import no.nav.sbl.sosialhjelp_mock_alt.config.CORSFilter
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
+@EnableScheduling
 class MockAltApplication {
 
   @Bean
