@@ -89,7 +89,7 @@ class WellKnownController(
             issuerId = issuer,
             subject = SignedJWT.parse(subjectToken).jwtClaimsSet.subject,
             audience = params["audience"],
-            claims = mapOf("acr" to "Level4"))
+            claims = mapOf("acr" to "idporten-loa-high"))
     return TokenResponse(newToken.serialize(), "JWT", "JWT", 60)
   }
 
