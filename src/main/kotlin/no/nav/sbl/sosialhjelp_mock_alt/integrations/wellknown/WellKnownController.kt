@@ -31,7 +31,9 @@ class WellKnownController(
       @RequestParam host: String?
   ): WellKnown {
     val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
-    val wellknown =
+      log.info("well-known baseUrl=$issuer")
+
+      val wellknown =
         WellKnown(
             issuer = mockOAuth2Server.issuerUrl(issuer).toString(),
             tokenEndpoint = "${baseUrl}sosialhjelp/mock-alt-api/token/$issuer",
@@ -69,6 +71,7 @@ class WellKnownController(
       @PathVariable(value = "issuer") issuer: String
   ): TokenResponse {
     val typeRef = object : TypeReference<HashMap<String, String>>() {}
+      log.info("debug body=$body issuer=$issuer")
     val params =
         try {
           objectMapper.readValue(body, typeRef)
@@ -76,7 +79,9 @@ class WellKnownController(
           splitFormParams(body)
         }
 
-    if (params.containsKey("assertion") && params.containsKey("grant_type")) {
+      log.info("params=$params")
+
+      if (params.containsKey("assertion") && params.containsKey("grant_type")) {
       log.info("Utveksler token for $issuer")
       return TokenResponse(params["assertion"]!!, "JWT", "JWT", 60)
     }
