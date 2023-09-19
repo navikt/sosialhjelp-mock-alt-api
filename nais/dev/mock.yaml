@@ -47,10 +47,9 @@ spec:
         - application: sosialhjelp-kommune-service-mock
   resources:
     limits:
-      cpu: 750m
       memory: 1Gi
     requests:
-      cpu: 2m
+      cpu: 10m
       memory: 256Mi
   env:
     - name: SPRING_PROFILES_ACTIVE
