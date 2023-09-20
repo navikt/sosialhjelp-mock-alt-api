@@ -47,7 +47,7 @@ spec:
         - application: sosialhjelp-kommune-service-mock
   resources:
     limits:
-      memory: 1Gi
+      memory: 2Gi
     requests:
       cpu: 10m
       memory: 512Mi
