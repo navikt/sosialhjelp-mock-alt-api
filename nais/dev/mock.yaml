@@ -56,7 +56,7 @@ spec:
     - name: GCP_PORT
       value: "8989"
     - name: HOST_ADDRESS
-      value: "https://digisos.ekstern.dev.nav.no/"
+      value: "http://sosialhjelp-mock-alt-api-mock/"
     - name: COOKIE_DOMAIN
       value: "digisos.ekstern.dev.nav.no"
     - name: LOGINURL
