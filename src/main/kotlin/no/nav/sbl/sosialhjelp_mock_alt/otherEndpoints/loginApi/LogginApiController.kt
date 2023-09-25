@@ -142,11 +142,10 @@ class LogginApiController(
         }
     log.info("Etter at vi har tulla med no docker-compose greier: $newUri")
     if (newUri.contains("innsyn-api")) {
-      newUri = newUri.replace("sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "sosialhjelp-innsyn-api-mock")
+      newUri = newUri.replace("https://sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "http://sosialhjelp-innsyn-api-mock")
     } else if (newUri.contains("soknad-api")) {
-      newUri = newUri.replace("sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "sosialhjelp-soknad-api-mock")
+      newUri = newUri.replace("https://sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "http://sosialhjelp-soknad-api-mock")
     }
-    newUri = newUri.replace("https://", "http://")
 //    newUri =
 //        newUri.replace(
 //            "sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "digisos.ekstern.dev.nav.no")
