@@ -141,9 +141,15 @@ class LogginApiController(
           else -> newUri.replace("localhost:8989", "localhost:8181")
         }
     log.info("Etter at vi har tulla med no docker-compose greier: $newUri")
-    newUri =
-        newUri.replace(
-            "sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "digisos.ekstern.dev.nav.no")
+    if (newUri.contains("innsyn-api")) {
+      newUri = newUri.replace("sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "sosialhjelp-innsyn-api-mock")
+    } else if (newUri.contains("soknad-api")) {
+      newUri = newUri.replace("sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "sosialhjelp-soknad-api-mock")
+    }
+    newUri = newUri.replace("https://", "http://")
+//    newUri =
+//        newUri.replace(
+//            "sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "digisos.ekstern.dev.nav.no")
     log.info("Etter at vi har bytta ut mock-alt-api-mock stuff: $newUri")
     val headers = getHeaders(request)
 
