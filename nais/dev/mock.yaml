@@ -60,6 +60,6 @@ spec:
     - name: HOST_ADDRESS
       value: "http://sosialhjelp-mock-alt-api-mock/"
     - name: COOKIE_DOMAIN
-      value: "digisos.ekstern.dev.nav.no"
+      value: "ekstern.dev.nav.no"
     - name: LOGINURL
       value: "https://digisos.ekstern.dev.nav.no/sosialhjelp/mock-alt/login"
