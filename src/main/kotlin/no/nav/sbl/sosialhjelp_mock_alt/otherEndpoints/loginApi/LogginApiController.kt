@@ -122,8 +122,9 @@ class LogginApiController(
       response: HttpServletResponse
   ): ResponseEntity<ByteArray> {
     var newUri = request.requestURL.append(getQueryString(request)).toString()
-
+    log.info("Før vi tukler med urlen: $newUri")
     newUri = newUri.replace("/sosialhjelp/mock-alt-api/login-api", "")
+    log.info("Etter at vi har fjerna mock-alt-api stuff: $newUri")
     newUri =
         when {
           newUri.contains("soknad-api") && soknadApiViaDockerCompose ->
@@ -139,10 +140,11 @@ class LogginApiController(
               newUri.replace("localhost:8989", "localhost:8383")
           else -> newUri.replace("localhost:8989", "localhost:8181")
         }
+    log.info("Etter at vi har tulla med no docker-compose greier: $newUri")
     newUri =
         newUri.replace(
             "sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "digisos.ekstern.dev.nav.no")
-
+    log.info("Etter at vi har bytta ut mock-alt-api-mock stuff: $newUri")
     val headers = getHeaders(request)
 
     addAccessTokenHeader(request, headers)
