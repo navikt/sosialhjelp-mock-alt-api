@@ -33,6 +33,8 @@ spec:
       rules:
         - application: sosialhjelp-proxy-dev
         - application: sosialhjelp-proxy-mock
+        - application: sosialhjelp-innsyn-api-mock
+        - application: sosialhjelp-soknad-api-mock
       external:
         - host: digisos.ekstern.dev.nav.no
     inbound:
