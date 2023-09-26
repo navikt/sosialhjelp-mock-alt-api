@@ -31,36 +31,31 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: sosialhjelp-proxy-dev
-        - application: sosialhjelp-proxy-mock
+        - application: sosialhjelp-innsyn-api-mock
       external:
         - host: digisos.ekstern.dev.nav.no
     inbound:
       rules:
-        - application: sosialhjelp-proxy-dev
         - application: sosialhjelp-proxy-mock
         - application: sosialhjelp-modia-api-mock
         - application: sosialhjelp-innsyn-api-mock
-        - application: sosialhjelp-innsyn-api
-        - application: sosialhjelp-soknad-api-mock
-        - application: sosialhjelp-soknad-api
-        - application: sosialhjelp-kommune-service-mock
         - application: sosialhjelp-innsyn-mock
+        - application: sosialhjelp-soknad-api-mock
+        - application: sosialhjelp-kommune-service-mock
   resources:
     limits:
-      cpu: 750m
-      memory: 1Gi
+      memory: 2Gi
     requests:
-      cpu: 2m
-      memory: 256Mi
+      cpu: 10m
+      memory: 512Mi
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "digisos-ekstern"
     - name: GCP_PORT
       value: "8989"
     - name: HOST_ADDRESS
-      value: "https://digisos.ekstern.dev.nav.no/"
+      value: "http://sosialhjelp-mock-alt-api-mock/"
     - name: COOKIE_DOMAIN
-      value: "digisos.ekstern.dev.nav.no"
+      value: "ekstern.dev.nav.no"
     - name: LOGINURL
       value: "https://digisos.ekstern.dev.nav.no/sosialhjelp/mock-alt/login"

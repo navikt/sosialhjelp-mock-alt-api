@@ -31,7 +31,7 @@ class LoginCookieController(
       response: HttpServletResponse
   ): Cookie? {
     val claims = mutableMapOf<String, String>()
-    claims["acr"] = "Level4"
+    claims["acr"] = "idporten-loa-high"
     claims["pid"] = subject!! // idporten
     claims["oid"] = subject // azure ad
     val token =

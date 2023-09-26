@@ -31,6 +31,7 @@ class WellKnownController(
       @RequestParam host: String?
   ): WellKnown {
     val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
+
     val wellknown =
         WellKnown(
             issuer = mockOAuth2Server.issuerUrl(issuer).toString(),
@@ -69,6 +70,7 @@ class WellKnownController(
       @PathVariable(value = "issuer") issuer: String
   ): TokenResponse {
     val typeRef = object : TypeReference<HashMap<String, String>>() {}
+
     val params =
         try {
           objectMapper.readValue(body, typeRef)
@@ -89,7 +91,7 @@ class WellKnownController(
             issuerId = issuer,
             subject = SignedJWT.parse(subjectToken).jwtClaimsSet.subject,
             audience = params["audience"],
-            claims = mapOf("acr" to "Level4"))
+            claims = mapOf("acr" to "idporten-loa-high"))
     return TokenResponse(newToken.serialize(), "JWT", "JWT", 60)
   }
 

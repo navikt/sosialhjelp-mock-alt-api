@@ -122,7 +122,6 @@ class LogginApiController(
       response: HttpServletResponse
   ): ResponseEntity<ByteArray> {
     var newUri = request.requestURL.append(getQueryString(request)).toString()
-
     newUri = newUri.replace("/sosialhjelp/mock-alt-api/login-api", "")
     newUri =
         when {
@@ -139,9 +138,18 @@ class LogginApiController(
               newUri.replace("localhost:8989", "localhost:8383")
           else -> newUri.replace("localhost:8989", "localhost:8181")
         }
-    newUri =
-        newUri.replace(
-            "sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no", "digisos.ekstern.dev.nav.no")
+
+    if (newUri.contains("innsyn-api")) {
+      newUri =
+          newUri.replace(
+              "https://sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no",
+              "http://sosialhjelp-innsyn-api-mock")
+    } else if (newUri.contains("soknad-api")) {
+      newUri =
+          newUri.replace(
+              "https://sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no",
+              "http://sosialhjelp-soknad-api-mock")
+    }
 
     val headers = getHeaders(request)
 
