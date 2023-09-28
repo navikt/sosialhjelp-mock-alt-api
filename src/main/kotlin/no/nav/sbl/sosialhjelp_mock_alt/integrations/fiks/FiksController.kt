@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks
 
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.module.kotlin.readValue
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -13,6 +14,9 @@ import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.DokumentKrypteringsService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.FiksDigisosId
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.Klage
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.KlageService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.KommuneInfoService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.mellomlagring.MellomlagringService
@@ -55,7 +59,8 @@ class FiksController(
     private val feilService: FeilService,
     private val pdlService: PdlService,
     private val kommuneInfoService: KommuneInfoService,
-    private val mellomlagringService: MellomlagringService
+    private val mellomlagringService: MellomlagringService,
+    private val klageService: KlageService,
 ) {
   companion object {
     private val log by logger()
@@ -376,5 +381,18 @@ class FiksController(
   @GetMapping("/fiks/fast/fnr")
   fun getFastFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
     return ResponseEntity.ok(fastFnr)
+  }
+
+  @GetMapping("/fiks/digisos/api/v1/{fiksDigisosId}/klage")
+  fun getKlager(@PathVariable fiksDigisosId: FiksDigisosId): ResponseEntity<List<Klage>> {
+    klageService.hentKlager(fiksDigisosId)
+    return ResponseEntity.ok(klageService.hentKlager(fiksDigisosId))
+  }
+
+  @PostMapping("/fiks/digisos/api/v1/{fiksDigisosId}/klage")
+  fun leggTilKlage(@PathVariable fiksDigisosId: FiksDigisosId, @RequestBody body: String): ResponseEntity<Unit> {
+    val klage: Klage = objectMapper.readValue(body)
+    klageService.leggTilKlage(fiksDigisosId, klage)
+    return ResponseEntity.ok(Unit)
   }
 }
