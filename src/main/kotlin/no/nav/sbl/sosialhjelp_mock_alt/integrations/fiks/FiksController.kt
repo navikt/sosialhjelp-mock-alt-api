@@ -382,17 +382,4 @@ class FiksController(
   fun getFastFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
     return ResponseEntity.ok(fastFnr)
   }
-
-  @GetMapping("/fiks/digisos/api/v1/{fiksDigisosId}/klage")
-  fun getKlager(@PathVariable fiksDigisosId: FiksDigisosId): ResponseEntity<List<Klage>> {
-    klageService.hentKlager(fiksDigisosId)
-    return ResponseEntity.ok(klageService.hentKlager(fiksDigisosId))
-  }
-
-  @PostMapping("/fiks/digisos/api/v1/{fiksDigisosId}/klage")
-  fun leggTilKlage(@PathVariable fiksDigisosId: FiksDigisosId, @RequestBody body: String): ResponseEntity<Unit> {
-    val klage: Klage = objectMapper.readValue(body)
-    klageService.leggTilKlage(fiksDigisosId, klage)
-    return ResponseEntity.ok(Unit)
-  }
 }

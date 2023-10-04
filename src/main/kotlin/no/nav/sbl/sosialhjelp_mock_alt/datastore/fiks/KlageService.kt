@@ -16,4 +16,4 @@ class KlageService {
 @JvmInline
 value class FiksDigisosId(val value: String)
 
-data class Klage(val fiksDigisosId: String, val klageTekst: String, val vedtaksIds: List<String>)
+data class Klage(val fiksDigisosId: FiksDigisosId, val klageTekst: String, val vedtaksIds: List<String>)

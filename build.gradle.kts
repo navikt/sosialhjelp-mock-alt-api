@@ -16,6 +16,7 @@ val snakeyamlVersion = "2.0"
 val svarUtVersion = "1.2.0"
 val bouncyCastle = "1.74"
 val netty = "4.1.94.Final"
+val fiksIO = "3.2.2"
 
 val jakartaActivationApiVersion = "2.1.0"
 val jakartaAnnotationApiVersion = "2.1.1"
@@ -86,6 +87,9 @@ dependencies {
 
   // SvarUt
   implementation("no.ks.fiks.svarut:svarut-rest-klient:$svarUtVersion")
+
+  // Fiks IO
+  implementation("no.ks.fiks:fiks-io-klient-java:${fiksIO}")
 
   testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
   testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
