@@ -11,7 +11,7 @@ class NorgService {
 
   init {
     val sentrum = lagMockNavEnhet("0301", "Sentrum, Oslo kommune")
-    val grunerokka = lagMockNavEnhet("0315", "Grünerløkka, Oslo kommune")
+    val grunerokka = lagMockNavEnhet("0104", "NAV Moss")
     val aarstad = lagMockNavEnhet("1208", "NAV Årstad, Årstad kommune")
     val bergenhus = lagMockNavEnhet("1209", "NAV Bergenhus, Bergen kommune")
     val ytrebygda = lagMockNavEnhet("1210", "NAV Ytrebygda, Bergen kommune")
