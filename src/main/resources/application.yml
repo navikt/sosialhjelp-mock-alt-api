@@ -35,3 +35,14 @@ modia-api-via-docker-compose: ${MODIA_API_VIA_DOCKER_COMPOSE:false}
 
 # sett SOKNAD_FRONTEND_BASEURL som env variabel hvis lenke til ettersendelse-side skal bli korrekt ved lokal kjøring, eks: http://localhost:3000/sosialhjelp/soknad
 soknad-frontend-baseurl: ${SOKNAD_FRONTEND_BASEURL:https://digisos.ekstern.dev.nav.no/sosialhjelp/soknad}
+
+maskinporten_clientid: ${MASKINPORTEN_CLIENT_ID}
+maskinporten_scopes: ${MASKINPORTEN_SCOPES}
+maskinporten_well_known_url: ${MASKINPORTEN_WELL_KNOWN_URL}
+maskinporten_client_jwk: ${MASKINPORTEN_CLIENT_JWK}
+
+fiks-io:
+  integrasjonspassord: ${MOCK_ALT_API_FIKS_IO_INTEGRASJONSPASSORD}
+  integrasjonsid: 6839eedd-8007-432b-a24d-67bd845f6369
+  private-key-path: "/var/run/secrets/kommune-key.der"
+  kontoId: 46bbe668-3468-45fa-9bd1-67b5469b7361

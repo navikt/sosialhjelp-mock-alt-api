@@ -71,6 +71,7 @@ dependencies {
 
   implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
   implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}")
 
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
