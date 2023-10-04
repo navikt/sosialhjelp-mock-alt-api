@@ -34,6 +34,11 @@ spec:
         - application: sosialhjelp-innsyn-api-mock
       external:
         - host: digisos.ekstern.dev.nav.no
+        - host: test.maskinporten.no
+        - host: api.fiks.test.ks.no
+        - host: io.fiks.test.ks.no
+          ports:
+            - port: 5671
     inbound:
       rules:
         - application: sosialhjelp-proxy-mock
@@ -42,12 +47,21 @@ spec:
         - application: sosialhjelp-innsyn-mock
         - application: sosialhjelp-soknad-api-mock
         - application: sosialhjelp-kommune-service-mock
+  maskinporten:
+    enabled: true
+    scopes:
+      consumes:
+        - name: "ks:fiks"
   resources:
     limits:
       memory: 2Gi
     requests:
       cpu: 10m
       memory: 512Mi
+  filesFrom:
+    - secret: mock-alt-api-fiks-io-private-key
+  envFrom:
+    - secret: mock-alt-api-fiks-io-integrasjonspassord
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "digisos-ekstern"
