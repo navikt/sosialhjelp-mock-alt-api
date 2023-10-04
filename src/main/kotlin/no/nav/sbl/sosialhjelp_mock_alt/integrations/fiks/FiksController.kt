@@ -14,8 +14,6 @@ import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.DokumentKrypteringsService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.FiksDigisosId
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.Klage
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.KlageService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.KommuneInfoService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
