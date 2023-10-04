@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import kotlin.jvm.optionals.getOrNull
 
 private const val ORG_NR = "910229567"
@@ -77,7 +78,7 @@ class KlageIO(
   fun leverKlageListener() = runBlocking(Dispatchers.IO) {
     val (klient) = hentKlientOgKonto("digisos.klage.send")
     lyttEtterKlager(klient).onEach {
-      klageService.leggTilKlage(it.fiksDigisosId, it)
+      klageService.leggTilKlage(FiksDigisosId(it.fiksDigisosId), it)
     }.catch {
       log.error("Fikk feil fra klagelytter", it)
     }.collect()
@@ -88,7 +89,7 @@ class KlageIO(
       if (melding.meldingType == "no.nav.sosialhjelp.klage.v1.send") {
         runCatching {
           melding.dekryptertZipStream.use {
-            ObjectMapper().readValue<Klage>(String(it.readBytes()))
+            ObjectMapper().readValue<InputKlage>(String(it.readBytes()))
           }
         }.mapCatching {
           channel.trySendBlocking(it).onSuccess {
@@ -135,9 +136,10 @@ class KlageController(
   }
 
   @PostMapping("/fiks/digisos/api/v1/{fiksDigisosId}/klage")
-  fun leggTilKlage(@PathVariable fiksDigisosId: FiksDigisosId, @RequestBody body: String): ResponseEntity<Unit> {
-    val klage: Klage = objectMapper.readValue(body)
+  fun leggTilKlage(@PathVariable fiksDigisosId: FiksDigisosId, @RequestBody klage: InputKlage): ResponseEntity<Unit> {
     klageService.leggTilKlage(fiksDigisosId, klage)
     return ResponseEntity.ok(Unit)
   }
 }
+
+data class InputKlage(val fiksDigisosId: String, val klageTekst: String, val vedtaksIds: List<String>, val vedlegg: List<MultipartFile> = emptyList())
