@@ -22,6 +22,7 @@ cookie_domain: ${COOKIE_DOMAIN:localhost}
 loginurl: ${LOGINURL:http://localhost:3008/sosialhjelp/mock-alt/login}
 filter_soknader_on_fnr: ${FILTER_SOKNADER_ON_FNR:true}
 
+
 springdoc:
   swagger-ui.path: swagger-ui.html
   pathsToMatch: /fiks/digisos/api/v1/**
@@ -40,16 +41,3 @@ maskinporten_clientid: ${MASKINPORTEN_CLIENT_ID}
 maskinporten_scopes: ${MASKINPORTEN_SCOPES}
 maskinporten_well_known_url: ${MASKINPORTEN_WELL_KNOWN_URL}
 maskinporten_client_jwk: ${MASKINPORTEN_CLIENT_JWK}
-
-fiks-io:
-  integrasjonspassord: ${MOCK_ALT_API_FIKS_IO_INTEGRASJONSPASSORD}
-  integrasjonsid:  fb22e091-f28f-4bdf-8c98-6a4924b64a8b
-  private-key-path: "/var/run/secrets/kommune-key.der"
-  kontoId: 37ef64de-aa0e-4f10-97ef-3799030f1440
-  virksomhetssertifikat:
-    projectId: "virksomhetssertifikat-dev"
-    secretId: "test-virksomhetssertifikat-felles-keystore-jceks_2018-2021"
-    secretVersion: 3
-    passwordProjectId: virksomhetssertifikat-dev
-    passwordSecretId: test-keystore-credentials-json
-    passwordSecretVersion: 2

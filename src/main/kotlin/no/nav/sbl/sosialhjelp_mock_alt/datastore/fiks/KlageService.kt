@@ -5,7 +5,7 @@ import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.filreferanse.JsonDokumentlagerFilreferanse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.filreferanse.JsonSvarUtFilreferanse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonVedtakFattet
-import no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks.klage.InputKlage
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.klage.InputKlage
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import org.springframework.stereotype.Service
 
@@ -16,12 +16,12 @@ class KlageService(private val soknadService: SoknadService) {
   fun leggTilKlage(fiksDigisosId: FiksDigisosId, klage: InputKlage) {
     val soknad =
         soknadService.hentSoknad(fiksDigisosId.value)
-            ?: error("Ingen søknad for fiksDigisosId: ${fiksDigisosId}")
+            ?: error("Ingen søknad for fiksDigisosId: $fiksDigisosId")
     val jsonDigisosSoker: JsonDigisosSoker =
         soknadService.hentDokument(soknad.fiksDigisosId, soknad.digisosSoker!!.metadata)?.let {
           objectMapper.readValue(it)
         }
-            ?: error("Feeeekk")
+            ?: error("Fant ikke dokument med id ${soknad.digisosSoker!!.metadata}")
     val vedtak =
         jsonDigisosSoker.hendelser
             .asSequence()
@@ -32,27 +32,27 @@ class KlageService(private val soknadService: SoknadService) {
               when (it) {
                 is JsonDokumentlagerFilreferanse -> it.id in klage.vedtaksIds
                 is JsonSvarUtFilreferanse -> it.id in klage.vedtaksIds
-                else -> error("fekk")
+                else -> error("Ukjent type på filreferanse")
               }
             }
             .map {
               when (it) {
                 is JsonDokumentlagerFilreferanse -> it.id
                 is JsonSvarUtFilreferanse -> it.id
-                else -> error("hekk")
+                else -> error("Ukjent type på filreferanse")
               }
             }
             .toList()
     val dokumentLagerRef =
         soknadService.leggInnIDokumentlager("klage", objectMapper.writeValueAsBytes(klage))
-    val lagretKlage =
-        Klage(
-            fiksDigisosId.value,
-            dokumentLagerRef,
-            vedtakRef = vedtak,
-            status = KlageStatus.UNDER_BEHANDLING,
-            utfall = null)
-    klager.getOrPut(fiksDigisosId) { mutableListOf() }.add(lagretKlage)
+    klager
+        .getOrPut(fiksDigisosId) { mutableListOf() }
+        .add(
+            Klage(
+                fiksDigisosId.value,
+                dokumentLagerRef,
+                vedtakRef = vedtak,
+                status = KlageStatus.UNDER_BEHANDLING))
   }
 
   fun hentKlager(fiksDigisosId: FiksDigisosId): List<Klage> = klager[fiksDigisosId] ?: emptyList()
@@ -65,7 +65,7 @@ data class Klage(
     val filRef: String,
     val vedtakRef: List<String>,
     val status: KlageStatus,
-    val utfall: KlageUtfall?
+    val utfall: KlageUtfall? = null
 )
 
 enum class KlageStatus {
