@@ -16,9 +16,6 @@ val snakeyamlVersion = "2.0"
 val svarUtVersion = "2.0.0"
 val bouncyCastle = "1.74"
 val netty = "4.1.94.Final"
-val fiksIOVersion = "3.2.2"
-val googleCloudLibrariesVersion = "26.14.0"
-val googleCloudSecretmanagerVersion = "2.10.0"
 
 plugins {
   kotlin("jvm") version "1.9.10"
@@ -55,10 +52,8 @@ dependencies {
 
   implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
   implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-  implementation("org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}")
 
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${coroutinesVersion}")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
@@ -73,13 +68,6 @@ dependencies {
 
   // SvarUt
   implementation("no.ks.fiks.svarut:svarut-rest-klient:$svarUtVersion")
-
-  // Fiks IO
-  implementation("no.ks.fiks:fiks-io-klient-java:${fiksIOVersion}")
-
-  // Google secret manager
-  implementation(platform("com.google.cloud:libraries-bom:${googleCloudLibrariesVersion}"))
-  implementation("com.google.cloud:google-cloud-secretmanager:${googleCloudSecretmanagerVersion}")
 
   testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
   testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")

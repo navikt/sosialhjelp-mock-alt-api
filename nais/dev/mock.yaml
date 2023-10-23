@@ -48,10 +48,6 @@ spec:
     requests:
       cpu: 10m
       memory: 512Mi
-  filesFrom:
-    - secret: mock-alt-api-fiks-io-private-key
-  envFrom:
-    - secret: mock-alt-api-fiks-io-integrasjonspassord
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "digisos-ekstern"

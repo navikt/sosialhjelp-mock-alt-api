@@ -29,9 +29,9 @@ private val sosialetjenesterInfo: String =
 """
         .trimIndent()
 
-fun lagMockNavEnhet(enhetsnr: String, navn: String, enhetId: Int = randomInt(8)): NavEnhet {
+fun lagMockNavEnhet(enhetsnr: String, navn: String): NavEnhet {
   return NavEnhet(
-      enhetId = enhetId,
+      enhetId = randomInt(8),
       navn = navn,
       enhetNr = enhetsnr,
       status = "20",

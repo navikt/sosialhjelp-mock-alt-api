@@ -22,7 +22,6 @@ cookie_domain: ${COOKIE_DOMAIN:localhost}
 loginurl: ${LOGINURL:http://localhost:3008/sosialhjelp/mock-alt/login}
 filter_soknader_on_fnr: ${FILTER_SOKNADER_ON_FNR:true}
 
-
 springdoc:
   swagger-ui.path: swagger-ui.html
   pathsToMatch: /fiks/digisos/api/v1/**
@@ -36,8 +35,3 @@ modia-api-via-docker-compose: ${MODIA_API_VIA_DOCKER_COMPOSE:false}
 
 # sett SOKNAD_FRONTEND_BASEURL som env variabel hvis lenke til ettersendelse-side skal bli korrekt ved lokal kjøring, eks: http://localhost:3000/sosialhjelp/soknad
 soknad-frontend-baseurl: ${SOKNAD_FRONTEND_BASEURL:https://digisos.ekstern.dev.nav.no/sosialhjelp/soknad}
-
-maskinporten_clientid: ${MASKINPORTEN_CLIENT_ID}
-maskinporten_scopes: ${MASKINPORTEN_SCOPES}
-maskinporten_well_known_url: ${MASKINPORTEN_WELL_KNOWN_URL}
-maskinporten_client_jwk: ${MASKINPORTEN_CLIENT_JWK}

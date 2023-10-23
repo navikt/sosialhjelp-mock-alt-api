@@ -316,7 +316,7 @@ class PdlService(
       position: Long,
       postnummer: String = "0101",
       kommuneNummer: String = "0301",
-      enhetsnummer: String = "0104",
+      enhetsnummer: String = "0315",
       adminRoller: List<AdminRolle> = emptyList()
   ): String {
     val barnFnr = genererTilfeldigPersonnummer()
