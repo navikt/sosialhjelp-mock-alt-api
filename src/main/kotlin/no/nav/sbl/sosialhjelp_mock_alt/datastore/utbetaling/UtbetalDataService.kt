@@ -9,6 +9,7 @@ class UtbetalDataService {
 
   private val utbetalDataListMap: HashMap<String, List<UtbetalDataDto>> = HashMap()
   private val autoGenerationSet: HashSet<String> = HashSet()
+
   fun getUtbetalingerFraNav(ident: String): List<UtbetalDataDto> {
 
     log.info("Henter utbetalinger for $ident")
