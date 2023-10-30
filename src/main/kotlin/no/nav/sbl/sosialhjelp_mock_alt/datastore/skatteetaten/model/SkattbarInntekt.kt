@@ -27,11 +27,15 @@ class OppgaveInntektsmottaker(
       val forskuddstrekksListe: MutableList<Forskuddstrekk> = mutableListOf(),
   ) {
     fun kalendermaaned(kalendermaaned: String) = apply { this.kalendermaaned = kalendermaaned }
+
     fun opplysningspliktigId(opplysningspliktigId: String) = apply {
       this.opplysningspliktigId = opplysningspliktigId
     }
+
     fun leggTilInntekt(inntekt: Inntekt) = apply { inntektsListe.add(inntekt) }
+
     fun leggTilForskuddstrekk(trekk: Forskuddstrekk) = apply { forskuddstrekksListe.add(trekk) }
+
     fun standardOppgave(
         dato: LocalDate = LocalDate.now().minusDays(14),
         belop: Int = 15000,
@@ -58,6 +62,7 @@ class Forskuddstrekk(
       var beloep: Int = 0,
   ) {
     fun beskrivelse(beskrivelse: String) = apply { this.beskrivelse = beskrivelse }
+
     fun beloep(beloep: Int) = apply { this.beloep = beloep }
 
     fun build() = Forskuddstrekk(beskrivelse, beloep)
@@ -112,13 +117,17 @@ class Inntekt(
     fun skatteOgAvgiftsregel(skatteOgAvgiftsregel: String) = apply {
       this.skatteOgAvgiftsregel = skatteOgAvgiftsregel
     }
+
     fun fordel(fordel: String) = apply { this.fordel = fordel }
+
     fun utloeserArbeidsgiveravgift(utloeserArbeidsgiveravgift: Boolean) = apply {
       this.utloeserArbeidsgiveravgift = utloeserArbeidsgiveravgift
     }
+
     fun inngaarIGrunnlagForTrekk(inngaarIGrunnlagForTrekk: Boolean) = apply {
       this.inngaarIGrunnlagForTrekk = inngaarIGrunnlagForTrekk
     }
+
     fun beloep(beloep: Int) = apply { this.beloep = beloep }
 
     fun type(type: Inntektstype, subType: Inntektstype? = null) = apply {
