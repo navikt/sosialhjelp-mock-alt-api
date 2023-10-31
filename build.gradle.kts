@@ -17,11 +17,6 @@ val svarUtVersion = "2.0.0"
 val bouncyCastle = "1.74"
 val netty = "4.1.94.Final"
 
-val jakartaActivationApiVersion = "2.1.0"
-val jakartaAnnotationApiVersion = "2.1.1"
-val jakartaXmlBindApiVersion = "4.0.0"
-val jakartaValidationApiVersion = "3.0.2"
-
 plugins {
   kotlin("jvm") version "1.9.10"
   kotlin("plugin.spring") version "1.9.10"
@@ -51,19 +46,6 @@ repositories {
   }
 }
 
-configurations {
-  "implementation" {
-    exclude(group = "javax.activation", module = "activation")
-    exclude(group = "javax.mail", module = "mailapi")
-    exclude(group = "javax.validation", module = "validation-api")
-  }
-  "testImplementation" {
-    exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
-    exclude(group = "org.mockito", module = "mockito-core")
-    exclude(group = "org.mockito", module = "mockito-junit-jupiter")
-  }
-}
-
 dependencies {
   implementation(kotlin("stdlib"))
   implementation(kotlin("reflect"))
@@ -89,38 +71,6 @@ dependencies {
 
   testImplementation("no.nav.security:token-validation-spring-test:$tokenValidationVersion")
   testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-
-  // spesifikke versjoner oppgradert etter ønske fra snyk
-  constraints {
-    implementation("net.minidev:json-smart:$jsonSmartVersion") {
-      because("Dependabot ønsker versjon 2.4.5 eller høyere")
-    }
-
-    implementation("junit:junit:$junitVersion") {
-      because("Snyk ønsker versjon 4.13.1 eller høyere")
-    }
-
-    implementation("org.apache.logging.log4j:log4j-api:$log4jVersion") {
-      because("0-day exploit i version 2.0.0-2.14.1")
-    }
-    implementation("org.apache.logging.log4j:log4j-to-slf4j:$log4jVersion") {
-      because("0-day exploit i version 2.0.0-2.14.1")
-    }
-    implementation("org.yaml:snakeyaml:$snakeyamlVersion") {
-      because("https://security.snyk.io/vuln/SNYK-JAVA-ORGYAML-3152153")
-    }
-    implementation("org.bouncycastle:bcprov-jdk18on:$bouncyCastle") {
-      because("https://github.com/advisories/GHSA-hr8g-6v94-x4m9")
-    }
-    implementation("io.netty:netty-handler:$netty") {
-      because("https://github.com/advisories/GHSA-6mjq-h674-j845")
-    }
-    // spring boot 3.0.0 -> jakarta
-    implementation("jakarta.activation:jakarta.activation-api:$jakartaActivationApiVersion")
-    implementation("jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationApiVersion")
-    implementation("jakarta.validation:jakarta.validation-api:$jakartaValidationApiVersion")
-    implementation("jakarta.xml.bind:jakarta.xml.bind-api:$jakartaXmlBindApiVersion")
-  }
 }
 
 fun String.isNonStable(): Boolean {
