@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks
 
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.module.kotlin.readValue
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -55,7 +56,7 @@ class FiksController(
     private val feilService: FeilService,
     private val pdlService: PdlService,
     private val kommuneInfoService: KommuneInfoService,
-    private val mellomlagringService: MellomlagringService
+    private val mellomlagringService: MellomlagringService,
 ) {
   companion object {
     private val log by logger()
