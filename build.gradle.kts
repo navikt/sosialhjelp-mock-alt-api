@@ -13,7 +13,7 @@ val mockOauth2ServerVersion = "2.0.1"
 val junitVersion = "4.13.2"
 val log4jVersion = "2.19.0"
 val snakeyamlVersion = "2.0"
-val svarUtVersion = "2.0.0"
+val svarUtVersion = "3.0.0"
 val bouncyCastle = "1.74"
 val netty = "4.1.94.Final"
 
