@@ -1,15 +1,15 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val springBootVersion = "3.1.5"
+val springBootVersion = "3.2.1"
 val coroutinesVersion = "1.7.3"
 val sosialhjelpCommonVersion = "1.20231004.1011-d57fe70"
 val filformatVersion = "1.2023.09.05-13.49-b12f0a7b2b4a"
-val tokenValidationVersion = "3.1.7"
-val jacksonVersion = "2.15.3"
-val springdocversion = "2.2.0"
+val tokenValidationVersion = "3.2.0"
+val jacksonVersion = "2.16.0"
+val springdocversion = "2.3.0"
 val jsonSmartVersion = "2.5.0"
-val mockOauth2ServerVersion = "2.0.1"
+val mockOauth2ServerVersion = "2.1.0"
 val junitVersion = "4.13.2"
 val log4jVersion = "2.19.0"
 val snakeyamlVersion = "2.0"
@@ -18,11 +18,11 @@ val bouncyCastle = "1.74"
 val netty = "4.1.94.Final"
 
 plugins {
-  kotlin("jvm") version "1.9.10"
-  kotlin("plugin.spring") version "1.9.10"
-  id("org.springframework.boot") version "3.1.5"
-  id("com.github.ben-manes.versions") version "0.49.0"
-  id("com.diffplug.spotless") version "6.22.0"
+  kotlin("jvm") version "1.9.22"
+  kotlin("plugin.spring") version "1.9.22"
+  id("org.springframework.boot") version "3.2.1"
+  id("com.github.ben-manes.versions") version "0.50.0"
+  id("com.diffplug.spotless") version "6.23.3"
 }
 
 group = "no.nav.sbl"
