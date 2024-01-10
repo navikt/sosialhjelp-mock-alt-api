@@ -38,7 +38,8 @@ class AzureController(
   ): ResponseEntity<AzureAdBruker> {
     val id =
         hentFnrFraTokenNoDefault(headers)
-            ?: hentFnrFraHeadersNoDefault(headers) ?: hentFnrFraCookieNoDefault(cookie)
+            ?: hentFnrFraHeadersNoDefault(headers)
+            ?: hentFnrFraCookieNoDefault(cookie)
     return getAzureBruker(id ?: throw MockAltException("Klarte ikke å finne id i request."))
   }
 

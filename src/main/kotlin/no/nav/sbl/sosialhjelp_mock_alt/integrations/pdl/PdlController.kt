@@ -125,8 +125,7 @@ class PdlController(
         criteria
             .firstOrNull { it.fieldName == "vegadresse.adressenavn" }
             ?.searchRule
-            ?.contains("wildcard")
-            ?: false
+            ?.contains("wildcard") ?: false
 
     feilService.eventueltLagFeil(ident, "PdlController", "getSokAdresse")
 
@@ -136,16 +135,14 @@ class PdlController(
               .firstOrNull { it.fieldName == "vegadresse.adressenavn" }
               ?.searchRule
               ?.get("wildcard")
-              ?.removeSuffix("*")
-              ?: ""
+              ?.removeSuffix("*") ?: ""
       objectMapper.writeValueAsString(pdlAdresseSokService.getAdresse(wildcardSokestreng))
     } else {
       val adressenavn =
           criteria
               .firstOrNull { it.fieldName == "vegadresse.adressenavn" }
               ?.searchRule
-              ?.get("contains")
-              ?: ""
+              ?.get("contains") ?: ""
       val husnummer =
           criteria.firstOrNull { it.fieldName == "vegadresse.husnummer" }?.searchRule?.get("equals")
               ?: ""
@@ -153,8 +150,7 @@ class PdlController(
           criteria
               .firstOrNull { it.fieldName == "vegadresse.husbokstav" }
               ?.searchRule
-              ?.get("equals")
-              ?: ""
+              ?.get("equals") ?: ""
       objectMapper.writeValueAsString(
           pdlAdresseSokService.getAdresse(adressenavn + husnummer + husbokstav))
     }
