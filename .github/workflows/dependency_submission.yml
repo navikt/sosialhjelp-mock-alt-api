@@ -13,3 +13,5 @@ jobs:
     permissions:
       contents: write
     uses: navikt/sosialhjelp-ci/.github/workflows/dependency_submission_gradle.yml@v2
+    with:
+      java-version: '21'
