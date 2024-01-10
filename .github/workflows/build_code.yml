@@ -20,3 +20,4 @@ jobs:
         uses: navikt/sosialhjelp-ci/actions/build-kotlin@v2
         with:
           lint: 'false'
+          java-version: '21'
