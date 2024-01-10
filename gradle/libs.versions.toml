@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.10"
+kotlin = "1.9.22"
 spring-boot = "3.1.5"
 coroutines = "1.7.3"
 sosialhjelp_common = "1.20231004.1011-d57fe70"
