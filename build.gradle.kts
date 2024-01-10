@@ -18,6 +18,7 @@ val bouncyCastle = "1.74"
 val netty = "4.1.94.Final"
 
 plugins {
+  `jvm-test-suite`
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.kotlin.plugin.spring)
   alias(libs.plugins.spring.boot)
@@ -29,7 +30,7 @@ group = "no.nav.sbl"
 
 version = "0.0.1-SNAPSHOT"
 
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 val githubUser: String by project
 val githubPassword: String by project
@@ -78,11 +79,15 @@ tasks.withType<DependencyUpdatesTask> {
 tasks.withType<KotlinCompile> {
   kotlinOptions {
     freeCompilerArgs = listOf("-Xjsr305=strict")
-    jvmTarget = "17"
+    jvmTarget = "21"
   }
 }
 
-tasks.withType<Test> { useJUnitPlatform() }
+testing {
+  suites {
+    val test by getting(JvmTestSuite::class) { useJUnitJupiter() }
+  }
+}
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
   this.archiveFileName.set("app.jar")

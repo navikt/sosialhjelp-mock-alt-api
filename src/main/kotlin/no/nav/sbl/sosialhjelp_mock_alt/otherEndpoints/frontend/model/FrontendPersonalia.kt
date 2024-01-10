@@ -183,8 +183,8 @@ data class FrontendBarn(
                   postnummer = bostedsadresse.vegadresse?.postnummer ?: "",
                   kommunenummer = bostedsadresse.vegadresse?.kommunenummer ?: "",
               ),
-          folkeregisterpersonstatus = pdlBarn.folkeregisterpersonstatus?.first()?.status
-                  ?: "bosatt",
+          folkeregisterpersonstatus =
+              pdlBarn.folkeregisterpersonstatus?.first()?.status ?: "bosatt",
           foedsel = pdlBarn.foedsel?.first()?.foedselsdato ?: LocalDate.now().minusYears(10),
           navn = PdlPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn))
     }
@@ -261,8 +261,7 @@ data class FrontendUtbetalingFraNav(
               ytelsestype = it.ytelsestype ?: "",
               skattebelop = it.skattsum?.toDouble() ?: 0.00,
               ytelseskomponenttype = it.ytelseskomponentListe?.first()?.ytelseskomponenttype ?: "")
-        }
-            ?: emptyList()
+        } ?: emptyList()
       }
     }
   }

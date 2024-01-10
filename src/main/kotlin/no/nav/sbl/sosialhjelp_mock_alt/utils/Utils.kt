@@ -115,6 +115,5 @@ fun <R : Any> R.logger(): Lazy<Logger> {
 private fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
   return ofClass.enclosingClass?.takeIf {
     ofClass.enclosingClass.kotlin.companionObject?.java == ofClass
-  }
-      ?: ofClass
+  } ?: ofClass
 }
