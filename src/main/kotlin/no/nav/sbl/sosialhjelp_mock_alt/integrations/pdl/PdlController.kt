@@ -31,7 +31,9 @@ class PdlController(
         @RequestBody body: String,
         @RequestHeader headers: HttpHeaders,
     ): String {
-        log.info("Token: ${headers[HttpHeaders.AUTHORIZATION]}")
+        val headerList = headers[HttpHeaders.AUTHORIZATION]
+        val token = headerList?.first() ?: throw IllegalStateException("Fant ikke header=AUTH")
+        log.info("Token: $token} First index of . : ${token.indexOf(".")}")
         val ident = hentFnrFraToken(headers)
         return handleRequest(body, ident)
     }
