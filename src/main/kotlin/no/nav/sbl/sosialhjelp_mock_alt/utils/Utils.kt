@@ -18,6 +18,7 @@ import no.nav.security.token.support.core.jwt.JwtToken
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
+import java.text.ParseException
 
 val fastFnr = genererTilfeldigPersonnummer(dato = LocalDate.of(1945, 10, 26), Kjoenn.KVINNE)
 
@@ -83,7 +84,7 @@ fun hentFnrFraTokenNoDefault(headers: HttpHeaders): String? {
       val tokenString = token.first().split(" ")[1]
       return try {
         JwtToken(tokenString).subject
-      } catch (e: RuntimeException) {
+      } catch (e: ParseException) {
         null
       }
     }
