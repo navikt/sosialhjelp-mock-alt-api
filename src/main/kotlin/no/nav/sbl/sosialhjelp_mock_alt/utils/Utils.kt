@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.utils
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.nimbusds.jwt.SignedJWT
+import java.text.ParseException
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -18,7 +19,6 @@ import no.nav.security.token.support.core.jwt.JwtToken
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
-import java.text.ParseException
 
 val fastFnr = genererTilfeldigPersonnummer(dato = LocalDate.of(1945, 10, 26), Kjoenn.KVINNE)
 
