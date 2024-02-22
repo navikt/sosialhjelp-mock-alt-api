@@ -402,6 +402,7 @@ class PdlService(
             personalia = standardBruker,
             startDato = LocalDate.of(2021, 1, 12),
             orgnummmer = organisasjonsnummer,
+            stillingsprosent = 50.0
         )
         /*
         val skattbarInntektBuilder = SkattbarInntekt.Builder()
@@ -409,6 +410,7 @@ class PdlService(
             skattbarInntektBuilder.leggTilOppgave(FrontendSkattbarInntekt.oversettTilInntektsmottaker(it))
         }
         */
+
         //val inntektsmotaker = OppgaveInntektsmottaker.Builder().kalendermaaned("he").leggTilInntekt()
 //
         //val skattbarInntekt:SkattbarInntekt = SkattbarInntekt.Builder()
