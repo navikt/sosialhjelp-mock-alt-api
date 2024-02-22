@@ -13,7 +13,7 @@ data class Personalia(
     var ektefelleType: String? = null,
     var ektefelleFnr: String? = null,
     var ektefelleFodselsdato: LocalDate = randomDate(),
-    var forelderBarnRelasjon: List<ForelderBarnRelasjon> = emptyList(),
+    var forelderBarnRelasjon: MutableList<ForelderBarnRelasjon> = mutableListOf(),
     var starsborgerskap: String = "NOR",
     var bostedsadresse: ForenkletBostedsadresse =
         ForenkletBostedsadresse(
