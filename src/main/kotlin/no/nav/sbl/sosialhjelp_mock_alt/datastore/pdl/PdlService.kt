@@ -3,6 +3,10 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 import java.time.LocalDate
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteStatus
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontoregisterService
@@ -55,7 +59,13 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigTelefonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomDate
+import no.nav.sbl.sosialhjelp_mock_alt.utils.unixToLocalDateTime
+import org.joda.time.DateTime
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class PdlService(
@@ -107,7 +117,10 @@ class PdlService(
         statsborgerskap = "NOR",
         position = 4,
         adminRoller = listOf(AdminRolle.MODIA_VEILEDER))
-    opprettNavKontaktsenterBruker(position = 5)
+    opprettNavKontaktsenterBruker(
+        position = 5,
+        brukerFnr = genererTilfeldigPersonnummer()
+    )
     val hemmeligBruker =
         Personalia()
             .withNavn("Hemmelig", "", "Adressesen")
@@ -369,7 +382,25 @@ class PdlService(
         val barnFnr1 = genererTilfeldigPersonnummer()
         val barnFnr2 = genererTilfeldigPersonnummer()
         val barnFnr3 = genererTilfeldigPersonnummer()
-        val brukerFnr = genererTilfeldigPersonnummer()
+        //val brukerFnr = genererTilfeldigPersonnummer()
+
+        println("--------------------")
+        println("brukerfnr " + brukerFnr)
+        println("--------------------")
+
+        //30040038015
+        //30040038015
+
+
+        //fnr 26104528839
+        //bostotteMap[fnr] null
+        //autoGenerationSet [02086503290, 04019835184, 06014544842, 26104528839]
+        //autoGenerationSet.contains(fnr) true
+
+
+        //[06084825008, 26104506207, 16121409015, 04048038307]
+        //[06084825008, 26104506207, 16121409015, 04048038307]
+
 
         val standardBruker =
             Personalia(fnr = brukerFnr)
@@ -386,7 +417,9 @@ class PdlService(
                         kommunenummer = "0301"))
                 .withStarsborgerskap("NOR")
                 .locked()
-
+        println("--------------------")
+        println("standardBruker " + standardBruker)
+        println("--------------------")
         personListe[brukerFnr] = standardBruker
         barnMap[barnFnr1] = defaultBarn("Kontaktsenter1", 10)
         barnMap[barnFnr2] = defaultBarn("Kontaktsenter2", 12)
@@ -396,6 +429,13 @@ class PdlService(
         krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
         kontoregisterService.putKonto(brukerFnr, genererTilfeldigKontonummer())
 
+
+
+
+
+
+
+
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
         eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Barnehagen AS")
         aaregService.leggTilEnkeltArbeidsforhold(
@@ -404,26 +444,78 @@ class PdlService(
             orgnummmer = organisasjonsnummer,
             stillingsprosent = 50.0
         )
-        /*
-        val skattbarInntektBuilder = SkattbarInntekt.Builder()
-        personalia.skattetatenUtbetalinger.forEach {
-            skattbarInntektBuilder.leggTilOppgave(FrontendSkattbarInntekt.oversettTilInntektsmottaker(it))
-        }
-        */
-
-        //val inntektsmotaker = OppgaveInntektsmottaker.Builder().kalendermaaned("he").leggTilInntekt()
-//
-        //val skattbarInntekt:SkattbarInntekt = SkattbarInntekt.Builder()
-        //    .leggTilOppgave(inntektsmotaker)
-        //    .build()
 
 
 
-        //skatteetatenService.putSkattbarInntekt().
 
-        skatteetatenService.enableAutoGenerationFor(brukerFnr)
-        utbetalDataService.enableAutoGenerationFor(brukerFnr)
-        bostotteService.enableAutoGenerationFor(brukerFnr)
+
+
+
+
+        val trekk:Forskuddstrekk = Forskuddstrekk.Builder().beskrivelse("skattetrekk").beloep(3333).build()
+        val inntekt: Inntekt = Inntekt.Builder().type(Inntektstype.Loennsinntekt).beloep(18000).build()
+        val dato: LocalDate = LocalDate.now().minusDays(14)
+        val inntektoppgave = OppgaveInntektsmottaker.Builder()
+            .opplysningspliktigId("555555")
+            .kalendermaaned(DateTimeFormatter.ofPattern("yyyy-MM").format(dato))
+            .leggTilForskuddstrekk(trekk)
+            .leggTilInntekt(inntekt)
+            .build()
+        val skattbarInntekt = SkattbarInntekt.Builder().leggTilOppgave(inntektoppgave).build()
+        skatteetatenService.putSkattbarInntekt(brukerFnr, skattbarInntekt)
+
+
+
+
+
+
+
+
+        println("-----------------------------------")
+
+        val ytelse = Ytelse(
+            ytelsestype = "Barnetrygd",
+            ytelseNettobeloep = BigDecimal(4530.00),
+            skattsum = BigDecimal(0.0))
+
+        val utbetaling = UtbetalDataDto(ytelseListe = listOf(ytelse))
+
+
+        println("utbetaling " + utbetaling)
+        utbetalDataService.putUtbetalingerFraNav(brukerFnr, listOf(UtbetalDataDto(ytelseListe = listOf(ytelse))))
+        println("brukerFnr " + brukerFnr)
+        println("-----------------------------------")
+
+
+
+
+
+
+
+        println("-----------------------------------")
+        val bostotteDto = BostotteDto(
+            mutableListOf(
+                SakerDto(
+                    ar = DateTime.now().minusDays(2).year,
+                    mnd = DateTime.now().minusDays(2).monthOfYear,
+                    status = BostotteStatus.UNDER_BEHANDLING,
+                )
+            ),
+            mutableListOf(UtbetalingerDto(belop = 20000.0, utbetalingsdato = LocalDate.now().minusDays(7))))
+
+        println("bostotteDto " + bostotteDto)
+        println("brukerFnr " + brukerFnr)
+        bostotteService.putBostotte(brukerFnr, bostotteDto)
+        println("-----------------------------------")
+
+
+
+        //071001 34467
+
+
+
+
+
 
         soknadService.opprettDigisosSak("0315", "0301", brukerFnr, brukerFnr)
         return brukerFnr

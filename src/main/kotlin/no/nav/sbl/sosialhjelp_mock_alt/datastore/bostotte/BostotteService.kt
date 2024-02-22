@@ -15,11 +15,23 @@ class BostotteService {
   private val autoGenerationSet: HashSet<String> = HashSet()
 
   fun putBostotte(fnr: String, bostotteDto: BostotteDto) {
+
+      println("-------------------------")
+      println("bostotteDto " + bostotteDto)
+      println("fnr " + fnr)
+      println("-------------------------")
     bostotteMap[fnr] = bostotteDto
   }
 
   fun getBostotte(fnr: String): BostotteDto {
-    if (autoGenerationSet.contains(fnr)) {
+    println("-------------------------")
+    println("fnr " + fnr)
+    println("bostotteMap[fnr] " + bostotteMap[fnr])
+    println("autoGenerationSet " + autoGenerationSet)
+    println("autoGenerationSet.contains(fnr) " + autoGenerationSet.contains(fnr))
+    println("-------------------------")
+
+      if (autoGenerationSet.contains(fnr)) {
       val sakDato = DateTime.now().minusDays(2)
       val utbetalingDato = LocalDate.now().minusDays(7)
       return BostotteDto(

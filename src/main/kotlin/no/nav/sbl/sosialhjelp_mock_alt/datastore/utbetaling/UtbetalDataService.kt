@@ -12,6 +12,11 @@ class UtbetalDataService {
 
   fun getUtbetalingerFraNav(ident: String): List<UtbetalDataDto> {
 
+    println("-------------------------")
+    println("ident " + ident)
+    println("autoGenerationSet " + autoGenerationSet)
+    println("autoGenerationSet.contains(fnr) " + autoGenerationSet.contains(ident))
+    println("-------------------------")
     log.info("Henter utbetalinger for $ident")
 
     if (autoGenerationSet.contains(ident)) {
@@ -21,6 +26,11 @@ class UtbetalDataService {
   }
 
   fun putUtbetalingerFraNav(ident: String, utbetalinger: List<UtbetalDataDto>) {
+
+    println("-------------------------")
+    println("utbetalinger " + utbetalinger)
+    println("ident " + ident)
+    println("-------------------------")
     utbetalDataListMap[ident] = utbetalinger
   }
 
