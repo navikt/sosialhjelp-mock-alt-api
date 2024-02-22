@@ -107,7 +107,7 @@ class PdlService(
         statsborgerskap = "NOR",
         position = 4,
         adminRoller = listOf(AdminRolle.MODIA_VEILEDER))
-
+    opprettNavKontaktsenterBruker(position = 5)
     val hemmeligBruker =
         Personalia()
             .withNavn("Hemmelig", "", "Adressesen")
@@ -327,7 +327,7 @@ class PdlService(
             .withEktefelleType("EKTEFELLE_SAMME_BOSTED")
             .withEktefelleFodselsDato(randomDate())
             .withSivilstand("GIFT")
-            .withForelderBarnRelasjon(barnFnr)
+            .withForelderBarnRelasjon(listOf(barnFnr))
             .withBostedsadresse(
                 ForenkletBostedsadresse(
                     adressenavn = "Gateveien",
