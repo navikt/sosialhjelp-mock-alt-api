@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
-import java.time.LocalDate
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
@@ -50,7 +49,17 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.SivilstandType
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.model.AdminRolle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Forskuddstrekk
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalDataService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Aktoer
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Aktoertype
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalDataDto
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Ytelse
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigKontonummer
@@ -377,8 +386,7 @@ class PdlService(
     return brukerFnr
   }
 
-    private fun opprettNavKontaktsenterBruker(position:Long): String {
-        //TODO: 3 barn
+    private fun opprettNavKontaktsenterBruker(position: Long, brukerFnr: String): String {
         val barnFnr1 = genererTilfeldigPersonnummer()
         val barnFnr2 = genererTilfeldigPersonnummer()
         val barnFnr3 = genererTilfeldigPersonnummer()
