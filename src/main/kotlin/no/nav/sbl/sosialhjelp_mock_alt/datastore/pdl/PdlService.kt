@@ -364,6 +364,71 @@ class PdlService(
     return brukerFnr
   }
 
+    private fun opprettNavKontaktsenterBruker(position:Long): String {
+        //TODO: 3 barn
+        val barnFnr1 = genererTilfeldigPersonnummer()
+        val barnFnr2 = genererTilfeldigPersonnummer()
+        val barnFnr3 = genererTilfeldigPersonnummer()
+        val brukerFnr = genererTilfeldigPersonnummer()
+
+        val standardBruker =
+            Personalia(fnr = brukerFnr)
+                .withNavn("NAV", "", "Kontaktsentersen")
+                .withOpprettetTidspunkt(position)
+                .withSivilstand("UGIFT")
+                ///TODO: 3 barn
+                .withForelderBarnRelasjon(listOf(barnFnr1, barnFnr2, barnFnr3))
+                .withBostedsadresse(
+                    ForenkletBostedsadresse(
+                        adressenavn = "Fyrstikkalléen",
+                        husnummer = 1,
+                        postnummer = "0661",
+                        kommunenummer = "0301"))
+                .withStarsborgerskap("NOR")
+                .locked()
+
+        personListe[brukerFnr] = standardBruker
+        barnMap[barnFnr1] = defaultBarn("Kontaktsenter1", 10)
+        barnMap[barnFnr2] = defaultBarn("Kontaktsenter2", 12)
+        barnMap[barnFnr3] = defaultBarn("Kontaktsenter3", 14)
+
+        pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
+        krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
+        kontoregisterService.putKonto(brukerFnr, genererTilfeldigKontonummer())
+
+        val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
+        eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Barnehagen AS")
+        aaregService.leggTilEnkeltArbeidsforhold(
+            personalia = standardBruker,
+            startDato = LocalDate.of(2021, 1, 12),
+            orgnummmer = organisasjonsnummer,
+        )
+        /*
+        val skattbarInntektBuilder = SkattbarInntekt.Builder()
+        personalia.skattetatenUtbetalinger.forEach {
+            skattbarInntektBuilder.leggTilOppgave(FrontendSkattbarInntekt.oversettTilInntektsmottaker(it))
+        }
+        */
+        //val inntektsmotaker = OppgaveInntektsmottaker.Builder().kalendermaaned("he").leggTilInntekt()
+//
+        //val skattbarInntekt:SkattbarInntekt = SkattbarInntekt.Builder()
+        //    .leggTilOppgave(inntektsmotaker)
+        //    .build()
+
+
+
+        //skatteetatenService.putSkattbarInntekt().
+
+        skatteetatenService.enableAutoGenerationFor(brukerFnr)
+        utbetalDataService.enableAutoGenerationFor(brukerFnr)
+        bostotteService.enableAutoGenerationFor(brukerFnr)
+
+        soknadService.opprettDigisosSak("0315", "0301", brukerFnr, brukerFnr)
+        return brukerFnr
+    }
+
+
+
   companion object {
     private val log by logger()
 
@@ -400,12 +465,12 @@ class PdlService(
             foedsel = listOf(PdlFoedsel(dato)),
             navn = listOf(PdlSoknadPersonNavn("Ektefelle", "", "McEktefelle")))
 
-    private fun defaultBarn(etternavn: String = "McKid") =
+    private fun defaultBarn(etternavn: String = "McKid", alder: Long = 10) =
         PdlSoknadBarn(
             adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
             bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
             folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus("bosatt")),
-            foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(10))),
+            foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(alder))),
             navn = listOf(PdlSoknadPersonNavn("Kid", "", etternavn)))
   }
 }
