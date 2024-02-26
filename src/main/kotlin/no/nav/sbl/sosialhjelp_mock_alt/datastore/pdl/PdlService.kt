@@ -128,7 +128,10 @@ class PdlService(
         adminRoller = listOf(AdminRolle.MODIA_VEILEDER))
     opprettNavKontaktsenterBruker(
         brukerFnr = genererTilfeldigPersonnummer(),
-        position = 5
+        position = 5,
+        barnFnr1 = genererTilfeldigPersonnummer(),
+        barnFnr2 = genererTilfeldigPersonnummer(),
+        barnFnr3 = genererTilfeldigPersonnummer()
     )
     val hemmeligBruker =
         Personalia()
@@ -384,29 +387,10 @@ class PdlService(
     return brukerFnr
   }
 
-
-
-
-
-
-
-
-
-
-    private fun opprettNavKontaktsenterBruker(brukerFnr: String, fornavn: String = "NAV", position: Long): String {
-        val barnFnr1 = genererTilfeldigPersonnummer()
-        val barnFnr2 = genererTilfeldigPersonnummer()
-        val barnFnr3 = genererTilfeldigPersonnummer()
-        //val brukerFnr = genererTilfeldigPersonnummer()
-
-        println("--------------------")
-        println("opprettNavKontaktsenterBruker brukerfnr " + brukerFnr)
-        println("--------------------")
-
-
+    private fun opprettNavKontaktsenterBruker(brukerFnr: String, position: Long, barnFnr1: String, barnFnr2: String, barnFnr3: String): String {
         val standardBruker =
             Personalia(fnr = brukerFnr)
-                .withNavn(fornavn, "", "Kontaktsentersen")
+                .withNavn("NAV", "", "Kontaktsentersen")
                 .withOpprettetTidspunkt(position)
                 .withSivilstand("UGIFT")
                 ///TODO: 3 barn
@@ -419,9 +403,6 @@ class PdlService(
                         kommunenummer = "0301"))
                 .withStarsborgerskap("NOR")
                 .locked()
-        println("--------------------")
-        println("opprettNavKontaktsenterBruker standardBruker " + standardBruker)
-        println("--------------------")
         personListe[brukerFnr] = standardBruker
         barnMap[barnFnr1] = defaultBarn("Kontaktsenter1", 10)
         barnMap[barnFnr2] = defaultBarn("Kontaktsenter2", 12)
@@ -451,47 +432,16 @@ class PdlService(
         val skattbarInntekt = SkattbarInntekt.Builder().leggTilOppgave(inntektoppgave).build()
         skatteetatenService.putSkattbarInntekt(brukerFnr, skattbarInntekt)
 
-        println("-----------------------------------")
         val ytelse = Ytelse(
             ytelsestype = "Barnetrygd",
             ytelseNettobeloep = BigDecimal(4530.00),
             skattsum = BigDecimal(0.0))
 
-        val utbetaling = UtbetalDataDto(ytelseListe = listOf(ytelse))
-        println("opprettNavKontaktsenterBruker utbetaling " + utbetaling)
-        println("opprettNavKontaktsenterBruker ytelse " + ytelse)
         utbetalDataService.putUtbetalingerFraNav(brukerFnr, listOf(UtbetalDataDto(ytelseListe = listOf(ytelse))))
-        println("opprettNavKontaktsenterBruker brukerFnr " + brukerFnr)
-        println("-----------------------------------")
-
-
-
-
-
-        println("-----------------------------------")
-        val bostotteDto = BostotteDto(
-            mutableListOf(
-                SakerDto(
-                    ar = DateTime.now().minusDays(2).year,
-                    mnd = DateTime.now().minusDays(2).monthOfYear,
-                    status = BostotteStatus.UNDER_BEHANDLING,
-                )
-            ),
-            mutableListOf(UtbetalingerDto(belop = 20000.0, utbetalingsdato = LocalDate.now().minusDays(7))))
-
-        println("opprettNavKontaktsenterBruker bostotteDto " + bostotteDto)
-        println("opprettNavKontaktsenterBruker brukerFnr " + brukerFnr)
-        bostotteService.putBostotte(brukerFnr, bostotteDto)
-        println("-----------------------------------")
-
-
-
-
-
+        bostotteService.enableAutoGenerationFor(brukerFnr)
         soknadService.opprettDigisosSak("0315", "0301", brukerFnr, brukerFnr)
         return brukerFnr
     }
-
 
 
   companion object {

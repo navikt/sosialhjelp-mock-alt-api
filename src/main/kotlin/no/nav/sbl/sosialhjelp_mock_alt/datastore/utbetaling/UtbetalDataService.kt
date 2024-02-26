@@ -11,20 +11,10 @@ class UtbetalDataService {
   private val autoGenerationSet: HashSet<String> = HashSet()
 
   fun putUtbetalingerFraNav(ident: String, utbetalinger: List<UtbetalDataDto>) {
-    println("-------------------------")
-    println("putUtbetalingerFraNav ident " + ident)
-    println("utbetalinger " + utbetalinger)
-    println("-------------------------")
     utbetalDataListMap[ident] = utbetalinger
   }
 
   fun getUtbetalingerFraNav(ident: String): List<UtbetalDataDto> {
-    println("-------------------------")
-    println("getUtbetalingerFraNav ident " + ident)
-    println("utbetalDataListMap[ident] " + utbetalDataListMap[ident])
-    println("autoGenerationSet " + autoGenerationSet)
-    println("autoGenerationSet.contains(fnr) " + autoGenerationSet.contains(ident))
-    println("-------------------------")
     log.info("Henter utbetalinger for $ident")
 
     if (autoGenerationSet.contains(ident)) {
@@ -34,10 +24,6 @@ class UtbetalDataService {
   }
 
   fun enableAutoGenerationFor(fnr: String) {
-    println("-------------------------")
-    println("enableAutoGenerationFor utbetalinger")
-    println("utbetalinger fnr " + fnr)
-    println("-------------------------")
     autoGenerationSet.add(fnr)
   }
 
