@@ -10,10 +10,18 @@ class UtbetalDataService {
   private val utbetalDataListMap: HashMap<String, List<UtbetalDataDto>> = HashMap()
   private val autoGenerationSet: HashSet<String> = HashSet()
 
-  fun getUtbetalingerFraNav(ident: String): List<UtbetalDataDto> {
-
+  fun putUtbetalingerFraNav(ident: String, utbetalinger: List<UtbetalDataDto>) {
     println("-------------------------")
-    println("ident " + ident)
+    println("putUtbetalingerFraNav ident " + ident)
+    println("utbetalinger " + utbetalinger)
+    println("-------------------------")
+    utbetalDataListMap[ident] = utbetalinger
+  }
+
+  fun getUtbetalingerFraNav(ident: String): List<UtbetalDataDto> {
+    println("-------------------------")
+    println("getUtbetalingerFraNav ident " + ident)
+    println("utbetalDataListMap[ident] " + utbetalDataListMap[ident])
     println("autoGenerationSet " + autoGenerationSet)
     println("autoGenerationSet.contains(fnr) " + autoGenerationSet.contains(ident))
     println("-------------------------")
@@ -25,16 +33,11 @@ class UtbetalDataService {
     return utbetalDataListMap[ident] ?: listOf(UtbetalDataDto())
   }
 
-  fun putUtbetalingerFraNav(ident: String, utbetalinger: List<UtbetalDataDto>) {
-
-    println("-------------------------")
-    println("utbetalinger " + utbetalinger)
-    println("ident " + ident)
-    println("-------------------------")
-    utbetalDataListMap[ident] = utbetalinger
-  }
-
   fun enableAutoGenerationFor(fnr: String) {
+    println("-------------------------")
+    println("enableAutoGenerationFor utbetalinger")
+    println("utbetalinger fnr " + fnr)
+    println("-------------------------")
     autoGenerationSet.add(fnr)
   }
 
