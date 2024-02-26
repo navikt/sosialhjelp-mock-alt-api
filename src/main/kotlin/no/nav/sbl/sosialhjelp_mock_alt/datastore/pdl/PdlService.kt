@@ -127,8 +127,8 @@ class PdlService(
         position = 4,
         adminRoller = listOf(AdminRolle.MODIA_VEILEDER))
     opprettNavKontaktsenterBruker(
-        position = 5,
-        brukerFnr = genererTilfeldigPersonnummer()
+        brukerFnr = genererTilfeldigPersonnummer(),
+        position = 5
     )
     val hemmeligBruker =
         Personalia()
@@ -362,10 +362,8 @@ class PdlService(
     ektefelleMap[brukerFnr] = ektefelleSammeBosted(standardBruker.ektefelleFodselsdato)
     barnMap[barnFnr] = defaultBarn(etternavn)
 
-    pdlGeografiskTilknytningService.putGeografiskTilknytning(
-        brukerFnr, standardBruker.bostedsadresse.kommunenummer)
-    krrService.oppdaterKonfigurasjon(
-        brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
+    pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
+    krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
     kontoregisterService.putKonto(brukerFnr, genererTilfeldigKontonummer())
     val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
     eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")
@@ -386,33 +384,29 @@ class PdlService(
     return brukerFnr
   }
 
-    private fun opprettNavKontaktsenterBruker(position: Long, brukerFnr: String): String {
+
+
+
+
+
+
+
+
+
+    private fun opprettNavKontaktsenterBruker(brukerFnr: String, fornavn: String = "NAV", position: Long): String {
         val barnFnr1 = genererTilfeldigPersonnummer()
         val barnFnr2 = genererTilfeldigPersonnummer()
         val barnFnr3 = genererTilfeldigPersonnummer()
         //val brukerFnr = genererTilfeldigPersonnummer()
 
         println("--------------------")
-        println("brukerfnr " + brukerFnr)
+        println("opprettNavKontaktsenterBruker brukerfnr " + brukerFnr)
         println("--------------------")
-
-        //30040038015
-        //30040038015
-
-
-        //fnr 26104528839
-        //bostotteMap[fnr] null
-        //autoGenerationSet [02086503290, 04019835184, 06014544842, 26104528839]
-        //autoGenerationSet.contains(fnr) true
-
-
-        //[06084825008, 26104506207, 16121409015, 04048038307]
-        //[06084825008, 26104506207, 16121409015, 04048038307]
 
 
         val standardBruker =
             Personalia(fnr = brukerFnr)
-                .withNavn("NAV", "", "Kontaktsentersen")
+                .withNavn(fornavn, "", "Kontaktsentersen")
                 .withOpprettetTidspunkt(position)
                 .withSivilstand("UGIFT")
                 ///TODO: 3 barn
@@ -426,7 +420,7 @@ class PdlService(
                 .withStarsborgerskap("NOR")
                 .locked()
         println("--------------------")
-        println("standardBruker " + standardBruker)
+        println("opprettNavKontaktsenterBruker standardBruker " + standardBruker)
         println("--------------------")
         personListe[brukerFnr] = standardBruker
         barnMap[barnFnr1] = defaultBarn("Kontaktsenter1", 10)
@@ -436,14 +430,6 @@ class PdlService(
         pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
         krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
         kontoregisterService.putKonto(brukerFnr, genererTilfeldigKontonummer())
-
-
-
-
-
-
-
-
         val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
         eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Barnehagen AS")
         aaregService.leggTilEnkeltArbeidsforhold(
@@ -452,13 +438,6 @@ class PdlService(
             orgnummmer = organisasjonsnummer,
             stillingsprosent = 50.0
         )
-
-
-
-
-
-
-
 
         val trekk:Forskuddstrekk = Forskuddstrekk.Builder().beskrivelse("skattetrekk").beloep(3333).build()
         val inntekt: Inntekt = Inntekt.Builder().type(Inntektstype.Loennsinntekt).beloep(18000).build()
@@ -472,29 +451,18 @@ class PdlService(
         val skattbarInntekt = SkattbarInntekt.Builder().leggTilOppgave(inntektoppgave).build()
         skatteetatenService.putSkattbarInntekt(brukerFnr, skattbarInntekt)
 
-
-
-
-
-
-
-
         println("-----------------------------------")
-
         val ytelse = Ytelse(
             ytelsestype = "Barnetrygd",
             ytelseNettobeloep = BigDecimal(4530.00),
             skattsum = BigDecimal(0.0))
 
         val utbetaling = UtbetalDataDto(ytelseListe = listOf(ytelse))
-
-
-        println("utbetaling " + utbetaling)
+        println("opprettNavKontaktsenterBruker utbetaling " + utbetaling)
+        println("opprettNavKontaktsenterBruker ytelse " + ytelse)
         utbetalDataService.putUtbetalingerFraNav(brukerFnr, listOf(UtbetalDataDto(ytelseListe = listOf(ytelse))))
-        println("brukerFnr " + brukerFnr)
+        println("opprettNavKontaktsenterBruker brukerFnr " + brukerFnr)
         println("-----------------------------------")
-
-
 
 
 
@@ -511,15 +479,10 @@ class PdlService(
             ),
             mutableListOf(UtbetalingerDto(belop = 20000.0, utbetalingsdato = LocalDate.now().minusDays(7))))
 
-        println("bostotteDto " + bostotteDto)
-        println("brukerFnr " + brukerFnr)
+        println("opprettNavKontaktsenterBruker bostotteDto " + bostotteDto)
+        println("opprettNavKontaktsenterBruker brukerFnr " + brukerFnr)
         bostotteService.putBostotte(brukerFnr, bostotteDto)
         println("-----------------------------------")
-
-
-
-        //071001 34467
-
 
 
 

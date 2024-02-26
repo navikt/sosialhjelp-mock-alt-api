@@ -15,17 +15,16 @@ class BostotteService {
   private val autoGenerationSet: HashSet<String> = HashSet()
 
   fun putBostotte(fnr: String, bostotteDto: BostotteDto) {
-
       println("-------------------------")
+      println("putBostotte fnr " + fnr)
       println("bostotteDto " + bostotteDto)
-      println("fnr " + fnr)
       println("-------------------------")
     bostotteMap[fnr] = bostotteDto
   }
 
   fun getBostotte(fnr: String): BostotteDto {
     println("-------------------------")
-    println("fnr " + fnr)
+    println("getBostotte fnr " + fnr)
     println("bostotteMap[fnr] " + bostotteMap[fnr])
     println("autoGenerationSet " + autoGenerationSet)
     println("autoGenerationSet.contains(fnr) " + autoGenerationSet.contains(fnr))
@@ -44,11 +43,18 @@ class BostotteService {
           mutableListOf(UtbetalingerDto(belop = 14000.0, utbetalingsdato = utbetalingDato)))
     }
     val bostotteDto = bostotteMap[fnr]
+    //  println("-------------------------")
+    //  println("bostotteDto " + bostotteDto)
+    //  println("-------------------------")
     if (bostotteDto != null) return bostotteDto
     return BostotteDto()
   }
 
   fun enableAutoGenerationFor(fnr: String) {
+      println("-------------------------")
+      println("enableAutoGenerationFor bostøtte")
+      println("getBostotte fnr " + fnr)
+      println("-------------------------")
     autoGenerationSet.add(fnr)
   }
 }
