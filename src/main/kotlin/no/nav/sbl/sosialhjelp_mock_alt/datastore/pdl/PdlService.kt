@@ -400,9 +400,9 @@ class PdlService(
             .withStarsborgerskap("NOR")
             .locked()
     personListe[brukerFnr] = standardBruker
-    barnMap[barnFnr1] = defaultBarn("Tor","Kontaktsentersen", 10)
-    barnMap[barnFnr2] = defaultBarn("Frida","Kontaktsentersen", 12)
-    barnMap[barnFnr3] = defaultBarn("Øyvind","Kontaktsentersen", 14)
+    barnMap[barnFnr1] = defaultBarn("Tor", "Kontaktsentersen", 10)
+    barnMap[barnFnr2] = defaultBarn("Frida", "Kontaktsentersen", 12)
+    barnMap[barnFnr3] = defaultBarn("Øyvind", "Kontaktsentersen", 14)
 
     pdlGeografiskTilknytningService.putGeografiskTilknytning(
         brukerFnr, standardBruker.bostedsadresse.kommunenummer)
@@ -480,7 +480,11 @@ class PdlService(
             foedsel = listOf(PdlFoedsel(dato)),
             navn = listOf(PdlSoknadPersonNavn("Ektefelle", "", "McEktefelle")))
 
-    private fun defaultBarn(fornavn: String = "kid", etternavn: String = "McKid", alder: Long = 10) =
+    private fun defaultBarn(
+        fornavn: String = "kid",
+        etternavn: String = "McKid",
+        alder: Long = 10
+    ) =
         PdlSoknadBarn(
             adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
             bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
