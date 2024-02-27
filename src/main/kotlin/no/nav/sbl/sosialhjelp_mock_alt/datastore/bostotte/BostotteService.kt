@@ -5,6 +5,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteStatus
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
+import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.joda.time.DateTime
 import org.springframework.stereotype.Service
 
@@ -19,6 +20,13 @@ class BostotteService {
   }
 
   fun getBostotte(fnr: String): BostotteDto {
+      /**TODO:
+       * Sjekk ut hvorfor standard standarson sin fnr blir brukt som default
+       * selv om bruker har valgt en annen fnr.
+       *
+       * Sjekk log
+       */
+      log.info("Henter bostøtte for $fnr")
       if (autoGenerationSet.contains(fnr)) {
       val sakDato = DateTime.now().minusDays(2)
       val utbetalingDato = LocalDate.now().minusDays(7)
@@ -39,4 +47,7 @@ class BostotteService {
   fun enableAutoGenerationFor(fnr: String) {
     autoGenerationSet.add(fnr)
   }
+    companion object {
+        private val log by logger()
+    }
 }

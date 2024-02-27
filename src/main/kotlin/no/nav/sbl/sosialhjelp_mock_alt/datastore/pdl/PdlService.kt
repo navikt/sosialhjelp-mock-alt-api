@@ -128,10 +128,10 @@ class PdlService(
         adminRoller = listOf(AdminRolle.MODIA_VEILEDER))
     opprettNavKontaktsenterBruker(
         brukerFnr = genererTilfeldigPersonnummer(),
-        position = 5,
         barnFnr1 = genererTilfeldigPersonnummer(),
         barnFnr2 = genererTilfeldigPersonnummer(),
-        barnFnr3 = genererTilfeldigPersonnummer()
+        barnFnr3 = genererTilfeldigPersonnummer(),
+        position = 5
     )
     val hemmeligBruker =
         Personalia()
@@ -387,13 +387,12 @@ class PdlService(
     return brukerFnr
   }
 
-    private fun opprettNavKontaktsenterBruker(brukerFnr: String, position: Long, barnFnr1: String, barnFnr2: String, barnFnr3: String): String {
+    private fun opprettNavKontaktsenterBruker(brukerFnr: String, barnFnr1: String, barnFnr2: String, barnFnr3: String, position: Long): String {
         val standardBruker =
             Personalia(fnr = brukerFnr)
                 .withNavn("NAV", "", "Kontaktsentersen")
                 .withOpprettetTidspunkt(position)
                 .withSivilstand("UGIFT")
-                ///TODO: 3 barn
                 .withForelderBarnRelasjon(listOf(barnFnr1, barnFnr2, barnFnr3))
                 .withBostedsadresse(
                     ForenkletBostedsadresse(
