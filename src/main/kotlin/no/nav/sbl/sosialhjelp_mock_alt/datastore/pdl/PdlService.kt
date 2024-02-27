@@ -377,7 +377,7 @@ class PdlService(
         soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, "15months")
     return brukerFnr
   }
-
+  /** Opprettet ny funksjon fordi vi trengte å spesifisere en mer detaljert bruker */
   private fun opprettNavKontaktsenterBruker(
       brukerFnr: String,
       barnFnr1: String,
