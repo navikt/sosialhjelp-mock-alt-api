@@ -352,7 +352,7 @@ class PdlService(
             .locked()
     personListe[brukerFnr] = standardBruker
     ektefelleMap[brukerFnr] = ektefelleSammeBosted(standardBruker.ektefelleFodselsdato)
-    barnMap[barnFnr] = defaultBarn(etternavn)
+    barnMap[barnFnr] = defaultBarn(etternavn = etternavn)
 
     pdlGeografiskTilknytningService.putGeografiskTilknytning(
         brukerFnr, standardBruker.bostedsadresse.kommunenummer)
@@ -400,9 +400,9 @@ class PdlService(
             .withStarsborgerskap("NOR")
             .locked()
     personListe[brukerFnr] = standardBruker
-    barnMap[barnFnr1] = defaultBarn("Kontaktsenter1", 10)
-    barnMap[barnFnr2] = defaultBarn("Kontaktsenter2", 12)
-    barnMap[barnFnr3] = defaultBarn("Kontaktsenter3", 14)
+    barnMap[barnFnr1] = defaultBarn("Tor","Kontaktsentersen", 10)
+    barnMap[barnFnr2] = defaultBarn("Frida","Kontaktsentersen", 12)
+    barnMap[barnFnr3] = defaultBarn("Øyvind","Kontaktsentersen", 14)
 
     pdlGeografiskTilknytningService.putGeografiskTilknytning(
         brukerFnr, standardBruker.bostedsadresse.kommunenummer)
@@ -480,12 +480,12 @@ class PdlService(
             foedsel = listOf(PdlFoedsel(dato)),
             navn = listOf(PdlSoknadPersonNavn("Ektefelle", "", "McEktefelle")))
 
-    private fun defaultBarn(etternavn: String = "McKid", alder: Long = 10) =
+    private fun defaultBarn(fornavn: String = "kid", etternavn: String = "McKid", alder: Long = 10) =
         PdlSoknadBarn(
             adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
             bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
             folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus("bosatt")),
             foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(alder))),
-            navn = listOf(PdlSoknadPersonNavn("Kid", "", etternavn)))
+            navn = listOf(PdlSoknadPersonNavn(fornavn, "", etternavn)))
   }
 }
