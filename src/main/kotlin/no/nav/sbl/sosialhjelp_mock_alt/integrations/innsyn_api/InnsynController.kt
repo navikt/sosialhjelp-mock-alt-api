@@ -79,6 +79,8 @@ class InnsynController(private val soknadService: SoknadService) {
       cookie: String?
   ): String {
     return fnrInput
-        ?: hentFnrFraHeadersNoDefault(headers) ?: hentFnrFraCookieNoDefault(cookie) ?: fastFnr
+        ?: hentFnrFraHeadersNoDefault(headers)
+        ?: hentFnrFraCookieNoDefault(cookie)
+        ?: fastFnr
   }
 }

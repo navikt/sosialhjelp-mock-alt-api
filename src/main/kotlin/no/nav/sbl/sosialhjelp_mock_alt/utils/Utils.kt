@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.utils
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.nimbusds.jwt.SignedJWT
+import java.text.ParseException
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -83,7 +84,7 @@ fun hentFnrFraTokenNoDefault(headers: HttpHeaders): String? {
       val tokenString = token.first().split(" ")[1]
       return try {
         JwtToken(tokenString).subject
-      } catch (e: RuntimeException) {
+      } catch (e: ParseException) {
         null
       }
     }
@@ -115,6 +116,5 @@ fun <R : Any> R.logger(): Lazy<Logger> {
 private fun <T : Any> unwrapCompanionClass(ofClass: Class<T>): Class<*> {
   return ofClass.enclosingClass?.takeIf {
     ofClass.enclosingClass.kotlin.companionObject?.java == ofClass
-  }
-      ?: ofClass
+  } ?: ofClass
 }

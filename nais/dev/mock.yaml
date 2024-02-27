@@ -9,7 +9,6 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "150M"
 spec:
   image: {{image}}
-  imagePullPolicy: Always
   port: 8989
   liveness:
     path: /sosialhjelp/mock-alt-api/internal/isAlive

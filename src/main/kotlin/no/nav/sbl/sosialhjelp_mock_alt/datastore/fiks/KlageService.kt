@@ -20,8 +20,7 @@ class KlageService(private val soknadService: SoknadService) {
     val jsonDigisosSoker: JsonDigisosSoker =
         soknadService.hentDokument(soknad.fiksDigisosId, soknad.digisosSoker!!.metadata)?.let {
           objectMapper.readValue(it)
-        }
-            ?: error("Fant ikke dokument med id ${soknad.digisosSoker!!.metadata}")
+        } ?: error("Fant ikke dokument med id ${soknad.digisosSoker!!.metadata}")
     val vedtak =
         jsonDigisosSoker.hendelser
             .asSequence()

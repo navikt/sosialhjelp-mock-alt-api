@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class UnleashController {
-  @GetMapping("/internal/unleash/client/features")
+  @GetMapping("/internal/unleash/api/client/features")
   fun unleashToggles(request: RequestEntity<String>): ResponseEntity<String> {
     return ResponseEntity.ok("{\"features\": [], \"version\": \"1\"}")
   }
 
-  @PostMapping("/internal/unleash/client/register")
+  @PostMapping("/internal/unleash/api/client/register")
   fun unleashRegister(request: RequestEntity<String>): ResponseEntity<String> {
     return ResponseEntity.ok().build()
   }
 
-  @PostMapping("/internal/unleash/client/metrics")
+  @PostMapping("/internal/unleash/api/client/metrics")
   fun unleashMetrics(request: RequestEntity<String>): ResponseEntity<String> {
     return ResponseEntity.ok().build()
   }

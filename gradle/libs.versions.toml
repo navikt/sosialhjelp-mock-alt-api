@@ -1,0 +1,37 @@
+[versions]
+kotlin = "1.9.22"
+spring-boot = "3.2.1"
+coroutines = "1.7.3"
+sosialhjelp_common = "1.20231004.1011-d57fe70"
+filformat = "1.2023.09.05-13.49-b12f0a7b2b4a"
+token_validation = "4.0.3"
+jackson = "2.16.1"
+springdoc = "2.3.0"
+mock_oauth2_server = "2.1.0"
+svarut = "4.0.0"
+spotless = "6.23.3"
+versions = "0.50.0"
+
+[libraries]
+spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+sosialhjelp-common-api = { module = "no.nav.sosialhjelp:sosialhjelp-common-api", version.ref = "sosialhjelp_common" }
+soknadsosialhjelp-filformat = { module = "no.nav.sbl.dialogarena:soknadsosialhjelp-filformat", version.ref = "filformat" }
+token-validation-spring = { module = "no.nav.security:token-validation-spring", version.ref = "token_validation" }
+token-validation-spring-test = { module = "no.nav.security:token-validation-spring-test", version.ref = "token_validation" }
+mock-oauth2-server = { module = "no.nav.security:mock-oauth2-server", version.ref = "mock_oauth2_server" }
+springdoc-openapi-starter-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+springdoc-openapi-starter-common = { module = "org.springdoc:springdoc-openapi-starter-common", version.ref = "springdoc" }
+svarut-rest-klient = { module = "no.ks.fiks.svarut:svarut-rest-klient", version.ref = "svarut" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+
+[bundles]
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
