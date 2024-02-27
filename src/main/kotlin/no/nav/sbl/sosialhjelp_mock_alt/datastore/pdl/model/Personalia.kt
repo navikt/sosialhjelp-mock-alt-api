@@ -73,9 +73,9 @@ data class Personalia(
   }
 
   fun withForelderBarnRelasjon(fnrBarn: List<String>): Personalia {
-      fnrBarn.forEach{ fnr ->
-          forelderBarnRelasjon.add(ForelderBarnRelasjon(fnr, "barn", "forelder"))
-      }
+    fnrBarn.forEach { fnr ->
+      forelderBarnRelasjon.add(ForelderBarnRelasjon(fnr, "barn", "forelder"))
+    }
     return this
   }
 }

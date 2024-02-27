@@ -25,7 +25,10 @@ class AaregService {
     aaregMap[personalia.fnr] =
         listOf(
             ArbeidsforholdDto.nyttArbeidsforhold(
-                fnr = personalia.fnr, fom = startDato, arbeidsgiver = arbeidsgiver, stillingsprosent = stillingsprosent))
+                fnr = personalia.fnr,
+                fom = startDato,
+                arbeidsgiver = arbeidsgiver,
+                stillingsprosent = stillingsprosent))
   }
 
   fun setArbeidsforholdForFnr(fnr: String, arbeidsforholdsliste: List<ArbeidsforholdDto>) {

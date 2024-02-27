@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class BostotteService {
-
   private val bostotteMap: HashMap<String, BostotteDto> = HashMap()
   private val autoGenerationSet: HashSet<String> = HashSet()
 
@@ -20,14 +19,12 @@ class BostotteService {
   }
 
   fun getBostotte(fnr: String): BostotteDto {
-      /**TODO:
-       * Sjekk ut hvorfor standard standarson sin fnr blir brukt som default
-       * selv om bruker har valgt en annen fnr.
-       *
-       * Sjekk log
-       */
-      log.info("Henter bostøtte for $fnr")
-      if (autoGenerationSet.contains(fnr)) {
+    // TODO:
+    // Sjekk ut hvorfor standard standarson sin fnr blir brukt som default
+    // selv om bruker har valgt en annen fnr
+    // Sjekk log
+    log.info("Henter bostøtte for $fnr")
+    if (autoGenerationSet.contains(fnr)) {
       val sakDato = DateTime.now().minusDays(2)
       val utbetalingDato = LocalDate.now().minusDays(7)
       return BostotteDto(
@@ -47,7 +44,8 @@ class BostotteService {
   fun enableAutoGenerationFor(fnr: String) {
     autoGenerationSet.add(fnr)
   }
-    companion object {
-        private val log by logger()
-    }
+
+  companion object {
+    private val log by logger()
+  }
 }

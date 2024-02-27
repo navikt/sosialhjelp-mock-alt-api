@@ -1,11 +1,10 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
+import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteStatus
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontoregisterService
@@ -55,11 +54,8 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntektstype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.OppgaveInntektsmottaker
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalDataService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Aktoer
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Aktoertype
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.UtbetalDataDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.model.Ytelse
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.fastFnr
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigKontonummer
@@ -68,13 +64,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.genererTilfeldigTelefonnummer
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.randomDate
-import no.nav.sbl.sosialhjelp_mock_alt.utils.unixToLocalDateTime
-import org.joda.time.DateTime
 import org.springframework.stereotype.Service
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Service
 class PdlService(
@@ -131,8 +121,7 @@ class PdlService(
         barnFnr1 = genererTilfeldigPersonnummer(),
         barnFnr2 = genererTilfeldigPersonnummer(),
         barnFnr3 = genererTilfeldigPersonnummer(),
-        position = 5
-    )
+        position = 5)
     val hemmeligBruker =
         Personalia()
             .withNavn("Hemmelig", "", "Adressesen")
@@ -365,8 +354,10 @@ class PdlService(
     ektefelleMap[brukerFnr] = ektefelleSammeBosted(standardBruker.ektefelleFodselsdato)
     barnMap[barnFnr] = defaultBarn(etternavn)
 
-    pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
-    krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
+    pdlGeografiskTilknytningService.putGeografiskTilknytning(
+        brukerFnr, standardBruker.bostedsadresse.kommunenummer)
+    krrService.oppdaterKonfigurasjon(
+        brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
     kontoregisterService.putKonto(brukerFnr, genererTilfeldigKontonummer())
     val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
     eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Arbeidsgiveren AS")
@@ -387,61 +378,71 @@ class PdlService(
     return brukerFnr
   }
 
-    private fun opprettNavKontaktsenterBruker(brukerFnr: String, barnFnr1: String, barnFnr2: String, barnFnr3: String, position: Long): String {
-        val standardBruker =
-            Personalia(fnr = brukerFnr)
-                .withNavn("NAV", "", "Kontaktsentersen")
-                .withOpprettetTidspunkt(position)
-                .withSivilstand("UGIFT")
-                .withForelderBarnRelasjon(listOf(barnFnr1, barnFnr2, barnFnr3))
-                .withBostedsadresse(
-                    ForenkletBostedsadresse(
-                        adressenavn = "Fyrstikkalléen",
-                        husnummer = 1,
-                        postnummer = "0661",
-                        kommunenummer = "0301"))
-                .withStarsborgerskap("NOR")
-                .locked()
-        personListe[brukerFnr] = standardBruker
-        barnMap[barnFnr1] = defaultBarn("Kontaktsenter1", 10)
-        barnMap[barnFnr2] = defaultBarn("Kontaktsenter2", 12)
-        barnMap[barnFnr3] = defaultBarn("Kontaktsenter3", 14)
+  private fun opprettNavKontaktsenterBruker(
+      brukerFnr: String,
+      barnFnr1: String,
+      barnFnr2: String,
+      barnFnr3: String,
+      position: Long
+  ): String {
+    val standardBruker =
+        Personalia(fnr = brukerFnr)
+            .withNavn("NAV", "", "Kontaktsentersen")
+            .withOpprettetTidspunkt(position)
+            .withSivilstand("UGIFT")
+            .withForelderBarnRelasjon(listOf(barnFnr1, barnFnr2, barnFnr3))
+            .withBostedsadresse(
+                ForenkletBostedsadresse(
+                    adressenavn = "Fyrstikkalléen",
+                    husnummer = 1,
+                    postnummer = "0661",
+                    kommunenummer = "0301"))
+            .withStarsborgerskap("NOR")
+            .locked()
+    personListe[brukerFnr] = standardBruker
+    barnMap[barnFnr1] = defaultBarn("Kontaktsenter1", 10)
+    barnMap[barnFnr2] = defaultBarn("Kontaktsenter2", 12)
+    barnMap[barnFnr3] = defaultBarn("Kontaktsenter3", 14)
 
-        pdlGeografiskTilknytningService.putGeografiskTilknytning(brukerFnr, standardBruker.bostedsadresse.kommunenummer)
-        krrService.oppdaterKonfigurasjon(brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
-        kontoregisterService.putKonto(brukerFnr, genererTilfeldigKontonummer())
-        val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
-        eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Barnehagen AS")
-        aaregService.leggTilEnkeltArbeidsforhold(
-            personalia = standardBruker,
-            startDato = LocalDate.of(2021, 1, 12),
-            orgnummmer = organisasjonsnummer,
-            stillingsprosent = 50.0
-        )
+    pdlGeografiskTilknytningService.putGeografiskTilknytning(
+        brukerFnr, standardBruker.bostedsadresse.kommunenummer)
+    krrService.oppdaterKonfigurasjon(
+        brukerFnr, true, telefonnummer = genererTilfeldigTelefonnummer())
+    kontoregisterService.putKonto(brukerFnr, genererTilfeldigKontonummer())
+    val organisasjonsnummer = genererTilfeldigOrganisasjonsnummer()
+    eregService.putOrganisasjonNoekkelinfo(organisasjonsnummer, "Barnehagen AS")
+    aaregService.leggTilEnkeltArbeidsforhold(
+        personalia = standardBruker,
+        startDato = LocalDate.of(2021, 1, 12),
+        orgnummmer = organisasjonsnummer,
+        stillingsprosent = 50.0)
 
-        val trekk:Forskuddstrekk = Forskuddstrekk.Builder().beskrivelse("skattetrekk").beloep(3333).build()
-        val inntekt: Inntekt = Inntekt.Builder().type(Inntektstype.Loennsinntekt).beloep(18000).build()
-        val dato: LocalDate = LocalDate.now().minusDays(14)
-        val inntektoppgave = OppgaveInntektsmottaker.Builder()
+    val trekk: Forskuddstrekk =
+        Forskuddstrekk.Builder().beskrivelse("skattetrekk").beloep(3333).build()
+    val inntekt: Inntekt = Inntekt.Builder().type(Inntektstype.Loennsinntekt).beloep(18000).build()
+    val dato: LocalDate = LocalDate.now().minusDays(14)
+    val inntektoppgave =
+        OppgaveInntektsmottaker.Builder()
             .opplysningspliktigId("555555")
             .kalendermaaned(DateTimeFormatter.ofPattern("yyyy-MM").format(dato))
             .leggTilForskuddstrekk(trekk)
             .leggTilInntekt(inntekt)
             .build()
-        val skattbarInntekt = SkattbarInntekt.Builder().leggTilOppgave(inntektoppgave).build()
-        skatteetatenService.putSkattbarInntekt(brukerFnr, skattbarInntekt)
+    val skattbarInntekt = SkattbarInntekt.Builder().leggTilOppgave(inntektoppgave).build()
+    skatteetatenService.putSkattbarInntekt(brukerFnr, skattbarInntekt)
 
-        val ytelse = Ytelse(
+    val ytelse =
+        Ytelse(
             ytelsestype = "Barnetrygd",
             ytelseNettobeloep = BigDecimal(4530.00),
             skattsum = BigDecimal(0.0))
 
-        utbetalDataService.putUtbetalingerFraNav(brukerFnr, listOf(UtbetalDataDto(ytelseListe = listOf(ytelse))))
-        bostotteService.enableAutoGenerationFor(brukerFnr)
-        soknadService.opprettDigisosSak("0315", "0301", brukerFnr, brukerFnr)
-        return brukerFnr
-    }
-
+    utbetalDataService.putUtbetalingerFraNav(
+        brukerFnr, listOf(UtbetalDataDto(ytelseListe = listOf(ytelse))))
+    bostotteService.enableAutoGenerationFor(brukerFnr)
+    soknadService.opprettDigisosSak("0315", "0301", brukerFnr, brukerFnr)
+    return brukerFnr
+  }
 
   companion object {
     private val log by logger()
