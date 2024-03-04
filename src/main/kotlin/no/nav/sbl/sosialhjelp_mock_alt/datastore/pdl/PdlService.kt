@@ -431,14 +431,23 @@ class PdlService(
     val skattbarInntekt = SkattbarInntekt.Builder().leggTilOppgave(inntektoppgave).build()
     skatteetatenService.putSkattbarInntekt(brukerFnr, skattbarInntekt)
 
-    val ytelse =
-        Ytelse(
-            ytelsestype = "Barnetrygd",
-            ytelseNettobeloep = BigDecimal(4530.00),
-            skattsum = BigDecimal(0.0))
+    val ytelser =
+        listOf(
+            Ytelse(
+                ytelsestype = "Barnetrygd",
+                ytelseNettobeloep = BigDecimal(1510.00),
+                skattsum = BigDecimal(0.0)),
+            Ytelse(
+                ytelsestype = "Barnetrygd",
+                ytelseNettobeloep = BigDecimal(1510.00),
+                skattsum = BigDecimal(0.0)),
+            Ytelse(
+                ytelsestype = "Barnetrygd",
+                ytelseNettobeloep = BigDecimal(1510.00),
+                skattsum = BigDecimal(0.0)))
 
     utbetalDataService.putUtbetalingerFraNav(
-        brukerFnr, listOf(UtbetalDataDto(ytelseListe = listOf(ytelse))))
+        brukerFnr, listOf(UtbetalDataDto(ytelseListe = ytelser)))
     bostotteService.enableAutoGenerationFor(brukerFnr)
     soknadService.opprettDigisosSak("0315", "0301", brukerFnr, brukerFnr)
     return brukerFnr
