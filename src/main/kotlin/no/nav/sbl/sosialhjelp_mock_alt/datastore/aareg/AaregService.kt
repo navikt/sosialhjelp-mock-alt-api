@@ -16,6 +16,7 @@ class AaregService {
       personalia: Personalia,
       startDato: LocalDate,
       orgnummmer: String,
+      stillingsprosent: Double = 100.0,
   ) {
     val arbeidsgiver =
         OrganisasjonDto(
@@ -24,7 +25,10 @@ class AaregService {
     aaregMap[personalia.fnr] =
         listOf(
             ArbeidsforholdDto.nyttArbeidsforhold(
-                fnr = personalia.fnr, fom = startDato, arbeidsgiver = arbeidsgiver))
+                fnr = personalia.fnr,
+                fom = startDato,
+                arbeidsgiver = arbeidsgiver,
+                stillingsprosent = stillingsprosent))
   }
 
   fun setArbeidsforholdForFnr(fnr: String, arbeidsforholdsliste: List<ArbeidsforholdDto>) {

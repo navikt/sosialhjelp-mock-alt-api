@@ -72,8 +72,9 @@ data class Personalia(
     return this
   }
 
-  fun withForelderBarnRelasjon(barnFnr: String): Personalia {
-    forelderBarnRelasjon = listOf(ForelderBarnRelasjon(barnFnr, "barn", "forelder"))
+  fun withForelderBarnRelasjon(fnrBarn: List<String>): Personalia {
+    val nyForeldreBarnRelasjon = fnrBarn.map { ForelderBarnRelasjon(it, "barn", "forelder") }
+    forelderBarnRelasjon = nyForeldreBarnRelasjon
     return this
   }
 }
