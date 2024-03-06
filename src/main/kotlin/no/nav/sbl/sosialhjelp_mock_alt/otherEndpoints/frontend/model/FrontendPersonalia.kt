@@ -91,7 +91,7 @@ data class FrontendPersonalia(
           adressebeskyttelse = personalia.adressebeskyttelse,
           sivilstand = personalia.sivilstand,
           ektefelleType = personalia.ektefelle,
-          forelderBarnRelasjon = forelderBarnRelasjon.toMutableList(),
+          forelderBarnRelasjon = forelderBarnRelasjon,
           starsborgerskap = personalia.starsborgerskap,
           bostedsadresse = personalia.bostedsadresse,
           locked = personalia.locked,

@@ -13,7 +13,7 @@ data class Personalia(
     var ektefelleType: String? = null,
     var ektefelleFnr: String? = null,
     var ektefelleFodselsdato: LocalDate = randomDate(),
-    var forelderBarnRelasjon: MutableList<ForelderBarnRelasjon> = mutableListOf(),
+    var forelderBarnRelasjon: List<ForelderBarnRelasjon> = emptyList(),
     var starsborgerskap: String = "NOR",
     var bostedsadresse: ForenkletBostedsadresse =
         ForenkletBostedsadresse(
@@ -73,9 +73,8 @@ data class Personalia(
   }
 
   fun withForelderBarnRelasjon(fnrBarn: List<String>): Personalia {
-    fnrBarn.forEach { fnr ->
-      forelderBarnRelasjon.add(ForelderBarnRelasjon(fnr, "barn", "forelder"))
-    }
+    val nyForeldreBarnRelasjon = fnrBarn.map { ForelderBarnRelasjon(it, "barn", "forelder") }
+    forelderBarnRelasjon = nyForeldreBarnRelasjon
     return this
   }
 }
