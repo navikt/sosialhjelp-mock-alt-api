@@ -1,9 +1,8 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.loginApi
 
+import jakarta.servlet.annotation.MultipartConfig
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import java.io.IOException
-import java.io.InputStream
 import java.net.URISyntaxException
 import java.util.Date
 import no.nav.sbl.sosialhjelp_mock_alt.config.CORSFilter
@@ -13,7 +12,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.security.token.support.core.jwt.JwtToken
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.io.InputStreamResource
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -31,6 +30,11 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @RestController
+@MultipartConfig(
+    fileSizeThreshold = 5 * 1024 * 1024,
+    maxFileSize = 20 * 1024 * 1024,
+    maxRequestSize = 150 * 1024 * 1024,
+    location = "/tmp")
 class LogginApiController(
     private val restTemplate: RestTemplate,
     private val pdlService: PdlService,
@@ -54,7 +58,7 @@ class LogginApiController(
       @RequestBody(required = false) body: String?,
       method: HttpMethod,
       request: HttpServletRequest,
-      response: HttpServletResponse
+      response: HttpServletResponse,
   ): ResponseEntity<ByteArray> {
     log.debug(
         "SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
@@ -119,7 +123,7 @@ class LogginApiController(
       body: Any?,
       method: HttpMethod,
       request: HttpServletRequest,
-      response: HttpServletResponse
+      response: HttpServletResponse,
   ): ResponseEntity<ByteArray> {
     var newUri = request.requestURL.append(getQueryString(request)).toString()
     newUri = newUri.replace("/sosialhjelp/mock-alt-api/login-api", "")
@@ -153,6 +157,7 @@ class LogginApiController(
 
     val headers = getHeaders(request)
 
+    headers.remove("content-length")
     addAccessTokenHeader(request, headers)
     fixCorsHeadersInResponse(request, response)
 
@@ -220,31 +225,23 @@ class LogginApiController(
   }
 
   private fun getMultipartBody(
-      request: MultipartHttpServletRequest
+      request: MultipartHttpServletRequest,
   ): LinkedMultiValueMap<String, Any> {
     val multipartBody = LinkedMultiValueMap<String, Any>()
     request.fileNames.forEach { name ->
       val files: MutableList<MultipartFile> = request.getFiles(name)
-      files.forEach {
-        multipartBody.add(
-            name, MultipartInputStreamFileResource(it.inputStream, it.originalFilename))
-      }
+      files.forEach { file -> multipartBody.add(name, file.resource) }
     }
     return multipartBody
   }
 
   internal inner class MultipartInputStreamFileResource(
-      inputStream: InputStream,
-      private val filename: String?
-  ) : InputStreamResource(inputStream) {
+      byteArray: ByteArray,
+      private val filename: String?,
+  ) : ByteArrayResource(byteArray) {
 
     override fun getFilename(): String? {
       return this.filename
-    }
-
-    @Throws(IOException::class)
-    override fun contentLength(): Long {
-      return -1 // we do not want to generally read the whole stream into memory ...
     }
   }
 }

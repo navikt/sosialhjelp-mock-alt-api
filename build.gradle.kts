@@ -67,11 +67,7 @@ tasks.withType<KotlinCompile> {
   }
 }
 
-testing {
-  suites {
-    val test by getting(JvmTestSuite::class) { useJUnitJupiter() }
-  }
-}
+tasks.withType<Test> { useJUnitPlatform() }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
   this.archiveFileName.set("app.jar")
