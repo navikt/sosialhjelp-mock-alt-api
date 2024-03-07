@@ -17,8 +17,7 @@ COPY --chown=gradle:gradle gradle /home/gradle/project/gradle
 # Build the application
 # --no-daemon is used for better Docker compatibility and resource usage
 RUN --mount=type=secret,id=github_token,dst=/home/gradle/.gradle/gradle.properties,required=true,uid=1000 \
-    gradle build \
-    --no-daemon -x test
+    gradle build --no-daemon -x check
 
 FROM gcr.io/distroless/java21-debian12
 
