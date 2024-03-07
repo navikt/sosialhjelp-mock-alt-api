@@ -43,7 +43,8 @@ jobs:
           push: true
           tags: |
             ${{ env.DOCKER_IMAGE }}:${{ steps.artifact-version.outputs.version }}
-            ${{ github.ref == 'refs/heads/master' && env.DOCKER_IMAGE + ':latest' }}
+            ${{ github.ref == 'refs/heads/master' && format('{0}:latest', env.DOCKER_IMAGE) || format('{0}:{1}', env.DOCKER_IMAGE, github.ref_name) }}
           platforms: linux/amd64,linux/arm64
           secrets: |
-            github_token=${{ secrets.GITHUB_TOKEN }}
+            "github_token=githubUser=x-access-token
+            githubPassword=${{ secrets.GITHUB_TOKEN }}"
