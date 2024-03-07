@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build kotlin, and run tests/lint
-        uses: navikt/sosialhjelp-ci/actions/build-kotlin@main
+        uses: navikt/sosialhjelp-ci/actions/build-kotlin@multiarch
         with:
           lint: 'false'
           java-version: '21'
