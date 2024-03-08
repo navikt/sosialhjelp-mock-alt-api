@@ -98,6 +98,7 @@ class WellKnownController(
   @PostMapping("/azuretoken/{issuer}", produces = ["application/json;charset=UTF-8"])
   fun exchangeAzuretoken(
       @RequestBody body: String,
+      @PathVariable(value = "issuer") issuer: String
   ): AzuredingsResponse {
     val formsMap: HashMap<String, String> = splitFormParams(body)
     if (formsMap.containsKey("grant_type") && formsMap["grant_type"]!! == "client_credentials") {
