@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks
 
 import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.readValue
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -38,7 +37,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -400,26 +398,14 @@ class FiksController(
 
     //    ======== Util =========
     @GetMapping("/fiks/ping")
-    fun ping(): ResponseEntity<String> {
-        return ResponseEntity.ok("pong")
-    }
+    fun ping(): String = "pong"
 
     @GetMapping("/fiks/tilfeldig/orgnummer")
-    fun getTilfeldigOrgnummer(
-        @RequestParam parameters: MultiValueMap<String, String>
-    ): ResponseEntity<String> {
-        return ResponseEntity.ok(genererTilfeldigOrganisasjonsnummer())
-    }
+    fun getTilfeldigOrgnummer(): String = genererTilfeldigOrganisasjonsnummer()
 
     @GetMapping("/fiks/tilfeldig/fnr")
-    fun getTilfeldigFnr(
-        @RequestParam parameters: MultiValueMap<String, String>
-    ): ResponseEntity<String> {
-        return ResponseEntity.ok(genererTilfeldigPersonnummer())
-    }
+    fun getTilfeldigFnr(): String = genererTilfeldigPersonnummer()
 
     @GetMapping("/fiks/fast/fnr")
-    fun getFastFnr(@RequestParam parameters: MultiValueMap<String, String>): ResponseEntity<String> {
-        return ResponseEntity.ok(fastFnr)
-    }
+    fun getFastFnr(): String = fastFnr
 }
