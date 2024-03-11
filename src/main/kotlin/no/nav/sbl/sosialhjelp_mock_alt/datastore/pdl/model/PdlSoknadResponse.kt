@@ -1,13 +1,19 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
-data class PdlSoknadPersonResponse(val errors: List<PdlError>?, val data: PdlSoknadHentPerson?)
+data class PdlSoknadPersonResponse(
+    val errors: List<PdlError>?,
+    val data: PdlSoknadHentPerson?
+)
 
 data class PdlSoknadEktefelleResponse(
     val errors: List<PdlError>?,
     val data: PdlSoknadHentEktefelle?
 )
 
-data class PdlSoknadBarnResponse(val errors: List<PdlError>?, val data: PdlSoknadHentBarn?)
+data class PdlSoknadBarnResponse(
+    val errors: List<PdlError>?,
+    val data: PdlSoknadHentBarn?
+)
 
 data class PdlSoknadAdressebeskyttelseResponse(
     val errors: List<PdlError>?,

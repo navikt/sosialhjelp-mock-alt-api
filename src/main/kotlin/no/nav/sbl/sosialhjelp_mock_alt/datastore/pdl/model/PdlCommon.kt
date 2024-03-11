@@ -17,10 +17,10 @@ data class PdlErrorExtension(val code: String?, val classification: String)
 data class Adressebeskyttelse(val gradering: Gradering)
 
 enum class Gradering {
-  STRENGT_FORTROLIG_UTLAND, // kode 6 (utland)
-  STRENGT_FORTROLIG, // kode 6
-  FORTROLIG, // kode 7
-  UGRADERT
+    STRENGT_FORTROLIG_UTLAND, // kode 6 (utland)
+    STRENGT_FORTROLIG, // kode 6
+    FORTROLIG, // kode 7
+    UGRADERT
 }
 
 data class PdlPersonNavn(
@@ -28,22 +28,26 @@ data class PdlPersonNavn(
     var mellomnavn: String = "",
     var etternavn: String = "",
 ) {
-  override fun toString(): String {
-    return ("$fornavn $mellomnavn $etternavn").replace("  ", " ")
-  }
+    override fun toString(): String {
+        return ("$fornavn $mellomnavn $etternavn").replace("  ", " ")
+    }
 }
 
 data class PdlKjoenn(val kjoenn: Kjoenn)
 
 enum class Kjoenn {
-  MANN,
-  KVINNE,
-  UKJENT
+    MANN,
+    KVINNE,
+    UKJENT
 }
 
 data class PdlFoedselsdato(val foedselsdato: String?)
 
-data class PdlTelefonnummer(val landskode: String, val nummer: String, val prioritet: Int)
+data class PdlTelefonnummer(
+    val landskode: String,
+    val nummer: String,
+    val prioritet: Int
+)
 
 data class PdlBostedsadresse(
     val coAdressenavn: String?,
@@ -99,33 +103,46 @@ data class PdlSivilstand(
 )
 
 enum class SivilstandType {
-  UOPPGITT,
-  UGIFT,
-  GIFT,
-  ENKE_ELLER_ENKEMANN,
-  SKILT,
-  SEPARERT,
-  PARTNER,
-  SEPARERT_PARTNER,
-  SKILT_PARTNER,
-  GJENLEVENDE_PARTNER
+    UOPPGITT,
+    UGIFT,
+    GIFT,
+    ENKE_ELLER_ENKEMANN,
+    SKILT,
+    SEPARERT,
+    PARTNER,
+    SEPARERT_PARTNER,
+    SKILT_PARTNER,
+    GJENLEVENDE_PARTNER
 }
 
 data class PdlStatsborgerskap(val land: String?)
 
 data class PdlMetadata(val master: String, val endringer: List<PdlEndring>)
 
-data class PdlEndring(val kilde: String?, val registrert: LocalDateTime?, val type: String?)
+data class PdlEndring(
+    val kilde: String?,
+    val registrert: LocalDateTime?,
+    val type: String?
+)
 
-data class PdlFolkeregistermetadata(val ajourholdstidspunkt: LocalDateTime?, val kilde: String?)
+data class PdlFolkeregistermetadata(
+    val ajourholdstidspunkt: LocalDateTime?,
+    val kilde: String?
+)
 
 fun defaultMetadata() =
     PdlMetadata(
         "PDL",
         listOf(
             PdlEndring(
-                kilde = "NAV", registrert = LocalDateTime.now().minusDays(7), type = "type")))
+                kilde = "NAV",
+                registrert = LocalDateTime.now().minusDays(7),
+                type = "type"
+            )
+        )
+    )
 
 fun defaultFolkeregistermetadata() =
     PdlFolkeregistermetadata(
-        ajourholdstidspunkt = LocalDateTime.now().minusDays(6), kilde = "kilde")
+        ajourholdstidspunkt = LocalDateTime.now().minusDays(6), kilde = "kilde"
+    )
