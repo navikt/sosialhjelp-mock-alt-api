@@ -159,7 +159,7 @@ data class FrontendBarn(
             postnummer = "0101",
             kommunenummer = "0301"
         ),
-    var folkeregisterpersonstatus: String = "bosatt",
+    var folkeregisterpersonstatus: PdlFolkeregisterpersonstatus = PdlFolkeregisterpersonstatus.bosatt,
     val foedsel: LocalDate = LocalDate.now().minusYears(10),
     val navn: PdlPersonNavn = PdlPersonNavn(),
 ) {
@@ -187,11 +187,7 @@ data class FrontendBarn(
                     null
                 )
             ),
-            folkeregisterpersonstatus = listOf(
-                PdlFolkeregisterpersonstatus(
-                    folkeregisterpersonstatus
-                )
-            ),
+            folkeregisterpersonstatus = listOf(folkeregisterpersonstatus),
             foedsel = listOf(PdlFoedsel(foedsel)),
             navn = listOf(
                 PdlSoknadPersonNavn(
@@ -219,7 +215,8 @@ data class FrontendBarn(
                         ?: "",
                 ),
                 folkeregisterpersonstatus =
-                pdlBarn.folkeregisterpersonstatus?.first()?.status ?: "bosatt",
+                pdlBarn.folkeregisterpersonstatus?.firstOrNull()
+                    ?: PdlFolkeregisterpersonstatus.bosatt,
                 foedsel = pdlBarn.foedsel?.first()?.foedselsdato
                     ?: LocalDate.now().minusYears(10),
                 navn = PdlPersonNavn(

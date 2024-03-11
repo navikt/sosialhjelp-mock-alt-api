@@ -319,7 +319,7 @@ class PdlService(
 
     fun leggTilPerson(personalia: Personalia) {
         leggTilEktefelle(personalia)
-        if (personListe[personalia.fnr] != null && personListe[personalia.fnr]!!.locked) {
+        if (personListe[personalia.fnr]?.locked == true) {
             throw MockAltException("Ident ${personalia.fnr} is locked! Cannot update!")
         }
         personListe[personalia.fnr] = personalia
@@ -647,11 +647,7 @@ class PdlService(
                         null
                     )
                 ),
-                folkeregisterpersonstatus = listOf(
-                    PdlFolkeregisterpersonstatus(
-                        "bosatt"
-                    )
-                ),
+                folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus.bosatt),
                 foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(alder))),
                 navn = listOf(PdlSoknadPersonNavn(fornavn, "", etternavn))
             )

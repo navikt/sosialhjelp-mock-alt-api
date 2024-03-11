@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend
 
+import jakarta.validation.Valid
 import java.io.ByteArrayOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -61,13 +62,7 @@ class FrontendController(
 
     // Frontend stuff:
     @PostMapping("/mock-alt/personalia")
-    fun frontendUpload(@RequestBody body: String): ResponseEntity<String> {
-        log.info("Laster opp personalia: $body")
-        val personalia =
-            objectMapper.readValue(body, FrontendPersonalia::class.java)
-        if (personalia.fnr.isEmpty()) {
-            return ResponseEntity.badRequest().body("FNR må være satt!")
-        }
+    fun putMockPerson(@Valid @RequestBody personalia: FrontendPersonalia): ResponseEntity<String> {
         pdlService.veryfyNotLocked(personalia.fnr)
         personalia.barn.forEach { pdlService.leggTilBarn(it.fnr, it.pdlBarn()) }
         pdlService.leggTilPerson(pdlPersonalia(personalia))
@@ -78,12 +73,12 @@ class FrontendController(
             personalia.epost,
             personalia.telefonnummer
         )
-        if (personalia.kontonummer.isNotEmpty()) {
+        if (personalia.kontonummer.isNotEmpty())
             kontoregisterService.putKonto(
                 personalia.fnr,
                 personalia.kontonummer
             )
-        }
+
         aaregService.setArbeidsforholdForFnr(
             personalia.fnr,
             personalia.arbeidsforhold.map {
@@ -127,7 +122,7 @@ class FrontendController(
     }
 
     @GetMapping("/mock-alt/personalia")
-    fun frontendDownload(@RequestParam ident: String): ResponseEntity<FrontendPersonalia> {
+    fun getMockPerson(@RequestParam ident: String): ResponseEntity<FrontendPersonalia> {
         val personalia =
             try {
                 pdlService.getPersonalia(ident)

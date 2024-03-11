@@ -93,7 +93,18 @@ data class PdlForelderBarnRelasjon(
 
 data class PdlFoedsel(val foedselsdato: LocalDate?)
 
-data class PdlFolkeregisterpersonstatus(val status: String?)
+enum class PdlFolkeregisterpersonstatus {
+    bosatt,
+    utflyttet,
+    forsvunnet,
+    doed,
+    opphoert,
+    foedselsregistrert,
+    midlertidig,
+    inaktiv,
+    ikkeBosatt,
+    aktiv
+}
 
 data class PdlSivilstand(
     val type: SivilstandType?,

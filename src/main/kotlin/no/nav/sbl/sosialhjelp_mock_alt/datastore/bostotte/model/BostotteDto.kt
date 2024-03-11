@@ -24,7 +24,7 @@ data class SakerDto(
     val ar: Int,
     val status: BostotteStatus,
     val vedtak: VedtakDto? = null,
-    val rolle: BostotteRolle? = BostotteRolle.HOVEDPERSON,
+    val rolle: BostotteRolle = BostotteRolle.HOVEDPERSON,
 )
 
 enum class BostotteStatus {
