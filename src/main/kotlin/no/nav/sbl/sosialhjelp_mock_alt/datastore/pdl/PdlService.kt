@@ -9,42 +9,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontoregisterService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.krr.KrrService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedsel
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedselsdato
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregisterpersonstatus
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlForelderBarnRelasjon
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlInnsynHentPerson
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlInnsynPerson
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlInnsynPersonResponse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlKjoenn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaHentPerson
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaPerson
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlModiaPersonResponse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlPersonNavn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSivilstand
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadAdressebeskyttelse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadAdressebeskyttelseResponse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadBarn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadBarnResponse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadEktefelle
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadEktefelleResponse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentAdressebeskyttelse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentBarn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentEktefelle
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadHentPerson
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadPerson
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadPersonNavn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadPersonResponse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlStatsborgerskap
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlTelefonnummer
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlVegadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.SivilstandType
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.*
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.RolleService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.model.AdminRolle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.SkatteetatenService
@@ -498,7 +463,7 @@ class PdlService(
         PdlSoknadBarn(
             adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
             bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
-            folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus.bosatt),
+            folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus("bosatt")),
             foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(alder))),
             navn = listOf(PdlSoknadPersonNavn(fornavn, "", etternavn)))
   }

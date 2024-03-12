@@ -10,18 +10,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.model.PersonDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.UtbetalingerDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Adressebeskyttelse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForelderBarnRelasjon
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.ForenkletBostedsadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Gradering
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlBostedsadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFoedsel
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlFolkeregisterpersonstatus
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlPersonNavn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadBarn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlSoknadPersonNavn
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlVegadresse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Personalia
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.*
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.roller.model.AdminRolle
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Forskuddstrekk
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.Inntekt
@@ -143,7 +132,7 @@ data class FrontendBarn(
             postnummer = "0101",
             kommunenummer = "0301"),
     var folkeregisterpersonstatus: PdlFolkeregisterpersonstatus =
-        PdlFolkeregisterpersonstatus.bosatt,
+        PdlFolkeregisterpersonstatus("bosatt"),
     val foedsel: LocalDate = LocalDate.now().minusYears(10),
     val navn: PdlPersonNavn = PdlPersonNavn(),
 ) {
@@ -186,7 +175,7 @@ data class FrontendBarn(
               ),
           folkeregisterpersonstatus =
               pdlBarn.folkeregisterpersonstatus?.firstOrNull()
-                  ?: PdlFolkeregisterpersonstatus.bosatt,
+                  ?: PdlFolkeregisterpersonstatus("bosatt"),
           foedsel = pdlBarn.foedsel?.first()?.foedselsdato ?: LocalDate.now().minusYears(10),
           navn = PdlPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn))
     }
