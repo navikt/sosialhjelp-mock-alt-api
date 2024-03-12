@@ -21,6 +21,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.SakWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.defaultJsonSoknad
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendVedlegg
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sbl.sosialhjelp_mock_alt.utils.toLocalDateTime
@@ -91,6 +92,22 @@ class SoknadService(
         fnr = fnr,
         fiksDigisosIdInput = id,
         digisosApiWrapper = digisosApiWrapper)
+  }
+
+  fun hentVedlegg(sak: DigisosSak): List<FrontendVedlegg> {
+    val initialVedlegg = sak.digisosSoker?.dokumenter?.map { toVedlegg(it) } ?: emptyList()
+    val ettersendteVedlegg =
+        sak.ettersendtInfoNAV?.ettersendelser?.flatMap { ettersendelse ->
+          ettersendelse.vedlegg.map { toVedlegg(it) }
+        } ?: emptyList()
+
+    return initialVedlegg + ettersendteVedlegg
+  }
+
+  private fun toVedlegg(dokument: DokumentInfo): FrontendVedlegg {
+    val kanLastesned = hentFil(dokument.dokumentlagerDokumentId) != null
+    return FrontendVedlegg(
+        dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse, kanLastesned)
   }
 
   fun oppdaterDigisosSak(
