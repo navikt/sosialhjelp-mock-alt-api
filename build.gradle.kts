@@ -87,6 +87,8 @@ spotless {
 
 val installPreCommitHook =
     tasks.register("installPreCommitHook", Copy::class) {
+      group = "Setup"
+      description = "Copy pre-commit git hook into repository"
       from(File(rootProject.rootDir, "scripts/pre-commit"))
       into(File(rootProject.rootDir, ".git/hooks"))
       fileMode = 0b111101101
