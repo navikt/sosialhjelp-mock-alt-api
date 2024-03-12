@@ -11,12 +11,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.token.support.core.configuration.ProxyAwareResourceRetriever
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class WellKnownController(
@@ -95,18 +90,24 @@ class WellKnownController(
     return TokenResponse(newToken.serialize(), "JWT", "JWT", 60)
   }
 
+  data class AzureTokenRequest(
+      val grant_type: String?,
+      val scope: String?,
+      val assertion: String?,
+      val audience: String?
+  )
+
   @PostMapping("/azuretoken/{issuer}", produces = ["application/json;charset=UTF-8"])
   fun exchangeAzuretoken(
-      @RequestBody body: String,
+      @ModelAttribute formsMap: AzureTokenRequest,
       @PathVariable(value = "issuer") issuer: String
   ): AzuredingsResponse {
-    val formsMap: HashMap<String, String> = splitFormParams(body)
-    if (formsMap.containsKey("grant_type") && formsMap["grant_type"]!! == "client_credentials") {
-      log.info("Utveklser azure token (client credentials flow), scope: ${formsMap["scope"]}")
-      return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, "token")
+    if (formsMap.grant_type == "client_credentials") {
+      log.info("Utveklser azure token (client credentials flow), scope: ${formsMap.scope}")
+      return AzuredingsResponse("JWT", formsMap.scope!!, 60, 60, "token")
     }
-    log.info("Utveksler azure token: audience: ${formsMap["audience"]}\n")
-    return AzuredingsResponse("JWT", formsMap["scope"]!!, 60, 60, formsMap["assertion"]!!)
+    log.info("Utveksler azure token: audience: ${formsMap.audience}\n")
+    return AzuredingsResponse("JWT", formsMap.scope!!, 60, 60, formsMap.assertion!!)
   }
 
   private fun splitFormParams(body: String): HashMap<String, String> {
