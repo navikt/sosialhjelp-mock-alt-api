@@ -10,13 +10,13 @@ data class BostotteDto(
     val saker: MutableList<SakerDto> = mutableListOf(),
     val utbetalinger: MutableList<UtbetalingerDto> = mutableListOf(),
 ) {
-    fun withSak(sak: SakerDto) {
-        saker.add(sak)
-    }
+  fun withSak(sak: SakerDto) {
+    saker.add(sak)
+  }
 
-    fun withUtbetaling(utbetaling: UtbetalingerDto) {
-        utbetalinger.add(utbetaling)
-    }
+  fun withUtbetaling(utbetaling: UtbetalingerDto) {
+    utbetalinger.add(utbetaling)
+  }
 }
 
 data class SakerDto(
@@ -28,13 +28,13 @@ data class SakerDto(
 )
 
 enum class BostotteStatus {
-    UNDER_BEHANDLING,
-    VEDTATT
+  UNDER_BEHANDLING,
+  VEDTATT
 }
 
 enum class BostotteRolle {
-    HOVEDPERSON,
-    BIPERSON
+  HOVEDPERSON,
+  BIPERSON
 }
 
 data class VedtakDto(
@@ -51,6 +51,6 @@ data class UtbetalingerDto(
 )
 
 enum class BostotteMottaker(val value: String) {
-    KOMMUNE(JsonOkonomiOpplysningUtbetaling.Mottaker.KOMMUNE.value()),
-    HUSSTAND(JsonOkonomiOpplysningUtbetaling.Mottaker.HUSSTAND.value()),
+  KOMMUNE(JsonOkonomiOpplysningUtbetaling.Mottaker.KOMMUNE.value()),
+  HUSSTAND(JsonOkonomiOpplysningUtbetaling.Mottaker.HUSSTAND.value()),
 }
