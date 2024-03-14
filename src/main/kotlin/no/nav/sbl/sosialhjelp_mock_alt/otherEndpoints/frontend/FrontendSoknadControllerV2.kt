@@ -1,7 +1,9 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend
 
+import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
+import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSoknad
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import org.springframework.http.HttpStatus
@@ -33,14 +35,16 @@ class FrontendSoknadControllerV2(
   }
 
   @GetMapping("{fiksDigisosId}/soknadJSON", produces = ["application/json"])
-  fun getSoknadJsonV2(@PathVariable fiksDigisosId: String): ResponseEntity<String> {
+  fun getSoknadJsonV2(@PathVariable fiksDigisosId: String): JsonSoknad {
     val soknad =
         soknadService.hentSoknad(fiksDigisosId)
-            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Søknad ikke funnet")
+            ?: throw RuntimeException("Fant ikke søknad med id $fiksDigisosId")
 
-    val soknadJson = soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata)
-
-    return ResponseEntity.ok().body(soknadJson!!)
+    val soknadJson =
+        objectMapper.readValue(
+            soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata),
+            JsonSoknad::class.java)
+    return soknadJson
   }
 
   @GetMapping("{fiksDigisosId}/ettersendelseZip", produces = ["application/zip"])
