@@ -238,25 +238,19 @@ data class FrontendUtbetalingFraNav(
                         listOf(Ytelseskomponent(ytelseskomponenttype = ytelseskomponenttype)))),
     )
   }
-
-  companion object {
-    fun mapUtbetalingDtoListeTilFrontendUtbetalingerFraNavListe(
-        utbetalingerFraNav: List<UtbetalDataDto>
-    ): List<FrontendUtbetalingFraNav> {
-
-      return utbetalingerFraNav.flatMap { utbetalingFraNav ->
-        utbetalingFraNav.ytelseListe?.map {
-          FrontendUtbetalingFraNav(
-              belop = it.ytelseNettobeloep?.toDouble() ?: 0.00,
-              dato = utbetalingFraNav.utbetalingsdato ?: LocalDate.now(),
-              ytelsestype = it.ytelsestype ?: "",
-              skattebelop = it.skattsum?.toDouble() ?: 0.00,
-              ytelseskomponenttype = it.ytelseskomponentListe?.first()?.ytelseskomponenttype ?: "")
-        } ?: emptyList()
-      }
-    }
-  }
 }
+
+fun List<UtbetalDataDto>.toFrontend(): List<FrontendUtbetalingFraNav> =
+    this.flatMap { utbetalingFraNav ->
+      utbetalingFraNav.ytelseListe?.map {
+        FrontendUtbetalingFraNav(
+            belop = it.ytelseNettobeloep?.toDouble() ?: 0.00,
+            dato = utbetalingFraNav.utbetalingsdato ?: LocalDate.now(),
+            ytelsestype = it.ytelsestype ?: "",
+            skattebelop = it.skattsum?.toDouble() ?: 0.00,
+            ytelseskomponenttype = it.ytelseskomponentListe?.first()?.ytelseskomponenttype ?: "")
+      } ?: emptyList()
+    }
 
 class FrontendArbeidsforhold(
     val type: String,
@@ -270,28 +264,27 @@ class FrontendArbeidsforhold(
 ) {
   companion object {
     fun arbeidsforhold(dto: ArbeidsforholdDto, eregService: EregService): FrontendArbeidsforhold {
-      var sluttDato = ""
-      if (dto.ansettelsesperiode.periode.tom != null)
-          sluttDato = dto.ansettelsesperiode.periode.tom.toIsoString()
-      var ident = ""
-      var orgnummer = ""
-      if (dto.arbeidsgiver is OrganisasjonDto) {
-        orgnummer = dto.arbeidsgiver.organisasjonsnummer
-      }
-      if (dto.arbeidsgiver is PersonDto) {
-        ident = dto.arbeidsgiver.offentligIdent
-      }
-      val orgnavn = eregService.getOrganisasjonNoekkelinfo(orgnummer)?.navn?.navnelinje1 ?: ""
-      return FrontendArbeidsforhold(
-          type = dto.arbeidsgiver.type,
-          id = dto.arbeidsforholdId,
-          startDato = dto.ansettelsesperiode.periode.fom.toIsoString(),
-          sluttDato = sluttDato,
-          stillingsProsent = dto.arbeidsavtaler[0].stillingsprosent.toString(),
-          ident = ident,
-          orgnummer = orgnummer,
-          orgnavn = orgnavn,
-      )
+      val orgnummer = (dto.arbeidsgiver as? OrganisasjonDto)?.organisasjonsnummer
+      val orgnavn = orgnummer?.let { eregService.getOrganisasjonNoekkelinfo(it)?.navn?.navnelinje1 }
+      val ident = (dto.arbeidsgiver as? PersonDto)?.offentligIdent
+      return arbeidsforhold(dto, orgnavn, orgnummer, ident)
     }
+
+    fun arbeidsforhold(
+        dto: ArbeidsforholdDto,
+        orgnavn: String?,
+        orgnummer: String?,
+        ident: String?
+    ) =
+        FrontendArbeidsforhold(
+            type = dto.arbeidsgiver.type,
+            id = dto.arbeidsforholdId,
+            startDato = dto.ansettelsesperiode.periode.fom.toIsoString(),
+            sluttDato = dto.ansettelsesperiode.periode.tom?.toIsoString() ?: "",
+            stillingsProsent = dto.arbeidsavtaler[0].stillingsprosent.toString(),
+            ident = ident ?: "",
+            orgnummer = orgnummer ?: "",
+            orgnavn = orgnavn ?: "",
+        )
   }
 }

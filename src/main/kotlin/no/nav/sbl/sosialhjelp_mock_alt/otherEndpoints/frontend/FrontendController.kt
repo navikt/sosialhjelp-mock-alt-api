@@ -20,15 +20,10 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.skatteetaten.model.SkattbarInnt
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.skjermedepersoner.SkjermedePersonerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.utbetaling.UtbetalDataService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.*
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendBarn.Companion.frontendBarn
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.aaregArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.pdlPersonalia
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSoknad
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapUtbetalingDtoListeTilFrontendUtbetalingerFraNavListe
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendVedlegg
 import no.nav.sbl.sosialhjelp_mock_alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.DigisosSak
@@ -125,8 +120,7 @@ class FrontendController(
     frontendPersonalia.bostotteSaker = bostotteDto.saker
     frontendPersonalia.bostotteUtbetalinger = bostotteDto.utbetalinger
     frontendPersonalia.utbetalingerFraNav =
-        mapUtbetalingDtoListeTilFrontendUtbetalingerFraNavListe(
-            utbetalDataService.getUtbetalingerFraNav(personalia.fnr))
+        utbetalDataService.getUtbetalingerFraNav(personalia.fnr).toFrontend()
     frontendPersonalia.administratorRoller = rolleService.hentKonfigurasjon(personalia.fnr)
 
     return ResponseEntity.ok(frontendPersonalia)
