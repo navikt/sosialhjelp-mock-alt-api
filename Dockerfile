@@ -19,11 +19,14 @@ COPY --chown=gradle:gradle gradle /home/gradle/project/gradle
 RUN --mount=type=secret,id=github_token,dst=/home/gradle/.gradle/gradle.properties,required=true,uid=1000 \
     gradle build --no-daemon -x check
 
-FROM gcr.io/distroless/java21-debian12
+FROM gcr.io/distroless/java21-debian12:nonroot
 
 ENV LC_ALL="no_NB.UTF-8"
 ENV LANG="no_NB.UTF-8"
 ENV TZ="Europe/Oslo"
+
+# Copy in a statically linked curl for health checks
+COPY --from=ghcr.io/tarampampam/curl:8.6.0 /bin/curl /bin/curl
 
 COPY --from=builder /home/gradle/project/build/libs/app.jar app.jar
 
