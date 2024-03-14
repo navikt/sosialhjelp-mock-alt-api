@@ -19,7 +19,7 @@ COPY --chown=gradle:gradle gradle /home/gradle/project/gradle
 RUN --mount=type=secret,id=github_token,dst=/home/gradle/.gradle/gradle.properties,required=true,uid=1000 \
     gradle build --no-daemon -x check
 
-FROM gcr.io/distroless/java21-debian12:nonroot
+FROM gcr.io/distroless/java21-debian12:latest
 
 ENV LC_ALL="no_NB.UTF-8"
 ENV LANG="no_NB.UTF-8"
