@@ -1,6 +1,7 @@
 package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend
 
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
+import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
@@ -45,6 +46,20 @@ class FrontendSoknadControllerV2(
             soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata),
             JsonSoknad::class.java)
     return soknadJson
+  }
+
+  @GetMapping("{fiksDigisosId}/vedleggJSON", produces = ["application/json"])
+  fun getVedleggJsonV2(@PathVariable fiksDigisosId: String): JsonVedleggSpesifikasjon {
+    val soknad =
+        soknadService.hentSoknad(fiksDigisosId)
+            ?: throw RuntimeException("Fant ikke søknad med id $fiksDigisosId")
+
+    val vedleggJson =
+        objectMapper.readValue(
+            soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata),
+            JsonVedleggSpesifikasjon::class.java)
+
+    return vedleggJson
   }
 
   @GetMapping("{fiksDigisosId}/ettersendelseZip", produces = ["application/zip"])
