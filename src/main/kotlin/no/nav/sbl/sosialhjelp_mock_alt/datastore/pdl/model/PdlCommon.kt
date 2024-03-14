@@ -89,7 +89,22 @@ data class PdlForelderBarnRelasjon(
 
 data class PdlFoedsel(val foedselsdato: LocalDate?)
 
-data class PdlFolkeregisterpersonstatus(val status: String)
+data class PdlFolkeregisterpersonstatus(val status: Folkeregisterpersonstatus)
+
+// Er klar over at disse sedvanlig skal være upper-case, men her er det valgt
+// lower-case fordi det var raskeste veien til typesikkerhet på frontend
+enum class Folkeregisterpersonstatus {
+  bosatt,
+  utflyttet,
+  forsvunnet,
+  doed,
+  opphoert,
+  foedselsregistrert,
+  midlertidig,
+  inaktiv,
+  ikkebosatt,
+  aktiv
+}
 
 data class PdlSivilstand(
     val type: SivilstandType?,

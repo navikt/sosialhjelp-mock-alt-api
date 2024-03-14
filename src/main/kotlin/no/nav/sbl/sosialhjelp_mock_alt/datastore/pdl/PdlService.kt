@@ -463,7 +463,8 @@ class PdlService(
         PdlSoknadBarn(
             adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
             bostedsadresse = listOf(PdlBostedsadresse(null, defaultAdresse, null, null)),
-            folkeregisterpersonstatus = listOf(PdlFolkeregisterpersonstatus("bosatt")),
+            folkeregisterpersonstatus =
+                listOf(PdlFolkeregisterpersonstatus(Folkeregisterpersonstatus.bosatt)),
             foedsel = listOf(PdlFoedsel(LocalDate.now().minusYears(alder))),
             navn = listOf(PdlSoknadPersonNavn(fornavn, "", etternavn)))
   }
