@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+/** Denne og FrontendUserControllerV2 er ment å erstatte FrontendController. */
 @RestController
 @RequestMapping("/mock-alt/v2/soknader")
 class FrontendSoknadControllerV2(
@@ -19,7 +20,7 @@ class FrontendSoknadControllerV2(
     private val soknadArchiveService: FrontendArchiveService,
 ) {
   @GetMapping("{fiksDigisosId}/soknadZip", produces = ["application/zip"])
-  fun getSoknadZip(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
+  fun getSoknadZipV2(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
     val soknad =
         soknadService.hentSoknad(fiksDigisosId)
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
@@ -32,7 +33,7 @@ class FrontendSoknadControllerV2(
   }
 
   @GetMapping("{fiksDigisosId}/soknadJSON", produces = ["application/json"])
-  fun getSoknadJson(@PathVariable fiksDigisosId: String): ResponseEntity<String> {
+  fun getSoknadJsonV2(@PathVariable fiksDigisosId: String): ResponseEntity<String> {
     val soknad =
         soknadService.hentSoknad(fiksDigisosId)
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Søknad ikke funnet")
@@ -43,7 +44,7 @@ class FrontendSoknadControllerV2(
   }
 
   @GetMapping("{fiksDigisosId}/ettersendelseZip", produces = ["application/zip"])
-  fun zipEttersendelse(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
+  fun zipEttersendelseV2(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
     val soknad =
         soknadService.hentSoknad(fiksDigisosId)
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
@@ -56,7 +57,7 @@ class FrontendSoknadControllerV2(
   }
 
   @GetMapping("")
-  fun soknadsListe(): Collection<FrontendSoknad> =
+  fun soknadsListeV2(): Collection<FrontendSoknad> =
       soknadService.listSoknader(null).map { toFrontendSoknad(it) }
 
   private fun toFrontendSoknad(soknad: DigisosSak) =

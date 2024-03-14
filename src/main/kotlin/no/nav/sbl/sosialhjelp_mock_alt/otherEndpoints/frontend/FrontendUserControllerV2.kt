@@ -20,7 +20,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPer
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.aaregArbeidsforhold
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.pdlPersonalia
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSkattbarInntekt
-import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendUtbetalingFraNav.Companion.mapUtbetalingDtoListeTilFrontendUtbetalingerFraNavListe
+import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.toFrontend
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -33,7 +33,7 @@ class FrontendUserControllerV2(
     private val aaregService: AaregService,
     private val skatteetatenService: SkatteetatenService,
     private val bostotteService: BostotteService,
-    private val utbetalDataService: UtbetalDataService,
+    private val utbetalingerService: UtbetalDataService,
     private val eregService: EregService,
     private val krrService: KrrService,
     private val kontoregisterService: KontoregisterService,
@@ -44,7 +44,7 @@ class FrontendUserControllerV2(
   }
 
   @PostMapping
-  fun postMockPerson(@Valid @RequestBody personalia: FrontendPersonalia): ResponseEntity<String> {
+  fun postMockPersonV2(@Valid @RequestBody personalia: FrontendPersonalia): ResponseEntity<String> {
     pdlService.veryfyNotLocked(personalia.fnr)
     personalia.barn.forEach { pdlService.leggTilBarn(it.fnr, it.pdlBarn()) }
     pdlService.leggTilPerson(pdlPersonalia(personalia))
@@ -68,7 +68,7 @@ class FrontendUserControllerV2(
     personalia.bostotteSaker.forEach { bostotteDto.saker.add(it) }
     personalia.bostotteUtbetalinger.forEach { bostotteDto.utbetalinger.add(it) }
     bostotteService.putBostotte(personalia.fnr, bostotteDto)
-    utbetalDataService.putUtbetalingerFraNav(
+    utbetalingerService.putUtbetalingerFraNav(
         ident = personalia.fnr,
         utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalDataDto() })
     rolleService.leggTilKonfigurasjon(personalia.fnr, personalia.administratorRoller)
@@ -79,42 +79,35 @@ class FrontendUserControllerV2(
   @GetMapping fun listMockPersonerV2(): Collection<Personalia> = pdlService.getPersonListe()
 
   @GetMapping("{ident}")
-  fun getMockPerson(@PathVariable ident: String): ResponseEntity<FrontendPersonalia> {
-    val personalia =
+  fun getMockPersonV2(@PathVariable ident: String): ResponseEntity<FrontendPersonalia> {
+    log.info("Henter ned personalia for fnr: $ident")
+    val pers =
         kotlin.runCatching { pdlService.getPersonalia(ident) }.getOrNull()
             ?: return ResponseEntity.notFound().build()
 
-    log.info("Henter ned personalia for fnr: $ident")
-    val krrKonfigurasjon = krrService.hentKonfigurasjon(personalia.fnr)
-    val skattbarInntekt = skatteetatenService.getSkattbarInntekt(personalia.fnr)
-    val bostotteDto = bostotteService.getBostotte(personalia.fnr)
+    val krr = krrService.hentKonfigurasjon(pers.fnr)
+    val skatt = skatteetatenService.getSkattbarInntekt(pers.fnr)
+    val husbank = bostotteService.getBostotte(pers.fnr)
 
-    val frontendPersonalia = FrontendPersonalia(personalia)
+    val frontendPersonalia = FrontendPersonalia(pers)
 
     frontendPersonalia.apply {
       skjerming = skjermedePersonerService.getStatus(ident)
-      barn =
-          personalia.forelderBarnRelasjon.map {
-            frontendBarn(it.ident, pdlService.getBarn(it.ident))
-          }
-      telefonnummer = krrKonfigurasjon.mobiltelefonnummer ?: ""
-      epost = krrKonfigurasjon.epostadresse ?: ""
-      kanVarsles = krrKonfigurasjon.frontendKanVarsles()
-      kontonummer = kontoregisterService.getKonto(personalia.fnr)?.kontonummer ?: ""
+      barn = pers.forelderBarnRelasjon.map { frontendBarn(it.ident, pdlService.getBarn(it.ident)) }
+      telefonnummer = krr.mobiltelefonnummer ?: ""
+      epost = krr.epostadresse ?: ""
+      kanVarsles = krr.frontendKanVarsles()
+      kontonummer = kontoregisterService.getKonto(pers.fnr)?.kontonummer ?: ""
       arbeidsforhold =
-          aaregService.getArbeidsforhold(personalia.fnr).map {
+          aaregService.getArbeidsforhold(pers.fnr).map {
             FrontendArbeidsforhold.arbeidsforhold(it, eregService)
           }
       skattetatenUtbetalinger =
-          skattbarInntekt.oppgaveInntektsmottaker.map {
-            FrontendSkattbarInntekt.skattUtbetaling(it)
-          }
-      bostotteSaker = bostotteDto.saker
-      bostotteUtbetalinger = bostotteDto.utbetalinger
-      utbetalingerFraNav =
-          mapUtbetalingDtoListeTilFrontendUtbetalingerFraNavListe(
-              utbetalDataService.getUtbetalingerFraNav(personalia.fnr))
-      administratorRoller = rolleService.hentKonfigurasjon(personalia.fnr)
+          skatt.oppgaveInntektsmottaker.map { FrontendSkattbarInntekt.skattUtbetaling(it) }
+      bostotteSaker = husbank.saker
+      bostotteUtbetalinger = husbank.utbetalinger
+      utbetalingerFraNav = utbetalingerService.getUtbetalingerFraNav(pers.fnr).toFrontend()
+      administratorRoller = rolleService.hentKonfigurasjon(pers.fnr)
     }
 
     return ResponseEntity.ok(frontendPersonalia)
