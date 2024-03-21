@@ -1,0 +1,5 @@
+Da jeg skrev forslagAdresse-mock, trengte jeg dataene fra sanner_adressesok.json
+
+vegadresser.json ble utledet fra sanner_adressesok.json slik:
+$ jq '.data.sokAdresse.hits | map(.vegadresse)' sanner_adressesok.json > vegadresser.json
+

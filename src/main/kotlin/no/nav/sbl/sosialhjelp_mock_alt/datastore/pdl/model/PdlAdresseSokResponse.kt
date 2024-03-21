@@ -15,6 +15,39 @@ data class PdlAdresseSokResponse(val errors: List<PdlError>?, val data: PdlAdres
 
 data class PdlAdresseSok(val sokAdresse: PdlAdresseSokResult?)
 
+data class PdlForslagAdresseVegadresse(
+    val matrikkelId: String?,
+    val adressenavn: String?,
+    val husnummer: Int?,
+    val husbokstav: String?,
+    val postnummer: String?,
+    val poststed: String?,
+    val kommunenavn: String?,
+    val kommunenummer: String?,
+    val bydelsnavn: String?,
+    val bydelsnummer: String?
+)
+
+data class PdlForslagAdresseMatrikkeladresse(
+    val matrikkelId: String?,
+    val tilleggsnavn: String?,
+    val kommunenummer: String?,
+    val gaardsnummer: String?,
+    val bruksnummer: String?,
+    val postnummer: String?,
+    val poststed: String?
+)
+
+data class PdlForslagAdresseAdresse(
+    val vegadresse: PdlForslagAdresseVegadresse?,
+    val matrikkeladresse: PdlForslagAdresseMatrikkeladresse?
+)
+
+data class PdlForslagAdresseResult(
+    val suggestions: List<String>,
+    val addressFound: PdlForslagAdresseAdresse?
+)
+
 data class PdlAdresseSokResult(
     val hits: List<AdresseSokHit>,
     val pageNumber: Int,

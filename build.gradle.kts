@@ -34,8 +34,7 @@ repositories {
 dependencies {
   implementation(kotlin("reflect"))
 
-  implementation(libs.spring.boot.starter)
-  implementation(libs.spring.boot.starter.web)
+  implementation(libs.bundles.spring.boot)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.jackson.module.kotlin)
   implementation(libs.sosialhjelp.common.api)

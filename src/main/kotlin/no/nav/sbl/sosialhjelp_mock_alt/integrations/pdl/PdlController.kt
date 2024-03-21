@@ -1,11 +1,13 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl
 
+import graphql.parser.Parser
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlAdresseSokService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlGeografiskTilknytningService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.HentGeografiskTilknytningRequest
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.HentPersonRequest
+import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.MockGraphQLRequest
 import no.nav.sbl.sosialhjelp_mock_alt.integrations.pdl.model.SokAdresseRequest
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraToken
@@ -25,6 +27,13 @@ class PdlController(
     private val pdlGeografiskTilknytningService: PdlGeografiskTilknytningService,
     private val feilService: FeilService,
 ) {
+
+  private fun getQuery(document: graphql.language.Document): String? {
+    val operations = document.definitions.filterIsInstance<graphql.language.OperationDefinition>()
+    val selections = operations.flatMap { it.selectionSet.selections }
+    return selections.firstOrNull()?.let { it as graphql.language.Field }.let { it?.name }
+  }
+
   @PostMapping("/pdl_endpoint_url", produces = ["application/json;charset=UTF-8"])
   fun pdlEndpoint(
       @RequestParam parameters: MultiValueMap<String, String>,
@@ -32,30 +41,31 @@ class PdlController(
       @RequestHeader headers: HttpHeaders,
   ): String {
     val ident = hentFnrFraToken(headers)
-    return handleRequest(body, ident)
+    val request = objectMapper.readValue(body, MockGraphQLRequest::class.java)
+    val document = Parser().parseDocument(request.query)
+    val query = getQuery(document)
+
+    return when (query) {
+      "hentPerson" -> handleHentPersonRequest(body, ident)
+      "hentGeografiskTilknytning" -> handleHentGeografiskTilknytningRequest(body, ident)
+      "sokAdresse" -> handleSokAdresseRequest(body, ident)
+      "forslagAdresse" -> handleForslagAdresseRequest(request.variables)
+      else -> "OK"
+    }
   }
 
-  private fun handleRequest(body: String, ident: String): String {
-    if (body.contains("hentIdenter")) {
-      return "{\"data\":{\"hentIdenter\":{\"identer\":[{\"ident\":\"$ident\"}]}}}"
-    }
-    if (body.contains("ident") && body.contains("historikk")) {
-      val hentPersonRequest = objectMapper.readValue(body, HentPersonRequest::class.java)
-      return handleHentPersonRequest(hentPersonRequest, ident)
-    }
-    if (body.contains("hentGeografiskTilknytning")) {
-      val hentGeografiskTilknytningRequest =
-          objectMapper.readValue(body, HentGeografiskTilknytningRequest::class.java)
-      return handleHentGeografiskTilknytningRequest(hentGeografiskTilknytningRequest, ident)
-    }
-    if (body.contains("paging") && body.contains("criteria")) {
-      val sokAdresseRequest = objectMapper.readValue(body, SokAdresseRequest::class.java)
-      return handleSokAdresseRequest(sokAdresseRequest, ident)
-    }
-    return "OK"
+  private fun handleForslagAdresseRequest(variables: Map<String, Any>): String {
+    val fritekst = variables["fritekst"] ?: error("Fritekst mangler")
+    require(fritekst is String) { "Fritekst må være en streng" }
+    return objectMapper.writeValueAsString(
+        mapOf(
+            "data" to mapOf("forslagAdresse" to pdlAdresseSokService.forslagAdresse(fritekst)),
+            "errors" to emptyList<String>()))
   }
 
-  private fun handleHentPersonRequest(hentPersonRequest: HentPersonRequest, ident: String): String {
+  private fun handleHentPersonRequest(body: String, ident: String): String {
+    val hentPersonRequest = objectMapper.readValue(body, HentPersonRequest::class.java)
+
     if (ident != hentPersonRequest.variables.ident) {
       log.warn(
           "Token matcher ikke request! $ident (token) != ${hentPersonRequest.variables.ident} (person request)")
@@ -64,13 +74,19 @@ class PdlController(
   }
 
   /**
-   * forelderBarnRelasjon -> kun del av person-request fra soknad-api folkeregisterpersonstatus ->
-   * kun del av barn-request fra soknad-api bostedsadresse -> del av ektefelle-request fra
-   * soknad-api (gjelder også de 2 over, men denne inneholder verken forelderBarnRelasjon eller
-   * folkeregisterpersonstatus) kjoenn -> kun del av request fra modia-api navn -> del av request
-   * fra innsyn-api (gjelder også 3 av de over, men denne inneholder verken forelderBarnRelasjon,
-   * folkeregisterpersonstatus eller bostedsadresse) adressebeskyttelse -> tilgangskontroll-sjekk
-   * kall fra soknad-api
+   * forelderBarnRelasjon -> kun del av person-request fra soknad-api
+   *
+   * folkeregisterpersonstatus -> kun del av barn-request fra soknad-api
+   *
+   * bostedsadresse -> del av ektefelle-request fra soknad-api (gjelder også de 2 over, men denne
+   * inneholder verken forelderBarnRelasjon eller folkeregisterpersonstatus)
+   *
+   * kjoenn -> kun del av request fra modia-api
+   *
+   * navn -> del av request fra innsyn-api (gjelder også 3 av de over, men denne inneholder verken
+   * forelderBarnRelasjon, folkeregisterpersonstatus eller bostedsadresse)
+   *
+   * adressebeskyttelse -> tilgangskontroll-sjekk kall fra soknad-api
    */
   private fun decideResponse(hentPersonRequest: HentPersonRequest): String {
     val fnr = hentPersonRequest.variables.ident
@@ -103,10 +119,9 @@ class PdlController(
     }
   }
 
-  private fun handleHentGeografiskTilknytningRequest(
-      hentGeografiskTilknytningRequest: HentGeografiskTilknytningRequest,
-      ident: String
-  ): String {
+  private fun handleHentGeografiskTilknytningRequest(body: String, ident: String): String {
+    val hentGeografiskTilknytningRequest =
+        objectMapper.readValue(body, HentGeografiskTilknytningRequest::class.java)
     if (ident != hentGeografiskTilknytningRequest.variables.ident) {
       log.warn(
           "Token matcher ikke request! $ident (token) != ${hentGeografiskTilknytningRequest.variables.ident} (GT request)")
@@ -119,7 +134,9 @@ class PdlController(
     return objectMapper.writeValueAsString(response)
   }
 
-  private fun handleSokAdresseRequest(sokAdresseRequest: SokAdresseRequest, ident: String): String {
+  private fun handleSokAdresseRequest(body: String, ident: String): String {
+    val sokAdresseRequest = objectMapper.readValue(body, SokAdresseRequest::class.java)
+
     val criteria = sokAdresseRequest.variables.criteria
     val isWildcardSok: Boolean =
         criteria

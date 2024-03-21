@@ -6,6 +6,8 @@ data class Variables(val ident: String)
 
 data class HentGeografiskTilknytningRequest(val query: String, val variables: Variables)
 
+data class MockGraphQLRequest(val query: String, val variables: Map<String, Any>)
+
 data class SokAdresseRequest(val query: String, val variables: SokAdresseVariables)
 
 data class SokAdresseVariables(val paging: Paging, val criteria: List<Criteria>)

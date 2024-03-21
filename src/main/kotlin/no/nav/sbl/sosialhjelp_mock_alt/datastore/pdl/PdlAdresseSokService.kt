@@ -1,9 +1,8 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.AdresseSokHit
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlAdresseSok
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlAdresseSokResponse
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlAdresseSokResult
+import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.*
+import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.stereotype.Component
 
@@ -13,7 +12,50 @@ class PdlAdresseSokService {
   // key: "<vegadresse><husnummer><husbokstav>"
   private val nyAdresseMap: HashMap<String, AdresseSokHit> = HashMap()
 
+  private val vegadresseListe: Map<String, AdresseDto> =
+      objectMapper
+          .readValue<List<AdresseDto>>(
+              this::class.java.classLoader.getResource("adressesok/vegadresser.json")!!.readText())
+          .map { formatVegadresse(it).uppercase() to it }
+          .toMap()
+
+  fun forslagAdresse(fritekst: String): PdlForslagAdresseResult {
+    log.info("PDL forslagAdresse, sokestreng: $fritekst")
+
+    val matchingAddress = vegadresseListe.entries.firstOrNull { it.key == fritekst }?.value
+
+    return PdlForslagAdresseResult(
+        suggestions = vegadresseListe.keys.filter { it.contains(fritekst.uppercase()) },
+        addressFound = matchingAddress?.toAdresseResult())
+  }
+
+  private fun AdresseDto.toAdresseResult(): PdlForslagAdresseAdresse =
+      PdlForslagAdresseAdresse(
+          matrikkeladresse = null,
+          vegadresse =
+              PdlForslagAdresseVegadresse(
+                  matrikkelId = this.matrikkelId,
+                  adressenavn = this.adressenavn,
+                  husnummer = this.husnummer,
+                  husbokstav = this.husbokstav,
+                  postnummer = this.postnummer,
+                  poststed = this.poststed,
+                  kommunenavn = this.kommunenavn,
+                  kommunenummer = this.kommunenummer,
+                  bydelsnavn = "mock-bydel",
+                  bydelsnummer = this.bydelsnummer))
+
+  fun formatVegadresse(vegadresse: AdresseDto): String {
+    val postfiks = ", ${vegadresse.postnummer} ${vegadresse.poststed}"
+    return if (!vegadresse.husbokstav.isNullOrEmpty()) {
+      "${vegadresse.adressenavn} ${vegadresse.husnummer} ${vegadresse.husbokstav}$postfiks"
+    } else {
+      "${vegadresse.adressenavn} ${vegadresse.husnummer}$postfiks"
+    }
+  }
+
   init {
+
     val hits = PdlAdresseSokResponse.defaultResponse().data.sokAdresse?.hits
     hits?.let { hit ->
       nyAdresseMap.putAll(
