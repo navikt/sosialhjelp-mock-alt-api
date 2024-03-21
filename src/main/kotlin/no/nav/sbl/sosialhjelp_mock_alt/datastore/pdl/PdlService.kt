@@ -86,7 +86,8 @@ class PdlService(
         barnFnr1 = genererTilfeldigPersonnummer(),
         barnFnr2 = genererTilfeldigPersonnummer(),
         barnFnr3 = genererTilfeldigPersonnummer(),
-        position = 5)
+        position = 5,
+        adminRoller = AdminRolle.entries)
     val hemmeligBruker =
         Personalia()
             .withNavn("Hemmelig", "", "Adressesen")
@@ -349,7 +350,8 @@ class PdlService(
       barnFnr1: String,
       barnFnr2: String,
       barnFnr3: String,
-      position: Long
+      position: Long,
+      adminRoller: List<AdminRolle>
   ): String {
     val standardBruker =
         Personalia(fnr = brukerFnr)
@@ -416,6 +418,7 @@ class PdlService(
         brukerFnr, listOf(UtbetalDataDto(ytelseListe = ytelser)))
     bostotteService.enableAutoGenerationFor(brukerFnr)
     soknadService.opprettDigisosSak("0315", "0301", brukerFnr, brukerFnr)
+    rolleService.leggTilKonfigurasjon(brukerFnr, adminRoller)
     return brukerFnr
   }
 
