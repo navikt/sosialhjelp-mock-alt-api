@@ -22,10 +22,12 @@ class PdlAdresseSokService {
   fun forslagAdresse(fritekst: String): PdlForslagAdresseResult {
     log.info("PDL forslagAdresse, sokestreng: $fritekst")
 
-    val matchingAddress = vegadresseListe.entries.firstOrNull { it.key == fritekst }?.value
+    val query = fritekst.uppercase()
+
+    val matchingAddress = vegadresseListe.entries.firstOrNull { it.key == query }?.value
 
     return PdlForslagAdresseResult(
-        suggestions = vegadresseListe.keys.filter { it.contains(fritekst.uppercase()) },
+        suggestions = vegadresseListe.keys.filter { it.contains(query) },
         addressFound = matchingAddress?.toAdresseResult())
   }
 
