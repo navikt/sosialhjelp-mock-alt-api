@@ -46,6 +46,7 @@ class PdlController(
     val query = getQuery(document)
 
     return when (query) {
+      "hentIdenter" -> "{\"data\":{\"hentIdenter\":{\"identer\":[{\"ident\":\"$ident\"}]}}}"
       "hentPerson" -> handleHentPersonRequest(body, ident)
       "hentGeografiskTilknytning" -> handleHentGeografiskTilknytningRequest(body, ident)
       "sokAdresse" -> handleSokAdresseRequest(body, ident)
