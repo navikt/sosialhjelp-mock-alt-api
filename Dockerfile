@@ -5,7 +5,6 @@ ENV LANG="no_NB.UTF-8"
 ENV TZ="Europe/Oslo"
 
 COPY /build/libs/app.jar app.jar
-COPY /scripts /init-scripts
 
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75 \
                -XX:+HeapDumpOnOutOfMemoryError \
