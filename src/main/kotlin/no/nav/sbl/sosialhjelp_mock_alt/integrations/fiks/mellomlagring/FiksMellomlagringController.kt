@@ -98,30 +98,30 @@ class FiksMellomlagringController(
         navEksternRefId = navEksternRefId,
         filnavn = filMetadata.filnavn,
         bytes = file.bytes,
-        mimeType = filMetadata.mimetype
-    )
+        mimeType = filMetadata.mimetype)
 
-    return mellomlagringService.getAll(navEksternRefId)
-        ?.mellomlagringMetadataList?.filter { it.filnavn == filMetadata.filnavn }
+    return mellomlagringService
+        .getAll(navEksternRefId)
+        ?.mellomlagringMetadataList
+        ?.filter { it.filnavn == filMetadata.filnavn }
         ?.let { MellomlagringDto(navEksternRefId, mellomlagringMetadataList = it) }
-        ?.let { ResponseEntity.ok(it) }
-        ?: createError(navEksternRefId)
-    }
+        ?.let { ResponseEntity.ok(it) } ?: createError(navEksternRefId)
+  }
 
   data class FilMetadata(val filnavn: String, val mimetype: String, val storrelse: Long)
 }
 
 private fun createError(navEksternRefId: String): ResponseEntity<Any> {
-    return ResponseEntity.badRequest()
-        .body(
-            ErrorMessage(
-                error = null,
-                errorCode = null,
-                errorId = null,
-                errorJson = null,
-                message = "Fant ingen data i basen knytter til angitt id'en $navEksternRefId",
-                originalPath = null,
-                path = null,
-                status = 400,
-                timestamp = null))
+  return ResponseEntity.badRequest()
+      .body(
+          ErrorMessage(
+              error = null,
+              errorCode = null,
+              errorId = null,
+              errorJson = null,
+              message = "Fant ingen data i basen knytter til angitt id'en $navEksternRefId",
+              originalPath = null,
+              path = null,
+              status = 400,
+              timestamp = null))
 }
