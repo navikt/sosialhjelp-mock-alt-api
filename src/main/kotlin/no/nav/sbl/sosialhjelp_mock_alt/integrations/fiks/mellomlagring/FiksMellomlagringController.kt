@@ -85,7 +85,7 @@ class FiksMellomlagringController(
       @PathVariable navEksternRefId: String,
       @RequestParam body: LinkedMultiValueMap<String, Any>,
       request: StandardMultipartHttpServletRequest
-  ): ResponseEntity<String> {
+  ): ResponseEntity<Any> {
     feilService.eventueltLagFeil(headers, "FiksMellomlagringController", "postMellomlagretVedlegg")
     // fisk ut filnavn, bytes og mimetype fra request/multipart
     val filMetadata =
@@ -98,9 +98,30 @@ class FiksMellomlagringController(
         navEksternRefId = navEksternRefId,
         filnavn = filMetadata.filnavn,
         bytes = file.bytes,
-        mimeType = filMetadata.mimetype)
-    return ResponseEntity.ok().build()
-  }
+        mimeType = filMetadata.mimetype
+    )
+
+    return mellomlagringService.getAll(navEksternRefId)
+        ?.mellomlagringMetadataList?.filter { it.filnavn == filMetadata.filnavn }
+        ?.let { MellomlagringDto(navEksternRefId, mellomlagringMetadataList = it) }
+        ?.let { ResponseEntity.ok(it) }
+        ?: createError(navEksternRefId)
+    }
 
   data class FilMetadata(val filnavn: String, val mimetype: String, val storrelse: Long)
+}
+
+private fun createError(navEksternRefId: String): ResponseEntity<Any> {
+    return ResponseEntity.badRequest()
+        .body(
+            ErrorMessage(
+                error = null,
+                errorCode = null,
+                errorId = null,
+                errorJson = null,
+                message = "Fant ingen data i basen knytter til angitt id'en $navEksternRefId",
+                originalPath = null,
+                path = null,
+                status = 400,
+                timestamp = null))
 }
