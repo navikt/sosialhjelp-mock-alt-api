@@ -15,7 +15,7 @@ jobs:
     permissions:
       packages: write
       contents: write
-    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@main
+    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v3
     with:
       cluster-name: 'dev-gcp'
       resource-name: 'mock'
