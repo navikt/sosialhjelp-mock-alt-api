@@ -24,6 +24,9 @@ filter_soknader_on_fnr: ${FILTER_SOKNADER_ON_FNR:true}
 
 springdoc:
   swagger-ui.path: swagger-ui.html
+  paths-to-exclude:
+    - "/internal/**"
+    - "/pdl_endpoint_url" # graphql endpoint
 
 mock-oauth2-server:
   port: 4321
