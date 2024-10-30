@@ -27,6 +27,7 @@ springdoc:
   paths-to-exclude:
     - "/internal/**"
     - "/pdl_endpoint_url" # graphql endpoint
+    - "/fiks/digisos/**"
 
 mock-oauth2-server:
   port: 4321
