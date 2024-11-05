@@ -11,7 +11,7 @@ on:
 
 jobs:
   deploy-to-dev:
-    name: 'Deploy to dev'
+    name: 'Deploy to GCP'
     permissions:
       id-token: write
       packages: write
