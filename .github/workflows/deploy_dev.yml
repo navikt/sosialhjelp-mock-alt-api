@@ -16,7 +16,7 @@ jobs:
       id-token: write
       packages: write
       contents: write
-    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@latest_tag_test
+    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v6
     with:
       cluster-name: 'dev-gcp'
       resource-name: 'mock'
