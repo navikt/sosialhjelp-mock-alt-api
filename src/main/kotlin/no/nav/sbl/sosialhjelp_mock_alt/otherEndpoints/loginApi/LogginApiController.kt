@@ -89,13 +89,15 @@ class LogginApiController(
 
   private fun checkAuthorized(request: HttpServletRequest) {
     val cookie = request.cookies
-    if (cookie.isNullOrEmpty()) {
-      log.info("Unauthorized: No Cookie!")
-      throw MockAltException("Unauthorized: No Cookie!")
+    if (cookie.isNullOrEmpty() || request.getHeader("Authorization") == null) {
+      log.info("Unauthorized: No Cookie or auth header!")
+      throw MockAltException("Unauthorized: No Cookie or Auth header!")
     } else {
       try {
-        val tokenString = cookie.firstOrNull { it.name == "localhost-idtoken" }?.value ?: ""
-        if (tokenString.isEmpty()) {
+        val tokenString =
+            cookie.firstOrNull { it.name == "localhost-idtoken" }?.value
+                ?: request.getHeader("Authorization")?.removePrefix("Bearer ")
+        if (tokenString == null) {
           log.debug(
               "Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}")
           throw MockAltException("Unauthorized: No Cookie!")
