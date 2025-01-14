@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.*
 class WellKnownController(
     @Value("\${host_address}") private val hostAddress: String,
     private val proxyAwareResourceRetriever: ProxyAwareResourceRetriever,
-    private val mockOAuth2Server: MockOAuth2Server
+    private val mockOAuth2Server: MockOAuth2Server,
 ) {
-
   @GetMapping("/well-known/{issuer}")
   fun getMockAltMetadata(
       @PathVariable(value = "issuer") issuer: String,
-      @RequestParam host: String?
+      @RequestParam host: String?,
   ): WellKnown {
     val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
 
@@ -31,7 +30,8 @@ class WellKnownController(
         WellKnown(
             issuer = mockOAuth2Server.issuerUrl(issuer).toString(),
             tokenEndpoint = "${baseUrl}sosialhjelp/mock-alt-api/token/$issuer",
-            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer")
+            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer",
+        )
     log.info("Metadata for issuer=$issuer: \n$wellknown")
     return wellknown
   }
@@ -39,20 +39,23 @@ class WellKnownController(
   @GetMapping("/azure-well-known/{issuer}")
   fun getAzureMetadata(
       @PathVariable(value = "issuer") issuer: String,
-      @RequestParam host: String?
+      @RequestParam host: String?,
   ): WellKnown {
     val baseUrl = host?.let { hostAddress(it) } ?: hostAddress
     val wellknown =
         WellKnown(
             issuer = mockOAuth2Server.issuerUrl(issuer).toString(),
             tokenEndpoint = "${baseUrl}sosialhjelp/mock-alt-api/azuretoken/$issuer",
-            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer")
+            jwksURI = "${baseUrl}sosialhjelp/mock-alt-api/jwks/$issuer",
+        )
     log.info("Metadata for issuer=$issuer: \n$wellknown")
     return wellknown
   }
 
   @GetMapping("/jwks/{issuer}")
-  fun getMockAltJwks(@PathVariable(value = "issuer") issuer: String): String {
+  fun getMockAltJwks(
+      @PathVariable(value = "issuer") issuer: String,
+  ): String {
     val jwksUrl = mockOAuth2Server.jwksUrl(issuer)
     val data = proxyAwareResourceRetriever.retrieveResource(jwksUrl.toUrl())
     log.info("Henter jwks for issuer=$issuer")
@@ -62,7 +65,7 @@ class WellKnownController(
   @PostMapping("/token/{issuer}", produces = ["application/json;charset=UTF-8"])
   fun exchangeToken(
       @RequestBody body: String,
-      @PathVariable(value = "issuer") issuer: String
+      @PathVariable(value = "issuer") issuer: String,
   ): TokenResponse {
     val typeRef = object : TypeReference<HashMap<String, String>>() {}
 
@@ -78,6 +81,19 @@ class WellKnownController(
       return TokenResponse(params["assertion"]!!, "JWT", "JWT", 60)
     }
 
+    // Dette er egentlig et kall til texas, prøver å simulere her
+    if (params.containsKey("identity_provider") && params.containsKey("target")) {
+      val token =
+          mockOAuth2Server.issueToken(
+              issuerId = issuer,
+              "subject",
+              "audience",
+              mapOf("acr" to params["target"]!!),
+              1000L,
+          )
+      return TokenResponse(token.serialize(), "JWT", "JWT", 60)
+    }
+
     log.info("Utveksler token for $issuer: audience: ${params["audience"]}\n")
     val subjectToken = params["subject_token"]!!
 
@@ -86,7 +102,8 @@ class WellKnownController(
             issuerId = issuer,
             subject = SignedJWT.parse(subjectToken).jwtClaimsSet.subject,
             audience = params["audience"],
-            claims = mapOf("acr" to "idporten-loa-high"))
+            claims = mapOf("acr" to "idporten-loa-high"),
+        )
     return TokenResponse(newToken.serialize(), "JWT", "JWT", 60)
   }
 
@@ -94,13 +111,13 @@ class WellKnownController(
       val grant_type: String?,
       val scope: String?,
       val assertion: String?,
-      val audience: String?
+      val audience: String?,
   )
 
   @PostMapping("/azuretoken/{issuer}", produces = ["application/json;charset=UTF-8"])
   fun exchangeAzuretoken(
       @ModelAttribute formsMap: AzureTokenRequest,
-      @PathVariable(value = "issuer") issuer: String
+      @PathVariable(value = "issuer") issuer: String,
   ): AzuredingsResponse {
     if (formsMap.grant_type == "client_credentials") {
       log.info("Utveklser azure token (client credentials flow), scope: ${formsMap.scope}")
