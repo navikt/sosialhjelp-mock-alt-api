@@ -86,12 +86,13 @@ class WellKnownController(
       val token =
           mockOAuth2Server.issueToken(
               issuerId = issuer,
-              "subject",
+              params["user_token"]?.let { SignedJWT.parse(it).jwtClaimsSet.subject }
+                  ?: "12345678910",
               "audience",
               mapOf("acr" to params["target"]!!),
               1000L,
           )
-      return TokenResponse(token.serialize(), "JWT", "JWT", 60)
+      return TokenResponse(token.serialize(), "Bearer", "Bearer", 60)
     }
 
     log.info("Utveksler token for $issuer: audience: ${params["audience"]}\n")
