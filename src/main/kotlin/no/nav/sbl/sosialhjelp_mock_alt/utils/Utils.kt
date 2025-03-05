@@ -13,14 +13,13 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.random.Random.Default.nextLong
 import kotlin.reflect.full.companionObject
-import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.Kjoenn
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.security.token.support.core.jwt.JwtToken
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 
-val fastFnr = genererTilfeldigPersonnummer(dato = LocalDate.of(1945, 10, 26), Kjoenn.KVINNE)
+const val fastFnr = "26504547549"
 
 fun String.toLocalDateTime(): LocalDateTime {
   return ZonedDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
