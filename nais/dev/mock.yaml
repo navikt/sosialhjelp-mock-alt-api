@@ -47,6 +47,8 @@ spec:
     requests:
       cpu: 10m
       memory: 512Mi
+  tokenx:
+    enabled: true
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "digisos-ekstern"
