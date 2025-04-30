@@ -6,4 +6,4 @@ ENV TZ="Europe/Oslo"
 
 COPY /build/libs/app.jar app.jar
 
-ENTRYPOINT ["app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
