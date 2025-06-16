@@ -1,15 +1,15 @@
 [versions]
 kotlin = "2.1.21"
-spring-boot = "3.4.5"
+spring-boot = "3.5.0"
 coroutines = "1.10.2"
 sosialhjelp_common = "1.20231205.0930-5ce172f"
 filformat = "1.2025.03.26-12.31-17b67ed849e1"
-token_validation = "4.0.3"
+token_validation = "5.0.29"
 jackson = "2.19.0"
 springdoc = "2.8.8"
-mock_oauth2_server = "2.1.0"
+mock_oauth2_server = "2.2.1"
 svarut = "4.2.0"
-spotless = "6.25.0"
+spotless = "7.0.4"
 versions = "0.52.0"
 
 [libraries]
