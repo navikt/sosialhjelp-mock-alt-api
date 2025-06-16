@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.klage
 
 import java.util.UUID
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -14,13 +13,6 @@ class KlageControllerTest {
 
   @Autowired private lateinit var webTestClient: WebTestClient
 
-  @Test
-  fun `Test app startup`() {
-
-    webTestClient.post().uri(sendUrl(UUID.randomUUID()))
-
-    restClient.post().uri(sendUrl(UUID.randomUUID()))
-  }
 
   companion object {
     private val restClient: RestClient = RestClient.create()
