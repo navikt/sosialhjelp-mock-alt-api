@@ -1,6 +1,7 @@
 name: 'Dependency Submission Gradle'
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'main'
@@ -12,6 +13,6 @@ jobs:
     name: Dependency Submission Gradle
     permissions:
       contents: write
-    uses: navikt/sosialhjelp-ci/.github/workflows/dependency_submission_gradle.yml@main
+    uses: navikt/sosialhjelp-ci/.github/workflows/dependency_submission_gradle.yml@v7
     with:
       java-version: '21'
