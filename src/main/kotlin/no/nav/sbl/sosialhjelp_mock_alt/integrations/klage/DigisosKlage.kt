@@ -44,7 +44,6 @@ data class DigisosVedlegg(
     val storrelse: Long,
 )
 
-
 data class SendtKvittering(
     val sendtStatus: DigisosSendtStatus,
     val statusListe: List<DigisosSendtStatus>

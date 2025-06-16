@@ -12,31 +12,25 @@ import org.springframework.web.client.RestClient
 @AutoConfigureWebTestClient(timeout = "PT36000S")
 class KlageControllerTest {
 
-    @Autowired
-    private lateinit var webTestClient: WebTestClient
+  @Autowired private lateinit var webTestClient: WebTestClient
 
+  @Test
+  fun `Test app startup`() {
 
-    @Test
-    fun `Test app startup`() {
+    webTestClient.post().uri(sendUrl(UUID.randomUUID()))
 
-        webTestClient.post()
-            .uri(sendUrl(UUID.randomUUID()))
+    restClient.post().uri(sendUrl(UUID.randomUUID()))
+  }
 
-        restClient.post()
-            .uri(sendUrl(UUID.randomUUID()))
+  companion object {
+    private val restClient: RestClient = RestClient.create()
 
+    private val navEksternRefId: UUID = UUID.randomUUID()
+    private val digisosId: UUID = UUID.randomUUID()
+    private val kommunenummer: String = "0302"
 
-    }
+    private val baseUrl = "/digisos/klage/api/v1/$digisosId/$kommunenummer/$navEksternRefId/"
 
-
-    companion object {
-        private val restClient: RestClient = RestClient.create()
-
-        private val navEksternRefId: UUID = UUID.randomUUID()
-        private val digisosId: UUID = UUID.randomUUID()
-        private val kommunenummer: String = "0302"
-
-        private val baseUrl = "/digisos/klage/api/v1/$digisosId/$kommunenummer/$navEksternRefId/"
-        private fun sendUrl(klageId: UUID) = "$baseUrl/$klageId"
-    }
+    private fun sendUrl(klageId: UUID) = "$baseUrl/$klageId"
+  }
 }
