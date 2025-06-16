@@ -13,7 +13,6 @@ class KlageControllerTest {
 
   @Autowired private lateinit var webTestClient: WebTestClient
 
-
   companion object {
     private val restClient: RestClient = RestClient.create()
 
