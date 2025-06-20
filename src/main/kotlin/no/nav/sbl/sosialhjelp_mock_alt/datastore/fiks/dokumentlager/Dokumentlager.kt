@@ -5,7 +5,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class Dokumentlager {
-  fun save(dokumentlagerId: String, data: Any) { storage[dokumentlagerId] = data }
+  fun save(dokumentlagerId: String, data: Any) {
+    storage[dokumentlagerId] = data
+  }
 
   fun save(data: Any): UUID = UUID.randomUUID().also { storage[it.toString()] = data }
 

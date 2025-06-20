@@ -29,10 +29,9 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
   @ExceptionHandler(MissingRequiredPartException::class)
   fun handleMissingPartException(e: MissingRequiredPartException): ResponseEntity<Any> {
     log.error("Mangler obligatorisk innhold i request: ${e.message}")
-    return ResponseEntity
-      .status(HttpStatus.BAD_REQUEST)
-      .contentType(MediaType.APPLICATION_JSON)
-      .body(e.message)
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(e.message)
   }
 }
 

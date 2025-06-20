@@ -30,20 +30,21 @@ class KlageService(
 
     klageStorage.addKlage(
         digisosId = digisosId,
-        klage = DigisosKlage(
-            klageId = klageId,
-            navEksternRefId = navEksternRefId,
-            klageDokument = KlageDokument(
-                filnavn = "klage.pdf",
-                vedleggPdfDokumentId,
-                storrelse = vedleggPdfStorrelse
-            ),
-            vedlegg = vedleggSpec ?: emptyList(),
-            vedleggMetadata = vedleggJsonDokumentId,
-            metadata = klageJsonDokumentId,
-            sendtKvittering = SendtKvittering(DigisosSendtStatus("SENDT"), emptyList()),
-            trukket = false,
-        ))
+        klage =
+            DigisosKlage(
+                klageId = klageId,
+                navEksternRefId = navEksternRefId,
+                klageDokument =
+                    KlageDokument(
+                        filnavn = "klage.pdf",
+                        vedleggPdfDokumentId,
+                        storrelse = vedleggPdfStorrelse),
+                vedlegg = vedleggSpec ?: emptyList(),
+                vedleggMetadata = vedleggJsonDokumentId,
+                metadata = klageJsonDokumentId,
+                sendtKvittering = SendtKvittering(DigisosSendtStatus("SENDT"), emptyList()),
+                trukket = false,
+            ))
   }
 
   fun hentAlleKlagerForPerson(personId: String): List<DigisosKlagerMetadata> =

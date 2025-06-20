@@ -9,7 +9,8 @@ class KlageStorage {
   fun metadataExists(digisosId: UUID): Boolean = storage.any { it.fiksDigisosId == digisosId }
 
   fun addKlage(digisosId: UUID, klage: DigisosKlage) {
-    val klagerMetadata = storage.find { it.fiksDigisosId == digisosId } ?: error("Metadata finnes ikke for klage")
+    val klagerMetadata =
+        storage.find { it.fiksDigisosId == digisosId } ?: error("Metadata finnes ikke for klage")
     klagerMetadata.klager.add(klage)
   }
 

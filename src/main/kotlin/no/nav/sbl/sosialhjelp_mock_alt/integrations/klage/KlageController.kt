@@ -28,88 +28,91 @@ class KlageController(
     private val dokumentlager: Dokumentlager,
 ) {
 
-    @PostMapping("/{klageId}/vedlegg")
-    fun lastOppVedlegg(
-        @PathVariable digisosId: UUID,
-        @PathVariable kommunenummer: String,
-        @PathVariable navEksternRefId: UUID,
-        @PathVariable klageId: UUID,
-        @RequestParam body: LinkedMultiValueMap<String, Any>,
-        request: StandardMultipartHttpServletRequest,
-    ) {}
+  @PostMapping("/{klageId}/vedlegg")
+  fun lastOppVedlegg(
+      @PathVariable digisosId: UUID,
+      @PathVariable kommunenummer: String,
+      @PathVariable navEksternRefId: UUID,
+      @PathVariable klageId: UUID,
+      @RequestParam body: LinkedMultiValueMap<String, Any>,
+      request: StandardMultipartHttpServletRequest,
+  ) {}
 
-    @PostMapping("/{klageId}")
-    fun sendKlage(
-        @PathVariable digisosId: UUID,
-        @PathVariable kommunenummer: String,
-        @PathVariable navEksternRefId: UUID,
-        @PathVariable klageId: UUID,
-        request: StandardMultipartHttpServletRequest,
-    ) {
-        val personId = hentFnrFraHeadersNoDefault(request.requestHeaders) ?: hentFnrFraToken(request.requestHeaders)
+  @PostMapping("/{klageId}")
+  fun sendKlage(
+      @PathVariable digisosId: UUID,
+      @PathVariable kommunenummer: String,
+      @PathVariable navEksternRefId: UUID,
+      @PathVariable klageId: UUID,
+      request: StandardMultipartHttpServletRequest,
+  ) {
+    val personId =
+        hentFnrFraHeadersNoDefault(request.requestHeaders)
+            ?: hentFnrFraToken(request.requestHeaders)
 
-        val klagePdf = request.fileMap["klagePdf"]
+    val klagePdf =
+        request.fileMap["klagePdf"]
             ?: throw MissingRequiredPartException("Fil (klagePdf) mangler i request")
 
-        val klagePdfDokumentId = klagePdf.originalFilename?.let {
-            soknadService.leggInnIDokumentlager(it, klagePdf.bytes)
-        } ?: throw MissingRequiredPartException("Filnavn (klage.pdf) mangler i request")
+    val klagePdfDokumentId =
+        klagePdf.originalFilename?.let { soknadService.leggInnIDokumentlager(it, klagePdf.bytes) }
+            ?: throw MissingRequiredPartException("Filnavn (klage.pdf) mangler i request")
 
-        val klageJsonDokumentId = request.parameterMap["klageJson"]?.let {
-            dokumentlager.save(data = it[0])
-        } ?: throw MissingRequiredPartException("Fil (klageJson) mangler i request")
+    val klageJsonDokumentId =
+        request.parameterMap["klageJson"]?.let { dokumentlager.save(data = it[0]) }
+            ?: throw MissingRequiredPartException("Fil (klageJson) mangler i request")
 
-        val vedleggJsonDokumentId = request.parameterMap["vedleggJson"]?.let {
-            dokumentlager.save(data = it[0])
-        } ?: throw MissingRequiredPartException("Fil (vedleggJson) mangler i request")
+    val vedleggJsonDokumentId =
+        request.parameterMap["vedleggJson"]?.let { dokumentlager.save(data = it[0]) }
+            ?: throw MissingRequiredPartException("Fil (vedleggJson) mangler i request")
 
-        val mellomlagringDto = mellomlagringService.getAll(navEksternRefId.toString())
+    val mellomlagringDto = mellomlagringService.getAll(navEksternRefId.toString())
 
-        val digisosVedleggInfo =
-            mellomlagringDto?.mellomlagringMetadataList?.map { dokInfo ->
-                soknadService.leggInnIDokumentlager(
-                    vedleggsId = dokInfo.filId,
-                    filnavn = dokInfo.filnavn,
-                    bytes = mellomlagringService.get(navEksternRefId.toString(), dokInfo.filId))
+    val digisosVedleggInfo =
+        mellomlagringDto?.mellomlagringMetadataList?.map { dokInfo ->
+          soknadService.leggInnIDokumentlager(
+              vedleggsId = dokInfo.filId,
+              filnavn = dokInfo.filnavn,
+              bytes = mellomlagringService.get(navEksternRefId.toString(), dokInfo.filId))
 
-                DigisosVedlegg(
-                    filnavn = dokInfo.filnavn,
-                    dokumentlagerDokumentId = UUID.fromString(dokInfo.filId),
-                    storrelse = dokInfo.storrelse)
-            }
+          DigisosVedlegg(
+              filnavn = dokInfo.filnavn,
+              dokumentlagerDokumentId = UUID.fromString(dokInfo.filId),
+              storrelse = dokInfo.storrelse)
+        }
 
-        mellomlagringService.deleteAll(navEksternRefId.toString())
+    mellomlagringService.deleteAll(navEksternRefId.toString())
 
-        klageService.leggTilKlage(
-            digisosId = digisosId,
-            kommunenummer = kommunenummer,
-            navEksternRefId = navEksternRefId,
-            klageId = klageId,
-            personId = personId,
-            klageJsonDokumentId = klageJsonDokumentId,
-            vedleggJsonDokumentId = vedleggJsonDokumentId,
-            vedleggPdfDokumentId = UUID.fromString(klagePdfDokumentId),
-            vedleggPdfStorrelse = klagePdf.size,
-            vedleggSpec = digisosVedleggInfo)
-    }
+    klageService.leggTilKlage(
+        digisosId = digisosId,
+        kommunenummer = kommunenummer,
+        navEksternRefId = navEksternRefId,
+        klageId = klageId,
+        personId = personId,
+        klageJsonDokumentId = klageJsonDokumentId,
+        vedleggJsonDokumentId = vedleggJsonDokumentId,
+        vedleggPdfDokumentId = UUID.fromString(klagePdfDokumentId),
+        vedleggPdfStorrelse = klagePdf.size,
+        vedleggSpec = digisosVedleggInfo)
+  }
 
-    @PostMapping("/{klageId}/trekk")
-    fun trekkKlage(
-        @PathVariable digisosId: UUID,
-        @PathVariable kommunenummer: String,
-        @PathVariable navEksternRefId: UUID,
-        @PathVariable klageId: UUID,
-    ) {
-        throw NotImplementedError("Ikke en del av første versjon av Klage")
-    }
+  @PostMapping("/{klageId}/trekk")
+  fun trekkKlage(
+      @PathVariable digisosId: UUID,
+      @PathVariable kommunenummer: String,
+      @PathVariable navEksternRefId: UUID,
+      @PathVariable klageId: UUID,
+  ) {
+    throw NotImplementedError("Ikke en del av første versjon av Klage")
+  }
 
-    @GetMapping("/klager")
-    fun hentKlager(
-        @RequestHeader headers: HttpHeaders,
-    ): List<DigisosKlagerMetadata> {
-        val personId = hentFnrFraTokenNoDefault(headers) ?: hentFnrFraToken(headers)
-        return klageService.hentAlleKlagerForPerson(personId)
-    }
+  @GetMapping("/klager")
+  fun hentKlager(
+      @RequestHeader headers: HttpHeaders,
+  ): List<DigisosKlagerMetadata> {
+    val personId = hentFnrFraTokenNoDefault(headers) ?: hentFnrFraToken(headers)
+    return klageService.hentAlleKlagerForPerson(personId)
+  }
 }
 
 data class JsonKlage(
