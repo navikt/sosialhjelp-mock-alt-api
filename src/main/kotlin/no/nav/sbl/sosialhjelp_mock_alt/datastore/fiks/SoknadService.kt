@@ -36,6 +36,7 @@ import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
@@ -43,7 +44,8 @@ const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 @Service
 class SoknadService(
-    @Value("\${filter_soknader_on_fnr}") private val filter_soknader_on_fnr: Boolean,
+    @Value("\${filter_soknader_on_fnr}") private val filterSoknaderOnFnr: Boolean,
+    private val fillager: FixedFileStorage,
     private val dokumentlager: Dokumentlager,
 ) {
   companion object {
@@ -52,8 +54,6 @@ class SoknadService(
 
   private val ettersendelseFilnavn = "ettersendelse.pdf"
   private val soknadsliste: HashMap<String, DigisosSak> = HashMap()
-  //  private val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
-  private val fillager: FixedFileStorage = FixedFileStorage()
   private val ettersendelsePdfLager: FixedFileStorage = FixedFileStorage()
 
   fun hentSoknad(fiksDigisosId: String): DigisosSak? {
@@ -70,7 +70,7 @@ class SoknadService(
     }
     val soknadslisteForFnr = soknadsliste.values.filter { it.sokerFnr == fnr }.toMutableList()
     log.info("Henter søknadsliste. Antall soknader for $fnr: ${soknadslisteForFnr.size}")
-    if (filter_soknader_on_fnr) {
+    if (filterSoknaderOnFnr) {
       return soknadslisteForFnr
     }
     log.info("- returnerer fortsatt alle. Antall soknader: ${soknadsliste.size}")
@@ -264,7 +264,7 @@ class SoknadService(
 
   fun hentDokument(digisosId: String?, dokumentlagerId: String): String? {
     log.debug("Henter dokument med id: $dokumentlagerId")
-    return dokumentlager.get(dokumentlagerId) // Allerede lagret som json
+    return dokumentlager.get(dokumentlagerId) as String // Allerede lagret som json
   }
 
   private fun femMinutterForMottattSoknad(digisosApiWrapper: DigisosApiWrapper): Long {
@@ -388,7 +388,7 @@ class SoknadService(
 
     val soknadString = dokumentlager.get(digisosSak!!.digisosSoker!!.metadata)
 
-    val soknad = objectMapper.readValue(soknadString, JsonDigisosSoker::class.java)
+    val soknad = objectMapper.readValue(soknadString as String, JsonDigisosSoker::class.java)
     val saksTittelMap = HashMap<String, String>()
     soknad.hendelser
         .filter { it.type == JsonHendelse.Type.SAKS_STATUS }
@@ -404,6 +404,7 @@ class SoknadService(
   }
 }
 
+@Component
 class FixedFileStorage {
   private val maxSize = 200
   private val items: MutableList<FileEntry> = mutableListOf()

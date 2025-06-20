@@ -8,7 +8,7 @@ data class DigisosKlagerMetadata(
     val id: UUID = randomUUID(),
     val fiksDigisosId: UUID = randomUUID(),
     val personId: String,
-    val klager: List<DigisosKlage> = emptyList(),
+    val klager: MutableList<DigisosKlage> = mutableListOf(),
     val sistEndret: LocalDateTime = LocalDateTime.now(),
     val hendelserStatusList: List<HendelserSvarUt> = emptyList()
 )
@@ -34,13 +34,13 @@ data class HendelserSvarUt(
 data class KlageDokument(
     val filnavn: String,
     // id til klage.pdf
-    val dokumenlagerDokumentId: UUID = randomUUID(),
+    val dokumenlagerDokumentId: UUID,
     val storrelse: Long
 )
 
 data class DigisosVedlegg(
     val filnavn: String,
-    val dokumentlagerDokumentId: UUID = randomUUID(),
+    val dokumentlagerDokumentId: UUID,
     val storrelse: Long,
 )
 

@@ -17,7 +17,8 @@ class KlageService(
       personId: String,
       klageJsonDokumentId: UUID,
       vedleggJsonDokumentId: UUID,
-      vedleggPdfDokumentId: String,
+      vedleggPdfDokumentId: UUID,
+      vedleggPdfStorrelse: Long,
       vedleggSpec: List<DigisosVedlegg>?
   ) {
     soknadService.hentSoknad(digisosId.toString()) ?: error("Finnes ingen søknad for DigisosId")
@@ -28,10 +29,15 @@ class KlageService(
     }
 
     klageStorage.addKlage(
-        DigisosKlage(
+        digisosId = digisosId,
+        klage = DigisosKlage(
             klageId = klageId,
             navEksternRefId = navEksternRefId,
-            klageDokument = KlageDokument(filnavn = "et filnavn", storrelse = 0L),
+            klageDokument = KlageDokument(
+                filnavn = "klage.pdf",
+                vedleggPdfDokumentId,
+                storrelse = vedleggPdfStorrelse
+            ),
             vedlegg = vedleggSpec ?: emptyList(),
             vedleggMetadata = vedleggJsonDokumentId,
             metadata = klageJsonDokumentId,
@@ -47,6 +53,7 @@ class KlageService(
 data class KlageJson(
     val klageId: UUID,
     val navEksternRefId: UUID,
+    val vedtakId: UUID,
     val klageTekst: String,
 )
 
