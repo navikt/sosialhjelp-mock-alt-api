@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.aareg.AaregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
@@ -254,8 +255,10 @@ class PdlService(
     when (personalia.ektefelleType) {
       "EKTEFELLE_SAMME_BOSTED" ->
           ektefelleMap[fnr] = ektefelleSammeBosted(personalia.ektefelleFodselsdato)
+
       "EKTEFELLE_ANNET_BOSTED" ->
           ektefelleMap[fnr] = ektefelleAnnetBosted(personalia.ektefelleFodselsdato)
+
       "EKTEFELLE_MED_ADRESSEBESKYTTELSE" -> ektefelleMap[fnr] = ektefelleMedAdressebeskyttelse
       else -> ektefelleMap[fnr] = defaultEktefelle(personalia.ektefelleFodselsdato)
     }
@@ -297,7 +300,7 @@ class PdlService(
       postnummer: String = "0101",
       kommuneNummer: String = "0301",
       enhetsnummer: String = "0315",
-      adminRoller: List<AdminRolle> = emptyList()
+      adminRoller: List<AdminRolle> = emptyList(),
   ): String {
     val barnFnr = genererTilfeldigPersonnummer()
     val standardBruker =
@@ -338,9 +341,11 @@ class PdlService(
     bostotteService.enableAutoGenerationFor(brukerFnr)
     rolleService.leggTilKonfigurasjon(brukerFnr, adminRoller)
 
-    soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, brukerFnr)
+    soknadService.opprettDigisosSak(
+        enhetsnummer, kommuneNummer, brukerFnr, UUID.randomUUID().toString())
     if (fornavn == "Standard")
-        soknadService.opprettDigisosSak(enhetsnummer, kommuneNummer, brukerFnr, "15months")
+        soknadService.opprettDigisosSak(
+            enhetsnummer, kommuneNummer, brukerFnr, UUID.randomUUID().toString())
     return brukerFnr
   }
 
@@ -351,7 +356,7 @@ class PdlService(
       barnFnr2: String,
       barnFnr3: String,
       position: Long,
-      adminRoller: List<AdminRolle>
+      adminRoller: List<AdminRolle>,
   ): String {
     val standardBruker =
         Personalia(fnr = brukerFnr)
@@ -417,7 +422,7 @@ class PdlService(
     utbetalDataService.putUtbetalingerFraNav(
         brukerFnr, listOf(UtbetalDataDto(ytelseListe = ytelser)))
     bostotteService.enableAutoGenerationFor(brukerFnr)
-    soknadService.opprettDigisosSak("0315", "0301", brukerFnr, brukerFnr)
+    soknadService.opprettDigisosSak("0315", "0301", brukerFnr, UUID.randomUUID().toString())
     rolleService.leggTilKonfigurasjon(brukerFnr, adminRoller)
     return brukerFnr
   }
@@ -461,7 +466,7 @@ class PdlService(
     private fun defaultBarn(
         fornavn: String = "kid",
         etternavn: String = "McKid",
-        alder: Long = 10
+        alder: Long = 10,
     ) =
         PdlSoknadBarn(
             adressebeskyttelse = listOf(Adressebeskyttelse(Gradering.UGRADERT)),
