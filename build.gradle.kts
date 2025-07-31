@@ -23,7 +23,7 @@ repositories {
   mavenLocal()
   mavenCentral()
   maven {
-    url = uri("https://maven.pkg.github.com/navikt/sosialhjelp-common")
+    url = uri("https://maven.pkg.github.com/navikt/*")
     credentials {
       username = githubUser
       password = githubPassword
