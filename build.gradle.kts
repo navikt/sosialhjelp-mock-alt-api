@@ -1,5 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   `jvm-test-suite`
@@ -44,7 +44,6 @@ dependencies {
   implementation(libs.mock.oauth2.server)
   implementation(libs.springdoc.openapi.starter.webmvc.ui)
   implementation(libs.springdoc.openapi.starter.common)
-  implementation(libs.svarut.rest.klient)
   testImplementation(libs.spring.boot.starter.test)
 }
 
@@ -59,10 +58,10 @@ tasks.withType<DependencyUpdatesTask> {
   rejectVersionIf { candidate.version.isNonStable() && !currentVersion.isNonStable() }
 }
 
-tasks.withType<KotlinCompile> {
-  kotlinOptions {
+kotlin {
+  compilerOptions {
     freeCompilerArgs = listOf("-Xjsr305=strict")
-    jvmTarget = "21"
+    jvmTarget.set(JvmTarget.JVM_21)
   }
 }
 
@@ -77,7 +76,7 @@ spotless {
     target("*.md", ".gitignore", "Dockerfile")
 
     trimTrailingWhitespace()
-    indentWithSpaces()
+    leadingTabsToSpaces()
     endWithNewline()
   }
   kotlin { ktfmt() }
