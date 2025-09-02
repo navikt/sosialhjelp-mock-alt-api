@@ -5,6 +5,8 @@ server:
   port: 8989
   servlet:
     context-path: '/sosialhjelp/mock-alt-api'
+  tomcat:
+    max-part-count: 33
 
 spring:
   servlet:
