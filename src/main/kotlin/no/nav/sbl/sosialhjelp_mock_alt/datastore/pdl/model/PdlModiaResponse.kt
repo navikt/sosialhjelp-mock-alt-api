@@ -8,6 +8,6 @@ data class PdlModiaPerson(
     val adressebeskyttelse: List<Adressebeskyttelse>,
     val navn: List<PdlPersonNavn>,
     val kjoenn: List<PdlKjoenn>,
-    val foedsel: List<PdlFoedselsdato>,
+    val foedselsdato: List<PdlFoedselsdato>,
     val telefonnummer: List<PdlTelefonnummer>
 )

@@ -139,7 +139,7 @@ class PdlService(
                         adressebeskyttelse = listOf(Adressebeskyttelse(adressebeskyttelse)),
                         navn = listOf(navn),
                         kjoenn = listOf(kjoenn),
-                        foedsel = listOf(foedselsdato),
+                        foedselsdato = listOf(foedselsdato),
                         telefonnummer = listOf(telefonnummer))))
   }
 
