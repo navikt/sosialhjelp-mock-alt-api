@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.innsyn_api
 
 import java.util.UUID
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.dokumentlager.DokumentlagerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
@@ -22,7 +23,10 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
-class InnsynController(private val soknadService: SoknadService) {
+class InnsynController(
+    private val soknadService: SoknadService,
+    private val dokumentlagerService: DokumentlagerService,
+) {
 
   @PostMapping("/innsyn-api/api/v1/digisosapi/oppdaterDigisosSak")
   fun oppdaterSoknad(
@@ -66,7 +70,7 @@ class InnsynController(private val soknadService: SoknadService) {
   fun hentInnsynsfil(@PathVariable digisosId: String): ResponseEntity<ByteArray> {
     val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.noContent().build()
     val innsynsfil =
-        soknadService.hentDokument(digisosId, soknad.digisosSoker!!.metadata)
+        dokumentlagerService.hentDokument(digisosId, soknad.digisosSoker!!.metadata)
             ?: return ResponseEntity.noContent().build()
     return ResponseEntity.ok()
         .contentType(MediaType.APPLICATION_JSON)

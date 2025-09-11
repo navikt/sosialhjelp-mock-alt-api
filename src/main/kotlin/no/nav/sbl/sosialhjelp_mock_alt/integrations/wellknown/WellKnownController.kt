@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 class WellKnownController(
-    @Value("\${host_address}") private val hostAddress: String,
+    @param:Value("\${host_address}") private val hostAddress: String,
     private val proxyAwareResourceRetriever: ProxyAwareResourceRetriever,
     private val mockOAuth2Server: MockOAuth2Server,
 ) {

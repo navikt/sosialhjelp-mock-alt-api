@@ -38,10 +38,12 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 class LogginApiController(
     private val restTemplate: RestTemplate,
     private val pdlService: PdlService,
-    @Value("\${loginurl}") private val loginurl: String,
-    @Value("\${soknad-api-via-docker-compose}") private val soknadApiViaDockerCompose: Boolean,
-    @Value("\${innsyn-api-via-docker-compose}") private val innsynApiViaDockerCompose: Boolean,
-    @Value("\${modia-api-via-docker-compose}") private val modiaApiViaDockerCompose: Boolean,
+    @param:Value("\${loginurl}") private val loginurl: String,
+    @param:Value("\${soknad-api-via-docker-compose}")
+    private val soknadApiViaDockerCompose: Boolean,
+    @param:Value("\${innsyn-api-via-docker-compose}")
+    private val innsynApiViaDockerCompose: Boolean,
+    @param:Value("\${modia-api-via-docker-compose}") private val modiaApiViaDockerCompose: Boolean,
 ) {
   companion object {
     private val log by logger()

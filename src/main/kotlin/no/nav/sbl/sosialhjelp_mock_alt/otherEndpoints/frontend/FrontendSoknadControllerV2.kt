@@ -3,6 +3,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.dokumentlager.DokumentlagerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sbl.sosialhjelp_mock_alt.otherEndpoints.frontend.model.FrontendSoknad
@@ -21,6 +22,7 @@ class FrontendSoknadControllerV2(
     private val pdlService: PdlService,
     private val soknadService: SoknadService,
     private val soknadArchiveService: FrontendArchiveService,
+    private val dokumentlagerService: DokumentlagerService,
 ) {
   @GetMapping("{fiksDigisosId}/soknadZip", produces = ["application/zip"])
   fun getSoknadZipV2(@PathVariable fiksDigisosId: String): ResponseEntity<ByteArray> {
@@ -43,7 +45,7 @@ class FrontendSoknadControllerV2(
 
     val soknadJson =
         objectMapper.readValue(
-            soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata),
+            dokumentlagerService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata),
             JsonSoknad::class.java)
     return soknadJson
   }
@@ -56,7 +58,8 @@ class FrontendSoknadControllerV2(
 
     val vedleggJson =
         objectMapper.readValue(
-            soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata),
+            dokumentlagerService.hentDokument(
+                fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata),
             JsonVedleggSpesifikasjon::class.java)
 
     return vedleggJson

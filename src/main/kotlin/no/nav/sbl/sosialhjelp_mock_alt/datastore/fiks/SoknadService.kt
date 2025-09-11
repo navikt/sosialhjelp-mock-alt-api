@@ -7,7 +7,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.UUID
-import kotlin.collections.set
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSaksStatus
@@ -16,6 +15,9 @@ import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonFiler
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.dokumentlager.DokumentlagerService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.dokumentlager.FileEntry
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.dokumentlager.FixedFileStorage
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.SakWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.VedleggMetadata
@@ -42,7 +44,8 @@ const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 @Service
 class SoknadService(
-    @Value("\${filter_soknader_on_fnr}") private val filter_soknader_on_fnr: Boolean,
+    @param:Value("\${filter_soknader_on_fnr}") private val filter_soknader_on_fnr: Boolean,
+    private val dokumentlagerService: DokumentlagerService,
 ) {
   companion object {
     val log by logger()
@@ -50,7 +53,6 @@ class SoknadService(
 
   private val ettersendelseFilnavn = "ettersendelse.pdf"
   private val soknadsliste: HashMap<String, DigisosSak> = HashMap()
-  private val dokumentLager: HashMap<String, String> = HashMap() // Lagres som rå json
   private val fillager: FixedFileStorage = FixedFileStorage()
   private val ettersendelsePdfLager: FixedFileStorage = FixedFileStorage()
 
@@ -105,7 +107,7 @@ class SoknadService(
   }
 
   private fun toVedlegg(dokument: DokumentInfo): FrontendVedlegg {
-    val kanLastesned = hentFil(dokument.dokumentlagerDokumentId) != null
+    val kanLastesned = dokumentlagerService.hentFil(dokument.dokumentlagerDokumentId) != null
     return FrontendVedlegg(
         dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse, kanLastesned)
   }
@@ -162,7 +164,10 @@ class SoknadService(
               tilleggsinformasjon = Tilleggsinformasjon(enhetsnummer = enhetsnummer))
       val dokumentlagerId = UUID.randomUUID().toString()
       log.info("Lagrer søker dokument med dokumentlagerId: $dokumentlagerId")
-      dokumentLager[dokumentlagerId] = objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
+
+      dokumentlagerService.leggTilDokument(
+          dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
+
       val oppdatertTidspunkt =
           unixToLocalDateTime(sistEndret)
               .plusSeconds(1)
@@ -180,10 +185,14 @@ class SoknadService(
       val soknad = jsonSoknad ?: defaultJsonSoknad(fnr)
       log.debug(soknad.toString())
       val orginalSoknad = objectMapper.writeValueAsString(soknad)
-      dokumentLager[metadataId] = orginalSoknad
+
+      dokumentlagerService.leggTilDokument(metadataId, orginalSoknad)
+
       log.info("Lagrer vedleggs metadata med dokumentlagerId: $vedleggMetadataId")
       val vedlegg = jsonVedlegg ?: defaultVedleggMetadata()
-      dokumentLager[vedleggMetadataId] = objectMapper.writeValueAsString(vedlegg)
+
+      dokumentlagerService.leggTilDokument(
+          vedleggMetadataId, objectMapper.writeValueAsString(vedlegg))
     } else {
       log.info("Oppdaterer søknad med id: $fiksDigisosId")
       oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(
@@ -192,8 +201,10 @@ class SoknadService(
       if (dokumentlagerId == null) {
         dokumentlagerId = UUID.randomUUID().toString()
         log.info("Lag nytt søker dokument med dokumentlagerId: $dokumentlagerId")
-        dokumentLager[dokumentlagerId] =
-            objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
+
+        dokumentlagerService.leggTilDokument(
+            dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
+
         val updatedDigisosSak =
             oldSoknad.updateDigisosSoker(
                 DigisosSoker(dokumentlagerId, emptyList(), System.currentTimeMillis()))
@@ -203,8 +214,9 @@ class SoknadService(
         oldSoknad.digisosSoker?.copy(timestampSistOppdatert = System.currentTimeMillis())?.let {
           soknadsliste.replace(fiksDigisosId, oldSoknad.updateDigisosSoker(it))
         }
-        dokumentLager[dokumentlagerId] =
-            objectMapper.writeValueAsString(digisosApiWrapper.sak.soker)
+
+        dokumentlagerService.leggTilDokument(
+            dokumentlagerId, objectMapper.writeValueAsString(digisosApiWrapper.sak.soker))
       }
     }
     return fiksDigisosId
@@ -241,19 +253,9 @@ class SoknadService(
     return soknadsliste[id] ?: throw MockAltException("Finner ikke sak med id: $id")
   }
 
-  fun hentFil(dokumentlagerId: String): FileEntry? {
-    log.debug("Henter fil med id: $dokumentlagerId")
-    return fillager.find(dokumentlagerId)
-  }
-
   fun hentEttersendelsePdf(fiksDigisosId: String): FileEntry? {
     log.debug("Henter $ettersendelseFilnavn for id: $fiksDigisosId")
     return ettersendelsePdfLager.find(fiksDigisosId)
-  }
-
-  fun hentDokument(digisosId: String?, dokumentlagerId: String): String? {
-    log.debug("Henter dokument med id: $dokumentlagerId")
-    return dokumentLager[dokumentlagerId] // Allerede lagret som json
   }
 
   private fun femMinutterForMottattSoknad(digisosApiWrapper: DigisosApiWrapper): Long {
@@ -337,8 +339,9 @@ class SoknadService(
         }
       }
     }
-    dokumentLager[vedleggsId] =
-        objectMapper.writeValueAsString(
+
+    objectMapper
+        .writeValueAsString(
             JsonVedleggSpesifikasjon()
                 .withVedlegg(
                     listOf(
@@ -352,9 +355,11 @@ class SoknadService(
                                     JsonFiler()
                                         .withFilnavn(vedleggMetadata.filnavn)
                                         .withSha512(sha512))))))
+        .also { dokumentlagerService.leggTilDokument(vedleggsId, it) }
+
     leggVedleggTilISak(fiksDigisosId, vedleggMetadata, vedleggsId, timestamp)
     if (file != null) {
-      fillager.add(vedleggsId, vedleggMetadata.filnavn ?: file.name, file.bytes)
+      dokumentlagerService.lagreFil(vedleggsId, vedleggMetadata.filnavn ?: file.name, file.bytes)
     }
     log.info(
         "Lastet opp fil fiksDigisosId: $fiksDigisosId, filnavn: ${vedleggMetadata.filnavn}, vedleggsId: $vedleggsId")
@@ -372,7 +377,7 @@ class SoknadService(
 
   fun hentSoknadstittel(fiksDigisosId: String): String {
     val digisosSak = soknadsliste[fiksDigisosId]
-    val soknadString = dokumentLager[digisosSak!!.digisosSoker!!.metadata]
+    val soknadString = dokumentlagerService.hentDokument(null, digisosSak!!.digisosSoker!!.metadata)
     val soknad = objectMapper.readValue(soknadString, JsonDigisosSoker::class.java)
     val saksTittelMap = HashMap<String, String>()
     soknad.hendelser
@@ -388,21 +393,3 @@ class SoknadService(
     return SOKNAD_DEFAULT_TITTEL
   }
 }
-
-class FixedFileStorage {
-  private val maxSize = 200
-  private val items: MutableList<FileEntry> = mutableListOf()
-
-  fun add(key: String, fileName: String, bytes: ByteArray) {
-    while (items.size >= maxSize) {
-      items.removeAt(0)
-    }
-    items.add(FileEntry(key, fileName, bytes))
-  }
-
-  fun find(key: String): FileEntry? {
-    return items.findLast { it.key == key }
-  }
-}
-
-class FileEntry(val key: String, val filnavn: String, val bytes: ByteArray)

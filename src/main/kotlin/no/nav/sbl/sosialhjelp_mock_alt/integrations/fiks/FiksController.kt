@@ -15,6 +15,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.DokumentKrypteringsService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.KommuneInfoService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.dokumentlager.DokumentlagerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.mellomlagring.MellomlagringService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.model.JsonTilleggsinformasjon
@@ -55,6 +56,7 @@ class FiksController(
     private val pdlService: PdlService,
     private val kommuneInfoService: KommuneInfoService,
     private val mellomlagringService: MellomlagringService,
+    private val dokumentlagerService: DokumentlagerService,
 ) {
   companion object {
     private val log by logger()
@@ -82,7 +84,9 @@ class FiksController(
       @RequestHeader headers: HttpHeaders,
   ): ResponseEntity<ByteArray> {
     feilService.eventueltLagFeil(headers, "FixController", "hentSoknad")
-    val fil = soknadService.hentFil(dokumentlagerId)
+
+    val fil = dokumentlagerService.hentFil(dokumentlagerId)
+
     if (fil != null) {
       val mediaType =
           if (fil.filnavn.lowercase().endsWith(".png")) MediaType.IMAGE_PNG
@@ -96,7 +100,7 @@ class FiksController(
           .body(fil.bytes)
     }
     val dokumentString =
-        soknadService.hentDokument(null, dokumentlagerId)
+        dokumentlagerService.hentDokument(null, dokumentlagerId)
             ?: return ResponseEntity.notFound().build()
     return ResponseEntity.ok()
         .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +115,7 @@ class FiksController(
   ): ResponseEntity<String> {
     feilService.eventueltLagFeil(headers, "FixController", "hentDokument")
     val dokumentString =
-        soknadService.hentDokument(digisosId, dokumentlagerId)
+        dokumentlagerService.hentDokument(digisosId, dokumentlagerId)
             ?: return ResponseEntity.notFound().build()
     return ResponseEntity.ok(dokumentString)
   }
@@ -268,7 +272,7 @@ class FiksController(
   ): ResponseEntity<String> {
     feilService.eventueltLagFeil(headers, "FixController", "hentDokument")
     val dokumentString =
-        soknadService.hentDokument(digisosId, dokumentlagerId)
+        dokumentlagerService.hentDokument(digisosId, dokumentlagerId)
             ?: return ResponseEntity.notFound().build()
     return ResponseEntity.ok(dokumentString)
   }

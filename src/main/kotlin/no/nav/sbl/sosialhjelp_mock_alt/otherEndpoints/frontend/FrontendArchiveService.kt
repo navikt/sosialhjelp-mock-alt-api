@@ -5,6 +5,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.dokumentlager.DokumentlagerService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sosialhjelp.api.fiks.DigisosSak
 import no.nav.sosialhjelp.api.fiks.Ettersendelse
@@ -13,19 +14,21 @@ import org.springframework.stereotype.Service
 @Service
 class FrontendArchiveService(
     private val soknadService: SoknadService,
+    private val dokumentlagerService: DokumentlagerService
 ) {
   fun makeSoknadZip(soknad: DigisosSak): ByteArray {
     val fiksDigisosId = soknad.fiksDigisosId
     val bytebuffer = ByteArrayOutputStream()
     val zipArchive = ZipOutputStream(bytebuffer)
 
-    val soknadJson = soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata)
+    val soknadJson =
+        dokumentlagerService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata)
     zipArchive.putNextEntry(ZipEntry("soknad.json"))
     zipArchive.write(soknadJson!!.toByteArray())
     zipArchive.closeEntry()
 
     val vedleggJson =
-        soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata)
+        dokumentlagerService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata)
     zipArchive.putNextEntry(ZipEntry("vedlegg.json"))
     zipArchive.write(vedleggJson!!.toByteArray())
     zipArchive.closeEntry()
@@ -37,7 +40,7 @@ class FrontendArchiveService(
         .hentVedlegg(soknad)
         .filterNot { it.id in sendtViaInnsyn }
         .forEach {
-          soknadService.hentFil(it.id)?.let { fil ->
+          dokumentlagerService.hentFil(it.id)?.let { fil ->
             zipArchive.putNextEntry(ZipEntry(fil.filnavn))
             zipArchive.write(fil.bytes)
             zipArchive.closeEntry()
@@ -72,7 +75,7 @@ class FrontendArchiveService(
         ?.ettersendelser
         ?.flatMap { it.vedlegg }
         ?.forEach {
-          soknadService.hentFil(it.dokumentlagerDokumentId)?.let { fil ->
+          dokumentlagerService.hentFil(it.dokumentlagerDokumentId)?.let { fil ->
             zipArchive.putNextEntry(ZipEntry(fil.filnavn))
             zipArchive.write(fil.bytes)
             zipArchive.closeEntry()
@@ -91,7 +94,7 @@ class FrontendArchiveService(
   ): JsonVedleggSpesifikasjon? {
     val vedleggSpesifikasjoner =
         ettersendelser
-            ?.map { soknadService.hentDokument(fiksDigisosId, it.vedleggMetadata) }
+            ?.map { dokumentlagerService.hentDokument(fiksDigisosId, it.vedleggMetadata) }
             ?.map { objectMapper.readValue(it, JsonVedleggSpesifikasjon::class.java) }
 
     return JsonVedleggSpesifikasjon().withVedlegg(vedleggSpesifikasjoner?.flatMap { it.vedlegg })

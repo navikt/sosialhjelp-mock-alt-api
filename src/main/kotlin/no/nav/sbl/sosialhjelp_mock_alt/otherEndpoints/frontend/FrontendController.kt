@@ -10,6 +10,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.BostotteService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.bostotte.model.BostotteDto
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.ereg.EregService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.SoknadService
+import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.dokumentlager.DokumentlagerService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.kontonummer.KontoregisterService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.krr.KrrService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.PdlService
@@ -50,6 +51,7 @@ class FrontendController(
     private val soknadService: SoknadService,
     private val kontoregisterService: KontoregisterService,
     private val rolleService: RolleService,
+    private val dokumentlagerService: DokumentlagerService,
 ) {
   companion object {
     private val log by logger()
@@ -139,14 +141,15 @@ class FrontendController(
     val bytebuffer = ByteArrayOutputStream()
     val zipArchive = ZipOutputStream(bytebuffer)
 
-    val soknadJson = soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata)
+    val soknadJson =
+        dokumentlagerService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata)
     val soknadZip = ZipEntry("soknad.json")
     zipArchive.putNextEntry(soknadZip)
     zipArchive.write(soknadJson!!.toByteArray())
     zipArchive.closeEntry()
 
     val vedleggJson =
-        soknadService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata)
+        dokumentlagerService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata)
     val vedleggZip = ZipEntry("vedlegg.json")
     zipArchive.putNextEntry(vedleggZip)
     zipArchive.write(vedleggJson!!.toByteArray())
@@ -165,7 +168,7 @@ class FrontendController(
               (soknad.ettersendtInfoNAV?.ettersendelser?.map { it.vedleggMetadata } ?: emptyList())
         }
         .forEach { vedlegg ->
-          val fil = soknadService.hentFil(vedlegg.id)
+          val fil = dokumentlagerService.hentFil(vedlegg.id)
           if (fil != null) {
             val zipFile = ZipEntry(fil.filnavn)
             zipArchive.putNextEntry(zipFile)
@@ -207,7 +210,7 @@ class FrontendController(
         ?.ettersendelser
         ?.flatMap { it.vedlegg }
         ?.forEach {
-          val fil = soknadService.hentFil(it.dokumentlagerDokumentId)
+          val fil = dokumentlagerService.hentFil(it.dokumentlagerDokumentId)
           if (fil != null) {
             val zipFile = ZipEntry(fil.filnavn)
             zipArchive.putNextEntry(zipFile)
@@ -230,7 +233,7 @@ class FrontendController(
   ): JsonVedleggSpesifikasjon? {
     val vedleggSpesifikasjoner =
         ettersendelser
-            ?.map { soknadService.hentDokument(fiksDigisosId, it.vedleggMetadata) }
+            ?.map { dokumentlagerService.hentDokument(fiksDigisosId, it.vedleggMetadata) }
             ?.map { objectMapper.readValue(it, JsonVedleggSpesifikasjon::class.java) }
 
     return JsonVedleggSpesifikasjon().withVedlegg(vedleggSpesifikasjoner?.flatMap { it.vedlegg })
@@ -265,7 +268,7 @@ class FrontendController(
   }
 
   private fun toVedlegg(dokument: DokumentInfo): FrontendVedlegg {
-    val kanLastesned = soknadService.hentFil(dokument.dokumentlagerDokumentId) != null
+    val kanLastesned = dokumentlagerService.hentFil(dokument.dokumentlagerDokumentId) != null
     return FrontendVedlegg(
         dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse, kanLastesned)
   }
