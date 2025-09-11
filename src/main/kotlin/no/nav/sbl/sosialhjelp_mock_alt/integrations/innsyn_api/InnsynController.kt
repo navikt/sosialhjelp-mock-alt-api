@@ -28,63 +28,63 @@ class InnsynController(
     private val dokumentlagerService: DokumentlagerService,
 ) {
 
-    @PostMapping("/innsyn-api/api/v1/digisosapi/oppdaterDigisosSak")
-    fun oppdaterSoknad(
-        @RequestParam(required = false) fiksDigisosId: String?,
-        @RequestParam(required = false) fnr: String?,
-        @RequestParam(required = false) isPapirSoknad: String?,
-        @RequestBody body: String,
-        @RequestHeader headers: HttpHeaders,
-        @CookieValue(name = "localhost-idtoken") cookie: String?,
-    ): ResponseEntity<String> {
-        var id = fiksDigisosId
-        if (id == null || id == "001" || id == "002" || id == "003") {
-            id = UUID.randomUUID().toString()
-        }
-        val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
-
-        val faktiskFnr = hentFnrFraInputOrTokenOrCookieOrDefault(fnr, headers, cookie)
-        soknadService.oppdaterDigisosSak(
-            kommuneNr = "0301",
-            fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
-            fnr = faktiskFnr,
-            fiksDigisosIdInput = id,
-            digisosApiWrapper = digisosApiWrapper,
-            isPapirSoknad = isPapirSoknad.toBoolean())
-        return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
+  @PostMapping("/innsyn-api/api/v1/digisosapi/oppdaterDigisosSak")
+  fun oppdaterSoknad(
+      @RequestParam(required = false) fiksDigisosId: String?,
+      @RequestParam(required = false) fnr: String?,
+      @RequestParam(required = false) isPapirSoknad: String?,
+      @RequestBody body: String,
+      @RequestHeader headers: HttpHeaders,
+      @CookieValue(name = "localhost-idtoken") cookie: String?,
+  ): ResponseEntity<String> {
+    var id = fiksDigisosId
+    if (id == null || id == "001" || id == "002" || id == "003") {
+      id = UUID.randomUUID().toString()
     }
+    val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
 
-    @PostMapping(
-        "/innsyn-api/api/v1/digisosapi/{fiksDigisosId}/filOpplasting",
-        consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun filOpplasting(
-        @PathVariable fiksDigisosId: String,
-        @RequestParam("file") file: MultipartFile
-    ): ResponseEntity<String> {
-        val vedleggMetadata = VedleggMetadata(file.originalFilename, file.contentType, file.size)
-        val dokumentlagerId = soknadService.lastOppFil(fiksDigisosId, vedleggMetadata, file = file)
-        return ResponseEntity.ok(dokumentlagerId)
-    }
+    val faktiskFnr = hentFnrFraInputOrTokenOrCookieOrDefault(fnr, headers, cookie)
+    soknadService.oppdaterDigisosSak(
+        kommuneNr = "0301",
+        fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
+        fnr = faktiskFnr,
+        fiksDigisosIdInput = id,
+        digisosApiWrapper = digisosApiWrapper,
+        isPapirSoknad = isPapirSoknad.toBoolean())
+    return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
+  }
 
-    @GetMapping("/innsyn-api/api/v1/digisosapi/{digisosId}/innsynsfil")
-    fun hentInnsynsfil(@PathVariable digisosId: String): ResponseEntity<ByteArray> {
-        val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.noContent().build()
-        val innsynsfil =
-            dokumentlagerService.hentDokument(digisosId, soknad.digisosSoker!!.metadata)
-                ?: return ResponseEntity.noContent().build()
-        return ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(innsynsfil.toByteArray())
-    }
+  @PostMapping(
+      "/innsyn-api/api/v1/digisosapi/{fiksDigisosId}/filOpplasting",
+      consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+  fun filOpplasting(
+      @PathVariable fiksDigisosId: String,
+      @RequestParam("file") file: MultipartFile
+  ): ResponseEntity<String> {
+    val vedleggMetadata = VedleggMetadata(file.originalFilename, file.contentType, file.size)
+    val dokumentlagerId = soknadService.lastOppFil(fiksDigisosId, vedleggMetadata, file = file)
+    return ResponseEntity.ok(dokumentlagerId)
+  }
 
-    private fun hentFnrFraInputOrTokenOrCookieOrDefault(
-        fnrInput: String?,
-        headers: HttpHeaders,
-        cookie: String?
-    ): String {
-        return fnrInput
-            ?: hentFnrFraHeadersNoDefault(headers)
-            ?: hentFnrFraCookieNoDefault(cookie)
-            ?: fastFnr
-    }
+  @GetMapping("/innsyn-api/api/v1/digisosapi/{digisosId}/innsynsfil")
+  fun hentInnsynsfil(@PathVariable digisosId: String): ResponseEntity<ByteArray> {
+    val soknad = soknadService.hentSoknad(digisosId) ?: return ResponseEntity.noContent().build()
+    val innsynsfil =
+        dokumentlagerService.hentDokument(digisosId, soknad.digisosSoker!!.metadata)
+            ?: return ResponseEntity.noContent().build()
+    return ResponseEntity.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(innsynsfil.toByteArray())
+  }
+
+  private fun hentFnrFraInputOrTokenOrCookieOrDefault(
+      fnrInput: String?,
+      headers: HttpHeaders,
+      cookie: String?
+  ): String {
+    return fnrInput
+        ?: hentFnrFraHeadersNoDefault(headers)
+        ?: hentFnrFraCookieNoDefault(cookie)
+        ?: fastFnr
+  }
 }

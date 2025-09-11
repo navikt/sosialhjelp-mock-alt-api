@@ -39,8 +39,10 @@ class LogginApiController(
     private val restTemplate: RestTemplate,
     private val pdlService: PdlService,
     @param:Value("\${loginurl}") private val loginurl: String,
-    @param:Value("\${soknad-api-via-docker-compose}") private val soknadApiViaDockerCompose: Boolean,
-    @param:Value("\${innsyn-api-via-docker-compose}") private val innsynApiViaDockerCompose: Boolean,
+    @param:Value("\${soknad-api-via-docker-compose}")
+    private val soknadApiViaDockerCompose: Boolean,
+    @param:Value("\${innsyn-api-via-docker-compose}")
+    private val innsynApiViaDockerCompose: Boolean,
     @param:Value("\${modia-api-via-docker-compose}") private val modiaApiViaDockerCompose: Boolean,
 ) {
   companion object {

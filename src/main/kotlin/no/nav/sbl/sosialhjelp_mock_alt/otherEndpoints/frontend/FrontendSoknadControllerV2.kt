@@ -58,7 +58,8 @@ class FrontendSoknadControllerV2(
 
     val vedleggJson =
         objectMapper.readValue(
-            dokumentlagerService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata),
+            dokumentlagerService.hentDokument(
+                fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata),
             JsonVedleggSpesifikasjon::class.java)
 
     return vedleggJson

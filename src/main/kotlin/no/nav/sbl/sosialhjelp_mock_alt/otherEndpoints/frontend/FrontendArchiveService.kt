@@ -21,7 +21,8 @@ class FrontendArchiveService(
     val bytebuffer = ByteArrayOutputStream()
     val zipArchive = ZipOutputStream(bytebuffer)
 
-    val soknadJson = dokumentlagerService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata)
+    val soknadJson =
+        dokumentlagerService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata)
     zipArchive.putNextEntry(ZipEntry("soknad.json"))
     zipArchive.write(soknadJson!!.toByteArray())
     zipArchive.closeEntry()

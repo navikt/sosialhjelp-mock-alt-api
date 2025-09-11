@@ -6,8 +6,4 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class KlageController(
     private val klageService: KlageService,
-) {
-
-}
-
-
+) {}
