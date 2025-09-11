@@ -23,7 +23,8 @@ class MellomlagringService {
                     filId = it.filId,
                     storrelse = it.bytes.size.toLong(),
                     mimetype = it.mimeType)
-              })
+              }
+      )
     }
   }
 

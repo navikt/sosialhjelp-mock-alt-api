@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class LoginCookieController(
-    @Value("\${cookie_domain}") private val cookie_domain: String,
+    @param:Value("\${cookie_domain}") private val cookie_domain: String,
     private val mockOAuth2Server: MockOAuth2Server
 ) {
 
