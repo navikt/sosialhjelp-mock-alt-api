@@ -16,108 +16,113 @@ class FiksKlageService(
     private val dokumentlagerService: DokumentlagerService,
 ) {
 
-    val klageStorage: KlageStorageHandler = KlageStorageHandler()
+  val klageStorage: KlageStorageHandler = KlageStorageHandler()
 
-    fun hentKlager(personId: String, digisosId: UUID?): List<FiksKlageDto> {
-        return klageStorage.get(personId)
-            ?.filter { klage -> digisosId == null || klage.digisosId == digisosId }
-            ?: emptyList()
-    }
+  fun hentKlager(personId: String, digisosId: UUID?): List<FiksKlageDto> {
+    return klageStorage.get(personId)?.filter { klage ->
+      digisosId == null || klage.digisosId == digisosId
+    } ?: emptyList()
+  }
 
-    fun handleMottattKlage(
-        personId: String,
-        digisosId: UUID,
-        klageId: UUID,
-        navEksternRefId: UUID,
-        vedtakId: UUID,
-        klageFiles: KlageFiles,
-    ) {
-        val klageJsonId = UUID.randomUUID()
-            .also { dokumentlagerService.leggTilDokument(it.toString(), klageFiles.klageJson) }
+  fun handleMottattKlage(
+      personId: String,
+      digisosId: UUID,
+      klageId: UUID,
+      navEksternRefId: UUID,
+      vedtakId: UUID,
+      klageFiles: KlageFiles,
+  ) {
+    val klageJsonId =
+        UUID.randomUUID().also {
+          dokumentlagerService.leggTilDokument(it.toString(), klageFiles.klageJson)
+        }
 
-        val vedleggJsonId = UUID.randomUUID()
-            .also { dokumentlagerService.leggTilDokument(it.toString(), klageFiles.vedleggJson) }
+    val vedleggJsonId =
+        UUID.randomUUID().also {
+          dokumentlagerService.leggTilDokument(it.toString(), klageFiles.vedleggJson)
+        }
 
-        val klagePdfId = UUID.randomUUID()
-            .also {
-                dokumentlagerService.lagreFil(
-                    it.toString(),
-                    klageFiles.klagePdf.originalFilename ?: error("Mangler filnavn på klage.pdf"),
-                    klageFiles.klagePdf.bytes
-                )
-            }
+    val klagePdfId =
+        UUID.randomUUID().also {
+          dokumentlagerService.lagreFil(
+              it.toString(),
+              klageFiles.klagePdf.originalFilename ?: error("Mangler filnavn på klage.pdf"),
+              klageFiles.klagePdf.bytes)
+        }
 
-        FiksKlageDto(
+    FiksKlageDto(
             digisosId = digisosId,
             klageId = klageId,
             navEksternRefId = klageId,
             vedtakId = vedtakId,
             klageMetadata = klageJsonId,
             vedleggMetadata = vedleggJsonId,
-            klageDokument = DokumentInfoDto(
-                filnavn = klageFiles.klagePdf.originalFilename ?: error("Mangler filnavn på klage.pdf"),
-                dokumentlagerDokumentId = klagePdfId,
-                storrelse = klageFiles.klagePdf.size,
-            ),
-            sendtKvittering = SendtKvitteringDto(
-                sendtKanal = FiksProtokoll.FIKS_IO,
-                meldingId = UUID.randomUUID(),
-                sendtStatus = SendtStatusDto(
-                    status = SendtStatus.SENDT,
-                    timestamp = System.currentTimeMillis(),
+            klageDokument =
+                DokumentInfoDto(
+                    filnavn =
+                        klageFiles.klagePdf.originalFilename
+                            ?: error("Mangler filnavn på klage.pdf"),
+                    dokumentlagerDokumentId = klagePdfId,
+                    storrelse = klageFiles.klagePdf.size,
                 ),
-                statusListe = emptyList()
-            ),
+            sendtKvittering =
+                SendtKvitteringDto(
+                    sendtKanal = FiksProtokoll.FIKS_IO,
+                    meldingId = UUID.randomUUID(),
+                    sendtStatus =
+                        SendtStatusDto(
+                            status = SendtStatus.SENDT,
+                            timestamp = System.currentTimeMillis(),
+                        ),
+                    statusListe = emptyList()),
         )
-            .also { klageStorage.createKlage(personId, it) }
+        .also { klageStorage.createKlage(personId, it) }
 
+    flyttFilerFraMellomlager(navEksternRefId, klageFiles.vedleggJson)
 
-        flyttFilerFraMellomlager(navEksternRefId, klageFiles.vedleggJson)
+    logger.info("Mottatt klage for personId $personId med digisosId $digisosId og klageId $klageId")
+  }
 
-        logger.info("Mottatt klage for personId $personId med digisosId $digisosId og klageId $klageId")
-    }
+  fun handleSendEttersendelse() {}
 
-    fun handleSendEttersendelse() {
+  fun handleTrekkKlage() {}
 
-    }
+  private fun flyttFilerFraMellomlager(klageId: UUID, vedleggJson: String) {
 
-    fun handleTrekkKlage() {
+    val jsonVedlegg =
+        objectMapper.readValue(vedleggJson, JsonVedleggSpesifikasjon::class.java).let { vedleggSpec
+          ->
+          vedleggSpec.vedlegg.find { it.type == "klage" && it.klageId == klageId.toString() }
+        } ?: error("Fant ikke vedlegg spesifikasjon for klageId $klageId i vedleggJson")
 
-    }
+    if (jsonVedlegg.filer.isEmpty()) return
 
-    private fun flyttFilerFraMellomlager(klageId: UUID, vedleggJson: String) {
-
-        val jsonVedlegg = objectMapper.readValue(vedleggJson, JsonVedleggSpesifikasjon::class.java)
-            .let { vedleggSpec -> vedleggSpec.vedlegg.find { it.type == "klage" && it.klageId == klageId.toString() } }
-            ?: error("Fant ikke vedlegg spesifikasjon for klageId $klageId i vedleggJson")
-
-        if (jsonVedlegg.filer.isEmpty()) return
-
-        val mellomlagredeForKlage = mellomlagringService.getAll(klageId.toString())?.mellomlagringMetadataList
+    val mellomlagredeForKlage =
+        mellomlagringService.getAll(klageId.toString())?.mellomlagringMetadataList
             ?: error("Finner ingen mellomlagrede filer for klageId $klageId")
 
-        jsonVedlegg.validate(mellomlagredeForKlage.map { it.filnavn })
+    jsonVedlegg.validate(mellomlagredeForKlage.map { it.filnavn })
 
-        mellomlagredeForKlage.forEach { dokumentDto ->
-            val bytes = mellomlagringService.get(klageId.toString(), dokumentDto.filId)
-            dokumentlagerService.lagreFil(dokumentDto.filId, dokumentDto.filnavn, bytes)
-        }
-
-        mellomlagringService.deleteAll(klageId.toString())
+    mellomlagredeForKlage.forEach { dokumentDto ->
+      val bytes = mellomlagringService.get(klageId.toString(), dokumentDto.filId)
+      dokumentlagerService.lagreFil(dokumentDto.filId, dokumentDto.filnavn, bytes)
     }
 
-    companion object {
-        private val logger by logger()
-    }
+    mellomlagringService.deleteAll(klageId.toString())
+  }
+
+  companion object {
+    private val logger by logger()
+  }
 }
 
 private fun JsonVedlegg.validate(mellomlagredeFilnavn: List<String>) {
-    require(filer.all { mellomlagredeFilnavn.contains(it.filnavn) }) {
-        "Manglende filer i mellomlager"
-    }
+  require(filer.all { mellomlagredeFilnavn.contains(it.filnavn) }) {
+    "Manglende filer i mellomlager"
+  }
 }
 
-data class KlageFiles (
+data class KlageFiles(
     val klageJson: String,
     val vedleggJson: String,
     val klagePdf: MultipartFile,

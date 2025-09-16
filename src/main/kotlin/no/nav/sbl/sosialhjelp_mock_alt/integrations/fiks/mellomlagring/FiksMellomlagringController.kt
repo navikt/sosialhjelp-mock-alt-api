@@ -32,21 +32,22 @@ class FiksMellomlagringController(
     val dto = mellomlagringService.getAll(navEksternRefId)
     return dto?.let { ResponseEntity.ok(it) }
         ?: ResponseEntity.ok(MellomlagringDto(navEksternRefId, emptyList()))
-//        ?: ResponseEntity.of(
-//            Optional.of(
+    //        ?: ResponseEntity.of(
+    //            Optional.of(
 
-//            .body(
-//                ErrorMessage(
-//                    error = null,
-//                    errorCode = null,
-//                    errorId = null,
-//                    errorJson = null,
-//                    message = "Fant ingen data i basen knytter til angitt id'en $navEksternRefId",
-//                    originalPath = null,
-//                    path = null,
-//                    status = 400,
-//                    timestamp = null))
-//            )
+    //            .body(
+    //                ErrorMessage(
+    //                    error = null,
+    //                    errorCode = null,
+    //                    errorId = null,
+    //                    errorJson = null,
+    //                    message = "Fant ingen data i basen knytter til angitt id'en
+    // $navEksternRefId",
+    //                    originalPath = null,
+    //                    path = null,
+    //                    status = 400,
+    //                    timestamp = null))
+    //            )
   }
 
   @GetMapping("/fiks/digisos/api/v1/mellomlagring/{navEksternRefId}/{digisosDokumentId}")

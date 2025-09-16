@@ -4,22 +4,24 @@ import java.util.UUID
 
 class KlageStorageHandler {
 
-    private val storage: MutableMap<String, MutableList<FiksKlageDto>> = mutableMapOf()
+  private val storage: MutableMap<String, MutableList<FiksKlageDto>> = mutableMapOf()
 
-    fun get(personId: String): List<FiksKlageDto>? = storage[personId]
+  fun get(personId: String): List<FiksKlageDto>? = storage[personId]
 
-    fun createKlage(personId: String, klage: FiksKlageDto) {
+  fun createKlage(personId: String, klage: FiksKlageDto) {
 
-        val klageList = storage[personId] ?: mutableListOf()
-        klageList.validate(klage.klageId, personId)
+    val klageList = storage[personId] ?: mutableListOf()
+    klageList.validate(klage.klageId, personId)
 
-        klageList.add(klage)
+    klageList.add(klage)
 
-        storage[personId] = klageList
-    }
+    storage[personId] = klageList
+  }
 }
 
 private fun MutableList<FiksKlageDto>.validate(klageId: UUID, personId: String) {
-    find { it.klageId == klageId }
-        ?.let { throw IllegalStateException("Klage med id ${klageId} finnes allerede for person $personId") }
+  find { it.klageId == klageId }
+      ?.let {
+        throw IllegalStateException("Klage med id ${klageId} finnes allerede for person $personId")
+      }
 }

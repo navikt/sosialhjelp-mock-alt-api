@@ -17,60 +17,56 @@ class FiksKlageMottakController(
     private val klageService: FiksKlageService,
 ) {
 
-    @GetMapping("/fiks/digisos/klage/api/v1/klager")
-    fun returnerKlager(
-        @RequestParam("digisosId") digisosId: UUID?,
-        @RequestHeader headers: HttpHeaders,
-    ): List<FiksKlageDto> {
+  @GetMapping("/fiks/digisos/klage/api/v1/klager")
+  fun returnerKlager(
+      @RequestParam("digisosId") digisosId: UUID?,
+      @RequestHeader headers: HttpHeaders,
+  ): List<FiksKlageDto> {
 
-        val personId = hentFnrFraTokenNoDefault(headers) ?: error("Mangler fnr i token")
+    val personId = hentFnrFraTokenNoDefault(headers) ?: error("Mangler fnr i token")
 
-        return klageService.hentKlager(personId, digisosId)
-    }
+    return klageService.hentKlager(personId, digisosId)
+  }
 
-    @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/{vedtakId}")
-    fun mottaKlage(
-        @PathVariable("digisosId") digisosId: UUID,
-        @PathVariable("navEksternRefId") navEksternRefId: UUID,
-        @PathVariable("klageId") klageId: UUID,
-        @PathVariable("vedtakId") vedtakId: UUID,
-        @RequestPart("klage.json") klageJson: String,
-        @RequestPart("klage.pdf") klagePdf: MultipartFile,
-        @RequestPart("vedlegg.json") vedleggJson: String,
-        @RequestHeader headers: HttpHeaders,
-    ) {
-        val personId = hentFnrFraTokenNoDefault(headers) ?: error("Mangler fnr i token")
+  @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/{vedtakId}")
+  fun mottaKlage(
+      @PathVariable("digisosId") digisosId: UUID,
+      @PathVariable("navEksternRefId") navEksternRefId: UUID,
+      @PathVariable("klageId") klageId: UUID,
+      @PathVariable("vedtakId") vedtakId: UUID,
+      @RequestPart("klage.json") klageJson: String,
+      @RequestPart("klage.pdf") klagePdf: MultipartFile,
+      @RequestPart("vedlegg.json") vedleggJson: String,
+      @RequestHeader headers: HttpHeaders,
+  ) {
+    val personId = hentFnrFraTokenNoDefault(headers) ?: error("Mangler fnr i token")
 
-        klageService.handleMottattKlage(
-            personId,
-            digisosId,
-            klageId,
-            navEksternRefId,
-            vedtakId,
-            KlageFiles(
-                klageJson,
-                vedleggJson,
-                klagePdf)
-        )
-    }
+    klageService.handleMottattKlage(
+        personId,
+        digisosId,
+        klageId,
+        navEksternRefId,
+        vedtakId,
+        KlageFiles(klageJson, vedleggJson, klagePdf))
+  }
 
-    @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/vedlegg")
-    fun mottaEttersendelse(
-        @PathVariable("digisosId") digisosId: UUID,
-        @PathVariable("navEksternRefId") navEksternRefId: UUID,
-        @PathVariable("klageId") klageId: UUID,
-    ) {
-        TODO("Send ettersendelse")
-    }
+  @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/vedlegg")
+  fun mottaEttersendelse(
+      @PathVariable("digisosId") digisosId: UUID,
+      @PathVariable("navEksternRefId") navEksternRefId: UUID,
+      @PathVariable("klageId") klageId: UUID,
+  ) {
+    TODO("Send ettersendelse")
+  }
 
-    @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/trekk")
-    fun mottaTrekkKlage(
-        @PathVariable("digisosId") digisosId: UUID,
-        @PathVariable("navEksternRefId") navEksternRefId: UUID,
-        @PathVariable("klageId") klageId: UUID,
-    ) {
-        TODO ("Trekk klage")
-    }
+  @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/trekk")
+  fun mottaTrekkKlage(
+      @PathVariable("digisosId") digisosId: UUID,
+      @PathVariable("navEksternRefId") navEksternRefId: UUID,
+      @PathVariable("klageId") klageId: UUID,
+  ) {
+    TODO("Trekk klage")
+  }
 }
 
 data class FiksKlageDto(
@@ -83,15 +79,17 @@ data class FiksKlageDto(
     val vedleggMetadata: UUID, // id til vedlegg.json (jsonVedleggSpec) i dokumentlager
     val klageDokument: DokumentInfoDto, // id til klage.pdf i dokumentlager
     val trekkKlageInfo: TrekkKlageInfoDto? = null,
-    val sendtKvittering: SendtKvitteringDto = SendtKvitteringDto(
-        sendtKanal = FiksProtokoll.FIKS_IO,
-        meldingId = UUID.randomUUID(),
-        sendtStatus = SendtStatusDto(
-            status = SendtStatus.SENDT,
-            timestamp = System.currentTimeMillis(),
+    val sendtKvittering: SendtKvitteringDto =
+        SendtKvitteringDto(
+            sendtKanal = FiksProtokoll.FIKS_IO,
+            meldingId = UUID.randomUUID(),
+            sendtStatus =
+                SendtStatusDto(
+                    status = SendtStatus.SENDT,
+                    timestamp = System.currentTimeMillis(),
+                ),
+            statusListe = emptyList(),
         ),
-        statusListe = emptyList(),
-    ),
     val ettersendtInfoNAV: EttersendtInfoNAVDto = EttersendtInfoNAVDto(emptyList()),
     val trukket: Boolean = false,
 )
@@ -135,16 +133,16 @@ data class SendtStatusDto(
 )
 
 enum class SendtStatus {
-    SENDT,
-    BEKREFTET,
-    TTL_TIDSAVBRUDD,
-    MAX_RETRIESAVBRUDD,
-    IKKE_SENDT,
-    SVARUT_FEIL,
-    STOPPET,
+  SENDT,
+  BEKREFTET,
+  TTL_TIDSAVBRUDD,
+  MAX_RETRIESAVBRUDD,
+  IKKE_SENDT,
+  SVARUT_FEIL,
+  STOPPET,
 }
 
 enum class FiksProtokoll {
-    FIKS_IO,
-    SVARUT,
+  FIKS_IO,
+  SVARUT,
 }
