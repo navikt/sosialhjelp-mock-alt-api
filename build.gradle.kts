@@ -31,6 +31,12 @@ repositories {
   }
 }
 
+configurations {
+  testImplementation {
+    exclude(group = "org.mockito")
+  }
+}
+
 dependencies {
   implementation(kotlin("reflect"))
 

@@ -18,14 +18,17 @@ class FiksKlageService(
 
     val klageStorage: KlageStorageHandler = KlageStorageHandler()
 
-    fun hentKlager(personId: String): List<FiksKlageDto> {
-        TODO("Finn klager basert på person + digisosId hvis den følger med")
+    fun hentKlager(personId: String, digisosId: UUID?): List<FiksKlageDto> {
+        return klageStorage.get(personId)
+            ?.filter { klage -> digisosId == null || klage.digisosId == digisosId }
+            ?: emptyList()
     }
 
     fun handleMottattKlage(
         personId: String,
         digisosId: UUID,
         klageId: UUID,
+        navEksternRefId: UUID,
         vedtakId: UUID,
         klageFiles: KlageFiles,
     ) {
@@ -69,7 +72,9 @@ class FiksKlageService(
             .also { klageStorage.createKlage(personId, it) }
 
 
-        flyttFilerFraMellomlager(klageId, klageFiles.vedleggJson)
+        flyttFilerFraMellomlager(navEksternRefId, klageFiles.vedleggJson)
+
+        logger.info("Mottatt klage for personId $personId med digisosId $digisosId og klageId $klageId")
     }
 
     fun handleSendEttersendelse() {

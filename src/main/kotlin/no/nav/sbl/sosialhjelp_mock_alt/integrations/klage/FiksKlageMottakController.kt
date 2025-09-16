@@ -20,8 +20,12 @@ class FiksKlageMottakController(
     @GetMapping("/fiks/digisos/klage/api/v1/klager")
     fun returnerKlager(
         @RequestParam("digisosId") digisosId: UUID?,
-    ): FiksKlageDto {
-        TODO ("Finn klager basert på person + digisosId hvis den følger med")
+        @RequestHeader headers: HttpHeaders,
+    ): List<FiksKlageDto> {
+
+        val personId = hentFnrFraTokenNoDefault(headers) ?: error("Mangler fnr i token")
+
+        return klageService.hentKlager(personId, digisosId)
     }
 
     @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/{vedtakId}")
@@ -41,6 +45,7 @@ class FiksKlageMottakController(
             personId,
             digisosId,
             klageId,
+            navEksternRefId,
             vedtakId,
             KlageFiles(
                 klageJson,
