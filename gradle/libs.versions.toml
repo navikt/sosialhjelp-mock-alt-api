@@ -7,7 +7,7 @@ filformat = "1.2025.07.30-13.34-d9f62af5ba3c"
 token_validation = "5.0.30"
 jackson = "2.19.1"
 springdoc = "2.8.9"
-mock_oauth2_server = "2.2.1"
+mock_oauth2_server = "3.0.0"
 spotless = "7.2.1"
 versions = "0.52.0"
 
