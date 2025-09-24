@@ -1,5 +1,13 @@
 package no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks
 
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.UUID
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonFilreferanse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
@@ -37,21 +45,13 @@ import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
-import java.util.UUID
 
 const val SOKNAD_DEFAULT_TITTEL = "Søknad om økonomisk sosialhjelp"
 
 @Service
 class SoknadService(
-  @param:Value("\${filter_soknader_on_fnr}") private val filter_soknader_on_fnr: Boolean,
-  private val dokumentlagerService: DokumentlagerService,
+    @param:Value("\${filter_soknader_on_fnr}") private val filter_soknader_on_fnr: Boolean,
+    private val dokumentlagerService: DokumentlagerService,
 ) {
   companion object {
     val log by logger()
@@ -84,11 +84,11 @@ class SoknadService(
   }
 
   fun opprettDigisosSak(
-    fiksOrgId: String,
-    kommuneNr: String,
-    fnr: String,
-    id: String,
-    mockedSoknadState: MockedSoknadState = MockedSoknadState.MOTTATT,
+      fiksOrgId: String,
+      kommuneNr: String,
+      fnr: String,
+      id: String,
+      mockedSoknadState: MockedSoknadState = MockedSoknadState.MOTTATT,
   ) {
     val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
     var hendelsestidspunkt = ZonedDateTime.now(ZoneOffset.UTC)
@@ -99,41 +99,39 @@ class SoknadService(
     leggHendelserTilSak(digisosApiWrapper, hendelsestidspunkt, mockedSoknadState)
 
     oppdaterDigisosSak(
-      kommuneNr = kommuneNr,
-      fiksOrgId = fiksOrgId,
-      fnr = fnr,
-      fiksDigisosIdInput = id,
-      digisosApiWrapper = digisosApiWrapper,
+        kommuneNr = kommuneNr,
+        fiksOrgId = fiksOrgId,
+        fnr = fnr,
+        fiksDigisosIdInput = id,
+        digisosApiWrapper = digisosApiWrapper,
     )
   }
 
   private fun leggHendelserTilSak(
-    digisosApiWrapper: DigisosApiWrapper,
-    hendelsestidspunkt: ZonedDateTime,
-    mockedSoknadState: MockedSoknadState,
+      digisosApiWrapper: DigisosApiWrapper,
+      hendelsestidspunkt: ZonedDateTime,
+      mockedSoknadState: MockedSoknadState,
   ) {
     digisosApiWrapper.sak.soker.hendelser.add(
-      JsonSoknadsStatus()
-        .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
-        .withType(JsonHendelse.Type.SOKNADS_STATUS)
-        .withStatus(JsonSoknadsStatus.Status.MOTTATT),
+        JsonSoknadsStatus()
+            .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
+            .withType(JsonHendelse.Type.SOKNADS_STATUS)
+            .withStatus(JsonSoknadsStatus.Status.MOTTATT),
     )
 
     if (mockedSoknadState == MockedSoknadState.MOTTATT) return
 
     digisosApiWrapper.sak.soker.hendelser.add(
-      JsonSoknadsStatus()
-        .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
-        .withType(JsonHendelse.Type.SOKNADS_STATUS)
-        .withStatus(
-          if (mockedSoknadState ==
-            MockedSoknadState.UNDER_BEHANDLING
-          ) {
-            JsonSoknadsStatus.Status.UNDER_BEHANDLING
-          } else {
-            JsonSoknadsStatus.Status.FERDIGBEHANDLET
-          },
-        ),
+        JsonSoknadsStatus()
+            .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
+            .withType(JsonHendelse.Type.SOKNADS_STATUS)
+            .withStatus(
+                if (mockedSoknadState == MockedSoknadState.UNDER_BEHANDLING) {
+                  JsonSoknadsStatus.Status.UNDER_BEHANDLING
+                } else {
+                  JsonSoknadsStatus.Status.FERDIGBEHANDLET
+                },
+            ),
     )
 
     if (mockedSoknadState == MockedSoknadState.UNDER_BEHANDLING) return
@@ -141,49 +139,52 @@ class SoknadService(
     val saksReferanse = UUID.randomUUID().toString()
 
     digisosApiWrapper.sak.soker.hendelser.add(
-      JsonSaksStatus()
-        .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
-        .withReferanse(saksReferanse)
-        .withType(JsonHendelse.Type.SAKS_STATUS)
-        .withTittel("Livsopphold")
-        .withStatus(JsonSaksStatus.Status.UNDER_BEHANDLING),
+        JsonSaksStatus()
+            .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
+            .withReferanse(saksReferanse)
+            .withType(JsonHendelse.Type.SAKS_STATUS)
+            .withTittel("Livsopphold")
+            .withStatus(JsonSaksStatus.Status.UNDER_BEHANDLING),
     )
 
     digisosApiWrapper.sak.soker.hendelser.add(
-      JsonVedtakFattet()
-        .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
-        .withSaksreferanse(saksReferanse)
-        .withType(JsonHendelse.Type.VEDTAK_FATTET)
-        .withUtfall(
-          if (mockedSoknadState ==
-            MockedSoknadState.AVVIST
-          ) {
-            JsonVedtakFattet.Utfall.AVVIST
-          } else {
-            JsonVedtakFattet.Utfall.INNVILGET
-          },
-        ).withVedtaksfil(
-          JsonVedtaksfil().withReferanse(
-            JsonDokumentlagerFilreferanse()
-              .withType(
-                JsonFilreferanse.Type.DOKUMENTLAGER,
-              ).withId(UUID.randomUUID().toString()),
-          ),
-        ),
+        JsonVedtakFattet()
+            .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
+            .withSaksreferanse(saksReferanse)
+            .withType(JsonHendelse.Type.VEDTAK_FATTET)
+            .withUtfall(
+                if (mockedSoknadState == MockedSoknadState.AVVIST) {
+                  JsonVedtakFattet.Utfall.AVVIST
+                } else {
+                  JsonVedtakFattet.Utfall.INNVILGET
+                },
+            )
+            .withVedtaksfil(
+                JsonVedtaksfil()
+                    .withReferanse(
+                        JsonDokumentlagerFilreferanse()
+                            .withType(
+                                JsonFilreferanse.Type.DOKUMENTLAGER,
+                            )
+                            .withId(UUID.randomUUID().toString()),
+                    ),
+            ),
     )
 
     if (mockedSoknadState == MockedSoknadState.INNVILGET) {
       listOf(-365, -60, -30, 10, 30).map { offset ->
         digisosApiWrapper.sak.soker.hendelser.add(
-          JsonUtbetaling()
-            .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
-            .withType(JsonHendelse.Type.UTBETALING)
-            .withUtbetalingsreferanse(UUID.randomUUID().toString())
-            .withSaksreferanse(saksReferanse)
-            .withStatus(if (offset > 0) JsonUtbetaling.Status.PLANLAGT_UTBETALING else JsonUtbetaling.Status.UTBETALT)
-            .withBelop(2300.00 + offset)
-            .withUtbetalingsdato(LocalDate.now().plusDays(offset.toLong()).toString())
-            .withForfallsdato(LocalDate.now().plusDays(offset.toLong() + 5).toString()),
+            JsonUtbetaling()
+                .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
+                .withType(JsonHendelse.Type.UTBETALING)
+                .withUtbetalingsreferanse(UUID.randomUUID().toString())
+                .withSaksreferanse(saksReferanse)
+                .withStatus(
+                    if (offset > 0) JsonUtbetaling.Status.PLANLAGT_UTBETALING
+                    else JsonUtbetaling.Status.UTBETALT)
+                .withBelop(2300.00 + offset)
+                .withUtbetalingsdato(LocalDate.now().plusDays(offset.toLong()).toString())
+                .withForfallsdato(LocalDate.now().plusDays(offset.toLong() + 5).toString()),
         )
       }
     }
@@ -192,9 +193,9 @@ class SoknadService(
   fun hentVedlegg(sak: DigisosSak): List<FrontendVedlegg> {
     val initialVedlegg = sak.digisosSoker?.dokumenter?.map { toVedlegg(it) } ?: emptyList()
     val ettersendteVedlegg =
-      sak.ettersendtInfoNAV?.ettersendelser?.flatMap { ettersendelse ->
-        ettersendelse.vedlegg.map { toVedlegg(it) }
-      } ?: emptyList()
+        sak.ettersendtInfoNAV?.ettersendelser?.flatMap { ettersendelse ->
+          ettersendelse.vedlegg.map { toVedlegg(it) }
+        } ?: emptyList()
 
     return initialVedlegg + ettersendteVedlegg
   }
@@ -202,25 +203,25 @@ class SoknadService(
   private fun toVedlegg(dokument: DokumentInfo): FrontendVedlegg {
     val kanLastesned = dokumentlagerService.hentFil(dokument.dokumentlagerDokumentId) != null
     return FrontendVedlegg(
-      dokument.filnavn,
-      dokument.dokumentlagerDokumentId,
-      dokument.storrelse,
-      kanLastesned,
+        dokument.filnavn,
+        dokument.dokumentlagerDokumentId,
+        dokument.storrelse,
+        kanLastesned,
     )
   }
 
   fun oppdaterDigisosSak(
-    kommuneNr: String,
-    fiksOrgId: String?,
-    fnr: String,
-    fiksDigisosIdInput: String?,
-    digisosApiWrapper: DigisosApiWrapper,
-    enhetsnummer: String = "0315",
-    jsonSoknad: JsonSoknad? = null,
-    jsonVedlegg: JsonVedleggSpesifikasjon? = null,
-    dokumenter: MutableList<DokumentInfo> = mutableListOf(),
-    soknadDokument: DokumentInfo? = null,
-    isPapirSoknad: Boolean = false,
+      kommuneNr: String,
+      fiksOrgId: String?,
+      fnr: String,
+      fiksDigisosIdInput: String?,
+      digisosApiWrapper: DigisosApiWrapper,
+      enhetsnummer: String = "0315",
+      jsonSoknad: JsonSoknad? = null,
+      jsonVedlegg: JsonVedleggSpesifikasjon? = null,
+      dokumenter: MutableList<DokumentInfo> = mutableListOf(),
+      soknadDokument: DokumentInfo? = null,
+      isPapirSoknad: Boolean = false,
   ): String? {
     var fiksDigisosId = fiksDigisosIdInput
     if (fiksDigisosId == null) {
@@ -238,52 +239,52 @@ class SoknadService(
       }
       val vedleggMetadataId = UUID.randomUUID().toString()
       val digisosSak =
-        DigisosSak(
-          fiksDigisosId = fiksDigisosId,
-          sokerFnr = fnr,
-          fiksOrgId = fiksOrgId ?: "",
-          kommunenummer = kommuneNr,
-          sistEndret = sistEndret,
-          originalSoknadNAV =
-            if (isPapirSoknad) {
-              null
-            } else {
-              OriginalSoknadNAV(
-                navEksternRefId = "110000000",
-                metadata = metadataId,
-                vedleggMetadata = vedleggMetadataId,
-                soknadDokument = soknadDokument ?: DokumentInfo("", "", 0L),
-                vedlegg = emptyList(),
-                timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper),
-              )
-            },
-          ettersendtInfoNAV = EttersendtInfoNAV(emptyList()),
-          digisosSoker = null,
-          tilleggsinformasjon = Tilleggsinformasjon(enhetsnummer = enhetsnummer),
-        )
+          DigisosSak(
+              fiksDigisosId = fiksDigisosId,
+              sokerFnr = fnr,
+              fiksOrgId = fiksOrgId ?: "",
+              kommunenummer = kommuneNr,
+              sistEndret = sistEndret,
+              originalSoknadNAV =
+                  if (isPapirSoknad) {
+                    null
+                  } else {
+                    OriginalSoknadNAV(
+                        navEksternRefId = "110000000",
+                        metadata = metadataId,
+                        vedleggMetadata = vedleggMetadataId,
+                        soknadDokument = soknadDokument ?: DokumentInfo("", "", 0L),
+                        vedlegg = emptyList(),
+                        timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper),
+                    )
+                  },
+              ettersendtInfoNAV = EttersendtInfoNAV(emptyList()),
+              digisosSoker = null,
+              tilleggsinformasjon = Tilleggsinformasjon(enhetsnummer = enhetsnummer),
+          )
       val dokumentlagerId = UUID.randomUUID().toString()
       log.info("Lagrer søker dokument med dokumentlagerId: $dokumentlagerId")
 
       dokumentlagerService.leggTilDokument(
-        dokumentlagerId,
-        objectMapper.writeValueAsString(digisosApiWrapper.sak.soker),
+          dokumentlagerId,
+          objectMapper.writeValueAsString(digisosApiWrapper.sak.soker),
       )
 
       val oppdatertTidspunkt =
-        unixToLocalDateTime(sistEndret)
-          .plusSeconds(1)
-          .atZone(ZoneId.of("Europe/Oslo"))
-          .toInstant()
-          .toEpochMilli()
+          unixToLocalDateTime(sistEndret)
+              .plusSeconds(1)
+              .atZone(ZoneId.of("Europe/Oslo"))
+              .toInstant()
+              .toEpochMilli()
       val updatedDigisosSak =
-        digisosSak.updateDigisosSoker(
-          DigisosSoker(dokumentlagerId, dokumenter, oppdatertTidspunkt),
-        )
+          digisosSak.updateDigisosSoker(
+              DigisosSoker(dokumentlagerId, dokumenter, oppdatertTidspunkt),
+          )
       log.info("Lagrer søknad fiksDigisosId: $fiksDigisosId")
       log.debug(updatedDigisosSak.toString())
       soknadsliste[fiksDigisosId] = updatedDigisosSak
       log.info(
-        "Lagrer orginalsøknad (med bare default verdier) med dokumentlagerId: $fiksDigisosId",
+          "Lagrer orginalsøknad (med bare default verdier) med dokumentlagerId: $fiksDigisosId",
       )
       val soknad = jsonSoknad ?: defaultJsonSoknad(fnr)
       log.debug(soknad.toString())
@@ -295,14 +296,14 @@ class SoknadService(
       val vedlegg = jsonVedlegg ?: defaultVedleggMetadata()
 
       dokumentlagerService.leggTilDokument(
-        vedleggMetadataId,
-        objectMapper.writeValueAsString(vedlegg),
+          vedleggMetadataId,
+          objectMapper.writeValueAsString(vedlegg),
       )
     } else {
       log.info("Oppdaterer søknad med id: $fiksDigisosId")
       oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(
-        fiksDigisosId,
-        digisosApiWrapper,
+          fiksDigisosId,
+          digisosApiWrapper,
       )
       var dokumentlagerId = oldSoknad.digisosSoker?.metadata
       if (dokumentlagerId == null) {
@@ -310,14 +311,14 @@ class SoknadService(
         log.info("Lag nytt søker dokument med dokumentlagerId: $dokumentlagerId")
 
         dokumentlagerService.leggTilDokument(
-          dokumentlagerId,
-          objectMapper.writeValueAsString(digisosApiWrapper.sak.soker),
+            dokumentlagerId,
+            objectMapper.writeValueAsString(digisosApiWrapper.sak.soker),
         )
 
         val updatedDigisosSak =
-          oldSoknad.updateDigisosSoker(
-            DigisosSoker(dokumentlagerId, emptyList(), System.currentTimeMillis()),
-          )
+            oldSoknad.updateDigisosSoker(
+                DigisosSoker(dokumentlagerId, emptyList(), System.currentTimeMillis()),
+            )
         soknadsliste.replace(fiksDigisosId, updatedDigisosSak)
       } else {
         log.info("Oppdaterer søker dokument med dokumentlagerId: $dokumentlagerId")
@@ -326,8 +327,8 @@ class SoknadService(
         }
 
         dokumentlagerService.leggTilDokument(
-          dokumentlagerId,
-          objectMapper.writeValueAsString(digisosApiWrapper.sak.soker),
+            dokumentlagerId,
+            objectMapper.writeValueAsString(digisosApiWrapper.sak.soker),
         )
       }
     }
@@ -337,21 +338,21 @@ class SoknadService(
   private fun defaultVedleggMetadata(): JsonVedleggSpesifikasjon = JsonVedleggSpesifikasjon()
 
   private fun leggVedleggTilISak(
-    id: String,
-    nyttVedlegg: VedleggMetadata,
-    dokumentId: String,
-    timestamp: Long,
+      id: String,
+      nyttVedlegg: VedleggMetadata,
+      dokumentId: String,
+      timestamp: Long,
   ) {
     if (!nyttVedlegg.filnavn!!.contentEquals(ettersendelseFilnavn)) {
       val digisosSak = hentSak(id)
       val idNumber =
-        (digisosSak.ettersendtInfoNAV!!.ettersendelser.size + 1).toString().padStart(4, '0')
+          (digisosSak.ettersendtInfoNAV!!.ettersendelser.size + 1).toString().padStart(4, '0')
       val navEksternRefId = "ettersendelseNavEksternRef$idNumber"
       val dokumentInfo = DokumentInfo(nyttVedlegg.filnavn, dokumentId, nyttVedlegg.storrelse)
       val ettersendelse =
-        Ettersendelse(navEksternRefId, dokumentId, listOf(dokumentInfo), timestamp)
+          Ettersendelse(navEksternRefId, dokumentId, listOf(dokumentInfo), timestamp)
       val nyListe: List<Ettersendelse> =
-        listOf(digisosSak.ettersendtInfoNAV!!.ettersendelser, listOf(ettersendelse)).flatten()
+          listOf(digisosSak.ettersendtInfoNAV!!.ettersendelser, listOf(ettersendelse)).flatten()
 
       val updatedDigisosSak = digisosSak.updateEttersendtInfoNAV(EttersendtInfoNAV(nyListe))
       soknadsliste[id] = updatedDigisosSak
@@ -370,63 +371,62 @@ class SoknadService(
 
   private fun femMinutterForMottattSoknad(digisosApiWrapper: DigisosApiWrapper): Long {
     val mottattTidspunkt =
-      digisosApiWrapper.sak.soker.hendelser
-        .minByOrNull { it.hendelsestidspunkt }!!
-        .hendelsestidspunkt
+        digisosApiWrapper.sak.soker.hendelser
+            .minByOrNull { it.hendelsestidspunkt }!!
+            .hendelsestidspunkt
     return try {
       mottattTidspunkt
-        .toLocalDateTime()
-        .minusMinutes(5)
-        .atZone(ZoneId.of("Europe/Oslo"))
-        .toInstant()
-        .toEpochMilli()
+          .toLocalDateTime()
+          .minusMinutes(5)
+          .atZone(ZoneId.of("Europe/Oslo"))
+          .toInstant()
+          .toEpochMilli()
     } catch (e: DateTimeParseException) {
-      LocalDateTime
-        .now()
-        .minusMinutes(5)
-        .atZone(ZoneId.of("Europe/Oslo"))
-        .toInstant()
-        .toEpochMilli()
+      LocalDateTime.now()
+          .minusMinutes(5)
+          .atZone(ZoneId.of("Europe/Oslo"))
+          .toInstant()
+          .toEpochMilli()
     }
   }
 
   private fun oppdaterOriginalSoknadNavHvisTimestampSendtIkkeErFoerTidligsteHendelse(
-    id: String,
-    digisosApiWrapper: DigisosApiWrapper,
+      id: String,
+      digisosApiWrapper: DigisosApiWrapper,
   ) {
     val digisosSak = hentSak(id)
     val timestampSendt = digisosSak.originalSoknadNAV?.timestampSendt
     val tidligsteHendelsetidspunkt =
-      digisosApiWrapper.sak.soker.hendelser
-        .minByOrNull { it.hendelsestidspunkt }!!
-        .hendelsestidspunkt
+        digisosApiWrapper.sak.soker.hendelser
+            .minByOrNull { it.hendelsestidspunkt }!!
+            .hendelsestidspunkt
     if (timestampSendt != null &&
-      unixToLocalDateTime(timestampSendt).isAfter(tidligsteHendelsetidspunkt.toLocalDateTime())
-    ) {
+        unixToLocalDateTime(timestampSendt).isAfter(tidligsteHendelsetidspunkt.toLocalDateTime())) {
       val oppdatertDigisosSak =
-        digisosSak.updateOriginalSoknadNAV(
-          digisosSak.originalSoknadNAV!!.copy(
-            timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper),
-          ),
-        )
+          digisosSak.updateOriginalSoknadNAV(
+              digisosSak.originalSoknadNAV!!.copy(
+                  timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper),
+              ),
+          )
       soknadsliste[id] = oppdatertDigisosSak
     }
   }
 
-  fun DigisosSak.updateDigisosSoker(digisosSoker: DigisosSoker): DigisosSak = this.copy(digisosSoker = digisosSoker)
+  fun DigisosSak.updateDigisosSoker(digisosSoker: DigisosSoker): DigisosSak =
+      this.copy(digisosSoker = digisosSoker)
 
   fun DigisosSak.updateOriginalSoknadNAV(originalSoknadNAV: OriginalSoknadNAV): DigisosSak =
-    this.copy(originalSoknadNAV = originalSoknadNAV)
+      this.copy(originalSoknadNAV = originalSoknadNAV)
 
   fun DigisosSak.updateEttersendtInfoNAV(ettersendtInfoNAV: EttersendtInfoNAV): DigisosSak =
-    this.copy(ettersendtInfoNAV = ettersendtInfoNAV)
+      this.copy(ettersendtInfoNAV = ettersendtInfoNAV)
 
   fun lastOppFil(
-    fiksDigisosId: String,
-    vedleggMetadata: VedleggMetadata,
-    vedleggsJson: JsonVedleggSpesifikasjon? = null,
-    timestamp: Long = DateTime.now().millis,
-    file: MultipartFile? = null,
+      fiksDigisosId: String,
+      vedleggMetadata: VedleggMetadata,
+      vedleggsJson: JsonVedleggSpesifikasjon? = null,
+      timestamp: Long = DateTime.now().millis,
+      file: MultipartFile? = null,
   ): String {
     val vedleggsId = UUID.randomUUID().toString()
     var vedleggsInfo: JsonVedlegg? = null
@@ -438,53 +438,54 @@ class SoknadService(
         }
       } else {
         vedleggsInfo =
-          vedleggsJson.vedlegg.firstOrNull { jsonVedlegg ->
-            jsonVedlegg.filer.any { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }
-          }
+            vedleggsJson.vedlegg.firstOrNull { jsonVedlegg ->
+              jsonVedlegg.filer.any { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }
+            }
         if (vedleggsInfo != null) {
           sha512 =
-            vedleggsInfo.filer
-              .first { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }
-              .sha512
+              vedleggsInfo.filer
+                  .first { it.filnavn!!.contentEquals(vedleggMetadata.filnavn) }
+                  .sha512
         }
       }
     }
 
     objectMapper
-      .writeValueAsString(
-        JsonVedleggSpesifikasjon()
-          .withVedlegg(
-            listOf(
-              JsonVedlegg()
-                .withType(vedleggsInfo?.type ?: "annet")
-                .withTilleggsinfo(vedleggsInfo?.tilleggsinfo)
-                .withStatus(vedleggsInfo?.status ?: "LastetOpp")
-                .withHendelseType(vedleggsInfo?.hendelseType)
-                .withFiler(
-                  listOf(
-                    JsonFiler()
-                      .withFilnavn(vedleggMetadata.filnavn)
-                      .withSha512(sha512),
-                  ),
+        .writeValueAsString(
+            JsonVedleggSpesifikasjon()
+                .withVedlegg(
+                    listOf(
+                        JsonVedlegg()
+                            .withType(vedleggsInfo?.type ?: "annet")
+                            .withTilleggsinfo(vedleggsInfo?.tilleggsinfo)
+                            .withStatus(vedleggsInfo?.status ?: "LastetOpp")
+                            .withHendelseType(vedleggsInfo?.hendelseType)
+                            .withFiler(
+                                listOf(
+                                    JsonFiler()
+                                        .withFilnavn(vedleggMetadata.filnavn)
+                                        .withSha512(sha512),
+                                ),
+                            ),
+                    ),
                 ),
-            ),
-          ),
-      ).also { dokumentlagerService.leggTilDokument(vedleggsId, it) }
+        )
+        .also { dokumentlagerService.leggTilDokument(vedleggsId, it) }
 
     leggVedleggTilISak(fiksDigisosId, vedleggMetadata, vedleggsId, timestamp)
     if (file != null) {
       dokumentlagerService.lagreFil(vedleggsId, vedleggMetadata.filnavn ?: file.name, file.bytes)
     }
     log.info(
-      "Lastet opp fil fiksDigisosId: $fiksDigisosId, filnavn: ${vedleggMetadata.filnavn}, vedleggsId: $vedleggsId",
+        "Lastet opp fil fiksDigisosId: $fiksDigisosId, filnavn: ${vedleggMetadata.filnavn}, vedleggsId: $vedleggsId",
     )
     return vedleggsId
   }
 
   fun leggInnIDokumentlager(
-    filnavn: String,
-    bytes: ByteArray,
-    vedleggsId: String = UUID.randomUUID().toString(),
+      filnavn: String,
+      bytes: ByteArray,
+      vedleggsId: String = UUID.randomUUID().toString(),
   ): String {
     fillager.add(vedleggsId, filnavn, bytes)
     return vedleggsId
@@ -496,12 +497,12 @@ class SoknadService(
     val soknad = objectMapper.readValue(soknadString, JsonDigisosSoker::class.java)
     val saksTittelMap = HashMap<String, String>()
     soknad.hendelser
-      .filter { it.type == JsonHendelse.Type.SAKS_STATUS }
-      .forEach {
-        if (it is JsonSaksStatus) {
-          saksTittelMap[it.referanse] = it.tittel ?: ""
+        .filter { it.type == JsonHendelse.Type.SAKS_STATUS }
+        .forEach {
+          if (it is JsonSaksStatus) {
+            saksTittelMap[it.referanse] = it.tittel ?: ""
+          }
         }
-      }
     if (saksTittelMap.isNotEmpty()) {
       return saksTittelMap.values.joinToString()
     }
