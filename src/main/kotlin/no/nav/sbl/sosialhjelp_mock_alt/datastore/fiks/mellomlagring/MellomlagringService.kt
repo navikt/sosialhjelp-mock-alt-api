@@ -28,7 +28,7 @@ class MellomlagringService {
   }
 
   fun get(navEksternRefId: String, digisosDokumentId: String): ByteArray {
-    log.debug(
+    log.info(
         "Henter fil for soknad med navEksternRefId=$navEksternRefId og dokument med digisosDokumentId=$digisosDokumentId")
     val fileEntry = mellomlager.find(soknadId = navEksternRefId, filId = digisosDokumentId)
     return fileEntry?.bytes
@@ -47,7 +47,7 @@ class MellomlagringService {
     mellomlager.delete(soknadId = navEksternRefId, filId = digisosDokumentId)
   }
 
-  fun post(navEksternRefId: String, filnavn: String, bytes: ByteArray, mimeType: String) {
+  fun lagreFil(navEksternRefId: String, filnavn: String, bytes: ByteArray, mimeType: String) {
     val filId = UUID.randomUUID().toString()
     log.debug(
         "Lagrer vedlegg med filnavn=$filnavn til mellomlager for soknad med navEksternRefId=$navEksternRefId. FilId=$filId")

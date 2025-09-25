@@ -19,9 +19,13 @@ class FiksKlageService(
   val klageStorage: KlageStorageHandler = KlageStorageHandler()
 
   fun hentKlager(personId: String, digisosId: UUID?): List<FiksKlageDto> {
-    return klageStorage.get(personId)?.filter { klage ->
-      digisosId == null || klage.digisosId == digisosId
-    } ?: emptyList()
+    return klageStorage
+        .get(personId)
+        ?.filter { klage -> digisosId == null || klage.digisosId == digisosId }
+        .also { klager ->
+          logger.info(
+              "Fant ${klager?.size ?: 0} klager for DigisosId: $digisosId på person $personId")
+        } ?: emptyList()
   }
 
   fun handleMottattKlage(
@@ -65,6 +69,7 @@ class FiksKlageService(
                     dokumentlagerDokumentId = klagePdfId,
                     storrelse = klageFiles.klagePdf.size,
                 ),
+            vedlegg = flyttFilerFraMellomlager(navEksternRefId, klageFiles.vedleggJson),
             sendtKvittering =
                 SendtKvitteringDto(
                     sendtKanal = FiksProtokoll.FIKS_IO,
@@ -78,8 +83,6 @@ class FiksKlageService(
         )
         .also { klageStorage.createKlage(personId, it) }
 
-    flyttFilerFraMellomlager(navEksternRefId, klageFiles.vedleggJson)
-
     logger.info("Mottatt klage for personId $personId med digisosId $digisosId og klageId $klageId")
   }
 
@@ -87,7 +90,9 @@ class FiksKlageService(
 
   fun handleTrekkKlage() {}
 
-  private fun flyttFilerFraMellomlager(klageId: UUID, vedleggJson: String) {
+  private fun flyttFilerFraMellomlager(klageId: UUID, vedleggJson: String): List<DokumentInfoDto> {
+
+    logger.info("Flytter vedlegg fra mellomlager til dokumentlager for KlageId $klageId")
 
     val jsonVedlegg =
         objectMapper.readValue(vedleggJson, JsonVedleggSpesifikasjon::class.java).let { vedleggSpec
@@ -95,7 +100,12 @@ class FiksKlageService(
           vedleggSpec.vedlegg.find { it.type == "klage" && it.klageId == klageId.toString() }
         } ?: error("Fant ikke vedlegg spesifikasjon for klageId $klageId i vedleggJson")
 
-    if (jsonVedlegg.filer.isEmpty()) return
+    if (jsonVedlegg.filer.isEmpty()) {
+      logger.info("Ingen referanser til vedlegg i JsonVedleggSpec for klageId $klageId")
+      return emptyList()
+    }
+
+    logger.info("Fant ${jsonVedlegg.filer.size} vedlegg i JsonVedleggSpec for Klage $klageId")
 
     val mellomlagredeForKlage =
         mellomlagringService.getAll(klageId.toString())?.mellomlagringMetadataList
@@ -103,12 +113,19 @@ class FiksKlageService(
 
     jsonVedlegg.validate(mellomlagredeForKlage.map { it.filnavn })
 
-    mellomlagredeForKlage.forEach { dokumentDto ->
-      val bytes = mellomlagringService.get(klageId.toString(), dokumentDto.filId)
-      dokumentlagerService.lagreFil(dokumentDto.filId, dokumentDto.filnavn, bytes)
-    }
-
-    mellomlagringService.deleteAll(klageId.toString())
+    return mellomlagredeForKlage
+        .map { dokumentDto ->
+          val bytes = mellomlagringService.get(klageId.toString(), dokumentDto.filId)
+          dokumentlagerService.lagreFil(dokumentDto.filId, dokumentDto.filnavn, bytes)
+          DokumentInfoDto(
+              filnavn = dokumentDto.filnavn,
+              dokumentlagerDokumentId = UUID.fromString(dokumentDto.filId),
+              storrelse = bytes.size.toLong())
+        }
+        .also {
+          logger.info("Sletter filer i Mellomlager for KlageId $klageId")
+          mellomlagringService.deleteAll(klageId.toString())
+        }
   }
 
   companion object {
@@ -118,7 +135,7 @@ class FiksKlageService(
 
 private fun JsonVedlegg.validate(mellomlagredeFilnavn: List<String>) {
   require(filer.all { mellomlagredeFilnavn.contains(it.filnavn) }) {
-    "Manglende filer i mellomlager"
+    "Finnes filer i mellomlager uten referanse i JsonVedleggSpec"
   }
 }
 
