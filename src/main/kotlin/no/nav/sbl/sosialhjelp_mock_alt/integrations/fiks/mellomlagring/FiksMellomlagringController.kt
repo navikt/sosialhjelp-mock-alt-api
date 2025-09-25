@@ -1,12 +1,12 @@
 package no.nav.sbl.sosialhjelp_mock_alt.integrations.fiks.mellomlagring
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp_mock_alt.datastore.fiks.mellomlagring.MellomlagringService
 import no.nav.sbl.sosialhjelp_mock_alt.objectMapper
 import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
-import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 class FiksMellomlagringController(
@@ -88,32 +88,32 @@ class FiksMellomlagringController(
   fun postMellomlagretVedlegg(
       @RequestHeader headers: HttpHeaders,
       @PathVariable navEksternRefId: String,
-      @RequestParam body: LinkedMultiValueMap<String, Any>,
-      request: StandardMultipartHttpServletRequest
+      @RequestParam("metadata") metadataList: List<String>,
+      @RequestParam("files") files: List<MultipartFile>,
   ): ResponseEntity<Any> {
     feilService.eventueltLagFeil(headers, "FiksMellomlagringController", "postMellomlagretVedlegg")
-    // fisk ut filnavn, bytes og mimetype fra request/multipart
-    val filMetadata =
-        objectMapper.readValue(request.parameterMap["metadata"]!![0], FilMetadata::class.java)
-    val file =
-        request.fileMap[filMetadata.filnavn]
-            ?: throw RuntimeException("Fant ikke fil for mellomlagring")
 
-    mellomlagringService.post(
-        navEksternRefId = navEksternRefId,
-        filnavn = filMetadata.filnavn,
-        bytes = file.bytes,
-        mimeType = filMetadata.mimetype)
+    //        fisk ut filnavn, bytes og mimetype fra request/multipart
+    metadataList
+        .map { objectMapper.readValue<FilMetadata>(it) }
+        .forEach { filMetadata ->
+          files
+              .find { it.originalFilename == filMetadata.filnavn }
+              ?.also { file ->
+                mellomlagringService.lagreFil(
+                    navEksternRefId = navEksternRefId,
+                    filnavn = filMetadata.filnavn,
+                    bytes = file.bytes,
+                    mimeType = filMetadata.mimetype)
+              } ?: error("Fant ikke fil for Metadata")
+        }
 
     return mellomlagringService
         .getAll(navEksternRefId)
         ?.mellomlagringMetadataList
-        ?.filter { it.filnavn == filMetadata.filnavn }
         ?.let { MellomlagringDto(navEksternRefId, mellomlagringMetadataList = it) }
         ?.let { ResponseEntity.ok(it) } ?: createError(navEksternRefId)
   }
-
-  data class FilMetadata(val filnavn: String, val mimetype: String, val storrelse: Long)
 }
 
 private fun createError(navEksternRefId: String): ResponseEntity<Any> {
@@ -130,3 +130,5 @@ private fun createError(navEksternRefId: String): ResponseEntity<Any> {
               status = 400,
               timestamp = null))
 }
+
+data class FilMetadata(val filnavn: String, val mimetype: String, val storrelse: Long)

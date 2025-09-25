@@ -15,6 +15,7 @@ class DokumentlagerService {
   }
 
   fun lagreFil(vedleggId: String, filnavn: String, bytes: ByteArray) {
+    log.info("Lagrer fil med id: $vedleggId og filnavn: $filnavn")
     fillager.add(vedleggId, filnavn, bytes)
   }
 

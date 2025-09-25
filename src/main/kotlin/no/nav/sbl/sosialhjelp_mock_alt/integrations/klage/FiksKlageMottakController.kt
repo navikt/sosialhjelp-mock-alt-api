@@ -2,6 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.integrations.klage
 
 import java.util.UUID
 import no.nav.sbl.sosialhjelp_mock_alt.utils.hentFnrFraTokenNoDefault
+import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.http.HttpHeaders
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -22,8 +23,8 @@ class FiksKlageMottakController(
       @RequestParam("digisosId") digisosId: UUID?,
       @RequestHeader headers: HttpHeaders,
   ): List<FiksKlageDto> {
-
     val personId = hentFnrFraTokenNoDefault(headers) ?: error("Mangler fnr i token")
+    logger.info("Henter alle klager for DigisosId: $digisosId og PersonId: $personId")
 
     return klageService.hentKlager(personId, digisosId)
   }
@@ -67,6 +68,10 @@ class FiksKlageMottakController(
   ) {
     TODO("Trekk klage")
   }
+
+  companion object {
+    private val logger by logger()
+  }
 }
 
 data class FiksKlageDto(
@@ -76,8 +81,9 @@ data class FiksKlageDto(
     val vedtakId: UUID,
     val navEksternRefId: UUID,
     val klageMetadata: UUID, // id til klage.json i dokumentlager
-    val vedleggMetadata: UUID, // id til vedlegg.json (jsonVedleggSpec) i dokumentlager
     val klageDokument: DokumentInfoDto, // id til klage.pdf i dokumentlager
+    val vedleggMetadata: UUID, // id til vedlegg.json (jsonVedleggSpec) i dokumentlager
+    val vedlegg: List<DokumentInfoDto>, // liste med opplastede vedlegg
     val trekkKlageInfo: TrekkKlageInfoDto? = null,
     val sendtKvittering: SendtKvitteringDto =
         SendtKvitteringDto(
