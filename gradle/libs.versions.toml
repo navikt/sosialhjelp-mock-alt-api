@@ -5,11 +5,11 @@ coroutines = "1.10.2"
 sosialhjelp_common = "1.20250120.1009-d88048d"
 filformat = "1.2025.07.30-13.34-d9f62af5ba3c"
 token_validation = "5.0.30"
-jackson = "2.19.1"
+jackson = "2.20.0"
 springdoc = "2.8.9"
 mock_oauth2_server = "2.2.1"
 spotless = "7.2.1"
-versions = "0.52.0"
+versions = "0.53.0"
 
 [libraries]
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
