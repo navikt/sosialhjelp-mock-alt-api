@@ -18,7 +18,7 @@ class KlageStorageHandler {
   fun createKlage(personId: String, klage: FiksKlageDto) {
 
     val klageList = storage[personId] ?: mutableListOf()
-    klageList.validate(klage.klageId, personId)
+    klageList.validateNotExists(klage.klageId, personId)
 
     klageList.add(klage)
 
@@ -27,14 +27,52 @@ class KlageStorageHandler {
     logger.info("Lagret Klage for PersonId: $personId: $klage")
   }
 
+  fun addEttersendelse(
+      personId: String,
+      klageId: UUID,
+      ettersendelseId: UUID,
+      vedleggJsonId: UUID,
+      dokumentInfoList: List<DokumentInfoDto>
+  ) {
+
+    logger.info("Legger til ettersendelse for klageId $klageId for person $personId")
+
+    val klager = storage[personId] ?: error("Fant ingen klager for person $personId")
+    val klage =
+        klager.find { it.klageId == klageId }?.also { klager.remove(it) }
+            ?: error("Fant ingen klage med id $klageId for person $personId")
+
+    klage.ettersendtInfoNAV
+        .addEttersendelse(ettersendelseId, vedleggJsonId, dokumentInfoList)
+        .let { ettersendtInfoNAVDto -> klage.copy(ettersendtInfoNAV = ettersendtInfoNAVDto) }
+        .also { updatedKlage -> klager.add(updatedKlage) }
+
+    storage[personId] = klager
+  }
+
   companion object {
     private val logger by logger()
   }
 }
 
-private fun MutableList<FiksKlageDto>.validate(klageId: UUID, personId: String) {
+private fun MutableList<FiksKlageDto>.validateNotExists(klageId: UUID, personId: String) {
   find { it.klageId == klageId }
       ?.let {
         throw IllegalStateException("Klage med id ${klageId} finnes allerede for person $personId")
       }
+}
+
+private fun EttersendtInfoNAVDto.addEttersendelse(
+    navEksternRefId: UUID,
+    vedleggJsonId: UUID,
+    dokumentInfoList: List<DokumentInfoDto>
+): EttersendtInfoNAVDto {
+  return ettersendelser
+      .plus(
+          EttersendelseDto(
+              navEksternRefId = navEksternRefId,
+              vedleggMetadata = vedleggJsonId,
+              vedlegg = dokumentInfoList,
+              timestampSendt = System.currentTimeMillis()))
+      .let { updatedList -> this.copy(ettersendelser = updatedList) }
 }
