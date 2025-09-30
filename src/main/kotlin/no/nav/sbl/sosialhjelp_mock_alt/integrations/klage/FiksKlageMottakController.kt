@@ -54,10 +54,20 @@ class FiksKlageMottakController(
   @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/vedlegg")
   fun mottaEttersendelse(
       @PathVariable("digisosId") digisosId: UUID,
-      @PathVariable("navEksternRefId") navEksternRefId: UUID,
+      @PathVariable("navEksternRefId") ettersendelseId: UUID,
       @PathVariable("klageId") klageId: UUID,
+      @RequestPart("vedlegg.json") vedleggJson: String,
+      @RequestHeader headers: HttpHeaders,
   ) {
-    TODO("Send ettersendelse")
+    val personId = hentFnrFraTokenNoDefault(headers) ?: error("Mangler fnr i token")
+
+    logger.info(
+        "Motta ettersendelse for DigisosId: $digisosId, " +
+            "NavEksternRefId(ettersendelseId): $ettersendelseId, " +
+            "KlageId: $klageId, " +
+            "PersonId: $personId")
+
+    klageService.handleEttersendelse(personId, klageId, ettersendelseId, vedleggJson)
   }
 
   @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/trekk")

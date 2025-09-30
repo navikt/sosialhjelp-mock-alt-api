@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @RestController
 class FiksMellomlagringController(
@@ -88,13 +89,13 @@ class FiksMellomlagringController(
   fun postMellomlagretVedlegg(
       @RequestHeader headers: HttpHeaders,
       @PathVariable navEksternRefId: String,
-      @RequestParam("metadata") metadataList: List<String>,
       @RequestParam("files") files: List<MultipartFile>,
+      request: MultipartHttpServletRequest,
   ): ResponseEntity<Any> {
     feilService.eventueltLagFeil(headers, "FiksMellomlagringController", "postMellomlagretVedlegg")
 
     //        fisk ut filnavn, bytes og mimetype fra request/multipart
-    metadataList
+    request.parameterMap["metadata"]!!
         .map { objectMapper.readValue<FilMetadata>(it) }
         .forEach { filMetadata ->
           files
