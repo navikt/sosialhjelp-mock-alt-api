@@ -48,7 +48,8 @@ class FiksKlageMottakController(
         klageId,
         navEksternRefId,
         vedtakId,
-        KlageFiles(klageJson, vedleggJson, klagePdf))
+        KlageFiles(klageJson, vedleggJson, klagePdf),
+    )
   }
 
   @PostMapping("/fiks/digisos/klage/api/v1/{digisosId}/{navEksternRefId}/{klageId}/vedlegg")
@@ -65,7 +66,8 @@ class FiksKlageMottakController(
         "Motta ettersendelse for DigisosId: $digisosId, " +
             "NavEksternRefId(ettersendelseId): $ettersendelseId, " +
             "KlageId: $klageId, " +
-            "PersonId: $personId")
+            "PersonId: $personId"
+    )
 
     klageService.handleEttersendelse(personId, klageId, ettersendelseId, vedleggJson)
   }

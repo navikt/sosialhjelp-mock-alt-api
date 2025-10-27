@@ -34,7 +34,8 @@ class KommuneInfoService {
           kontaktpersoner =
               Kontaktpersoner(listOf("Kontakt$id@navo.no"), listOf("Test$id@navno.no")),
           harNksTilgang = false,
-          behandlingsansvarlig = null)
+          behandlingsansvarlig = null,
+      )
 
   private fun lagKommuneInfo(id: String) =
       KommuneInfo(
@@ -46,5 +47,6 @@ class KommuneInfoService {
           kontaktpersoner =
               Kontaktpersoner(listOf("Kontakt$id@navo.no"), listOf("Test$id@navno.no")),
           harNksTilgang = true,
-          behandlingsansvarlig = null)
+          behandlingsansvarlig = null,
+      )
 }

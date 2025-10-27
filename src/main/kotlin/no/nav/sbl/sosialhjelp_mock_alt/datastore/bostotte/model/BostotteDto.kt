@@ -29,12 +29,12 @@ data class SakerDto(
 
 enum class BostotteStatus {
   UNDER_BEHANDLING,
-  VEDTATT
+  VEDTATT,
 }
 
 enum class BostotteRolle {
   HOVEDPERSON,
-  BIPERSON
+  BIPERSON,
 }
 
 data class VedtakDto(

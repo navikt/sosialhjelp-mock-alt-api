@@ -6,5 +6,5 @@ data class PdlInnsynHentPerson(val hentPerson: PdlInnsynPerson?)
 
 data class PdlInnsynPerson(
     val adressebeskyttelse: List<Adressebeskyttelse>,
-    val navn: List<PdlPersonNavn>
+    val navn: List<PdlPersonNavn>,
 )

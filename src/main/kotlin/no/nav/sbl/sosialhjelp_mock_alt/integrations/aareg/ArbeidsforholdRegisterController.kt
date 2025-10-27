@@ -28,7 +28,8 @@ class ArbeidsforholdRegisterController(
     val fnr = hentFnrFraHeaders(headers)
     val arbeidsforhold = aaregService.getArbeidsforhold(fnr)
     log.info(
-        "Henter aareg arbeidsforhold liste: ${objectMapper.writeValueAsString(arbeidsforhold)}")
+        "Henter aareg arbeidsforhold liste: ${objectMapper.writeValueAsString(arbeidsforhold)}"
+    )
     return ResponseEntity.ok(arbeidsforhold)
   }
 }

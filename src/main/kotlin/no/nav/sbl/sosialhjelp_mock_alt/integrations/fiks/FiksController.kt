@@ -90,8 +90,9 @@ class FiksController(
     if (fil != null) {
       val mediaType =
           if (fil.filnavn.lowercase().endsWith(".png")) MediaType.IMAGE_PNG
-          else if (fil.filnavn.lowercase().endsWith(".jpeg") ||
-              fil.filnavn.lowercase().endsWith(".jpg"))
+          else if (
+              fil.filnavn.lowercase().endsWith(".jpeg") || fil.filnavn.lowercase().endsWith(".jpg")
+          )
               MediaType.IMAGE_JPEG
           else MediaType.APPLICATION_PDF
       return ResponseEntity.ok()
@@ -126,7 +127,7 @@ class FiksController(
       @PathVariable(required = false) fiksOrgId: String?,
       @RequestParam body: LinkedMultiValueMap<String, Any>,
       @RequestHeader headers: HttpHeaders,
-      request: StandardMultipartHttpServletRequest
+      request: StandardMultipartHttpServletRequest,
   ): ResponseEntity<String> {
     feilService.eventueltLagFeil(headers, "FixController", "lastOpp")
     return lastOppFiler("", digisosId, "", body, headers, request)
@@ -159,7 +160,8 @@ class FiksController(
           fiksOrgId = fiksOrgId,
           fnr = fnr,
           fiksDigisosIdInput = id,
-          digisosApiWrapper = digisosApiWrapper)
+          digisosApiWrapper = digisosApiWrapper,
+      )
       ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
     }
   }
@@ -169,7 +171,7 @@ class FiksController(
   fun lastOppSoknad(
       @PathVariable kommuneNr: String,
       @PathVariable(required = false) fiksDigisosId: String?,
-      request: StandardMultipartHttpServletRequest
+      request: StandardMultipartHttpServletRequest,
   ): ResponseEntity<String> {
 
     val id = fiksDigisosId ?: UUID.randomUUID().toString()
@@ -177,9 +179,11 @@ class FiksController(
     digisosApiWrapper.sak.soker.hendelser.add(
         JsonSoknadsStatus()
             .withHendelsestidspunkt(
-                ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT))
+                ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT)
+            )
             .withType(JsonHendelse.Type.SOKNADS_STATUS)
-            .withStatus(JsonSoknadsStatus.Status.MOTTATT))
+            .withStatus(JsonSoknadsStatus.Status.MOTTATT)
+    )
     digisosApiWrapper.sak.soker.avsender =
         JsonAvsender().withSystemnavn("mock-alt").withSystemversjon("1.0-MOCKVERSJON")
 
@@ -187,13 +191,16 @@ class FiksController(
         objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
     val vedleggJson =
         objectMapper.readValue(
-            request.parameterMap["vedleggJson"]!![0], JsonVedleggSpesifikasjon::class.java)
+            request.parameterMap["vedleggJson"]!![0],
+            JsonVedleggSpesifikasjon::class.java,
+        )
     val fnr = soknadJson.data.personalia.personIdentifikator.verdi
     feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
     val tilleggsinformasjonJson =
         objectMapper.readValue(
             request.parameterMap["tilleggsinformasjonJson"]!![0],
-            JsonTilleggsinformasjon::class.java)
+            JsonTilleggsinformasjon::class.java,
+        )
     val enhetsnummer = tilleggsinformasjonJson.enhetsnummer
 
     val dokumenter = mutableListOf<DokumentInfo>()
@@ -214,7 +221,8 @@ class FiksController(
       val dokumentlagerId =
           soknadService.leggInnIDokumentlager(
               filnavn = it.filnavn,
-              bytes = mellomlagringService.get(navEksternRefId = id, digisosDokumentId = it.filId))
+              bytes = mellomlagringService.get(navEksternRefId = id, digisosDokumentId = it.filId),
+          )
       val dokumentInfo =
           DokumentInfo(
               filnavn = it.filnavn,
@@ -236,7 +244,8 @@ class FiksController(
         jsonSoknad = soknadJson,
         jsonVedlegg = vedleggJson,
         dokumenter = dokumenter,
-        soknadDokument = dokumenter.firstOrNull { it.filnavn.lowercase() == "soknad.pdf" })
+        soknadDokument = dokumenter.firstOrNull { it.filnavn.lowercase() == "soknad.pdf" },
+    )
     return ResponseEntity.ok(id)
   }
 
@@ -316,12 +325,15 @@ class FiksController(
   ): ResponseEntity<String> {
     feilService.eventueltLagFeil(headers, "FixController", "lastOpp")
     log.info(
-        "Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId")
+        "Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId"
+    )
     val vedleggsInfoText: String = body["vedlegg.json"].toString()
     val vedleggsJson =
         objectMapper
             .readValue(
-                vedleggsInfoText, object : TypeReference<List<JsonVedleggSpesifikasjon>>() {})
+                vedleggsInfoText,
+                object : TypeReference<List<JsonVedleggSpesifikasjon>>() {},
+            )
             .first()
     body.keys.forEach { key ->
       if (key.startsWith("vedleggSpesifikasjon")) {
@@ -351,7 +363,10 @@ class FiksController(
     val vedleggMetadata = VedleggMetadata(file.originalFilename, file.contentType, file.size)
     val dokumentlagerId =
         soknadService.lastOppFil(
-            fiksDigisosId = fiksDigisosId, vedleggMetadata = vedleggMetadata, file = file)
+            fiksDigisosId = fiksDigisosId,
+            vedleggMetadata = vedleggMetadata,
+            file = file,
+        )
 
     return ResponseEntity.ok(dokumentlagerId)
   }

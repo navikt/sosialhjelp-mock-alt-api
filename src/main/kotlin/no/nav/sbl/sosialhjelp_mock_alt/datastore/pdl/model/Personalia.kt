@@ -20,9 +20,10 @@ data class Personalia(
             adressenavn = "Hovedveien",
             husnummer = 42,
             postnummer = "0101",
-            kommunenummer = "0301"),
+            kommunenummer = "0301",
+        ),
     var locked: Boolean = false,
-    var opprettetTidspunkt: Long = DateTime.now().millis
+    var opprettetTidspunkt: Long = DateTime.now().millis,
 ) {
   fun withNavn(fornavn: String, mellomnavn: String, etternavn: String): Personalia {
     navn.fornavn = fornavn
@@ -90,5 +91,5 @@ data class ForenkletBostedsadresse(
     val husnummer: Int,
     val husbokstav: String? = null,
     val postnummer: String,
-    val kommunenummer: String
+    val kommunenummer: String,
 )

@@ -25,7 +25,7 @@ data class PdlForslagAdresseVegadresse(
     val kommunenavn: String?,
     val kommunenummer: String?,
     val bydelsnavn: String?,
-    val bydelsnummer: String?
+    val bydelsnummer: String?,
 )
 
 data class PdlForslagAdresseMatrikkeladresse(
@@ -35,24 +35,24 @@ data class PdlForslagAdresseMatrikkeladresse(
     val gaardsnummer: String?,
     val bruksnummer: String?,
     val postnummer: String?,
-    val poststed: String?
+    val poststed: String?,
 )
 
 data class PdlForslagAdresseAdresse(
     val vegadresse: PdlForslagAdresseVegadresse?,
-    val matrikkeladresse: PdlForslagAdresseMatrikkeladresse?
+    val matrikkeladresse: PdlForslagAdresseMatrikkeladresse?,
 )
 
 data class PdlForslagAdresseResult(
     val suggestions: List<String>,
-    val addressFound: PdlForslagAdresseAdresse?
+    val addressFound: PdlForslagAdresseAdresse?,
 )
 
 data class PdlAdresseSokResult(
     val hits: List<AdresseSokHit>,
     val pageNumber: Int,
     val totalPages: Int,
-    val totalHits: Int
+    val totalHits: Int,
 )
 
 data class AdresseSokHit(val vegadresse: AdresseDto, val score: Float)

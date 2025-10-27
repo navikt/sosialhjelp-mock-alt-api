@@ -50,16 +50,18 @@ class InnsynController(
         fnr = faktiskFnr,
         fiksDigisosIdInput = id,
         digisosApiWrapper = digisosApiWrapper,
-        isPapirSoknad = isPapirSoknad.toBoolean())
+        isPapirSoknad = isPapirSoknad.toBoolean(),
+    )
     return ResponseEntity.ok("{\"fiksDigisosId\":\"$id\"}")
   }
 
   @PostMapping(
       "/innsyn-api/api/v1/digisosapi/{fiksDigisosId}/filOpplasting",
-      consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+      consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
+  )
   fun filOpplasting(
       @PathVariable fiksDigisosId: String,
-      @RequestParam("file") file: MultipartFile
+      @RequestParam("file") file: MultipartFile,
   ): ResponseEntity<String> {
     val vedleggMetadata = VedleggMetadata(file.originalFilename, file.contentType, file.size)
     val dokumentlagerId = soknadService.lastOppFil(fiksDigisosId, vedleggMetadata, file = file)
@@ -80,7 +82,7 @@ class InnsynController(
   private fun hentFnrFraInputOrTokenOrCookieOrDefault(
       fnrInput: String?,
       headers: HttpHeaders,
-      cookie: String?
+      cookie: String?,
   ): String {
     return fnrInput
         ?: hentFnrFraHeadersNoDefault(headers)

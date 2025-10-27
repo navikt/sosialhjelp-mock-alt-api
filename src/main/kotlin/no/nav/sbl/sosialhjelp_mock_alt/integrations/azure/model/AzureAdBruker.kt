@@ -19,7 +19,8 @@ data class AzureAdBruker(
               .trim(),
       givenName = "${personalia.navn.fornavn} ${personalia.navn.mellomnavn}".trim(),
       surname = personalia.navn.etternavn,
-      onPremisesSamAccountName = "${personalia.navn.etternavn.subSequence(0,1)}123456")
+      onPremisesSamAccountName = "${personalia.navn.etternavn.subSequence(0,1)}123456",
+  )
 }
 
 class AzureAdBrukere(val value: List<AzureAdBruker>)

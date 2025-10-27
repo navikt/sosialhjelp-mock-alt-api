@@ -36,7 +36,9 @@ class NorgService {
   fun getNavEnhetForGt(geografiskTilknytning: String): NavEnhet {
     return gtNavEnheter[geografiskTilknytning]
         ?: lagMockNavEnhet(
-            geografiskTilknytning, "Generert mockenhet for gt $geografiskTilknytning, Mock kommune")
+            geografiskTilknytning,
+            "Generert mockenhet for gt $geografiskTilknytning, Mock kommune",
+        )
   }
 
   fun getAlleNavenheter(): Collection<NavEnhet> {

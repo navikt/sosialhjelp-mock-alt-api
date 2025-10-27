@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 @Service
 class FrontendArchiveService(
     private val soknadService: SoknadService,
-    private val dokumentlagerService: DokumentlagerService
+    private val dokumentlagerService: DokumentlagerService,
 ) {
   fun makeSoknadZip(soknad: DigisosSak): ByteArray {
     val fiksDigisosId = soknad.fiksDigisosId
@@ -60,7 +60,9 @@ class FrontendArchiveService(
 
     val sammenslattVedleggJson =
         slaSammenTilJsonVedleggSpesifikasjon(
-            soknad.ettersendtInfoNAV?.ettersendelser, fiksDigisosId)
+            soknad.ettersendtInfoNAV?.ettersendelser,
+            fiksDigisosId,
+        )
     zipArchive.putNextEntry(ZipEntry("vedlegg.json"))
     zipArchive.write(objectMapper.writeValueAsBytes(sammenslattVedleggJson))
     zipArchive.closeEntry()
@@ -90,7 +92,7 @@ class FrontendArchiveService(
 
   private fun slaSammenTilJsonVedleggSpesifikasjon(
       ettersendelser: List<Ettersendelse>?,
-      fiksDigisosId: String
+      fiksDigisosId: String,
   ): JsonVedleggSpesifikasjon? {
     val vedleggSpesifikasjoner =
         ettersendelser

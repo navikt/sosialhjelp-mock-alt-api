@@ -9,5 +9,5 @@ data class PdlModiaPerson(
     val navn: List<PdlPersonNavn>,
     val kjoenn: List<PdlKjoenn>,
     val foedselsdato: List<PdlFoedselsdato>,
-    val telefonnummer: List<PdlTelefonnummer>
+    val telefonnummer: List<PdlTelefonnummer>,
 )

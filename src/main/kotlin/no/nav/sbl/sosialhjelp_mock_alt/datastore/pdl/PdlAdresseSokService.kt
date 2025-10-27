@@ -15,7 +15,8 @@ class PdlAdresseSokService {
   private val vegadresseListe: Map<String, AdresseDto> =
       objectMapper
           .readValue<List<AdresseDto>>(
-              this::class.java.classLoader.getResource("adressesok/vegadresser.json")!!.readText())
+              this::class.java.classLoader.getResource("adressesok/vegadresser.json")!!.readText()
+          )
           .map { formatVegadresse(it).uppercase() to it }
           .toMap()
 
@@ -28,7 +29,8 @@ class PdlAdresseSokService {
 
     return PdlForslagAdresseResult(
         suggestions = vegadresseListe.keys.filter { it.contains(query) },
-        addressFound = matchingAddress?.toAdresseResult())
+        addressFound = matchingAddress?.toAdresseResult(),
+    )
   }
 
   private fun AdresseDto.toAdresseResult(): PdlForslagAdresseAdresse =
@@ -45,7 +47,9 @@ class PdlAdresseSokService {
                   kommunenavn = this.kommunenavn,
                   kommunenummer = this.kommunenummer,
                   bydelsnavn = "mock-bydel",
-                  bydelsnummer = this.bydelsnummer))
+                  bydelsnummer = this.bydelsnummer,
+              ),
+      )
 
   fun formatVegadresse(vegadresse: AdresseDto): String {
     val postfiks = ", ${vegadresse.postnummer} ${vegadresse.poststed}"
@@ -63,7 +67,8 @@ class PdlAdresseSokService {
       nyAdresseMap.putAll(
           hit.map {
             it.vegadresse.adressenavn + it.vegadresse.husnummer + it.vegadresse.husbokstav to it
-          })
+          }
+      )
     }
   }
 
@@ -81,7 +86,10 @@ class PdlAdresseSokService {
                           hits = treff.toList(),
                           pageNumber = 1,
                           totalHits = treff.size,
-                          totalPages = 1)))
+                          totalPages = 1,
+                      )
+              ),
+      )
     } else {
       PdlAdresseSokResponse.defaultResponse()
     }

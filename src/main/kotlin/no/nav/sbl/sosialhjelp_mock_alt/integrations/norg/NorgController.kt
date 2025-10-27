@@ -20,7 +20,7 @@ class NorgController(private val norgService: NorgService, private val feilServi
   @GetMapping("/norg_endpoint_url/enhet", produces = ["application/json;charset=UTF-8"])
   fun getAlleEnheter(
       @RequestParam enhetStatusListe: String,
-      @RequestHeader headers: HttpHeaders
+      @RequestHeader headers: HttpHeaders,
   ): String {
     feilService.eventueltLagFeilMedFnrFraToken(headers, "NorgController", "getAlleEnheter")
     val navEnheter = norgService.getAlleNavenheter()
@@ -38,10 +38,11 @@ class NorgController(private val norgService: NorgService, private val feilServi
 
   @GetMapping(
       "/norg_endpoint_url/enhet/navkontor/{geografiskTilknytning}",
-      produces = ["application/json;charset=UTF-8"])
+      produces = ["application/json;charset=UTF-8"],
+  )
   fun getEnhetForGt(
       @PathVariable geografiskTilknytning: String,
-      @RequestHeader headers: HttpHeaders
+      @RequestHeader headers: HttpHeaders,
   ): String {
     feilService.eventueltLagFeilMedFnrFraToken(headers, "NorgController", "getEnhetForGt")
     val navEnhet = norgService.getNavEnhetForGt(geografiskTilknytning)

@@ -65,12 +65,18 @@ class FrontendController(
     pdlService.leggTilPerson(pdlPersonalia(personalia))
     skjermedePersonerService.setStatus(personalia.fnr, personalia.skjerming)
     krrService.oppdaterKonfigurasjon(
-        personalia.fnr, personalia.kanVarsles, personalia.epost, personalia.telefonnummer)
+        personalia.fnr,
+        personalia.kanVarsles,
+        personalia.epost,
+        personalia.telefonnummer,
+    )
     if (personalia.kontonummer.isNotEmpty())
         kontoregisterService.putKonto(personalia.fnr, personalia.kontonummer)
 
     aaregService.setArbeidsforholdForFnr(
-        personalia.fnr, personalia.arbeidsforhold.map { aaregArbeidsforhold(personalia.fnr, it) })
+        personalia.fnr,
+        personalia.arbeidsforhold.map { aaregArbeidsforhold(personalia.fnr, it) },
+    )
     personalia.arbeidsforhold.forEach {
       eregService.putOrganisasjonNoekkelinfo(it.orgnummer, it.orgnavn)
     }
@@ -85,7 +91,8 @@ class FrontendController(
     bostotteService.putBostotte(personalia.fnr, bostotteDto)
     utbetalDataService.putUtbetalingerFraNav(
         ident = personalia.fnr,
-        utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalDataDto() })
+        utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalDataDto() },
+    )
     rolleService.leggTilKonfigurasjon(personalia.fnr, personalia.administratorRoller)
 
     return ResponseEntity.ok("OK")
@@ -192,7 +199,9 @@ class FrontendController(
 
     val sammenslattVedleggJson =
         slaSammenTilJsonVedleggSpesifikasjon(
-            soknad.ettersendtInfoNAV?.ettersendelser, fiksDigisosId)
+            soknad.ettersendtInfoNAV?.ettersendelser,
+            fiksDigisosId,
+        )
     val vedleggZip = ZipEntry("vedlegg.json")
     zipArchive.putNextEntry(vedleggZip)
     zipArchive.write(objectMapper.writeValueAsBytes(sammenslattVedleggJson))
@@ -229,7 +238,7 @@ class FrontendController(
 
   private fun slaSammenTilJsonVedleggSpesifikasjon(
       ettersendelser: List<Ettersendelse>?,
-      fiksDigisosId: String
+      fiksDigisosId: String,
   ): JsonVedleggSpesifikasjon? {
     val vedleggSpesifikasjoner =
         ettersendelser
@@ -264,12 +273,17 @@ class FrontendController(
         fiksDigisosId = soknad.fiksDigisosId,
         tittel = soknadService.hentSoknadstittel(soknad.fiksDigisosId),
         vedlegg = vedlegg,
-        vedleggSomMangler = vedlegg.filter { !it.kanLastesned }.size)
+        vedleggSomMangler = vedlegg.filter { !it.kanLastesned }.size,
+    )
   }
 
   private fun toVedlegg(dokument: DokumentInfo): FrontendVedlegg {
     val kanLastesned = dokumentlagerService.hentFil(dokument.dokumentlagerDokumentId) != null
     return FrontendVedlegg(
-        dokument.filnavn, dokument.dokumentlagerDokumentId, dokument.storrelse, kanLastesned)
+        dokument.filnavn,
+        dokument.dokumentlagerDokumentId,
+        dokument.storrelse,
+        kanLastesned,
+    )
   }
 }

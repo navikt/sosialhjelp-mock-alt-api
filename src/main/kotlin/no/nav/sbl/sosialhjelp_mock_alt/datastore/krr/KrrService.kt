@@ -21,7 +21,7 @@ class KrrService {
       ident: String,
       kanVarsles: Boolean,
       epost: String = "epost@adresse.sen",
-      telefonnummer: String = "11112222"
+      telefonnummer: String = "11112222",
   ) {
     krrKonfigursjoner[ident] = nyKontaktinformasjon(ident, epost, telefonnummer, kanVarsles)
   }
@@ -40,5 +40,6 @@ class KrrService {
           spraak = "no-nb",
           epostadresse = epostadresse,
           mobiltelefonnummer = telefonnummer,
-          sikkerDigitalPostkasse = null)
+          sikkerDigitalPostkasse = null,
+      )
 }

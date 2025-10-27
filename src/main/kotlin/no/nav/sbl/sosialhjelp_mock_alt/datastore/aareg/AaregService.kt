@@ -28,7 +28,9 @@ class AaregService {
                 fnr = personalia.fnr,
                 fom = startDato,
                 arbeidsgiver = arbeidsgiver,
-                stillingsprosent = stillingsprosent))
+                stillingsprosent = stillingsprosent,
+            )
+        )
   }
 
   fun setArbeidsforholdForFnr(fnr: String, arbeidsforholdsliste: List<ArbeidsforholdDto>) {

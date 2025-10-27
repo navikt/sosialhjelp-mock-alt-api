@@ -7,7 +7,7 @@ data class PdlError(
     val message: String,
     val locations: List<PdlErrorLocation>,
     val path: List<String>?,
-    val extensions: PdlErrorExtension
+    val extensions: PdlErrorExtension,
 )
 
 data class PdlErrorLocation(val line: Int?, val column: Int?)
@@ -20,7 +20,7 @@ enum class Gradering {
   STRENGT_FORTROLIG_UTLAND, // kode 6 (utland)
   STRENGT_FORTROLIG, // kode 6
   FORTROLIG, // kode 7
-  UGRADERT
+  UGRADERT,
 }
 
 data class PdlPersonNavn(
@@ -38,7 +38,7 @@ data class PdlKjoenn(val kjoenn: Kjoenn)
 enum class Kjoenn {
   MANN,
   KVINNE,
-  UKJENT
+  UKJENT,
 }
 
 data class PdlFoedselsdato(val foedselsdato: String?)
@@ -49,7 +49,7 @@ data class PdlBostedsadresse(
     val coAdressenavn: String?,
     val vegadresse: PdlVegadresse?,
     val matrikkeladresse: PdlMatrikkeladresse?,
-    val ukjentBosted: PdlUkjentBosted?
+    val ukjentBosted: PdlUkjentBosted?,
 )
 
 data class PdlOppholdsadresse(
@@ -57,7 +57,7 @@ data class PdlOppholdsadresse(
     val coAdressenavn: String?,
     val vegadresse: PdlVegadresse?,
     val metadata: PdlMetadata?,
-    val folkeregistermetadata: PdlFolkeregistermetadata?
+    val folkeregistermetadata: PdlFolkeregistermetadata?,
 )
 
 data class PdlVegadresse(
@@ -68,7 +68,7 @@ data class PdlVegadresse(
     val tilleggsnavn: String?,
     val postnummer: String?,
     val kommunenummer: String?,
-    val bruksenhetsnummer: String?
+    val bruksenhetsnummer: String?,
 )
 
 data class PdlMatrikkeladresse(
@@ -76,7 +76,7 @@ data class PdlMatrikkeladresse(
     val postnummer: String?,
     val tilleggsnavn: String?,
     val kommunenummer: String?,
-    val bruksenhetsnummer: String?
+    val bruksenhetsnummer: String?,
 )
 
 data class PdlUkjentBosted(val bostedskommune: String?)
@@ -84,7 +84,7 @@ data class PdlUkjentBosted(val bostedskommune: String?)
 data class PdlForelderBarnRelasjon(
     val relatertPersonsIdent: String?,
     val relatertPersonsRolle: String?,
-    val minRolleForPerson: String?
+    val minRolleForPerson: String?,
 )
 
 data class PdlFoedsel(val foedselsdato: LocalDate?)
@@ -103,7 +103,7 @@ enum class Folkeregisterpersonstatus {
   midlertidig,
   inaktiv,
   ikkebosatt,
-  aktiv
+  aktiv,
 }
 
 data class PdlSivilstand(
@@ -123,7 +123,7 @@ enum class SivilstandType {
   PARTNER,
   SEPARERT_PARTNER,
   SKILT_PARTNER,
-  GJENLEVENDE_PARTNER
+  GJENLEVENDE_PARTNER,
 }
 
 data class PdlStatsborgerskap(val land: String?)
@@ -138,9 +138,12 @@ fun defaultMetadata() =
     PdlMetadata(
         "PDL",
         listOf(
-            PdlEndring(
-                kilde = "NAV", registrert = LocalDateTime.now().minusDays(7), type = "type")))
+            PdlEndring(kilde = "NAV", registrert = LocalDateTime.now().minusDays(7), type = "type")
+        ),
+    )
 
 fun defaultFolkeregistermetadata() =
     PdlFolkeregistermetadata(
-        ajourholdstidspunkt = LocalDateTime.now().minusDays(6), kilde = "kilde")
+        ajourholdstidspunkt = LocalDateTime.now().minusDays(6),
+        kilde = "kilde",
+    )

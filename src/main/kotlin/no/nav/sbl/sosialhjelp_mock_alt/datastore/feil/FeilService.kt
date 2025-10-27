@@ -26,7 +26,7 @@ class FeilService {
   fun eventueltLagFeilMedFnrFraToken(
       headers: HttpHeaders,
       className: String,
-      functionName: String
+      functionName: String,
   ) {
     val fnr = hentFnrFraToken(headers)
     eventueltLagFeil(fnr, className, functionName)
@@ -35,10 +35,14 @@ class FeilService {
   fun eventueltLagFeil(fnr: String, className: String, functionName: String) {
     val feilsituasjoner = hentFeil(fnr)
     feilsituasjoner.forEach { feilsituasjon ->
-      if (feilsituasjon.className.contentEquals(className) ||
-          feilsituasjon.className.contentEquals("*")) {
-        if (functionName.startsWith(feilsituasjon.functionName) ||
-            feilsituasjon.functionName.contentEquals("*")) {
+      if (
+          feilsituasjon.className.contentEquals(className) ||
+              feilsituasjon.className.contentEquals("*")
+      ) {
+        if (
+            functionName.startsWith(feilsituasjon.functionName) ||
+                feilsituasjon.functionName.contentEquals("*")
+        ) {
           if (feilsituasjon.timeout > 0 && feilsituasjon.timeoutSansynlighet > randomInt(2)) {
             var sleep = 0
             log.info("Timeout er konfigurert for $className.$functionName")
@@ -50,7 +54,8 @@ class FeilService {
           if (feilsituasjon.feilkodeSansynlighet > randomInt(2)) {
             if (feilsituasjon.feilkode != null && feilsituasjon.feilkode > 0) {
               log.info(
-                  "Error er konfigurert for $className.$functionName -> ${feilsituasjon.feilkode}")
+                  "Error er konfigurert for $className.$functionName -> ${feilsituasjon.feilkode}"
+              )
               throw KonfigurertFeil(feilsituasjon.feilkode, feilsituasjon.feilmelding)
             }
           }

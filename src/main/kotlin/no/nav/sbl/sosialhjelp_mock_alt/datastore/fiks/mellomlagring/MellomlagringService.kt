@@ -12,7 +12,8 @@ class MellomlagringService {
 
   fun getAll(navEksternRefId: String): MellomlagringDto? {
     log.debug(
-        "Henter metadata om alle mellomlagrede vedlegg for soknad med navEksternRefId=$navEksternRefId")
+        "Henter metadata om alle mellomlagrede vedlegg for soknad med navEksternRefId=$navEksternRefId"
+    )
     return mellomlager.getAll(soknadId = navEksternRefId)?.let { fileEntries ->
       MellomlagringDto(
           navEksternRefId = navEksternRefId,
@@ -22,18 +23,22 @@ class MellomlagringService {
                     filnavn = it.filnavn,
                     filId = it.filId,
                     storrelse = it.bytes.size.toLong(),
-                    mimetype = it.mimeType)
-              })
+                    mimetype = it.mimeType,
+                )
+              },
+      )
     }
   }
 
   fun get(navEksternRefId: String, digisosDokumentId: String): ByteArray {
     log.info(
-        "Henter fil for soknad med navEksternRefId=$navEksternRefId og dokument med digisosDokumentId=$digisosDokumentId")
+        "Henter fil for soknad med navEksternRefId=$navEksternRefId og dokument med digisosDokumentId=$digisosDokumentId"
+    )
     val fileEntry = mellomlager.find(soknadId = navEksternRefId, filId = digisosDokumentId)
     return fileEntry?.bytes
         ?: throw RuntimeException(
-            "Ingen mellomlagret vedlegg med digisosDokumentId=$digisosDokumentId funnet for soknad $navEksternRefId")
+            "Ingen mellomlagret vedlegg med digisosDokumentId=$digisosDokumentId funnet for soknad $navEksternRefId"
+        )
   }
 
   fun deleteAll(navEksternRefId: String) {
@@ -43,20 +48,23 @@ class MellomlagringService {
 
   fun delete(navEksternRefId: String, digisosDokumentId: String) {
     log.debug(
-        "Sletter mellomlagrede vedlegg for soknad med navEksternRefId=$navEksternRefId og dokument med digisosDokumentId=$digisosDokumentId")
+        "Sletter mellomlagrede vedlegg for soknad med navEksternRefId=$navEksternRefId og dokument med digisosDokumentId=$digisosDokumentId"
+    )
     mellomlager.delete(soknadId = navEksternRefId, filId = digisosDokumentId)
   }
 
   fun lagreFil(navEksternRefId: String, filnavn: String, bytes: ByteArray, mimeType: String) {
     val filId = UUID.randomUUID().toString()
     log.debug(
-        "Lagrer vedlegg med filnavn=$filnavn til mellomlager for soknad med navEksternRefId=$navEksternRefId. FilId=$filId")
+        "Lagrer vedlegg med filnavn=$filnavn til mellomlager for soknad med navEksternRefId=$navEksternRefId. FilId=$filId"
+    )
     mellomlager.add(
         soknadId = navEksternRefId,
         filId = filId,
         fileName = filnavn,
         bytes = bytes,
-        mimeType = mimeType)
+        mimeType = mimeType,
+    )
   }
 
   companion object {
@@ -100,5 +108,5 @@ data class FileEntry(
     val filId: String,
     val filnavn: String,
     val bytes: ByteArray,
-    val mimeType: String
+    val mimeType: String,
 )

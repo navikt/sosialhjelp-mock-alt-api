@@ -23,7 +23,7 @@ class UtbetalingController(
   @PostMapping("/utbetaldata/api/v2/hent-utbetalingsinformasjon/ekstern")
   fun getUtbetalingerFraNavUtbetaldata(
       @RequestBody body: Utbetalingsoppslag,
-      @RequestHeader headers: HttpHeaders
+      @RequestHeader headers: HttpHeaders,
   ): ResponseEntity<List<UtbetalDataDto>> {
     log.info("RequestBody for hentUtbetalinger fra Utbetaldata: $body")
     val ident = hentFnrFraToken(headers)

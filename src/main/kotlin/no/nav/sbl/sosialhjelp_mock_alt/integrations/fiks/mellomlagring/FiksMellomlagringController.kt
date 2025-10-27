@@ -20,16 +20,19 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 @RestController
 class FiksMellomlagringController(
     private val feilService: FeilService,
-    private val mellomlagringService: MellomlagringService
+    private val mellomlagringService: MellomlagringService,
 ) {
 
   @GetMapping("/fiks/digisos/api/v1/mellomlagring/{navEksternRefId}")
   fun getAllMellomlagredeVedlegg(
       @RequestHeader headers: HttpHeaders,
-      @PathVariable navEksternRefId: String
+      @PathVariable navEksternRefId: String,
   ): ResponseEntity<Any> {
     feilService.eventueltLagFeil(
-        headers, "FiksMellomlagringController", "getAllMellomlagredeVedlegg")
+        headers,
+        "FiksMellomlagringController",
+        "getAllMellomlagredeVedlegg",
+    )
     val dto = mellomlagringService.getAll(navEksternRefId)
     return dto?.let { ResponseEntity.ok(it) }
         ?: ResponseEntity.ok(MellomlagringDto(navEksternRefId, emptyList()))
@@ -68,7 +71,10 @@ class FiksMellomlagringController(
       @PathVariable navEksternRefId: String,
   ): ResponseEntity<String> {
     feilService.eventueltLagFeil(
-        headers, "FiksMellomlagringController", "deleteAllMellomlagredeVedlegg")
+        headers,
+        "FiksMellomlagringController",
+        "deleteAllMellomlagredeVedlegg",
+    )
     mellomlagringService.deleteAll(navEksternRefId)
     return ResponseEntity.ok().build()
   }
@@ -80,7 +86,10 @@ class FiksMellomlagringController(
       @PathVariable digisosDokumentId: String,
   ): ResponseEntity<String> {
     feilService.eventueltLagFeil(
-        headers, "FiksMellomlagringController", "deleteMellomlagretVedlegg")
+        headers,
+        "FiksMellomlagringController",
+        "deleteMellomlagretVedlegg",
+    )
     mellomlagringService.delete(navEksternRefId, digisosDokumentId)
     return ResponseEntity.ok().build()
   }
@@ -105,7 +114,8 @@ class FiksMellomlagringController(
                     navEksternRefId = navEksternRefId,
                     filnavn = filMetadata.filnavn,
                     bytes = file.bytes,
-                    mimeType = filMetadata.mimetype)
+                    mimeType = filMetadata.mimetype,
+                )
               } ?: error("Fant ikke fil for Metadata")
         }
 
@@ -129,7 +139,9 @@ private fun createError(navEksternRefId: String): ResponseEntity<Any> {
               originalPath = null,
               path = null,
               status = 400,
-              timestamp = null))
+              timestamp = null,
+          )
+      )
 }
 
 data class FilMetadata(val filnavn: String, val mimetype: String, val storrelse: Long)

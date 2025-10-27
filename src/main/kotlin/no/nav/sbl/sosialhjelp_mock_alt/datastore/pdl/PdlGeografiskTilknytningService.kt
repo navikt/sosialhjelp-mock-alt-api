@@ -30,7 +30,10 @@ class PdlGeografiskTilknytningService {
                             gtType = type,
                             gtKommune = if (type == GtType.KOMMUNE) gt else null,
                             gtBydel = if (type == GtType.BYDEL) gt else null,
-                            gtLand = null)))
+                            gtLand = null,
+                        )
+                ),
+        )
   }
 
   companion object {

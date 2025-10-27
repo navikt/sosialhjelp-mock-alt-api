@@ -61,7 +61,9 @@ class PdlController(
     return objectMapper.writeValueAsString(
         mapOf(
             "data" to mapOf("forslagAdresse" to pdlAdresseSokService.forslagAdresse(fritekst)),
-            "errors" to emptyList<String>()))
+            "errors" to emptyList<String>(),
+        )
+    )
   }
 
   private fun handleHentPersonRequest(body: String, ident: String): String {
@@ -69,7 +71,8 @@ class PdlController(
 
     if (ident != hentPersonRequest.variables.ident) {
       log.warn(
-          "Token matcher ikke request! $ident (token) != ${hentPersonRequest.variables.ident} (person request)")
+          "Token matcher ikke request! $ident (token) != ${hentPersonRequest.variables.ident} (person request)"
+      )
     }
     return decideResponse(hentPersonRequest)
   }
@@ -125,12 +128,14 @@ class PdlController(
         objectMapper.readValue(body, HentGeografiskTilknytningRequest::class.java)
     if (ident != hentGeografiskTilknytningRequest.variables.ident) {
       log.warn(
-          "Token matcher ikke request! $ident (token) != ${hentGeografiskTilknytningRequest.variables.ident} (GT request)")
+          "Token matcher ikke request! $ident (token) != ${hentGeografiskTilknytningRequest.variables.ident} (GT request)"
+      )
     }
 
     val response =
         pdlGeografiskTilknytningService.getGeografiskTilknytning(
-            hentGeografiskTilknytningRequest.variables.ident)
+            hentGeografiskTilknytningRequest.variables.ident
+        )
     feilService.eventueltLagFeil(ident, "PdlController", "getGeografiskTilknytning")
     return objectMapper.writeValueAsString(response)
   }
@@ -170,7 +175,8 @@ class PdlController(
               ?.searchRule
               ?.get("equals") ?: ""
       objectMapper.writeValueAsString(
-          pdlAdresseSokService.getAdresse(adressenavn + husnummer + husbokstav))
+          pdlAdresseSokService.getAdresse(adressenavn + husnummer + husbokstav)
+      )
     }
   }
 
