@@ -71,7 +71,11 @@ class MockBrukerService(
     pdlService.leggTilPerson(FrontendPersonalia.pdlPersonalia(personalia))
     skjermedePersonerService.setStatus(personalia.fnr, personalia.skjerming)
     krrService.oppdaterKonfigurasjon(
-        personalia.fnr, personalia.kanVarsles, personalia.epost, personalia.telefonnummer)
+        personalia.fnr,
+        personalia.kanVarsles,
+        personalia.epost,
+        personalia.telefonnummer,
+    )
     if (personalia.kontonummer.isNotEmpty())
         kontoregisterService.putKonto(personalia.fnr, personalia.kontonummer)
 
@@ -79,7 +83,8 @@ class MockBrukerService(
         personalia.fnr,
         personalia.arbeidsforhold.map {
           FrontendPersonalia.aaregArbeidsforhold(personalia.fnr, it)
-        })
+        },
+    )
     personalia.arbeidsforhold.forEach {
       eregService.putOrganisasjonNoekkelinfo(it.orgnummer, it.orgnavn)
     }
@@ -94,7 +99,8 @@ class MockBrukerService(
     bostotteService.putBostotte(personalia.fnr, bostotteDto)
     utbetalingerService.putUtbetalingerFraNav(
         ident = personalia.fnr,
-        utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalDataDto() })
+        utbetalinger = personalia.utbetalingerFraNav.map { it.toUtbetalDataDto() },
+    )
     rolleService.leggTilKonfigurasjon(personalia.fnr, personalia.administratorRoller)
   }
 }

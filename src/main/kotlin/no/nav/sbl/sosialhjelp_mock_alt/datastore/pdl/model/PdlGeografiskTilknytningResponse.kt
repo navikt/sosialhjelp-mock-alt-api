@@ -2,7 +2,7 @@ package no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model
 
 data class PdlGeografiskTilknytningResponse(
     val errors: List<PdlError>?,
-    val data: PdlHentGeografiskTilknytning?
+    val data: PdlHentGeografiskTilknytning?,
 ) {
   companion object {
     fun defaultResponse(): PdlGeografiskTilknytningResponse {
@@ -15,7 +15,10 @@ data class PdlGeografiskTilknytningResponse(
                           gtType = GtType.KOMMUNE,
                           gtKommune = "0301",
                           gtBydel = null,
-                          gtLand = null)))
+                          gtLand = null,
+                      )
+              ),
+      )
     }
   }
 }
@@ -26,12 +29,12 @@ data class PdlGeografiskTilknytning(
     val gtType: GtType,
     val gtKommune: String?,
     val gtBydel: String?,
-    val gtLand: String?
+    val gtLand: String?,
 )
 
 enum class GtType {
   KOMMUNE,
   BYDEL,
   UTLAND,
-  UDEFINERT
+  UDEFINERT,
 }

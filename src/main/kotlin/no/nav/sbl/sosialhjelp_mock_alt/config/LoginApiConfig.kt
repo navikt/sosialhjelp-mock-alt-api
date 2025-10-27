@@ -16,7 +16,8 @@ class LoginApiConfig : WebMvcConfigurer {
   fun restTemplate(): RestTemplate {
     return RestTemplateBuilder()
         .requestFactory(
-            Supplier { BufferingClientHttpRequestFactory(SimpleClientHttpRequestFactory()) })
+            Supplier { BufferingClientHttpRequestFactory(SimpleClientHttpRequestFactory()) }
+        )
         .build()!!
   }
 }

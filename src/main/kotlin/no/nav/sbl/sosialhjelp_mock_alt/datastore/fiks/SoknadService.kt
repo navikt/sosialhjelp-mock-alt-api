@@ -181,7 +181,8 @@ class SoknadService(
                 .withSaksreferanse(saksReferanse)
                 .withStatus(
                     if (offset > 0) JsonUtbetaling.Status.PLANLAGT_UTBETALING
-                    else JsonUtbetaling.Status.UTBETALT)
+                    else JsonUtbetaling.Status.UTBETALT
+                )
                 .withBelop(2300.00 + offset)
                 .withUtbetalingsdato(LocalDate.now().plusDays(offset.toLong()).toString())
                 .withForfallsdato(LocalDate.now().plusDays(offset.toLong() + 5).toString()),
@@ -400,8 +401,11 @@ class SoknadService(
         digisosApiWrapper.sak.soker.hendelser
             .minByOrNull { it.hendelsestidspunkt }!!
             .hendelsestidspunkt
-    if (timestampSendt != null &&
-        unixToLocalDateTime(timestampSendt).isAfter(tidligsteHendelsetidspunkt.toLocalDateTime())) {
+    if (
+        timestampSendt != null &&
+            unixToLocalDateTime(timestampSendt)
+                .isAfter(tidligsteHendelsetidspunkt.toLocalDateTime())
+    ) {
       val oppdatertDigisosSak =
           digisosSak.updateOriginalSoknadNAV(
               digisosSak.originalSoknadNAV!!.copy(

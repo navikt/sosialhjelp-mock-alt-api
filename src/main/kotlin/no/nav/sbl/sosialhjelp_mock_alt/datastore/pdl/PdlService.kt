@@ -174,8 +174,10 @@ class PdlService(
               personalia.navn.mellomnavn,
               personalia.navn.etternavn,
           )
-      if (personalia.sivilstand.equals("GIFT", true) ||
-          personalia.sivilstand.equals("PARTNER", true)) {
+      if (
+          personalia.sivilstand.equals("GIFT", true) ||
+              personalia.sivilstand.equals("PARTNER", true)
+      ) {
         if (personalia.ektefelleFnr.isNullOrEmpty()) {
           leggTilEktefelle(personalia)
         }

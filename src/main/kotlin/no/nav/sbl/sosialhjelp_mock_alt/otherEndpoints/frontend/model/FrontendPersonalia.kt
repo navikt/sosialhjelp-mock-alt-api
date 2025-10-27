@@ -35,7 +35,11 @@ data class FrontendPersonalia(
     var starsborgerskap: String = "NOR",
     var bostedsadresse: ForenkletBostedsadresse =
         ForenkletBostedsadresse(
-            adressenavn = "Gateveien", husnummer = 1, postnummer = "0101", kommunenummer = "0301"),
+            adressenavn = "Gateveien",
+            husnummer = 1,
+            postnummer = "0101",
+            kommunenummer = "0301",
+        ),
     var telefonnummer: String = "",
     var epost: String = "",
     var kanVarsles: Boolean = true,
@@ -89,7 +93,7 @@ data class FrontendPersonalia(
 
     fun aaregArbeidsforhold(
         fnr: String,
-        frontendArbeidsforhold: FrontendArbeidsforhold
+        frontendArbeidsforhold: FrontendArbeidsforhold,
     ): ArbeidsforholdDto {
       val arbeidsgiver: OpplysningspliktigArbeidsgiverDto =
           when (frontendArbeidsforhold.type) {
@@ -117,7 +121,8 @@ data class FrontendPersonalia(
       return LocalDate.of(
           string.substring(0, 4).toInt(),
           string.substring(5, 7).toInt(),
-          string.substring(8).toInt())
+          string.substring(8).toInt(),
+      )
     }
   }
 }
@@ -130,7 +135,8 @@ data class FrontendBarn(
             adressenavn = "Hovedveien",
             husnummer = 42,
             postnummer = "0101",
-            kommunenummer = "0301"),
+            kommunenummer = "0301",
+        ),
     var folkeregisterpersonstatus: PdlFolkeregisterpersonstatus =
         PdlFolkeregisterpersonstatus(Folkeregisterpersonstatus.bosatt),
     val foedsel: LocalDate = LocalDate.now().minusYears(10),
@@ -177,7 +183,8 @@ data class FrontendBarn(
               pdlBarn.folkeregisterpersonstatus?.firstOrNull()
                   ?: PdlFolkeregisterpersonstatus(Folkeregisterpersonstatus.bosatt),
           foedsel = pdlBarn.foedsel?.first()?.foedselsdato ?: LocalDate.now().minusYears(10),
-          navn = PdlPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn))
+          navn = PdlPersonNavn(navn.fornavn, navn.mellomnavn, navn.etternavn),
+      )
     }
   }
 }
@@ -201,7 +208,8 @@ class FrontendSkattbarInntekt(
                   .fordel("kontantytelse")
                   .beloep(frontEnd.beloep.toInt())
                   .type(frontEnd.type)
-                  .build())
+                  .build()
+          )
           .build()
     }
 
@@ -235,7 +243,9 @@ data class FrontendUtbetalingFraNav(
                     ytelseNettobeloep = BigDecimal(belop),
                     skattsum = BigDecimal(skattebelop),
                     ytelseskomponentListe =
-                        listOf(Ytelseskomponent(ytelseskomponenttype = ytelseskomponenttype)))),
+                        listOf(Ytelseskomponent(ytelseskomponenttype = ytelseskomponenttype)),
+                )
+            ),
     )
   }
 }
@@ -248,7 +258,8 @@ fun List<UtbetalDataDto>.toFrontend(): List<FrontendUtbetalingFraNav> =
             dato = utbetalingFraNav.utbetalingsdato ?: LocalDate.now(),
             ytelsestype = it.ytelsestype ?: "",
             skattebelop = it.skattsum?.toDouble() ?: 0.00,
-            ytelseskomponenttype = it.ytelseskomponentListe?.first()?.ytelseskomponenttype ?: "")
+            ytelseskomponenttype = it.ytelseskomponentListe?.first()?.ytelseskomponenttype ?: "",
+        )
       } ?: emptyList()
     }
 
@@ -274,7 +285,7 @@ class FrontendArbeidsforhold(
         dto: ArbeidsforholdDto,
         orgnavn: String?,
         orgnummer: String?,
-        ident: String?
+        ident: String?,
     ) =
         FrontendArbeidsforhold(
             type = dto.arbeidsgiver.type,

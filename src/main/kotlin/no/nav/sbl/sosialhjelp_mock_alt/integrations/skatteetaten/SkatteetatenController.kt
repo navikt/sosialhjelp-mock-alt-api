@@ -24,7 +24,7 @@ class SkatteetatenController(
   fun getStatteetatenInntekt(
       @PathVariable fnr: String,
       @RequestParam fraOgMed: String,
-      @RequestParam tilOgMed: String
+      @RequestParam tilOgMed: String,
   ): ResponseEntity<SkattbarInntekt> {
     feilService.eventueltLagFeil(fnr, "SkatteetatenController", "getStatteetatenInntekt")
     val skattbarInntekt = skatteetatenService.getSkattbarInntekt(fnr)

@@ -4,14 +4,14 @@ data class PdlSoknadPersonResponse(val errors: List<PdlError>?, val data: PdlSok
 
 data class PdlSoknadEktefelleResponse(
     val errors: List<PdlError>?,
-    val data: PdlSoknadHentEktefelle?
+    val data: PdlSoknadHentEktefelle?,
 )
 
 data class PdlSoknadBarnResponse(val errors: List<PdlError>?, val data: PdlSoknadHentBarn?)
 
 data class PdlSoknadAdressebeskyttelseResponse(
     val errors: List<PdlError>?,
-    val data: PdlSoknadHentAdressebeskyttelse?
+    val data: PdlSoknadHentAdressebeskyttelse?,
 )
 
 data class PdlSoknadHentPerson(val hentPerson: PdlSoknadPerson?)

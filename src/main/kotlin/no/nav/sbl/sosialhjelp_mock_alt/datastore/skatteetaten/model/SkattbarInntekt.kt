@@ -39,7 +39,7 @@ class OppgaveInntektsmottaker(
     fun standardOppgave(
         dato: LocalDate = LocalDate.now().minusDays(14),
         belop: Int = 15000,
-        trekk: Int = 5000
+        trekk: Int = 5000,
     ) = apply {
       kalendermaaned = DateTimeFormatter.ofPattern("yyyy-MM").format(dato)
       opplysningspliktigId = randomInt(5).toString()
@@ -49,7 +49,11 @@ class OppgaveInntektsmottaker(
 
     fun build() =
         OppgaveInntektsmottaker(
-            kalendermaaned, opplysningspliktigId!!, inntektsListe, forskuddstrekksListe)
+            kalendermaaned,
+            opplysningspliktigId!!,
+            inntektsListe,
+            forskuddstrekksListe,
+        )
   }
 }
 

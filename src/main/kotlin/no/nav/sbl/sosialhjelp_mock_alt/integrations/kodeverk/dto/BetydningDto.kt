@@ -8,5 +8,5 @@ class BetydningDto
 constructor(
     val gyldigFra: LocalDate,
     val gyldigTil: LocalDate,
-    val beskrivelser: Map<String, BeskrivelseDto>
+    val beskrivelser: Map<String, BeskrivelseDto>,
 )

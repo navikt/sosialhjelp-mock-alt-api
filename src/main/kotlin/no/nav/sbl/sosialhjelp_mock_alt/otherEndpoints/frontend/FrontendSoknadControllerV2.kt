@@ -46,7 +46,8 @@ class FrontendSoknadControllerV2(
     val soknadJson =
         objectMapper.readValue(
             dokumentlagerService.hentDokument(fiksDigisosId, soknad.originalSoknadNAV!!.metadata),
-            JsonSoknad::class.java)
+            JsonSoknad::class.java,
+        )
     return soknadJson
   }
 
@@ -59,8 +60,11 @@ class FrontendSoknadControllerV2(
     val vedleggJson =
         objectMapper.readValue(
             dokumentlagerService.hentDokument(
-                fiksDigisosId, soknad.originalSoknadNAV!!.vedleggMetadata),
-            JsonVedleggSpesifikasjon::class.java)
+                fiksDigisosId,
+                soknad.originalSoknadNAV!!.vedleggMetadata,
+            ),
+            JsonVedleggSpesifikasjon::class.java,
+        )
 
     return vedleggJson
   }
@@ -91,5 +95,6 @@ class FrontendSoknadControllerV2(
           fiksDigisosId = soknad.fiksDigisosId,
           tittel = soknadService.hentSoknadstittel(soknad.fiksDigisosId),
           vedlegg = soknadService.hentVedlegg(soknad),
-          vedleggSomMangler = soknadService.hentVedlegg(soknad).filter { !it.kanLastesned }.size)
+          vedleggSomMangler = soknadService.hentVedlegg(soknad).filter { !it.kanLastesned }.size,
+      )
 }

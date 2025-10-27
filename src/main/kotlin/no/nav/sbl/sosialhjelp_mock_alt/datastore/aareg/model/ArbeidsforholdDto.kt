@@ -56,5 +56,5 @@ class OrganisasjonDto(val organisasjonsnummer: String, override val type: String
 class PersonDto(
     val offentligIdent: String,
     val aktoerId: String,
-    override val type: String = "Person"
+    override val type: String = "Person",
 ) : OpplysningspliktigArbeidsgiverDto

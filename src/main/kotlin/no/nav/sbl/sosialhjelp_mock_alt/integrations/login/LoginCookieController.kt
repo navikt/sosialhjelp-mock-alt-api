@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class LoginCookieController(
     @param:Value("\${cookie_domain}") private val cookie_domain: String,
-    private val mockOAuth2Server: MockOAuth2Server
+    private val mockOAuth2Server: MockOAuth2Server,
 ) {
 
   @GetMapping("/login/cookie")
@@ -28,7 +28,7 @@ class LoginCookieController(
       @RequestParam(value = "cookiename", defaultValue = "localhost-idtoken") cookieName: String,
       @RequestParam(value = "redirect", required = false) redirect: String?,
       @RequestParam(value = "expiry", required = false) expiry: String?,
-      response: HttpServletResponse
+      response: HttpServletResponse,
   ): Cookie? {
     val claims = mutableMapOf<String, String>()
     claims["acr"] = "idporten-loa-high"
@@ -45,7 +45,9 @@ class LoginCookieController(
                     JOSEObjectType.JWT.type,
                     listOf(audience),
                     claims,
-                    expiry?.toLong() ?: 3600))
+                    expiry?.toLong() ?: 3600,
+                ),
+            )
             .serialize()
     return createCookieAndAddToResponse(response, cookieName, token, redirect)
   }
@@ -56,7 +58,7 @@ class LoginCookieController(
       @RequestParam(value = "cookiename", defaultValue = "localhost-idtoken") cookieName: String,
       @RequestParam(value = "redirect", required = false) redirect: String?,
       @RequestBody claims: Map<String, Any>,
-      response: HttpServletResponse
+      response: HttpServletResponse,
   ): Cookie? {
     val token = mockOAuth2Server.anyToken(mockOAuth2Server.issuerUrl(issuerId), claims).serialize()
     return createCookieAndAddToResponse(response, cookieName, token, redirect)
@@ -66,7 +68,7 @@ class LoginCookieController(
       response: HttpServletResponse,
       cookieName: String,
       token: String,
-      redirect: String?
+      redirect: String?,
   ): Cookie? {
     val cookie = Cookie(cookieName, token)
     cookie.domain = cookie_domain

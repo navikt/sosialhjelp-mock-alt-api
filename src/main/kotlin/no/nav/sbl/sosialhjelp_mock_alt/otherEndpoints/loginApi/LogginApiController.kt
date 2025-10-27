@@ -34,7 +34,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
     fileSizeThreshold = 5 * 1024 * 1024,
     maxFileSize = 20 * 1024 * 1024,
     maxRequestSize = 150 * 1024 * 1024,
-    location = "/tmp")
+    location = "/tmp",
+)
 class LogginApiController(
     private val restTemplate: RestTemplate,
     private val pdlService: PdlService,
@@ -63,7 +64,8 @@ class LogginApiController(
       response: HttpServletResponse,
   ): ResponseEntity<ByteArray> {
     log.debug(
-        "SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body")
+        "SoknadProxy request for path: ${request.servletPath}, metode: $method, metode fra request: ${request.method}, body: $body"
+    )
     log.debug("SoknadProxy request: $request")
     try {
       checkAuthorized(request)
@@ -83,7 +85,8 @@ class LogginApiController(
     log.debug(
         "SoknadProxy response statuscode: ${eksternResponse.statusCode}, " +
             "body: ${eksternResponse.body?.size},  " +
-            "headers: ${objectMapper.writeValueAsString(eksternResponse.headers)}")
+            "headers: ${objectMapper.writeValueAsString(eksternResponse.headers)}"
+    )
     return eksternResponse
   }
 
@@ -101,7 +104,8 @@ class LogginApiController(
                 ?: request.getHeader("Authorization")?.removePrefix("Bearer ")
         if (tokenString == null) {
           log.debug(
-              "Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}")
+              "Could not extract token from cookie: ${objectMapper.writeValueAsString(cookie)}"
+          )
           throw MockAltException("Unauthorized: No Cookie!")
         }
         val jwtToken = JwtToken(tokenString)
@@ -151,12 +155,14 @@ class LogginApiController(
       newUri =
           newUri.replace(
               "https://sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no",
-              "http://sosialhjelp-innsyn-api-mock")
+              "http://sosialhjelp-innsyn-api-mock",
+          )
     } else if (newUri.contains("soknad-api")) {
       newUri =
           newUri.replace(
               "https://sosialhjelp-mock-alt-api-mock.ekstern.dev.nav.no",
-              "http://sosialhjelp-soknad-api-mock")
+              "http://sosialhjelp-soknad-api-mock",
+          )
     }
 
     val headers = getHeaders(request)
@@ -190,8 +196,13 @@ class LogginApiController(
             objectMapper
                 .writeValueAsString(
                     UnauthorizedMelding(
-                        "azuread_authentication_error", "Autentiseringsfeil", loginurl))
-                .toByteArray())
+                        "azuread_authentication_error",
+                        "Autentiseringsfeil",
+                        loginurl,
+                    )
+                )
+                .toByteArray()
+        )
   }
 
   private fun getHeaders(request: HttpServletRequest): HttpHeaders {

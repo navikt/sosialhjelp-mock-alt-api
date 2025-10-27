@@ -32,7 +32,7 @@ class KlageStorageHandler {
       klageId: UUID,
       ettersendelseId: UUID,
       vedleggJsonId: UUID,
-      dokumentInfoList: List<DokumentInfoDto>
+      dokumentInfoList: List<DokumentInfoDto>,
   ) {
 
     logger.info("Legger til ettersendelse for klageId $klageId for person $personId")
@@ -65,7 +65,7 @@ private fun MutableList<FiksKlageDto>.validateNotExists(klageId: UUID, personId:
 private fun EttersendtInfoNAVDto.addEttersendelse(
     navEksternRefId: UUID,
     vedleggJsonId: UUID,
-    dokumentInfoList: List<DokumentInfoDto>
+    dokumentInfoList: List<DokumentInfoDto>,
 ): EttersendtInfoNAVDto {
   return ettersendelser
       .plus(
@@ -73,6 +73,8 @@ private fun EttersendtInfoNAVDto.addEttersendelse(
               navEksternRefId = navEksternRefId,
               vedleggMetadata = vedleggJsonId,
               vedlegg = dokumentInfoList,
-              timestampSendt = System.currentTimeMillis()))
+              timestampSendt = System.currentTimeMillis(),
+          )
+      )
       .let { updatedList -> this.copy(ettersendelser = updatedList) }
 }

@@ -21,7 +21,7 @@ class EregController(private val eregService: EregService) {
   @GetMapping("/ereg/v1/organisasjon/{orgnr}/noekkelinfo")
   fun getNokkelinfo(
       @PathVariable orgnr: String,
-      @RequestHeader headers: HttpHeaders
+      @RequestHeader headers: HttpHeaders,
   ): ResponseEntity<OrganisasjonNoekkelinfoDto> {
     val nokkelinfo =
         eregService.getOrganisasjonNoekkelinfo(orgnr)

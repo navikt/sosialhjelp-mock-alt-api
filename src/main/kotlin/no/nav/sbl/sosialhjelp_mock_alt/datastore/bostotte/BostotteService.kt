@@ -33,8 +33,10 @@ class BostotteService {
                   ar = sakDato.year,
                   mnd = sakDato.monthOfYear,
                   status = BostotteStatus.UNDER_BEHANDLING,
-              )),
-          mutableListOf(UtbetalingerDto(belop = 14000.0, utbetalingsdato = utbetalingDato)))
+              )
+          ),
+          mutableListOf(UtbetalingerDto(belop = 14000.0, utbetalingsdato = utbetalingDato)),
+      )
     }
     val bostotteDto = bostotteMap[fnr]
     if (bostotteDto != null) return bostotteDto
