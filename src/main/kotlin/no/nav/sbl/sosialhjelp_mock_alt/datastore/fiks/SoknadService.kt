@@ -464,6 +464,7 @@ class SoknadService(
                             .withTilleggsinfo(vedleggsInfo?.tilleggsinfo)
                             .withStatus(vedleggsInfo?.status ?: "LastetOpp")
                             .withHendelseType(vedleggsInfo?.hendelseType)
+                            .withHendelseReferanse(vedleggsInfo?.hendelseReferanse)
                             .withFiler(
                                 listOf(
                                     JsonFiler()
