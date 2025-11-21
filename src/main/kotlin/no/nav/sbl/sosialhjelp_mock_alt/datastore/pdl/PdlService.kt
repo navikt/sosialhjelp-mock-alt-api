@@ -101,6 +101,175 @@ class PdlService(
             .withOpprettetTidspunkt(5)
             .locked()
     personListe[hemmeligBruker.fnr] = hemmeligBruker
+
+    // Create 15 test søknader for Standard user
+    val testDate = LocalDate.of(2025, 9, 5) // 05.09.2025
+    val oldTestDate = LocalDate.of(2025, 8, 5) // 05.08.2025 (3 weeks old)
+
+    // Søknad 1: Påbegynt (started but not sent)
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-paabegynt",
+        mockedSoknadState = MockedSoknadState.PAABEGYNT,
+    )
+
+    // Søknad 2: Sendt (sent but not received yet)
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-sendt",
+        mockedSoknadState = MockedSoknadState.SENDT,
+        customDate = testDate,
+    )
+
+    // Søknad 3: Mottatt
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-mottatt",
+        mockedSoknadState = MockedSoknadState.MOTTATT,
+        customDate = testDate,
+    )
+
+    // Søknad 4: Under behandling (livsopphold)
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-under-behandling",
+        mockedSoknadState = MockedSoknadState.UNDER_BEHANDLING,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold"),
+    )
+
+    // Søknad 5: Under behandling med oppgaver
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-under-behandling-oppgaver",
+        mockedSoknadState = MockedSoknadState.UNDER_BEHANDLING,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold"),
+        harOppgaver = true,
+    )
+
+    // Søknad 6: Under behandling med forlenget saksbehandlingstid
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-forlenget",
+        mockedSoknadState = MockedSoknadState.UNDER_BEHANDLING,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold"),
+    )
+
+    // Søknad 7: Ferdigbehandlet
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-ferdigbehandlet",
+        mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold"),
+    )
+
+    // Søknad 8: Ferdigbehandlet med vilkår
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-ferdigbehandlet-vilkar",
+        mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold"),
+        harVilkar = true,
+    )
+
+    // Søknad 9: Ferdigbehandlet med vilkår med frist
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-ferdigbehandlet-vilkar-frist",
+        mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold"),
+        harVilkar = true,
+    )
+
+    // Søknad 10: 1 av 2 saker ferdigbehandlet (livsopphold + husleie)
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-delvis-ferdig",
+        mockedSoknadState = MockedSoknadState.UNDER_BEHANDLING,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold", "Husleie"),
+    )
+
+    // Søknad 11: 1 av 2 saker ferdigbehandlet med vilkår
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-delvis-ferdig-vilkar",
+        mockedSoknadState = MockedSoknadState.UNDER_BEHANDLING,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold", "Husleie"),
+        harVilkar = true,
+    )
+
+    // Søknad 12: Ferdigbehandlet (livsopphold + husleie)
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-to-saker-ferdig",
+        mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold", "Husleie"),
+    )
+
+    // Søknad 13: Ferdigbehandlet med vilkår (livsopphold + husleie)
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-to-saker-ferdig-vilkar",
+        mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
+        customDate = testDate,
+        saksTitler = listOf("Livsopphold", "Husleie"),
+        harVilkar = true,
+    )
+
+    // Søknad 14: Ferdigbehandlet med vilkår (økonomisk sosialhjelp - default title)
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-sosialhjelp-vilkar",
+        mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
+        customDate = testDate,
+        harVilkar = true,
+    )
+
+    // Søknad 15: Ferdigbehandlet (3 weeks old - 05.08.2025)
+    soknadService.opprettDigisosSak(
+        fiksOrgId = "0315",
+        kommuneNr = "0301",
+        fnr = fastFnr,
+        id = "test-soknad-gammel",
+        mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
+        customDate = oldTestDate,
+    )
   }
 
   fun getInnsynResponseFor(ident: String): PdlInnsynPersonResponse {

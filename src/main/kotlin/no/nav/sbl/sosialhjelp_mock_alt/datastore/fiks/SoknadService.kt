@@ -89,14 +89,28 @@ class SoknadService(
       fnr: String,
       id: String,
       mockedSoknadState: MockedSoknadState = MockedSoknadState.MOTTATT,
+      customDate: LocalDate? = null,
+      saksTitler: List<String> = listOf("Livsopphold"),
+      harVilkar: Boolean = false,
+      harOppgaver: Boolean = false,
   ) {
     val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
     var hendelsestidspunkt = ZonedDateTime.now(ZoneOffset.UTC)
-    if (id == "15months") {
+
+    if (customDate != null) {
+      hendelsestidspunkt = customDate.atStartOfDay(ZoneOffset.UTC).plusHours(10)
+    } else if (id == "15months") {
       hendelsestidspunkt = hendelsestidspunkt.minusMonths(15)
     }
 
-    leggHendelserTilSak(digisosApiWrapper, hendelsestidspunkt, mockedSoknadState)
+    leggHendelserTilSak(
+        digisosApiWrapper,
+        hendelsestidspunkt,
+        mockedSoknadState,
+        saksTitler,
+        harVilkar,
+        harOppgaver,
+    )
 
     oppdaterDigisosSak(
         kommuneNr = kommuneNr,
@@ -111,7 +125,18 @@ class SoknadService(
       digisosApiWrapper: DigisosApiWrapper,
       hendelsestidspunkt: ZonedDateTime,
       mockedSoknadState: MockedSoknadState,
+      saksTitler: List<String> = listOf("Livsopphold"),
+      harVilkar: Boolean = false,
+      harOppgaver: Boolean = false,
   ) {
+    // PAABEGYNT: No events added (søknad started but not sent)
+    if (mockedSoknadState == MockedSoknadState.PAABEGYNT) return
+
+    // SENDT: Only add this if you want to track sent but not received
+    // For now, we skip to MOTTATT
+    if (mockedSoknadState == MockedSoknadState.SENDT) return
+
+    // MOTTATT and beyond: Add received status
     digisosApiWrapper.sak.soker.hendelser.add(
         JsonSoknadsStatus()
             .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
@@ -121,6 +146,7 @@ class SoknadService(
 
     if (mockedSoknadState == MockedSoknadState.MOTTATT) return
 
+    // UNDER_BEHANDLING or FERDIGBEHANDLET: Add processing status
     digisosApiWrapper.sak.soker.hendelser.add(
         JsonSoknadsStatus()
             .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
@@ -134,43 +160,55 @@ class SoknadService(
             ),
     )
 
+    // Add saker (cases) for each title
+    val saksReferanser =
+        saksTitler.map { tittel ->
+          val saksReferanse = UUID.randomUUID().toString()
+
+          digisosApiWrapper.sak.soker.hendelser.add(
+              JsonSaksStatus()
+                  .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
+                  .withReferanse(saksReferanse)
+                  .withType(JsonHendelse.Type.SAKS_STATUS)
+                  .withTittel(tittel)
+                  .withStatus(JsonSaksStatus.Status.UNDER_BEHANDLING),
+          )
+
+          saksReferanse
+        }
+
     if (mockedSoknadState == MockedSoknadState.UNDER_BEHANDLING) return
 
-    val saksReferanse = UUID.randomUUID().toString()
+    // FERDIGBEHANDLET, INNVILGET, or AVVIST: Add vedtak for each sak
+    saksReferanser.forEach { saksReferanse ->
+      digisosApiWrapper.sak.soker.hendelser.add(
+          JsonVedtakFattet()
+              .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
+              .withSaksreferanse(saksReferanse)
+              .withType(JsonHendelse.Type.VEDTAK_FATTET)
+              .withUtfall(
+                  if (mockedSoknadState == MockedSoknadState.AVVIST) {
+                    JsonVedtakFattet.Utfall.AVVIST
+                  } else {
+                    JsonVedtakFattet.Utfall.INNVILGET
+                  },
+              )
+              .withVedtaksfil(
+                  JsonVedtaksfil()
+                      .withReferanse(
+                          JsonDokumentlagerFilreferanse()
+                              .withType(
+                                  JsonFilreferanse.Type.DOKUMENTLAGER,
+                              )
+                              .withId(UUID.randomUUID().toString()),
+                      ),
+              ),
+      )
+    }
 
-    digisosApiWrapper.sak.soker.hendelser.add(
-        JsonSaksStatus()
-            .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
-            .withReferanse(saksReferanse)
-            .withType(JsonHendelse.Type.SAKS_STATUS)
-            .withTittel("Livsopphold")
-            .withStatus(JsonSaksStatus.Status.UNDER_BEHANDLING),
-    )
+    if (mockedSoknadState == MockedSoknadState.FERDIGBEHANDLET) return
 
-    digisosApiWrapper.sak.soker.hendelser.add(
-        JsonVedtakFattet()
-            .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
-            .withSaksreferanse(saksReferanse)
-            .withType(JsonHendelse.Type.VEDTAK_FATTET)
-            .withUtfall(
-                if (mockedSoknadState == MockedSoknadState.AVVIST) {
-                  JsonVedtakFattet.Utfall.AVVIST
-                } else {
-                  JsonVedtakFattet.Utfall.INNVILGET
-                },
-            )
-            .withVedtaksfil(
-                JsonVedtaksfil()
-                    .withReferanse(
-                        JsonDokumentlagerFilreferanse()
-                            .withType(
-                                JsonFilreferanse.Type.DOKUMENTLAGER,
-                            )
-                            .withId(UUID.randomUUID().toString()),
-                    ),
-            ),
-    )
-
+    // INNVILGET: Add utbetalinger
     if (mockedSoknadState == MockedSoknadState.INNVILGET) {
       listOf(-365, -60, -30, 10, 30).map { offset ->
         digisosApiWrapper.sak.soker.hendelser.add(
@@ -178,7 +216,7 @@ class SoknadService(
                 .withHendelsestidspunkt(hendelsestidspunkt.format(DateTimeFormatter.ISO_INSTANT))
                 .withType(JsonHendelse.Type.UTBETALING)
                 .withUtbetalingsreferanse(UUID.randomUUID().toString())
-                .withSaksreferanse(saksReferanse)
+                .withSaksreferanse(saksReferanser.first())
                 .withStatus(
                     if (offset > 0) JsonUtbetaling.Status.PLANLAGT_UTBETALING
                     else JsonUtbetaling.Status.UTBETALT
@@ -516,8 +554,11 @@ class SoknadService(
 }
 
 enum class MockedSoknadState {
-  MOTTATT,
-  UNDER_BEHANDLING,
-  INNVILGET,
-  AVVIST,
+  PAABEGYNT, // Started but not sent
+  SENDT, // Sent but not received
+  MOTTATT, // Received
+  UNDER_BEHANDLING, // Under processing
+  FERDIGBEHANDLET, // Completed
+  INNVILGET, // Approved
+  AVVIST, // Rejected
 }
