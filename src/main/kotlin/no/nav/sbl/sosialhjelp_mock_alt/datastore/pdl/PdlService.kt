@@ -104,8 +104,14 @@ class PdlService(
 
     // Create 15 test søknader for Standard user
     val testDate = LocalDate.of(2025, 9, 5) // 05.09.2025
-    val oldTestDate = LocalDate.of(2025, 8, 5) // 05.08.2025 (3 weeks old)
     val underBehandlingDate = LocalDate.now().plusDays(3) // Dynamic: 3 days in the future
+    val todayDate = LocalDate.now() // Today
+    val minus4Days = LocalDate.now().minusDays(4) // 4 days ago
+    val minus10Days = LocalDate.now().minusDays(10) // 10 days ago
+    val minus15Days = LocalDate.now().minusDays(15) // 15 days ago
+    val minus19Days = LocalDate.now().minusDays(19) // 19 days ago
+    val minus20Days = LocalDate.now().minusDays(20) // 20 days ago
+    val minus21Days = LocalDate.now().minusDays(21) // 21 days ago
 
     // Søknad 1: Påbegynt (started but not sent) - Default saksTitler
     soknadService.opprettDigisosSak(
@@ -170,37 +176,37 @@ class PdlService(
         saksTitler = listOf("Legeregning, Nødhjelp"),
     )
 
-    // Søknad 7: Ferdigbehandlet - Single sakstittel
+    // Søknad 7: Ferdigbehandlet - Single sakstittel (today)
     soknadService.opprettDigisosSak(
         fiksOrgId = "0315",
         kommuneNr = "0301",
         fnr = fastFnr,
         id = "test-soknad-ferdigbehandlet",
         mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
-        customDate = testDate,
+        customDate = todayDate,
         saksTitler = listOf("Livsopphold"),
     )
 
-    // Søknad 8: Ferdigbehandlet med vilkår - Multiple sakstitler
+    // Søknad 8: Ferdigbehandlet med vilkår - Multiple sakstitler (4 days ago)
     soknadService.opprettDigisosSak(
         fiksOrgId = "0315",
         kommuneNr = "0301",
         fnr = fastFnr,
         id = "test-soknad-ferdigbehandlet-vilkar",
         mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
-        customDate = testDate,
+        customDate = minus4Days,
         saksTitler = listOf("Tannlege", "Husleie"),
         harVilkar = true,
     )
 
-    // Søknad 9: Ferdigbehandlet med vilkår med frist - Single large sakstittel
+    // Søknad 9: Ferdigbehandlet med vilkår med frist - Single large sakstittel (10 days ago)
     soknadService.opprettDigisosSak(
         fiksOrgId = "0315",
         kommuneNr = "0301",
         fnr = fastFnr,
         id = "test-soknad-ferdigbehandlet-vilkar-frist",
         mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
-        customDate = testDate,
+        customDate = minus10Days,
         saksTitler = listOf("Strømregning, Legeregning"),
         harVilkar = true,
     )
@@ -228,49 +234,49 @@ class PdlService(
         harVilkar = true,
     )
 
-    // Søknad 12: Ferdigbehandlet - Multiple sakstitler
+    // Søknad 12: Ferdigbehandlet - Multiple sakstitler (15 days ago)
     soknadService.opprettDigisosSak(
         fiksOrgId = "0315",
         kommuneNr = "0301",
         fnr = fastFnr,
         id = "test-soknad-to-saker-ferdig",
         mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
-        customDate = testDate,
+        customDate = minus15Days,
         saksTitler = listOf("Legeregning", "Nødhjelp", "Livsopphold"),
     )
 
-    // Søknad 13: Ferdigbehandlet med vilkår - Single large sakstittel
+    // Søknad 13: Ferdigbehandlet med vilkår - Single large sakstittel (19 days ago)
     soknadService.opprettDigisosSak(
         fiksOrgId = "0315",
         kommuneNr = "0301",
         fnr = fastFnr,
         id = "test-soknad-to-saker-ferdig-vilkar",
         mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
-        customDate = testDate,
+        customDate = minus19Days,
         saksTitler = listOf("Tannlege, Husleie"),
         harVilkar = true,
     )
 
-    // Søknad 14: Ferdigbehandlet med vilkår - Multiple sakstitler
+    // Søknad 14: Ferdigbehandlet med vilkår - Multiple sakstitler (20 days ago)
     soknadService.opprettDigisosSak(
         fiksOrgId = "0315",
         kommuneNr = "0301",
         fnr = fastFnr,
         id = "test-soknad-sosialhjelp-vilkar",
         mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
-        customDate = testDate,
+        customDate = minus20Days,
         saksTitler = listOf("Strømregning", "Legeregning"),
         harVilkar = true,
     )
 
-    // Søknad 15: Ferdigbehandlet (3 weeks old) - Single sakstittel
+    // Søknad 15: Ferdigbehandlet (3 weeks old) - Single sakstittel (21 days ago)
     soknadService.opprettDigisosSak(
         fiksOrgId = "0315",
         kommuneNr = "0301",
         fnr = fastFnr,
         id = "test-soknad-gammel",
         mockedSoknadState = MockedSoknadState.FERDIGBEHANDLET,
-        customDate = oldTestDate,
+        customDate = minus21Days,
         saksTitler = listOf("Nødhjelp"),
     )
   }
