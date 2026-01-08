@@ -417,13 +417,13 @@ class SoknadService(
   }
 
   fun DigisosSak.updateDigisosSoker(digisosSoker: DigisosSoker): DigisosSak =
-      this.copy(digisosSoker = digisosSoker)
+      this.copy(digisosSoker = digisosSoker, sistEndret = System.currentTimeMillis())
 
   fun DigisosSak.updateOriginalSoknadNAV(originalSoknadNAV: OriginalSoknadNAV): DigisosSak =
-      this.copy(originalSoknadNAV = originalSoknadNAV)
+      this.copy(originalSoknadNAV = originalSoknadNAV, sistEndret = System.currentTimeMillis())
 
   fun DigisosSak.updateEttersendtInfoNAV(ettersendtInfoNAV: EttersendtInfoNAV): DigisosSak =
-      this.copy(ettersendtInfoNAV = ettersendtInfoNAV)
+      this.copy(ettersendtInfoNAV = ettersendtInfoNAV, sistEndret = System.currentTimeMillis())
 
   fun lastOppFil(
       fiksDigisosId: String,
