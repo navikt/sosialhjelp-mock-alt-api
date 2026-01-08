@@ -8,6 +8,7 @@ import org.joda.time.DateTime
 data class Personalia(
     val fnr: String = genererTilfeldigPersonnummer(),
     val navn: PdlPersonNavn = PdlPersonNavn(),
+    val foedselsdato: PdlFoedselsdato = PdlFoedselsdato("2000-01-01", 2000),
     var adressebeskyttelse: Gradering = Gradering.UGRADERT,
     var sivilstand: String = "UOPPGITT",
     var ektefelleType: String? = null,
@@ -25,6 +26,7 @@ data class Personalia(
     var locked: Boolean = false,
     var opprettetTidspunkt: Long = DateTime.now().millis,
 ) {
+
   fun withNavn(fornavn: String, mellomnavn: String, etternavn: String): Personalia {
     navn.fornavn = fornavn
     navn.mellomnavn = mellomnavn

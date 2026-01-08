@@ -21,6 +21,7 @@ data class PdlSoknadPerson(
     val oppholdsadresse: List<PdlOppholdsadresse>?,
     val forelderBarnRelasjon: List<PdlForelderBarnRelasjon>?,
     val navn: List<PdlSoknadPersonNavn>?,
+    val foedselsdato: List<PdlFoedselsdato>?,
     val sivilstand: List<PdlSivilstand>?,
     val statsborgerskap: List<PdlStatsborgerskap>?,
 )
