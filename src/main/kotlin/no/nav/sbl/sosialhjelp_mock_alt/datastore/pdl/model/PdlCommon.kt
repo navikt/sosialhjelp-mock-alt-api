@@ -41,7 +41,7 @@ enum class Kjoenn {
   UKJENT,
 }
 
-data class PdlFoedselsdato(val foedselsdato: String?)
+data class PdlFoedselsdato(val foedselsdato: String?, val foedselsaar: Int?)
 
 data class PdlTelefonnummer(val landskode: String, val nummer: String, val prioritet: Int)
 
