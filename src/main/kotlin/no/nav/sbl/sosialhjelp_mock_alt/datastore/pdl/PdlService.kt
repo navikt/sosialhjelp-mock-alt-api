@@ -363,7 +363,7 @@ class PdlService(
       etternavn: String,
       statsborgerskap: String,
       position: Long,
-      postnummer: String = "0101",
+      postnummer: String = "0557",
       kommuneNummer: String = "0301",
       enhetsnummer: String = "0315",
       adminRoller: List<AdminRolle> = emptyList(),
@@ -379,7 +379,7 @@ class PdlService(
             .withForelderBarnRelasjon(listOf(barnFnr))
             .withBostedsadresse(
                 ForenkletBostedsadresse(
-                    adressenavn = "Gateveien",
+                    adressenavn = "Sannergata",
                     husnummer = 1,
                     postnummer = postnummer,
                     kommunenummer = kommuneNummer,
@@ -544,7 +544,7 @@ class PdlService(
     private val log by logger()
 
     private val defaultAdresse =
-        PdlVegadresse("matrikkelId", "Gateveien", 1, "A", null, "0101", "0301", "H101")
+        PdlVegadresse("matrikkelId", "Sannergata", 1, "A", null, "0557", "0301", "H101")
     private val annenAdresse =
         PdlVegadresse("matrikkelId2", "Karl Johans gate", 1, null, null, "0101", "0301", null)
 

@@ -35,9 +35,9 @@ data class FrontendPersonalia(
     var starsborgerskap: String = "NOR",
     var bostedsadresse: ForenkletBostedsadresse =
         ForenkletBostedsadresse(
-            adressenavn = "Gateveien",
+            adressenavn = "Sannergata",
             husnummer = 1,
-            postnummer = "0101",
+            postnummer = "0557",
             kommunenummer = "0301",
         ),
     var telefonnummer: String = "",

@@ -7,6 +7,7 @@ import no.nav.sbl.sosialhjelp_mock_alt.datastore.pdl.model.PdlHentGeografiskTilk
 import no.nav.sbl.sosialhjelp_mock_alt.utils.logger
 import org.springframework.stereotype.Component
 
+@Deprecated("Brukes ikke lenger av Soknad-api")
 @Component
 class PdlGeografiskTilknytningService {
 
