@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Include Spring Boot defaults -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- Console Appender with JSON format -->
+    <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <!-- Configure JSON output -->
+            <includeMdcKeyName>mdc</includeMdcKeyName>
+            <includeContext>false</includeContext>
+            <customFields>{"application":"sosialhjelp-mock-alt-api"}</customFields>
+
+            <!-- Field names -->
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <version>version</version>
+                <message>message</message>
+                <logger>logger</logger>
+                <thread>thread</thread>
+                <level>level</level>
+                <levelValue>levelValue</levelValue>
+            </fieldNames>
+
+            <!-- Include caller data (file, line number) - disable in production for performance -->
+            <includeCallerData>false</includeCallerData>
+
+            <!-- Pretty print JSON for readability (disable in production) -->
+            <jsonGeneratorDecorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
+        </encoder>
+    </appender>
+
+    <!-- Logger configurations -->
+    <logger name="no.nav.sbl.sosialhjelp.mock.alt" level="DEBUG"/>
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.springframework.boot" level="INFO"/>
+    <logger name="org.hibernate" level="WARN"/>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="stdout_json"/>
+    </root>
+
+    <!-- Profile-specific configurations -->
+    <springProfile name="dev">
+        <logger name="no.nav.sbl.sosialhjelp.mock.alt" level="TRACE"/>
+    </springProfile>
+
+</configuration>
+

@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.mock.oauth2.server)
     implementation(libs.springdoc.openapi.starter.webmvc.ui)
     implementation(libs.springdoc.openapi.starter.common)
+    implementation(libs.logstash.logback.encoder)
     testImplementation(libs.spring.boot.starter.test)
 }
 

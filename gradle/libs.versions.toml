@@ -11,6 +11,7 @@ mock_oauth2_server = "3.0.1"
 spotless = "8.0.0"
 versions = "0.53.0"
 ktlint = "1.7.1"
+logstash_logback_encoder = "8.0"
 
 [libraries]
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
@@ -26,6 +27,7 @@ mock-oauth2-server = { module = "no.nav.security:mock-oauth2-server", version.re
 springdoc-openapi-starter-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
 springdoc-openapi-starter-common = { module = "org.springdoc:springdoc-openapi-starter-common", version.ref = "springdoc" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logstash_logback_encoder" }
 
 [bundles]
 
