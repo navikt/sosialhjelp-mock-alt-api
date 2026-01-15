@@ -1,49 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- Include Spring Boot defaults -->
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
-    <!-- Console Appender with JSON format -->
-    <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <!-- Configure JSON output -->
-            <includeMdcKeyName>mdc</includeMdcKeyName>
-            <includeContext>false</includeContext>
-            <customFields>{"application":"sosialhjelp-mock-alt-api"}</customFields>
+    <springProfile name="log-kibana">
 
-            <!-- Field names -->
-            <fieldNames>
-                <timestamp>timestamp</timestamp>
-                <version>version</version>
-                <message>message</message>
-                <logger>logger</logger>
-                <thread>thread</thread>
-                <level>level</level>
-                <levelValue>levelValue</levelValue>
-            </fieldNames>
+        <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                    <maxDepthPerThrowable>20</maxDepthPerThrowable>
+                </throwableConverter>
+            </encoder>
+        </appender>
 
-            <!-- Include caller data (file, line number) - disable in production for performance -->
-            <includeCallerData>false</includeCallerData>
+        <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
+            <appender-ref ref="STDOUT" />
+        </appender>
 
-            <!-- Pretty print JSON for readability (disable in production) -->
-            <jsonGeneratorDecorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
-        </encoder>
-    </appender>
+        <root level="INFO">
+            <appender-ref ref="OTEL" />
+        </root>
 
-    <!-- Logger configurations -->
-    <logger name="no.nav.sbl.sosialhjelp.mock.alt" level="DEBUG"/>
-    <logger name="org.springframework.web" level="INFO"/>
-    <logger name="org.springframework.boot" level="INFO"/>
-    <logger name="org.hibernate" level="WARN"/>
+        <logger name="org.springframework" level="warn"/>
 
-    <!-- Root logger -->
-    <root level="INFO">
-        <appender-ref ref="stdout_json"/>
-    </root>
-
-    <!-- Profile-specific configurations -->
-    <springProfile name="dev">
-        <logger name="no.nav.sbl.sosialhjelp.mock.alt" level="TRACE"/>
+        <root level="INFO">
+            <appender-ref ref="stdout_json"/>
+        </root>
     </springProfile>
 
 </configuration>

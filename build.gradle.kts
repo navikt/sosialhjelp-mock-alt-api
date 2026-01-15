@@ -46,7 +46,16 @@ dependencies {
     implementation(libs.mock.oauth2.server)
     implementation(libs.springdoc.openapi.starter.webmvc.ui)
     implementation(libs.springdoc.openapi.starter.common)
+
+    // Logback
+    implementation(libs.logback.classic)
     implementation(libs.logstash.logback.encoder)
+
+    // Opentelemetry
+    implementation(platform(libs.opentelemetry.bom))
+    implementation(libs.opentelemetry.api)
+    implementation(libs.opentelemetry.instrumentation.logback)
+
     testImplementation(libs.spring.boot.starter.test)
 }
 
