@@ -1,0 +1,22 @@
+package no.nav.sbl.sosialhjelp.mock.alt.datastore.utbetaling.model
+
+data class Utbetalingsoppslag(
+    val ident: String,
+    val rolle: Rolle,
+    val periode: Periode,
+    val periodetype: Periodetype,
+)
+
+enum class Rolle(
+    val databaseverdi: String,
+) {
+    UTBETALT_TIL("UtbetaltTil"),
+    RETTIGHETSHAVER("Rettighetshaver"),
+}
+
+enum class Periodetype(
+    val databaseverdi: String,
+) {
+    UTBETALINGSPERIODE("Utbetalingsperiode"),
+    YTELSESPERIODE("Ytelsesperiode"),
+}

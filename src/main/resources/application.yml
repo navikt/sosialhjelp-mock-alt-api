@@ -17,7 +17,7 @@ spring:
 logging:
   level:
     root: INFO
-    no.nav.sbl.sosialhjelp_mock_alt: DEBUG
+    no.nav.sbl.sosialhjelp.mock.alt: DEBUG
     org.springframework.web: INFO
 
 host_address: ${HOST_ADDRESS:http://localhost:8989/}

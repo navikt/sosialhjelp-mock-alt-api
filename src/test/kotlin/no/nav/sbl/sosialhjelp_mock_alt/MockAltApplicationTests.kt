@@ -1,4 +1,4 @@
-package no.nav.sbl.sosialhjelp_mock_alt
+package no.nav.sbl.sosialhjelp.mock.alt
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -7,6 +7,5 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @SpringBootTest
 @EnableScheduling
 class MockAltApplicationTests {
-
-  @Test fun contextLoads() {}
+    @Test fun contextLoads() {}
 }
