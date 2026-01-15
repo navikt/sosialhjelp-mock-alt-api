@@ -1,0 +1,235 @@
+[
+    {
+        "utbetaltTil": {
+            "aktoertype": "PERSON",
+            "ident": "26504547549",
+            "navn": "Standard Standardsen"
+        },
+        "utbetalingsmetode": "Norsk bankkonto",
+        "utbetalingsstatus": "Utbetalt",
+        "posteringsdato": "2025-10-16",
+        "forfallsdato": "2025-10-17",
+        "utbetalingsdato": "2025-10-17",
+        "utbetalingNettobeloep": 0.00,
+        "utbetalingsmelding": "011025 - 311025 100 %, Skatt tabell: 8000",
+        "utbetaltTilKonto": {
+            "kontonummer": "45162797038",
+            "kontotype": "Norsk bankkonto"
+        },
+        "ytelseListe": [
+            {
+                "ytelsestype": "Uføretrygd",
+                "ytelsesperiode": {
+                    "fom": "2025-10-01",
+                    "tom": "2025-10-31"
+                },
+                "ytelseNettobeloep": 0.00,
+                "rettighetshaver": {
+                    "aktoertype": "PERSON",
+                    "ident": "26504547549",
+                    "navn": "Standard Standardsen"
+                },
+                "skattsum": -5763.00,
+                "trekksum": -21900.00,
+                "ytelseskomponentersum": 27663.00,
+                "skattListe": [
+                    {
+                        "skattebeloep": -5763.00
+                    }
+                ],
+                "trekkListe": [
+                    {
+                        "trekktype": "Vederlagstrekk",
+                        "trekkbeloep": -15706.00,
+                        "kreditor": "80000415406"
+                    },
+                    {
+                        "trekktype": "Vederlagstrekk",
+                        "trekkbeloep": -6194.00,
+                        "kreditor": "80000916122"
+                    }
+                ],
+                "ytelseskomponentListe": [
+                    {
+                        "ytelseskomponenttype": "Ordinær",
+                        "satsbeloep": 0.00,
+                        "satsantall": 0.0,
+                        "ytelseskomponentbeloep": 27663.00
+                    }
+                ],
+                "bilagsnummer": "14201889"
+            }
+        ]
+    },
+    {
+        "utbetaltTil": {
+            "aktoertype": "PERSON",
+            "ident": "26504547549",
+            "navn": "Standard Standardsen"
+        },
+        "utbetalingsmetode": "Norsk bankkonto",
+        "utbetalingsstatus": "Utbetalt",
+        "posteringsdato": "2025-11-17",
+        "forfallsdato": "2025-11-17",
+        "utbetalingsdato": "2025-11-18",
+        "utbetalingNettobeloep": 0.00,
+        "utbetalingsmelding": "011125 - 301125 100 %, Skatt tabell: 8000",
+        "utbetaltTilKonto": {
+            "kontonummer": "45162797038",
+            "kontotype": "Norsk bankkonto"
+        },
+        "ytelseListe": [
+            {
+                "ytelsestype": "Uføretrygd",
+                "ytelsesperiode": {
+                    "fom": "2025-11-01",
+                    "tom": "2025-11-30"
+                },
+                "ytelseNettobeloep": 0.00,
+                "rettighetshaver": {
+                    "aktoertype": "PERSON",
+                    "ident": "26504547549",
+                    "navn": "Standard Standardsen"
+                },
+                "skattsum": -5763.00,
+                "trekksum": -21900.00,
+                "ytelseskomponentersum": 27663.00,
+                "skattListe": [
+                    {
+                        "skattebeloep": -5763.00
+                    }
+                ],
+                "trekkListe": [
+                    {
+                        "trekktype": "Vederlagstrekk",
+                        "trekkbeloep": -21900.00,
+                        "kreditor": "80000415406"
+                    }
+                ],
+                "ytelseskomponentListe": [
+                    {
+                        "ytelseskomponenttype": "Ordinær",
+                        "satsbeloep": 0.00,
+                        "satsantall": 0.0,
+                        "ytelseskomponentbeloep": 27663.00
+                    }
+                ],
+                "bilagsnummer": "14212831"
+            }
+        ]
+    },
+    {
+        "utbetaltTil": {
+            "aktoertype": "PERSON",
+            "ident": "26504547549",
+            "navn": "Standard Standardsen"
+        },
+        "utbetalingsmetode": "Norsk bankkonto",
+        "utbetalingsstatus": "Utbetalt",
+        "posteringsdato": "2025-12-08",
+        "forfallsdato": "2025-12-11",
+        "utbetalingsdato": "2025-12-11",
+        "utbetalingNettobeloep": 22827.00,
+        "utbetalingsmelding": "011225 - 311225 100 %, Skatt tabell: 8000",
+        "utbetaltTilKonto": {
+            "kontonummer": "45162797038",
+            "kontotype": "Norsk bankkonto"
+        },
+        "ytelseListe": [
+            {
+                "ytelsestype": "Uføretrygd",
+                "ytelsesperiode": {
+                    "fom": "2025-12-01",
+                    "tom": "2025-12-31"
+                },
+                "ytelseNettobeloep": 22827.00,
+                "rettighetshaver": {
+                    "aktoertype": "PERSON",
+                    "ident": "26504547549",
+                    "navn": "Standard Standardsen"
+                },
+                "skattsum": -2881.00,
+                "trekksum": -1955.00,
+                "ytelseskomponentersum": 27663.00,
+                "skattListe": [
+                    {
+                        "skattebeloep": -2881.00
+                    }
+                ],
+                "trekkListe": [
+                    {
+                        "trekktype": "Vederlagstrekk",
+                        "trekkbeloep": -1955.00,
+                        "kreditor": "80000415406"
+                    }
+                ],
+                "ytelseskomponentListe": [
+                    {
+                        "ytelseskomponenttype": "Ordinær",
+                        "satsbeloep": 0.00,
+                        "satsantall": 0.0,
+                        "ytelseskomponentbeloep": 27663.00
+                    }
+                ],
+                "bilagsnummer": "827028304"
+            }
+        ]
+    },
+    {
+        "utbetaltTil": {
+            "aktoertype": "PERSON",
+            "ident": "26504547549",
+            "navn": "Standard Standardsen"
+        },
+        "utbetalingsmetode": "Norsk bankkonto",
+        "utbetalingsstatus": "Utbetalt",
+        "posteringsdato": "2026-01-08",
+        "forfallsdato": "2026-01-08",
+        "utbetalingsdato": "2026-01-09",
+        "utbetalingNettobeloep": 0.00,
+        "utbetalingsmelding": "010126 - 310126 100 %, Skatt tabell: 8000",
+        "utbetaltTilKonto": {
+            "kontonummer": "45162797038",
+            "kontotype": "Norsk bankkonto"
+        },
+        "ytelseListe": [
+            {
+                "ytelsestype": "Uføretrygd",
+                "ytelsesperiode": {
+                    "fom": "2026-01-01",
+                    "tom": "2026-01-31"
+                },
+                "ytelseNettobeloep": 0.00,
+                "rettighetshaver": {
+                    "aktoertype": "PERSON",
+                    "ident": "26504547549",
+                    "navn": "Standard Standardsen"
+                },
+                "skattsum": -5496.00,
+                "trekksum": -22167.00,
+                "ytelseskomponentersum": 27663.00,
+                "skattListe": [
+                    {
+                        "skattebeloep": -5496.00
+                    }
+                ],
+                "trekkListe": [
+                    {
+                        "trekktype": "Vederlagstrekk",
+                        "trekkbeloep": -22167.00,
+                        "kreditor": "80000415406"
+                    }
+                ],
+                "ytelseskomponentListe": [
+                    {
+                        "ytelseskomponenttype": "Ordinær",
+                        "satsbeloep": 0.00,
+                        "satsantall": 0.0,
+                        "ytelseskomponentbeloep": 27663.00
+                    }
+                ],
+                "bilagsnummer": "14236017"
+            }
+        ]
+    }
+]
