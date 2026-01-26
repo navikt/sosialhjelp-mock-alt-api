@@ -1,10 +1,11 @@
 package no.nav.sbl.sosialhjelp.mock.alt.otherEndpoints.frontend.model
 
-import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsforholdDto
-import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsgiverType
-import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.OpplysningspliktigArbeidsgiverDto
-import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.OrganisasjonDto
-import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.PersonDto
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsforholdResponseDto
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsstedDto
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsstedType
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidstakerIdentType
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.IdentInfoDto
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.IdentInfoType
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.bostotte.model.UtbetalingerDto
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.ereg.EregService
@@ -106,28 +107,47 @@ data class FrontendPersonalia(
         fun aaregArbeidsforhold(
             fnr: String,
             frontendArbeidsforhold: FrontendArbeidsforhold,
-        ): ArbeidsforholdDto {
-            val arbeidsgiver: OpplysningspliktigArbeidsgiverDto =
+        ): ArbeidsforholdResponseDto {
+            val arbeidssted: ArbeidsstedDto =
                 when (frontendArbeidsforhold.type) {
-                    ArbeidsgiverType.Person.name -> {
-                        PersonDto(frontendArbeidsforhold.ident, frontendArbeidsforhold.ident)
-                    }
-                    ArbeidsgiverType.Organisasjon.name -> {
-                        OrganisasjonDto(frontendArbeidsforhold.orgnummer)
-                    }
-                    else -> {
-                        throw MockAltException("Ukjent ArbreidsgiverType: ${frontendArbeidsforhold.type}")
-                    }
+                    ArbeidsstedType.Person -> createArbeidssted(ArbeidsstedType.Person, frontendArbeidsforhold.ident)
+                    ArbeidsstedType.Underenhet ->
+                        createArbeidssted(
+                            ArbeidsstedType.Underenhet,
+                            frontendArbeidsforhold.orgnummer,
+                        )
+
+                    else -> throw MockAltException("Ukjent ArbreidsgiverType: ${frontendArbeidsforhold.type}")
                 }
-            return ArbeidsforholdDto.nyttArbeidsforhold(
-                fnr = fnr,
-                fom = textToLocalDate(frontendArbeidsforhold.startDato),
-                tom = textToLocalDate(frontendArbeidsforhold.sluttDato),
-                stillingsprosent = frontendArbeidsforhold.stillingsProsent.toDouble(),
-                arbeidsforholdId = frontendArbeidsforhold.id,
-                arbeidsgiver = arbeidsgiver,
+            return ArbeidsforholdResponseDto.createNyttArbeidsforhold(
+                personId = fnr,
+                start = textToLocalDate(frontendArbeidsforhold.startDato),
+                slutt = textToLocalDate(frontendArbeidsforhold.sluttDato),
+                stillingsprosent = frontendArbeidsforhold.stillingsProsent ?: 0.0,
+                arbeidssted = arbeidssted,
             )
         }
+
+        private fun createArbeidssted(
+            type: ArbeidsstedType,
+            ident: String,
+        ): ArbeidsstedDto =
+            ArbeidsstedDto(
+                type = type,
+                identer =
+                    listOf(
+                        IdentInfoDto(
+                            type =
+                                if (type == ArbeidsstedType.Person) {
+                                    IdentInfoType.FOLKEREGISTERIDENT
+                                } else {
+                                    IdentInfoType.ORGANISASJONSNUMMER
+                                },
+                            ident = ident,
+                            gjeldende = true,
+                        ),
+                    ),
+            )
 
         private fun textToLocalDate(string: String): LocalDate =
             LocalDate.of(
@@ -274,41 +294,49 @@ fun List<UtbetalDataDto>.toFrontend(): List<FrontendUtbetalingFraNav> =
     }
 
 class FrontendArbeidsforhold(
-    val type: String,
+    val type: ArbeidsstedType?,
     val id: String,
     val startDato: String,
     val sluttDato: String,
-    val stillingsProsent: String,
+    val stillingsProsent: Double?,
     val ident: String,
     val orgnummer: String,
     val orgnavn: String,
 ) {
     companion object {
         fun arbeidsforhold(
-            dto: ArbeidsforholdDto,
+            dto: ArbeidsforholdResponseDto,
             eregService: EregService,
         ): FrontendArbeidsforhold {
-            val orgnummer = (dto.arbeidsgiver as? OrganisasjonDto)?.organisasjonsnummer
+            val orgnummer =
+                dto.arbeidssted
+                    ?.identer
+                    ?.find { it.type == IdentInfoType.ORGANISASJONSNUMMER }
+                    ?.ident
             val orgnavn = orgnummer?.let { eregService.getOrganisasjonNoekkelinfo(it)?.navn?.navnelinje1 }
-            val ident = (dto.arbeidsgiver as? PersonDto)?.offentligIdent
+            val ident =
+                dto.arbeidstaker
+                    ?.identer
+                    ?.find { it.type == ArbeidstakerIdentType.FOLKEREGISTERIDENT }
+                    ?.ident
             return arbeidsforhold(dto, orgnavn, orgnummer, ident)
         }
 
         fun arbeidsforhold(
-            dto: ArbeidsforholdDto,
+            dto: ArbeidsforholdResponseDto,
             orgnavn: String?,
             orgnummer: String?,
             ident: String?,
         ) = FrontendArbeidsforhold(
-            type = dto.arbeidsgiver.type,
-            id = dto.arbeidsforholdId,
+            type = dto.arbeidssted?.type,
+            id = dto.id,
             startDato =
-                dto.ansettelsesperiode.periode.fom
+                dto.ansettelsesperiode.startdato
                     .toIsoString(),
             sluttDato =
-                dto.ansettelsesperiode.periode.tom
+                dto.ansettelsesperiode.sluttdato
                     ?.toIsoString() ?: "",
-            stillingsProsent = dto.arbeidsavtaler[0].stillingsprosent.toString(),
+            stillingsProsent = dto.ansettelsesdetaljer?.find { it.rapporteringsmaaneder?.til == null }?.avtaltStillingsprosent,
             ident = ident ?: "",
             orgnummer = orgnummer ?: "",
             orgnavn = orgnavn ?: "",

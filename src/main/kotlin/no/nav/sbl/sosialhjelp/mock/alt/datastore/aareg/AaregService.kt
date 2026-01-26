@@ -1,7 +1,10 @@
 package no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg
 
-import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsforholdDto
-import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.OrganisasjonDto
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsforholdResponseDto
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsstedDto
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsstedType
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.IdentInfoDto
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.IdentInfoType
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.pdl.model.Personalia
 import no.nav.sbl.sosialhjelp.mock.alt.utils.logger
 import org.springframework.stereotype.Service
@@ -9,7 +12,7 @@ import java.time.LocalDate
 
 @Service
 class AaregService {
-    private val aaregMap: HashMap<String, List<ArbeidsforholdDto>> = HashMap()
+    private val aaregMap: HashMap<String, List<ArbeidsforholdResponseDto>> = HashMap()
 
     fun leggTilEnkeltArbeidsforhold(
         personalia: Personalia,
@@ -17,16 +20,25 @@ class AaregService {
         orgnummmer: String,
         stillingsprosent: Double = 100.0,
     ) {
-        val arbeidsgiver =
-            OrganisasjonDto(
-                organisasjonsnummer = orgnummmer,
+        val arbeidssted =
+            ArbeidsstedDto(
+                type = ArbeidsstedType.Underenhet,
+                identer =
+                    listOf(
+                        IdentInfoDto(
+                            type = IdentInfoType.ORGANISASJONSNUMMER,
+                            ident = orgnummmer,
+                            gjeldende = true,
+                        ),
+                    ),
             )
+
         aaregMap[personalia.fnr] =
             listOf(
-                ArbeidsforholdDto.nyttArbeidsforhold(
-                    fnr = personalia.fnr,
-                    fom = startDato,
-                    arbeidsgiver = arbeidsgiver,
+                ArbeidsforholdResponseDto.createNyttArbeidsforhold(
+                    personId = personalia.fnr,
+                    start = startDato,
+                    arbeidssted = arbeidssted,
                     stillingsprosent = stillingsprosent,
                 ),
             )
@@ -34,12 +46,12 @@ class AaregService {
 
     fun setArbeidsforholdForFnr(
         fnr: String,
-        arbeidsforholdsliste: List<ArbeidsforholdDto>,
+        arbeidsforholdsliste: List<ArbeidsforholdResponseDto>,
     ) {
         aaregMap[fnr] = arbeidsforholdsliste
     }
 
-    fun getArbeidsforhold(fnr: String): List<ArbeidsforholdDto> {
+    fun getArbeidsforhold(fnr: String): List<ArbeidsforholdResponseDto> {
         log.info("Henter arbeidsforhold for $fnr")
         return aaregMap[fnr] ?: emptyList()
     }

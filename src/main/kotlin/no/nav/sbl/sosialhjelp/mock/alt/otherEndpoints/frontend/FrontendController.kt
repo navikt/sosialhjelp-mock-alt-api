@@ -19,7 +19,6 @@ import no.nav.sbl.sosialhjelp.mock.alt.datastore.skjermedepersoner.SkjermedePers
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.utbetaling.UtbetalDataService
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
 import no.nav.sbl.sosialhjelp.mock.alt.otherEndpoints.frontend.model.FrontendArbeidsforhold
-import no.nav.sbl.sosialhjelp.mock.alt.otherEndpoints.frontend.model.FrontendBarn
 import no.nav.sbl.sosialhjelp.mock.alt.otherEndpoints.frontend.model.FrontendBarn.Companion.frontendBarn
 import no.nav.sbl.sosialhjelp.mock.alt.otherEndpoints.frontend.model.FrontendPersonalia
 import no.nav.sbl.sosialhjelp.mock.alt.otherEndpoints.frontend.model.FrontendPersonalia.Companion.aaregArbeidsforhold
