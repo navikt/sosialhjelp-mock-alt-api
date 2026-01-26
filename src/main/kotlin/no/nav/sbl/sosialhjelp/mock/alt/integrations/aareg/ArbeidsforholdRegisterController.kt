@@ -7,7 +7,7 @@ import no.nav.sbl.sosialhjelp.mock.alt.utils.hentFnrFraHeaders
 import no.nav.sbl.sosialhjelp.mock.alt.utils.logger
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
@@ -20,7 +20,7 @@ class ArbeidsforholdRegisterController(
     }
 
     // ?sporingsinformasjon=false&regelverk=A_ORDNINGEN&ansettelsesperiodeFom=2020-07-29&ansettelsesperiodeTom=2020-10-29
-    @GetMapping("/aareg/v2/arbeidstaker/arbeidsforhold")
+    @PostMapping("/aareg/v2/arbeidstaker/arbeidsforhold")
     fun getArbeidsforhold(
         @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<List<ArbeidsforholdResponseDto>> {
