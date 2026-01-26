@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelp.mock.alt.integrations.aareg
 
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.AaregService
-import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsforholdDto
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.aareg.model.ArbeidsforholdResponseDto
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
 import no.nav.sbl.sosialhjelp.mock.alt.utils.hentFnrFraHeaders
 import no.nav.sbl.sosialhjelp.mock.alt.utils.logger
@@ -20,10 +20,10 @@ class ArbeidsforholdRegisterController(
     }
 
     // ?sporingsinformasjon=false&regelverk=A_ORDNINGEN&ansettelsesperiodeFom=2020-07-29&ansettelsesperiodeTom=2020-10-29
-    @GetMapping("/aareg/v1/arbeidstaker/arbeidsforhold")
+    @GetMapping("/aareg/v2/arbeidstaker/arbeidsforhold")
     fun getArbeidsforhold(
         @RequestHeader headers: HttpHeaders,
-    ): ResponseEntity<List<ArbeidsforholdDto>> {
+    ): ResponseEntity<List<ArbeidsforholdResponseDto>> {
         val fnr = hentFnrFraHeaders(headers)
         val arbeidsforhold = aaregService.getArbeidsforhold(fnr)
         log.info(
