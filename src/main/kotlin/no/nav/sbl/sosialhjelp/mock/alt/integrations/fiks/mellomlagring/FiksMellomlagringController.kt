@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @RestController
@@ -97,25 +95,21 @@ class FiksMellomlagringController(
     fun postMellomlagretVedlegg(
         @RequestHeader headers: HttpHeaders,
         @PathVariable navEksternRefId: String,
-        @RequestParam("files") files: List<MultipartFile>,
+//        @RequestParam("files") files: List<MultipartFile>,
         request: MultipartHttpServletRequest,
     ): ResponseEntity<Any> {
         feilService.eventueltLagFeil(headers, "FiksMellomlagringController", "postMellomlagretVedlegg")
 
-        //        fisk ut filnavn, bytes og mimetype fra request/multipart
         request.parameterMap["metadata"]!!
             .map { objectMapper.readValue<FilMetadata>(it) }
-            .forEach { filMetadata ->
-                files
-                    .find { it.originalFilename == filMetadata.filnavn }
-                    ?.also { file ->
-                        mellomlagringService.lagreFil(
-                            navEksternRefId = navEksternRefId,
-                            filnavn = filMetadata.filnavn,
-                            bytes = file.bytes,
-                            mimeType = filMetadata.mimetype,
-                        )
-                    } ?: error("Fant ikke fil for Metadata")
+            .forEach { metadata ->
+                val file = request.fileMap[metadata.filnavn]
+                mellomlagringService.lagreFil(
+                    navEksternRefId = navEksternRefId,
+                    filnavn = metadata.filnavn,
+                    bytes = file?.bytes ?: error("Fant ikke fil for Metadata"),
+                    mimeType = metadata.mimetype,
+                )
             }
 
         return mellomlagringService
