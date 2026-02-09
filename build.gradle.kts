@@ -16,8 +16,8 @@ version = "0.0.1-SNAPSHOT"
 
 java.sourceCompatibility = JavaVersion.VERSION_21
 
-val githubUser: String by project
-val githubPassword: String by project
+val githubUser: String? by project
+val githubPassword: String? by project
 
 repositories {
     mavenLocal()
