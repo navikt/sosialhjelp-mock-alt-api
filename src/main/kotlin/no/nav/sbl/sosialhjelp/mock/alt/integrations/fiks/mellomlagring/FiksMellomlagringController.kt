@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.mellomlagring.MellomlagringService
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
+import no.nav.sbl.sosialhjelp.mock.alt.utils.logger
 import no.nav.sosialhjelp.api.fiks.ErrorMessage
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @RestController
@@ -32,23 +35,7 @@ class FiksMellomlagringController(
         )
         val dto = mellomlagringService.getAll(navEksternRefId)
         return dto?.let { ResponseEntity.ok(it) }
-            ?: ResponseEntity.ok(MellomlagringDto(navEksternRefId, emptyList()))
-        //        ?: ResponseEntity.of(
-        //            Optional.of(
-
-        //            .body(
-        //                ErrorMessage(
-        //                    error = null,
-        //                    errorCode = null,
-        //                    errorId = null,
-        //                    errorJson = null,
-        //                    message = "Fant ingen data i basen knytter til angitt id'en
-        // $navEksternRefId",
-        //                    originalPath = null,
-        //                    path = null,
-        //                    status = 400,
-        //                    timestamp = null))
-        //            )
+            ?: ResponseEntity.notFound().build()
     }
 
     @GetMapping("/fiks/digisos/api/v1/mellomlagring/{navEksternRefId}/{digisosDokumentId}")
@@ -95,7 +82,7 @@ class FiksMellomlagringController(
     fun postMellomlagretVedlegg(
         @RequestHeader headers: HttpHeaders,
         @PathVariable navEksternRefId: String,
-//        @RequestParam("files") files: List<MultipartFile>,
+        @RequestParam("files") files: List<MultipartFile>,
         request: MultipartHttpServletRequest,
     ): ResponseEntity<Any> {
         feilService.eventueltLagFeil(headers, "FiksMellomlagringController", "postMellomlagretVedlegg")
@@ -103,7 +90,7 @@ class FiksMellomlagringController(
         request.parameterMap["metadata"]!!
             .map { objectMapper.readValue<FilMetadata>(it) }
             .forEach { metadata ->
-                val file = request.fileMap[metadata.filnavn]
+                val file = files.find { it.originalFilename == metadata.filnavn }
                 mellomlagringService.lagreFil(
                     navEksternRefId = navEksternRefId,
                     filnavn = metadata.filnavn,
@@ -118,24 +105,31 @@ class FiksMellomlagringController(
             ?.let { MellomlagringDto(navEksternRefId, mellomlagringMetadataList = it) }
             ?.let { ResponseEntity.ok(it) } ?: createError(navEksternRefId)
     }
-}
 
-private fun createError(navEksternRefId: String): ResponseEntity<Any> =
-    ResponseEntity
-        .badRequest()
-        .body(
-            ErrorMessage(
-                error = null,
-                errorCode = null,
-                errorId = null,
-                errorJson = null,
-                message = "Fant ingen data i basen knytter til angitt id'en $navEksternRefId",
-                originalPath = null,
-                path = null,
-                status = 400,
-                timestamp = null,
-            ),
-        )
+    private fun createError(navEksternRefId: String): ResponseEntity<Any> {
+        logger.error("Fant ikke data etter opplasting for id: $navEksternRefId")
+
+        return ResponseEntity
+            .internalServerError()
+            .body(
+                ErrorMessage(
+                    error = null,
+                    errorCode = null,
+                    errorId = null,
+                    errorJson = null,
+                    message = "Fant ingen data i basen knytter til angitt id'en $navEksternRefId etter opplasting",
+                    originalPath = null,
+                    path = null,
+                    status = 500,
+                    timestamp = null,
+                ),
+            )
+    }
+
+    companion object {
+        private val logger by logger()
+    }
+}
 
 data class FilMetadata(
     val filnavn: String,
