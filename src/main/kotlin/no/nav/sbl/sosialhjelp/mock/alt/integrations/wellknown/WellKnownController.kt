@@ -1,7 +1,6 @@
 package no.nav.sbl.sosialhjelp.mock.alt.integrations.wellknown
 
 import com.fasterxml.jackson.core.JsonParseException
-import com.fasterxml.jackson.core.type.TypeReference
 import com.nimbusds.jwt.SignedJWT
 import no.nav.sbl.sosialhjelp.mock.alt.integrations.wellknown.model.AzuredingsResponse
 import no.nav.sbl.sosialhjelp.mock.alt.integrations.wellknown.model.TokenResponse
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import tools.jackson.module.kotlin.readValue
 
 @RestController
 class WellKnownController(
@@ -73,14 +73,9 @@ class WellKnownController(
         @RequestBody body: String,
         @PathVariable(value = "issuer") issuer: String,
     ): TokenResponse {
-        val typeRef = object : TypeReference<HashMap<String, String>>() {}
-
         val params =
-            try {
-                objectMapper.readValue(body, typeRef)
-            } catch (e: JsonParseException) {
-                splitFormParams(body)
-            }
+            runCatching { objectMapper.readValue<HashMap<String, String>>(body) }
+                .getOrElse { if (it is JsonParseException) splitFormParams(body) else throw it }
 
         if (params.containsKey("assertion") && params.containsKey("grant_type")) {
             log.info("Utveksler token for $issuer")

@@ -22,6 +22,7 @@ import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.model.defaultJsonSoknad
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
 import no.nav.sbl.sosialhjelp.mock.alt.otherEndpoints.frontend.model.FrontendVedlegg
+import no.nav.sbl.sosialhjelp.mock.alt.toEpochMillis
 import no.nav.sbl.sosialhjelp.mock.alt.utils.MockAltException
 import no.nav.sbl.sosialhjelp.mock.alt.utils.logger
 import no.nav.sbl.sosialhjelp.mock.alt.utils.toLocalDateTime
@@ -33,7 +34,6 @@ import no.nav.sosialhjelp.api.fiks.Ettersendelse
 import no.nav.sosialhjelp.api.fiks.EttersendtInfoNAV
 import no.nav.sosialhjelp.api.fiks.OriginalSoknadNAV
 import no.nav.sosialhjelp.api.fiks.Tilleggsinformasjon
-import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -236,7 +236,7 @@ class SoknadService(
             log.info("Oppretter søknad med id: $fiksDigisosId")
             var sistEndret = System.currentTimeMillis()
             if (fiksDigisosId == "15months") {
-                sistEndret = DateTime.now().minusMonths(15).millis
+                sistEndret = LocalDateTime.now().minusMonths(15).toEpochMillis()
             }
             val vedleggMetadataId = UUID.randomUUID().toString()
             val digisosSak =
@@ -375,14 +375,16 @@ class SoknadService(
             digisosApiWrapper.sak.soker.hendelser
                 .minByOrNull { it.hendelsestidspunkt }!!
                 .hendelsestidspunkt
-        return try {
+
+        return runCatching {
             mottattTidspunkt
                 .toLocalDateTime()
                 .minusMinutes(5)
                 .atZone(ZoneId.of("Europe/Oslo"))
                 .toInstant()
                 .toEpochMilli()
-        } catch (e: DateTimeParseException) {
+        }.getOrElse {
+            if (it !is DateTimeParseException) throw it
             LocalDateTime
                 .now()
                 .minusMinutes(5)
@@ -430,7 +432,7 @@ class SoknadService(
         fiksDigisosId: String,
         vedleggMetadata: VedleggMetadata,
         vedleggsJson: JsonVedleggSpesifikasjon? = null,
-        timestamp: Long = DateTime.now().millis,
+        timestamp: Long = LocalDateTime.now().toEpochMillis(),
         file: MultipartFile? = null,
     ): String {
         val vedleggsId = UUID.randomUUID().toString()

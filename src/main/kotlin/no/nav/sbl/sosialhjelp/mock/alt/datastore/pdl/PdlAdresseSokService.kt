@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp.mock.alt.datastore.pdl
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.pdl.model.AdresseDto
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.pdl.model.AdresseSokHit
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.pdl.model.PdlAdresseSok
@@ -12,6 +11,7 @@ import no.nav.sbl.sosialhjelp.mock.alt.datastore.pdl.model.PdlForslagAdresseVega
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
 import no.nav.sbl.sosialhjelp.mock.alt.utils.logger
 import org.springframework.stereotype.Component
+import tools.jackson.module.kotlin.readValue
 
 @Component
 class PdlAdresseSokService {
@@ -24,8 +24,7 @@ class PdlAdresseSokService {
                 this::class.java.classLoader
                     .getResource("adressesok/vegadresser.json")!!
                     .readText(),
-            ).map { formatVegadresse(it).uppercase() to it }
-            .toMap()
+            ).associateBy { formatVegadresse(it).uppercase() }
 
     fun forslagAdresse(fritekst: String): PdlForslagAdresseResult {
         log.info("PDL forslagAdresse, sokestreng: $fritekst")

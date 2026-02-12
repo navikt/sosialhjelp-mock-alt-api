@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp.mock.alt.integrations.fiks.mellomlagring
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.mellomlagring.MellomlagringService
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
+import tools.jackson.module.kotlin.readValue
 
 @RestController
 class FiksMellomlagringController(

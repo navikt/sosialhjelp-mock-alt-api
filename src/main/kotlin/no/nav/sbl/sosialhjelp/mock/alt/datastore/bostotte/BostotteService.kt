@@ -5,9 +5,9 @@ import no.nav.sbl.sosialhjelp.mock.alt.datastore.bostotte.model.BostotteStatus
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.bostotte.model.SakerDto
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.bostotte.model.UtbetalingerDto
 import no.nav.sbl.sosialhjelp.mock.alt.utils.logger
-import org.joda.time.DateTime
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class BostotteService {
@@ -28,13 +28,13 @@ class BostotteService {
         // Sjekk log
         log.info("Henter bostøtte for $fnr")
         if (autoGenerationSet.contains(fnr)) {
-            val sakDato = DateTime.now().minusDays(2)
+            val sakDato = LocalDateTime.now().minusDays(2)
             val utbetalingDato = LocalDate.now().minusDays(7)
             return BostotteDto(
                 mutableListOf(
                     SakerDto(
                         ar = sakDato.year,
-                        mnd = sakDato.monthOfYear,
+                        mnd = sakDato.monthValue,
                         status = BostotteStatus.UNDER_BEHANDLING,
                     ),
                 ),
