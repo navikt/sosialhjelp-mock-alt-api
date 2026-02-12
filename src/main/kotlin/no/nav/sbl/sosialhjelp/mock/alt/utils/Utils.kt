@@ -46,9 +46,7 @@ fun hentFnrFraHeadersNoDefault(headers: HttpHeaders): String? {
     val fnrString = headers["nav-personident"]
     if (fnrString != null) {
         val fnr = fnrString.first()
-        if (fnr != null) {
-            return fnr
-        }
+        return fnr
     }
     val fnrListe = headers["nav-personidenter"]
     if (fnrListe != null) {

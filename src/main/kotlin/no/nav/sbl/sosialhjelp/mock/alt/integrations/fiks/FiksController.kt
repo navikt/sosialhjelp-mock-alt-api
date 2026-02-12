@@ -159,7 +159,7 @@ class FiksController(
         return if (id == null || id.lowercase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
             soknadService.opprettDigisosSak(fiksOrgId, kommuneNr, fnr, id)
-            ResponseEntity.ok("$id")
+            ResponseEntity.ok(id)
         } else {
             val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
             soknadService.oppdaterDigisosSak(
