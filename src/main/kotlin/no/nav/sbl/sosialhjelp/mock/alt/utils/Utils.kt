@@ -1,12 +1,12 @@
 package no.nav.sbl.sosialhjelp.mock.alt.utils
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.nimbusds.jwt.SignedJWT
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
 import no.nav.security.token.support.core.jwt.JwtToken
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
+import tools.jackson.module.kotlin.readValue
 import java.text.ParseException
 import java.time.Instant
 import java.time.LocalDate
@@ -46,9 +46,7 @@ fun hentFnrFraHeadersNoDefault(headers: HttpHeaders): String? {
     val fnrString = headers["nav-personident"]
     if (fnrString != null) {
         val fnr = fnrString.first()
-        if (fnr != null) {
-            return fnr
-        }
+        return fnr
     }
     val fnrListe = headers["nav-personidenter"]
     if (fnrListe != null) {
@@ -73,11 +71,8 @@ fun hentFnrFraTokenNoDefault(headers: HttpHeaders): String? {
     if (token != null) {
         if (token.isNotEmpty()) {
             val tokenString = token.first().split(" ")[1]
-            return try {
-                JwtToken(tokenString).subject
-            } catch (e: ParseException) {
-                null
-            }
+            return runCatching { JwtToken(tokenString).subject }
+                .getOrElse { if (it is ParseException) null else throw it }
         }
     }
     return null

@@ -1,9 +1,10 @@
 package no.nav.sbl.sosialhjelp.mock.alt.datastore.pdl.model
 
+import no.nav.sbl.sosialhjelp.mock.alt.toEpochMillis
 import no.nav.sbl.sosialhjelp.mock.alt.utils.genererTilfeldigPersonnummer
 import no.nav.sbl.sosialhjelp.mock.alt.utils.randomDate
-import org.joda.time.DateTime
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Personalia(
     val fnr: String = genererTilfeldigPersonnummer(),
@@ -24,7 +25,7 @@ data class Personalia(
             kommunenummer = "0301",
         ),
     var locked: Boolean = false,
-    var opprettetTidspunkt: Long = DateTime.now().millis,
+    var opprettetTidspunkt: Long = LocalDateTime.now().toEpochMillis(),
 ) {
     fun withNavn(
         fornavn: String,

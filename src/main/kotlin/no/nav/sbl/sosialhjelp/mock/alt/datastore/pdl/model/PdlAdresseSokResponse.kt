@@ -1,7 +1,7 @@
 package no.nav.sbl.sosialhjelp.mock.alt.datastore.pdl.model
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
+import tools.jackson.module.kotlin.readValue
 
 data class PdlAdresseSokResponse(
     val errors: List<PdlError>?,

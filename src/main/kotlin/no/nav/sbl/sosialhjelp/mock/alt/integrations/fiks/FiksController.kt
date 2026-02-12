@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp.mock.alt.integrations.fiks
 
-import com.fasterxml.jackson.core.type.TypeReference
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonAvsender
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
@@ -43,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
+import tools.jackson.module.kotlin.readValue
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -153,15 +153,13 @@ class FiksController(
         val fnr = hentFnrFraHeaders(headers)
         feilService.eventueltLagFeil(fnr, "FixController", "lastOppSoknad")
         val kommuneNr =
-            try {
-                pdlService.getPersonalia(fnr).bostedsadresse.kommunenummer
-            } catch (e: MockAltException) {
-                "0301"
-            }
+            runCatching { pdlService.getPersonalia(fnr).bostedsadresse.kommunenummer }
+                .getOrElse { if (it is MockAltException) "0301" else throw it }
+
         return if (id == null || id.lowercase().contentEquals("ny")) {
             id = UUID.randomUUID().toString()
             soknadService.opprettDigisosSak(fiksOrgId, kommuneNr, fnr, id)
-            ResponseEntity.ok("$id")
+            ResponseEntity.ok(id)
         } else {
             val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
             soknadService.oppdaterDigisosSak(
@@ -337,17 +335,11 @@ class FiksController(
             "Laster opp filer for kommune: $kommunenummer digisosId: $digisosId navEksternRefId: $navEksternRefId",
         )
         val vedleggsInfoText: String = body["vedlegg.json"].toString()
-        val vedleggsJson =
-            objectMapper
-                .readValue(
-                    vedleggsInfoText,
-                    object : TypeReference<List<JsonVedleggSpesifikasjon>>() {},
-                ).first()
+        val vedleggsJson = objectMapper.readValue<List<JsonVedleggSpesifikasjon>>(vedleggsInfoText).first()
         body.keys.forEach { key ->
             if (key.startsWith("vedleggSpesifikasjon")) {
                 val json = body[key].toString()
-                val vedleggMetadata =
-                    objectMapper.readValue(json, object : TypeReference<List<VedleggMetadata>>() {}).first()
+                val vedleggMetadata = objectMapper.readValue<List<VedleggMetadata>>(json).first()
                 val file = request.fileMap.values.find { it.originalFilename == vedleggMetadata.filnavn }
                 soknadService.lastOppFil(
                     fiksDigisosId = digisosId,
