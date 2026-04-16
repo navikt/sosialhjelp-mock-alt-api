@@ -489,6 +489,20 @@ class SoknadService(
         return vedleggsId
     }
 
+    fun leggTilEttersendelseVedlegg(
+        fiksDigisosId: String,
+        navEksternRefId: String,
+        vedleggMetadataId: String,
+        vedlegg: List<DokumentInfo>,
+    ) {
+        val sak = hentSak(fiksDigisosId)
+        val ettersendelse = Ettersendelse(navEksternRefId, vedleggMetadataId, vedlegg, System.currentTimeMillis())
+        val oppdatertEttersendtInfo =
+            EttersendtInfoNAV((sak.ettersendtInfoNAV?.ettersendelser ?: emptyList()) + ettersendelse)
+        soknadsliste[fiksDigisosId] = sak.updateEttersendtInfoNAV(oppdatertEttersendtInfo)
+        log.info("La til ettersendelse for fiksDigisosId=$fiksDigisosId, navEksternRefId=$navEksternRefId, ${vedlegg.size} vedlegg")
+    }
+
     fun leggInnIDokumentlager(
         filnavn: String,
         bytes: ByteArray,

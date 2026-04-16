@@ -1,9 +1,8 @@
 package no.nav.sbl.sosialhjelp.mock.alt.integrations.klage
 
-import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedlegg
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.MellomlagerTilDokumentlagerService
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.dokumentlager.DokumentlagerService
-import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.mellomlagring.MellomlagringService
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
 import no.nav.sbl.sosialhjelp.mock.alt.utils.logger
 import org.springframework.stereotype.Service
@@ -12,7 +11,7 @@ import java.util.UUID
 
 @Service
 class FiksKlageService(
-    private val mellomlagringService: MellomlagringService,
+    private val mellomlagerTilDokumentlagerService: MellomlagerTilDokumentlagerService,
     private val dokumentlagerService: DokumentlagerService,
 ) {
     val klageStorage: KlageStorageHandler = KlageStorageHandler()
@@ -72,7 +71,7 @@ class FiksKlageService(
                     dokumentlagerDokumentId = klagePdfId,
                     storrelse = klageFiles.klagePdf.size,
                 ),
-            vedlegg = flyttFilerFraMellomlager(navEksternRefId, klageId, klageFiles.vedleggJson),
+            vedlegg = hentOgFlyttKlageVedlegg(navEksternRefId, klageId, klageFiles.vedleggJson),
             sendtKvittering =
                 SendtKvitteringDto(
                     sendtKanal = FiksProtokoll.FIKS_IO,
@@ -98,7 +97,7 @@ class FiksKlageService(
         UUID.randomUUID().also { vedleggJsonId ->
             dokumentlagerService.leggTilDokument(vedleggJsonId.toString(), vedleggJson)
 
-            val dokumentInfoDtos = flyttFilerFraMellomlager(ettersendelseId, klageId, vedleggJson)
+            val dokumentInfoDtos = hentOgFlyttKlageVedlegg(ettersendelseId, klageId, vedleggJson)
 
             klageStorage.addEttersendelse(
                 personId,
@@ -112,7 +111,7 @@ class FiksKlageService(
 
     fun handleTrekkKlage() {}
 
-    private fun flyttFilerFraMellomlager(
+    private fun hentOgFlyttKlageVedlegg(
         navEksternRefId: UUID,
         klageId: UUID,
         vedleggJson: String,
@@ -126,48 +125,21 @@ class FiksKlageService(
                 vedleggSpec.vedlegg.find { it.klageId == klageId.toString() }
             } ?: error("Fant ikke vedlegg spesifikasjon for klageId $klageId i vedleggJson")
 
-        if (jsonVedlegg.filer.isEmpty()) {
-            logger.info(
-                "Ingen referanser til vedlegg i JsonVedleggSpec for klageId $klageId og referanse $navEksternRefId",
-            )
-            return emptyList()
-        }
+        val forventedeFilnavn = jsonVedlegg.filer.mapNotNull { it.filnavn }
 
-        logger.info(
-            "Fant ${jsonVedlegg.filer.size} vedlegg i JsonVedleggSpec for Klage $klageId og referanse $navEksternRefId",
-        )
-
-        val mellomlagredeForKlage =
-            mellomlagringService.getAll(navEksternRefId.toString())?.mellomlagringMetadataList
-                ?: error("Finner ingen mellomlagrede filer for navEksternRefId $navEksternRefId")
-
-        jsonVedlegg.validateNotExists(mellomlagredeForKlage.map { it.filnavn })
-
-        return mellomlagredeForKlage
-            .map { dokumentDto ->
-                val bytes = mellomlagringService.get(navEksternRefId.toString(), dokumentDto.filId)
-                dokumentlagerService.lagreFil(dokumentDto.filId, dokumentDto.filnavn, bytes)
+        return mellomlagerTilDokumentlagerService
+            .flyttFilerFraMellomlager(navEksternRefId.toString(), forventedeFilnavn)
+            .map {
                 DokumentInfoDto(
-                    filnavn = dokumentDto.filnavn,
-                    dokumentlagerDokumentId = UUID.fromString(dokumentDto.filId),
-                    storrelse = bytes.size.toLong(),
+                    filnavn = it.filnavn,
+                    dokumentlagerDokumentId = UUID.fromString(it.dokumentlagerDokumentId),
+                    storrelse = it.storrelse,
                 )
-            }.also {
-                logger.info(
-                    "Sletter filer i Mellomlager for KlageId $klageId med referanse $navEksternRefId",
-                )
-                mellomlagringService.deleteAll(navEksternRefId.toString())
             }
     }
 
     companion object {
         private val logger by logger()
-    }
-}
-
-private fun JsonVedlegg.validateNotExists(mellomlagredeFilnavn: List<String>) {
-    require(filer.all { mellomlagredeFilnavn.contains(it.filnavn) }) {
-        "Finnes filer i mellomlager uten referanse i JsonVedleggSpec"
     }
 }
 

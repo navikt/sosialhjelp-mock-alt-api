@@ -9,6 +9,7 @@ import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.feil.FeilService
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.DokumentKrypteringsService
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.KommuneInfoService
+import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.MellomlagerTilDokumentlagerService
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.SoknadService
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.dokumentlager.DokumentlagerService
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.mellomlagring.MellomlagringService
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
@@ -57,6 +59,7 @@ class FiksController(
     private val kommuneInfoService: KommuneInfoService,
     private val mellomlagringService: MellomlagringService,
     private val dokumentlagerService: DokumentlagerService,
+    private val mellomlagerTilDokumentlagerService: MellomlagerTilDokumentlagerService,
 ) {
     companion object {
         private val log by logger()
@@ -252,6 +255,32 @@ class FiksController(
             soknadDokument = dokumenter.firstOrNull { it.filnavn.lowercase() == "soknad.pdf" },
         )
         return ResponseEntity.ok(id)
+    }
+
+    // Ettersendelse v2
+    @PostMapping("/fiks/digisos/api/v2/soknader/{kommunenummer}/{fiksDigisosId}/{navEksternRefId}")
+    fun mottaEttersendelseV2(
+        @PathVariable kommunenummer: String,
+        @PathVariable fiksDigisosId: String,
+        @PathVariable navEksternRefId: String,
+        @RequestPart("vedlegg.json") vedleggJson: String,
+    ): ResponseEntity<Unit> {
+        log.info(
+            "Motta ettersendelse v2 for kommunenummer=$kommunenummer, fiksDigisosId=$fiksDigisosId, navEksternRefId=$navEksternRefId",
+        )
+
+        val vedleggSpec = objectMapper.readValue(vedleggJson, JsonVedleggSpesifikasjon::class.java)
+        val forventedeFilnavn = vedleggSpec.vedlegg.flatMap { it.filer.mapNotNull { f -> f.filnavn } }
+
+        val dokumenter =
+            mellomlagerTilDokumentlagerService.flyttFilerFraMellomlager(navEksternRefId, forventedeFilnavn)
+
+        val vedleggMetadataId = UUID.randomUUID().toString()
+        dokumentlagerService.leggTilDokument(vedleggMetadataId, vedleggJson)
+
+        soknadService.leggTilEttersendelseVedlegg(fiksDigisosId, navEksternRefId, vedleggMetadataId, dokumenter)
+
+        return ResponseEntity.ok().build()
     }
 
     //    ======== Modia =========
