@@ -40,6 +40,7 @@ spec:
     inbound:
       rules:
         - application: sosialhjelp-proxy-mock
+        - application: sosialhjelp-upload-mock
         - application: sosialhjelp-modia-api-mock
         - application: sosialhjelp-innsyn-api-mock
         - application: sosialhjelp-innsyn-mock
