@@ -50,6 +50,9 @@ dependencies {
         implementation("org.bouncycastle:bcutil-jdk18on:1.84") {
             because("Keeps Bouncy Castle modules aligned with the bcprov security fix")
         }
+        implementation("com.fasterxml.jackson.core:jackson-core:2.21.1") {
+            because("Fixes GHSA-72hv-8253-57qq: Number Length Constraint Bypass in Async Parser Leads to Potential DoS")
+        }
     }
 
     implementation(kotlin("reflect"))
