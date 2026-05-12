@@ -50,6 +50,9 @@ dependencies {
         implementation("org.bouncycastle:bcutil-jdk18on:1.84") {
             because("Keeps Bouncy Castle modules aligned with the bcprov security fix")
         }
+        implementation("org.apache.commons:commons-lang3:3.18.0") {
+            because("Fixes CVE-2025-48924: Uncontrolled Recursion in ClassUtils.getClass() on long inputs")
+        }
     }
 
     implementation(kotlin("reflect"))
