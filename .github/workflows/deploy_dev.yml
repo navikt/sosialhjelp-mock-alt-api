@@ -16,8 +16,7 @@ jobs:
     name: 'Deploy to GCP'
     permissions:
       id-token: write
-      packages: write
-      contents: write
+      contents: read
     uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v19
     with:
       cluster-name: 'dev-gcp'
