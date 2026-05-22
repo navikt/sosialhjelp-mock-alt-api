@@ -102,7 +102,7 @@ All mock data is stored **in-memory** using HashMap structures in Spring `@Servi
 @Service
 class SomeService {
     private val dataStore: HashMap<String, DataClass> = HashMap()
-    
+
     fun get(id: String): DataClass? = dataStore[id]
     fun put(id: String, data: DataClass) { dataStore[id] = data }
     fun getAll(): List<DataClass> = dataStore.values.toList()
