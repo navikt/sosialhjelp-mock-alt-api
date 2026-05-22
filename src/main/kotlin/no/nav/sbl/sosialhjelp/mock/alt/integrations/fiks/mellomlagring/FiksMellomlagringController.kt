@@ -87,22 +87,28 @@ class FiksMellomlagringController(
     ): ResponseEntity<Any> {
         feilService.eventueltLagFeil(headers, "FiksMellomlagringController", "postMellomlagretVedlegg")
 
-        val metadata = request.parameterMap["metadata"]!!.map { objectMapper.readValue<FilMetadata>(it) }
+        val metadataList = request.parameterMap["metadata"]!!.map { objectMapper.readValue<FilMetadata>(it) }
+        val filesByName =
+            files
+                .groupBy { it.originalFilename ?: "" }
+                .mapValues { (_, groupedFiles) -> ArrayDeque(groupedFiles) }
+
         val opplastetMetadata =
-            metadata.map { metadata ->
-                val file = files.find { it.originalFilename == metadata.filnavn }
+            metadataList.map { meta ->
+                val file = filesByName[meta.filnavn]?.removeFirstOrNull()
+                val bytes = file?.bytes ?: error("Fant ikke fil for metadata ${meta.filnavn}")
                 val filId =
                     mellomlagringService.lagreFil(
                         navEksternRefId = navEksternRefId,
-                        filnavn = metadata.filnavn,
-                        bytes = file?.bytes ?: error("Fant ikke fil for Metadata"),
-                        mimeType = metadata.mimetype,
+                        filnavn = meta.filnavn,
+                        bytes = bytes,
+                        mimeType = meta.mimetype,
                     )
                 MellomlagringDokumentInfo(
-                    filnavn = metadata.filnavn,
+                    filnavn = meta.filnavn,
                     filId = filId,
-                    storrelse = metadata.storrelse,
-                    mimetype = metadata.mimetype,
+                    storrelse = bytes.size.toLong(),
+                    mimetype = meta.mimetype,
                 )
             }
 
