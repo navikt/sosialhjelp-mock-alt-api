@@ -87,23 +87,36 @@ class FiksMellomlagringController(
     ): ResponseEntity<Any> {
         feilService.eventueltLagFeil(headers, "FiksMellomlagringController", "postMellomlagretVedlegg")
 
-        request.parameterMap["metadata"]!!
-            .map { objectMapper.readValue<FilMetadata>(it) }
-            .forEach { metadata ->
+        val metadata = request.parameterMap["metadata"]!!.map { objectMapper.readValue<FilMetadata>(it) }
+        val opplastetMetadata =
+            metadata.map { metadata ->
                 val file = files.find { it.originalFilename == metadata.filnavn }
-                mellomlagringService.lagreFil(
-                    navEksternRefId = navEksternRefId,
+                val filId =
+                    mellomlagringService.lagreFil(
+                        navEksternRefId = navEksternRefId,
+                        filnavn = metadata.filnavn,
+                        bytes = file?.bytes ?: error("Fant ikke fil for Metadata"),
+                        mimeType = metadata.mimetype,
+                    )
+                MellomlagringDokumentInfo(
                     filnavn = metadata.filnavn,
-                    bytes = file?.bytes ?: error("Fant ikke fil for Metadata"),
-                    mimeType = metadata.mimetype,
+                    filId = filId,
+                    storrelse = metadata.storrelse,
+                    mimetype = metadata.mimetype,
                 )
             }
 
-        return mellomlagringService
-            .getAll(navEksternRefId)
-            ?.mellomlagringMetadataList
-            ?.let { MellomlagringDto(navEksternRefId, mellomlagringMetadataList = it) }
-            ?.let { ResponseEntity.ok(it) } ?: createError(navEksternRefId)
+        return opplastetMetadata
+            .takeIf { it.isNotEmpty() }
+            ?.let {
+                ResponseEntity.ok(
+                    MellomlagringDto(
+                        navEksternRefId = navEksternRefId,
+                        mellomlagringMetadataList = it,
+                    ),
+                )
+            }
+            ?: createError(navEksternRefId)
     }
 
     private fun createError(navEksternRefId: String): ResponseEntity<Any> {
