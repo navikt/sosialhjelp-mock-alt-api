@@ -64,7 +64,7 @@ class MellomlagringService {
         filnavn: String,
         bytes: ByteArray,
         mimeType: String,
-    ) {
+    ): String {
         val filId = UUID.randomUUID().toString()
         log.debug(
             "Lagrer vedlegg med filnavn=$filnavn til mellomlager for soknad med navEksternRefId=$navEksternRefId. FilId=$filId",
@@ -76,6 +76,7 @@ class MellomlagringService {
             bytes = bytes,
             mimeType = mimeType,
         )
+        return filId
     }
 
     companion object {

@@ -87,23 +87,42 @@ class FiksMellomlagringController(
     ): ResponseEntity<Any> {
         feilService.eventueltLagFeil(headers, "FiksMellomlagringController", "postMellomlagretVedlegg")
 
-        request.parameterMap["metadata"]!!
-            .map { objectMapper.readValue<FilMetadata>(it) }
-            .forEach { metadata ->
-                val file = files.find { it.originalFilename == metadata.filnavn }
-                mellomlagringService.lagreFil(
-                    navEksternRefId = navEksternRefId,
-                    filnavn = metadata.filnavn,
-                    bytes = file?.bytes ?: error("Fant ikke fil for Metadata"),
-                    mimeType = metadata.mimetype,
+        val metadataList = request.parameterMap["metadata"]!!.map { objectMapper.readValue<FilMetadata>(it) }
+        val filesByName =
+            files
+                .groupBy { it.originalFilename ?: "" }
+                .mapValues { (_, groupedFiles) -> ArrayDeque(groupedFiles) }
+
+        val opplastetMetadata =
+            metadataList.map { meta ->
+                val file = filesByName[meta.filnavn]?.removeFirstOrNull()
+                val bytes = file?.bytes ?: error("Fant ikke fil for metadata ${meta.filnavn}")
+                val filId =
+                    mellomlagringService.lagreFil(
+                        navEksternRefId = navEksternRefId,
+                        filnavn = meta.filnavn,
+                        bytes = bytes,
+                        mimeType = meta.mimetype,
+                    )
+                MellomlagringDokumentInfo(
+                    filnavn = meta.filnavn,
+                    filId = filId,
+                    storrelse = bytes.size.toLong(),
+                    mimetype = meta.mimetype,
                 )
             }
 
-        return mellomlagringService
-            .getAll(navEksternRefId)
-            ?.mellomlagringMetadataList
-            ?.let { MellomlagringDto(navEksternRefId, mellomlagringMetadataList = it) }
-            ?.let { ResponseEntity.ok(it) } ?: createError(navEksternRefId)
+        return opplastetMetadata
+            .takeIf { it.isNotEmpty() }
+            ?.let {
+                ResponseEntity.ok(
+                    MellomlagringDto(
+                        navEksternRefId = navEksternRefId,
+                        mellomlagringMetadataList = it,
+                    ),
+                )
+            }
+            ?: createError(navEksternRefId)
     }
 
     private fun createError(navEksternRefId: String): ResponseEntity<Any> {
