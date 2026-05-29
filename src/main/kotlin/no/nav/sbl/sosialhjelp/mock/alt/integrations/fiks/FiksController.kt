@@ -177,13 +177,13 @@ class FiksController(
     }
 
     // Soknad
-    @PostMapping("/fiks/digisos/api/v2/soknader/{kommuneNr}/{fiksDigisosId}")
+    @PostMapping("/fiks/digisos/api/v2/soknader/{kommuneNr}/{navEksternRefId}")
     fun lastOppSoknad(
         @PathVariable kommuneNr: String,
-        @PathVariable(required = false) fiksDigisosId: String?,
+        @PathVariable(required = false) navEksternRefId: String?,
         request: StandardMultipartHttpServletRequest,
     ): ResponseEntity<String> {
-        val id = fiksDigisosId ?: UUID.randomUUID().toString()
+        val id = navEksternRefId ?: UUID.randomUUID().toString()
         val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
         digisosApiWrapper.sak.soker.hendelser.add(
             JsonSoknadsStatus()
@@ -197,6 +197,9 @@ class FiksController(
 
         val soknadJson =
             objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)
+
+        log.info("Soknad.json: ${objectMapper.writeValueAsString(soknadJson)}")
+
         val vedleggJson =
             objectMapper.readValue(
                 request.parameterMap["vedleggJson"]!![0],
