@@ -35,6 +35,15 @@ configurations { testImplementation { exclude(group = "org.mockito") } }
 
 dependencies {
     constraints {
+        implementation("org.apache.tomcat.embed:tomcat-embed-core:11.0.22") {
+            because("Temporary fix: upgrades embedded Tomcat from 11.0.21 to 11.0.22 to address CVE-2026-41293, CVE-2026-43512, CVE-2026-43513, CVE-2026-43515, and CVE-2026-42498 until Spring Boot ships the fix")
+        }
+        implementation("org.apache.tomcat.embed:tomcat-embed-el:11.0.22") {
+            because("Keeps Tomcat modules aligned with the tomcat-embed-core security fix")
+        }
+        implementation("org.apache.tomcat.embed:tomcat-embed-websocket:11.0.22") {
+            because("Keeps Tomcat modules aligned with the tomcat-embed-core security fix")
+        }
         implementation("io.netty:netty-codec-http:4.2.15.Final") {
             because("Fixes high-severity Netty HTTP request smuggling and HttpClientCodec response desynchronization vulnerabilities")
         }
