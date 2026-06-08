@@ -17,7 +17,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v19
+    uses: navikt/sosialhjelp-ci/.github/workflows/deploy_app.yml@v21
     with:
       cluster-name: 'dev-gcp'
       resource-name: 'mock'
