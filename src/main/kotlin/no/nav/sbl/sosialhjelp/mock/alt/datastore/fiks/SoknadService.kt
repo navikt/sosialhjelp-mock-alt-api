@@ -177,6 +177,7 @@ class SoknadService(
                         .withType(JsonHendelse.Type.UTBETALING)
                         .withUtbetalingsreferanse(UUID.randomUUID().toString())
                         .withSaksreferanse(saksReferanse)
+                        .withBeskrivelse("Livsopphold")
                         .withStatus(
                             if (offset > 0) {
                                 JsonUtbetaling.Status.PLANLAGT_UTBETALING
