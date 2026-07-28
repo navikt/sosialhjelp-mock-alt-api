@@ -41,13 +41,13 @@ dependencies {
         implementation("io.netty:netty-codec-compression:4.2.16.Final") {
             because("Fixes high-severity Netty Lz4FrameDecoder resource exhaustion vulnerability")
         }
-        implementation("org.bouncycastle:bcprov-jdk18on:1.84") {
+        implementation("org.bouncycastle:bcprov-jdk18on:1.85") {
             because("Fixes high-severity Bouncy Castle timing side-channel vulnerability")
         }
-        implementation("org.bouncycastle:bcpkix-jdk18on:1.84") {
+        implementation("org.bouncycastle:bcpkix-jdk18on:1.85") {
             because("Keeps Bouncy Castle modules aligned with the bcprov security fix")
         }
-        implementation("org.bouncycastle:bcutil-jdk18on:1.84") {
+        implementation("org.bouncycastle:bcutil-jdk18on:1.85") {
             because("Keeps Bouncy Castle modules aligned with the bcprov security fix")
         }
     }
