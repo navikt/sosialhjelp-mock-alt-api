@@ -34,13 +34,8 @@ repositories {
 configurations { testImplementation { exclude(group = "org.mockito") } }
 
 dependencies {
+
     constraints {
-        implementation("io.netty:netty-codec-http:4.2.16.Final") {
-            because("Fixes high-severity Netty HTTP request smuggling and HttpClientCodec response desynchronization vulnerabilities")
-        }
-        implementation("io.netty:netty-codec-compression:4.2.16.Final") {
-            because("Fixes high-severity Netty Lz4FrameDecoder resource exhaustion vulnerability")
-        }
         implementation("org.bouncycastle:bcprov-jdk18on:1.85") {
             because("Fixes high-severity Bouncy Castle timing side-channel vulnerability")
         }
@@ -64,6 +59,10 @@ dependencies {
     implementation(libs.mock.oauth2.server)
     implementation(libs.springdoc.openapi.starter.webmvc.ui)
     implementation(libs.springdoc.openapi.starter.common)
+    // eksplisitt pga. sårbarheter - sjekk opp ved oppdatering av spring, reactor, etc.
+    implementation(platform(libs.netty.bom))
+
+    implementation(enforcedPlatform(libs.fasterxml.jackson.bom))
 
     // Logback
     implementation(libs.logback.classic)

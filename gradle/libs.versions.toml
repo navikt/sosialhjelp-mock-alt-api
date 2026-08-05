@@ -6,6 +6,7 @@ sosialhjelp_common = "1.20260512.1419-f4bad13"
 filformat = "1.2026.05.27-22.23-05302aad4dc3"
 token_validation = "6.0.11"
 jackson = "3.2.1"
+fasterxml_jackson = "2.22.1"
 springdoc = "3.1.0"
 mock_oauth2_server = "5.0.2"
 spotless = "8.9.0"
@@ -15,6 +16,7 @@ logback = "1.6.1"
 logstash = "9.0"
 opentelemetry = "1.64.0"
 opentelemetry-logback = "2.30.0-alpha"
+netty = "4.2.16.Final"
 
 [libraries]
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
@@ -22,6 +24,7 @@ spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-start
 spring-boot-starter-graphql = { module = "org.springframework.boot:spring-boot-starter-graphql", version.ref = "spring-boot" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+fasterxml-jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "fasterxml_jackson" }
 sosialhjelp-common-api = { module = "no.nav.sosialhjelp:sosialhjelp-common-api", version.ref = "sosialhjelp_common" }
 soknadsosialhjelp-filformat = { module = "no.nav.sbl.dialogarena:soknadsosialhjelp-filformat", version.ref = "filformat" }
 token-validation-spring = { module = "no.nav.security:token-validation-spring", version.ref = "token_validation" }
@@ -35,7 +38,7 @@ logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-enc
 opentelemetry-bom = { module = "io.opentelemetry:opentelemetry-bom", version.ref = "opentelemetry" }
 opentelemetry-api = { module = "io.opentelemetry:opentelemetry-api", version.ref = "opentelemetry" }
 opentelemetry-instrumentation-logback = { module = "io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0", version.ref = "opentelemetry-logback" }
-
+netty-bom = { module = "io.netty:netty-bom", version.ref = "netty" }
 
 [bundles]
 
