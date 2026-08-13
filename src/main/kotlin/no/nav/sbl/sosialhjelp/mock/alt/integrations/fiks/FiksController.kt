@@ -180,10 +180,10 @@ class FiksController(
     @PostMapping("/fiks/digisos/api/v2/soknader/{kommuneNr}/{navEksternRefId}")
     fun lastOppSoknad(
         @PathVariable kommuneNr: String,
-        @PathVariable(required = false) navEksternRefId: String?,
+        @PathVariable(required = false) navEksternRefId: UUID?,
         request: StandardMultipartHttpServletRequest,
-    ): ResponseEntity<String> {
-        val id = navEksternRefId ?: UUID.randomUUID().toString()
+    ): ResponseEntity<UUID> {
+        val id = navEksternRefId ?: UUID.randomUUID()
         val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
         digisosApiWrapper.sak.soker.hendelser.add(
             JsonSoknadsStatus()
@@ -227,12 +227,12 @@ class FiksController(
         }
 
         // hent ut mellomlagrede vedlegg
-        val mellomlagringDto = mellomlagringService.getAll(navEksternRefId = id)
+        val mellomlagringDto = mellomlagringService.getAll(navEksternRefId = id.toString())
         mellomlagringDto?.mellomlagringMetadataList?.forEach {
             val dokumentlagerId =
                 soknadService.leggInnIDokumentlager(
                     filnavn = it.filnavn,
-                    bytes = mellomlagringService.get(navEksternRefId = id, digisosDokumentId = it.filId),
+                    bytes = mellomlagringService.get(navEksternRefId = id.toString(), digisosDokumentId = it.filId),
                 )
             val dokumentInfo =
                 DokumentInfo(
@@ -243,13 +243,13 @@ class FiksController(
             dokumenter.add(dokumentInfo)
         }
         // fjern mellomlagrede vedlegg
-        mellomlagringService.deleteAll(navEksternRefId = id)
+        mellomlagringService.deleteAll(navEksternRefId = id.toString())
 
         soknadService.oppdaterDigisosSak(
             kommuneNr = kommuneNr,
             fiksOrgId = null,
             fnr = fnr!!,
-            fiksDigisosIdInput = id,
+            fiksDigisosIdInput = id.toString(),
             enhetsnummer = enhetsnummer,
             digisosApiWrapper = digisosApiWrapper,
             jsonSoknad = soknadJson,
@@ -313,7 +313,6 @@ class FiksController(
     fun hentDokumentFraLagerModia(
         @PathVariable digisosId: String,
         @PathVariable dokumentlagerId: String,
-        @RequestParam(name = "sporingsId") sporingsId: String,
         @RequestHeader headers: HttpHeaders,
     ): ResponseEntity<String> {
         feilService.eventueltLagFeil(headers, "FixController", "hentDokument")

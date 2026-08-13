@@ -71,6 +71,7 @@ class LoginCookieController(
         val cookie = Cookie(cookieName, token)
         cookie.domain = cookie_domain
         cookie.path = "/"
+        cookie.secure = true
         response.addCookie(cookie)
         if (redirect != null) {
             response.sendRedirect(redirect)
