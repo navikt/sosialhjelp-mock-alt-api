@@ -10,6 +10,12 @@ plugins {
     alias(libs.plugins.spotless)
 }
 
+buildscript {
+    dependencies {
+        classpath("org.apache.httpcomponents.client5:httpclient5:5.6.4")
+    }
+}
+
 group = "no.nav.sbl"
 
 version = "0.0.1-SNAPSHOT"
