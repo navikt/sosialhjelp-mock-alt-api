@@ -1,5 +1,6 @@
 package no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks
 
+import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonAvsender
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonFilreferanse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
@@ -90,7 +91,7 @@ class SoknadService(
         id: String,
         mockedSoknadState: MockedSoknadState = MockedSoknadState.MOTTATT,
     ) {
-        val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
+        val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker().withAvsender(JsonAvsender().withSystemnavn("default").withSystemversjon("1.0"))), "")
         var hendelsestidspunkt = ZonedDateTime.now(ZoneOffset.UTC)
         if (id == "15months") {
             hendelsestidspunkt = hendelsestidspunkt.minusMonths(15)
