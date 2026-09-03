@@ -42,13 +42,13 @@ configurations { testImplementation { exclude(group = "org.mockito") } }
 dependencies {
 
     constraints {
-        implementation("org.bouncycastle:bcprov-jdk18on:1.85") {
+        implementation("org.bouncycastle:bcprov-jdk18on:1.85.2") {
             because("Fixes high-severity Bouncy Castle timing side-channel vulnerability")
         }
-        implementation("org.bouncycastle:bcpkix-jdk18on:1.85") {
+        implementation("org.bouncycastle:bcpkix-jdk18on:1.85.2") {
             because("Keeps Bouncy Castle modules aligned with the bcprov security fix")
         }
-        implementation("org.bouncycastle:bcutil-jdk18on:1.85") {
+        implementation("org.bouncycastle:bcutil-jdk18on:1.85.2") {
             because("Keeps Bouncy Castle modules aligned with the bcprov security fix")
         }
     }
