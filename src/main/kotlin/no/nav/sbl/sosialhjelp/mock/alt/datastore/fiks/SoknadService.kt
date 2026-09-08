@@ -91,7 +91,11 @@ class SoknadService(
         id: String,
         mockedSoknadState: MockedSoknadState = MockedSoknadState.MOTTATT,
     ) {
-        val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker().withAvsender(JsonAvsender().withSystemnavn("default").withSystemversjon("1.0"))), "")
+        val digisosApiWrapper =
+            DigisosApiWrapper(
+                SakWrapper(JsonDigisosSoker().withAvsender(JsonAvsender().withSystemnavn("default").withSystemversjon("1.0"))),
+                "",
+            )
         var hendelsestidspunkt = ZonedDateTime.now(ZoneOffset.UTC)
         if (id == "15months") {
             hendelsestidspunkt = hendelsestidspunkt.minusMonths(15)
