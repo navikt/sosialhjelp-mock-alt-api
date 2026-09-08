@@ -51,6 +51,12 @@ dependencies {
         implementation("org.bouncycastle:bcutil-jdk18on:1.85") {
             because("Keeps Bouncy Castle modules aligned with the bcprov security fix")
         }
+
+        implementation("org.apache.tomcat.embed:tomcat-embed-core") {
+            version {
+                strictly("11.0.25")
+            }
+        }
     }
 
     implementation(kotlin("reflect"))
