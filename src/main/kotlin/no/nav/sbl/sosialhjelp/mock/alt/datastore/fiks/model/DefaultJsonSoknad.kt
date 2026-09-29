@@ -21,49 +21,28 @@ import no.nav.sbl.soknadsosialhjelp.soknad.personalia.JsonSokernavn
 import no.nav.sbl.soknadsosialhjelp.soknad.utdanning.JsonUtdanning
 
 fun defaultJsonSoknad(fiksDigisosId: String): JsonSoknad =
-    JsonSoknad()
-        .withVersion("1.0.0")
-        .withData(
-            JsonData()
-                .withPersonalia(
-                    JsonPersonalia()
-                        .withPersonIdentifikator(
-                            JsonPersonIdentifikator()
-                                .withKilde(JsonPersonIdentifikator.Kilde.SYSTEM)
-                                .withVerdi(fiksDigisosId),
-                        ).withNavn(
-                            JsonSokernavn()
-                                .withKilde(JsonSokernavn.Kilde.SYSTEM)
-                                .withFornavn("")
-                                .withMellomnavn("")
-                                .withEtternavn(""),
-                        ).withKontonummer(JsonKontonummer().withKilde(JsonKilde.BRUKER)),
-                ).withArbeid(JsonArbeid())
-                .withUtdanning(JsonUtdanning().withKilde(JsonKilde.BRUKER))
-                .withFamilie(JsonFamilie().withForsorgerplikt(JsonForsorgerplikt()))
-                .withBegrunnelse(
-                    JsonBegrunnelse()
-                        .withKilde(JsonKildeBruker.BRUKER)
-                        .withHvorforSoke("")
-                        .withHvaSokesOm(""),
-                ).withBosituasjon(JsonBosituasjon().withKilde(JsonKildeBruker.BRUKER))
-                .withOkonomi(
-                    JsonOkonomi()
-                        .withOpplysninger(
-                            JsonOkonomiopplysninger()
-                                .withUtbetaling(emptyList())
-                                .withUtgift(emptyList()),
-                        ).withOversikt(
-                            JsonOkonomioversikt()
-                                .withInntekt(emptyList())
-                                .withUtgift(emptyList())
-                                .withFormue(emptyList()),
-                        ),
-                ),
-        ).withMottaker(
-            JsonSoknadsmottaker()
-                .withNavEnhetsnavn("Mock bydel, mock kommune")
-                .withEnhetsnummer("0301")
-                .withKommunenummer("1337"),
-        ).withDriftsinformasjon(JsonDriftsinformasjon())
-        .withKompatibilitet(emptyList())
+    JsonSoknad(
+        version = "1.0.0",
+        data =
+            JsonData(
+                personalia =
+                    JsonPersonalia(
+                        personIdentifikator = JsonPersonIdentifikator(JsonPersonIdentifikator.Kilde.SYSTEM, fiksDigisosId),
+                        navn = JsonSokernavn(JsonSokernavn.Kilde.SYSTEM, "", "", ""),
+                        kontonummer = JsonKontonummer(kilde = JsonKilde.BRUKER),
+                    ),
+                begrunnelse = JsonBegrunnelse(JsonKildeBruker.BRUKER, "Livsopphold", ""),
+                okonomi =
+                    JsonOkonomi(
+                        opplysninger = JsonOkonomiopplysninger(utbetaling = emptyList(), utgift = emptyList()),
+                        oversikt = JsonOkonomioversikt(inntekt = emptyList(), utgift = emptyList(), formue = emptyList()),
+                    ),
+                arbeid = JsonArbeid(),
+                utdanning = JsonUtdanning(kilde = JsonKilde.BRUKER),
+                familie = JsonFamilie(forsorgerplikt = JsonForsorgerplikt()),
+                bosituasjon = JsonBosituasjon(kilde = JsonKildeBruker.BRUKER),
+            ),
+        mottaker = JsonSoknadsmottaker(kommunenummer = "1337", enhetsnummer = "0301", navEnhetsnavn = "Mock bydel, mock kommune"),
+        driftsinformasjon = JsonDriftsinformasjon(inntektFraSkatteetatenFeilet = false),
+        kompatibilitet = emptyList(),
+    )

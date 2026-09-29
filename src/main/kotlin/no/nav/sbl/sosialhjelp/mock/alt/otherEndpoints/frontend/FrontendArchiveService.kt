@@ -99,6 +99,6 @@ class FrontendArchiveService(
                 ?.map { dokumentlagerService.hentDokument(fiksDigisosId, it.vedleggMetadata) }
                 ?.map { objectMapper.readValue(it, JsonVedleggSpesifikasjon::class.java) }
 
-        return JsonVedleggSpesifikasjon().withVedlegg(vedleggSpesifikasjoner?.flatMap { it.vedlegg })
+        return JsonVedleggSpesifikasjon(vedlegg = vedleggSpesifikasjoner?.flatMap { it.vedlegg } ?: emptyList())
     }
 }
