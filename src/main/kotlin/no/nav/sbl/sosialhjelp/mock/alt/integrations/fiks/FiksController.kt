@@ -2,7 +2,6 @@ package no.nav.sbl.sosialhjelp.mock.alt.integrations.fiks
 
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonAvsender
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonDigisosSoker
-import no.nav.sbl.soknadsosialhjelp.digisos.soker.JsonHendelse
 import no.nav.sbl.soknadsosialhjelp.digisos.soker.hendelse.JsonSoknadsStatus
 import no.nav.sbl.soknadsosialhjelp.soknad.JsonSoknad
 import no.nav.sbl.soknadsosialhjelp.vedlegg.JsonVedleggSpesifikasjon
@@ -184,16 +183,23 @@ class FiksController(
         request: StandardMultipartHttpServletRequest,
     ): ResponseEntity<String> {
         val id = navEksternRefId ?: UUID.randomUUID()
-        val digisosApiWrapper = DigisosApiWrapper(SakWrapper(JsonDigisosSoker()), "")
-        digisosApiWrapper.sak.soker.hendelser.add(
-            JsonSoknadsStatus()
-                .withHendelsestidspunkt(
-                    ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT),
-                ).withType(JsonHendelse.Type.SOKNADS_STATUS)
-                .withStatus(JsonSoknadsStatus.Status.MOTTATT),
-        )
-        digisosApiWrapper.sak.soker.avsender =
-            JsonAvsender().withSystemnavn("mock-alt").withSystemversjon("1.0-MOCKVERSJON")
+        val digisosApiWrapper =
+            DigisosApiWrapper(
+                SakWrapper(
+                    JsonDigisosSoker(
+                        version = "1.0",
+                        avsender = JsonAvsender(systemnavn = "mock-alt", systemversjon = "1.0-MOCKVERSJON"),
+                        hendelser =
+                            listOf(
+                                JsonSoknadsStatus(
+                                    status = JsonSoknadsStatus.Status.MOTTATT,
+                                    hendelsestidspunkt = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT),
+                                ),
+                            ),
+                    ),
+                ),
+                "",
+            )
 
         val soknadJson =
             objectMapper.readValue(request.parameterMap["soknadJson"]!![0], JsonSoknad::class.java)

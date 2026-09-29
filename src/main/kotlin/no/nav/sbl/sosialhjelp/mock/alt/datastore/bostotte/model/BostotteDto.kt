@@ -53,6 +53,6 @@ data class UtbetalingerDto(
 enum class BostotteMottaker(
     val value: String,
 ) {
-    KOMMUNE(JsonOkonomiOpplysningUtbetaling.Mottaker.KOMMUNE.value()),
-    HUSSTAND(JsonOkonomiOpplysningUtbetaling.Mottaker.HUSSTAND.value()),
+    KOMMUNE(JsonOkonomiOpplysningUtbetaling.Mottaker.KOMMUNE.value),
+    HUSSTAND(JsonOkonomiOpplysningUtbetaling.Mottaker.HUSSTAND.value),
 }
