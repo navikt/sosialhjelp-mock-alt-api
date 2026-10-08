@@ -251,7 +251,7 @@ class SoknadService(
                                 navEksternRefId = "110000000",
                                 metadata = metadataId,
                                 vedleggMetadata = vedleggMetadataId,
-                                soknadDokument = soknadDokument ?: DokumentInfo("", "", 0L),
+                                soknadDokument = soknadDokument ?: DokumentInfo("soknad.json", "4d93d259-e4bd-40de-99cf-7728b9274e93", 10L),
                                 vedlegg = emptyList(),
                                 timestampSendt = femMinutterForMottattSoknad(digisosApiWrapper),
                             )
