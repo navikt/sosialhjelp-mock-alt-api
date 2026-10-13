@@ -1,6 +1,5 @@
 package no.nav.sbl.sosialhjelp.mock.alt.utils
 
-import com.nimbusds.jwt.SignedJWT
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
 import no.nav.security.token.support.core.jwt.JwtToken
 import org.slf4j.Logger
@@ -51,15 +50,6 @@ fun hentFnrFraHeadersNoDefault(headers: HttpHeaders): String? {
     val fnrListe = headers["nav-personidenter"]
     if (fnrListe != null) {
         return fnrListe.firstOrNull() ?: FAST_FNR
-    }
-    return null
-}
-
-fun hentFnrFraCookieNoDefault(cookie: String?): String? {
-    if (cookie != null) {
-        // read fnr from cookie
-        val jwt = SignedJWT.parse(cookie)
-        return jwt.jwtClaimsSet.subject
     }
     return null
 }

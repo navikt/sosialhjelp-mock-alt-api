@@ -6,12 +6,10 @@ import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.model.DigisosApiWrapper
 import no.nav.sbl.sosialhjelp.mock.alt.datastore.fiks.model.VedleggMetadata
 import no.nav.sbl.sosialhjelp.mock.alt.objectMapper
 import no.nav.sbl.sosialhjelp.mock.alt.utils.FAST_FNR
-import no.nav.sbl.sosialhjelp.mock.alt.utils.hentFnrFraCookieNoDefault
 import no.nav.sbl.sosialhjelp.mock.alt.utils.hentFnrFraHeadersNoDefault
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -34,7 +32,6 @@ class InnsynController(
         @RequestParam(required = false) isPapirSoknad: String?,
         @RequestBody body: String,
         @RequestHeader headers: HttpHeaders,
-        @CookieValue(name = "localhost-idtoken") cookie: String?,
     ): ResponseEntity<String> {
         var id = fiksDigisosId
         if (id == null || id == "001" || id == "002" || id == "003") {
@@ -42,7 +39,7 @@ class InnsynController(
         }
         val digisosApiWrapper = objectMapper.readValue(body, DigisosApiWrapper::class.java)
 
-        val faktiskFnr = hentFnrFraInputOrTokenOrCookieOrDefault(fnr, headers, cookie)
+        val faktiskFnr = hentFnrFraInputOrHeaderOrDefault(fnr, headers)
         soknadService.oppdaterDigisosSak(
             kommuneNr = "0301",
             fiksOrgId = "11415cd1-e26d-499a-8421-751457dfcbd5",
@@ -81,13 +78,11 @@ class InnsynController(
             .body(innsynsfil.toByteArray())
     }
 
-    private fun hentFnrFraInputOrTokenOrCookieOrDefault(
+    private fun hentFnrFraInputOrHeaderOrDefault(
         fnrInput: String?,
         headers: HttpHeaders,
-        cookie: String?,
     ): String =
         fnrInput
             ?: hentFnrFraHeadersNoDefault(headers)
-            ?: hentFnrFraCookieNoDefault(cookie)
             ?: FAST_FNR
 }

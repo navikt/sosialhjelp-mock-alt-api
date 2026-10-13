@@ -8,7 +8,6 @@ import no.nav.sbl.sosialhjelp.mock.alt.integrations.azure.model.AzureAdBrukere
 import no.nav.sbl.sosialhjelp.mock.alt.integrations.azure.model.AzureAdGruppe
 import no.nav.sbl.sosialhjelp.mock.alt.integrations.azure.model.AzureAdGrupper
 import no.nav.sbl.sosialhjelp.mock.alt.utils.MockAltException
-import no.nav.sbl.sosialhjelp.mock.alt.utils.hentFnrFraCookieNoDefault
 import no.nav.sbl.sosialhjelp.mock.alt.utils.hentFnrFraHeadersNoDefault
 import no.nav.sbl.sosialhjelp.mock.alt.utils.hentFnrFraToken
 import no.nav.sbl.sosialhjelp.mock.alt.utils.hentFnrFraTokenNoDefault
@@ -16,7 +15,6 @@ import no.nav.sbl.sosialhjelp.mock.alt.utils.logger
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
@@ -34,12 +32,10 @@ class AzureController(
     @GetMapping("/azuread/graph/me")
     fun getCurrentAzureBruker(
         @RequestHeader headers: HttpHeaders,
-        @CookieValue(name = "localhost-idtoken") cookie: String?,
     ): ResponseEntity<AzureAdBruker> {
         val id =
             hentFnrFraTokenNoDefault(headers)
                 ?: hentFnrFraHeadersNoDefault(headers)
-                ?: hentFnrFraCookieNoDefault(cookie)
         return getAzureBruker(id ?: throw MockAltException("Klarte ikke å finne id i request."))
     }
 
