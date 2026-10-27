@@ -15,7 +15,7 @@ ktlint = "1.7.1"
 logback = "1.6.5"
 logstash = "9.0"
 opentelemetry = "1.67.0"
-opentelemetry-logback = "2.32.0-alpha"
+opentelemetry-logback = "2.33.0-alpha"
 netty = "4.2.19.Final"
 
 [libraries]
