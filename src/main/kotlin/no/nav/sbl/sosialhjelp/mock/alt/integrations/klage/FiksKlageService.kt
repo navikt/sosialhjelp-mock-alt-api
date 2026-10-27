@@ -116,16 +116,21 @@ class FiksKlageService(
         klageId: UUID,
         vedleggJson: String,
     ): List<DokumentInfoDto> {
-        logger.info(
-            "Flytter vedlegg fra mellomlager til dokumentlager for Klage $klageId og referanse $navEksternRefId",
-        )
+        if (vedleggJson.isBlank()) {
+            logger.info("Ingen vedlegg for Klage $klageId og referanse $navEksternRefId")
+            return emptyList()
+        }
 
         val jsonVedlegg =
             objectMapper.readValue(vedleggJson, JsonVedleggSpesifikasjon::class.java).let { vedleggSpec ->
                 vedleggSpec.vedlegg.find { it.klageId == klageId.toString() }
-            } ?: error("Fant ikke vedlegg spesifikasjon for klageId $klageId i vedleggJson")
+            } ?: return emptyList()
 
         val forventedeFilnavn = jsonVedlegg.filer.mapNotNull { it.filnavn }
+
+        logger.info(
+            "Flytter vedlegg fra mellomlager til dokumentlager for Klage $klageId og referanse $navEksternRefId",
+        )
 
         return mellomlagerTilDokumentlagerService
             .flyttFilerFraMellomlager(navEksternRefId.toString(), forventedeFilnavn)
