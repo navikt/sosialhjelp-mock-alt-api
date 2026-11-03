@@ -59,7 +59,6 @@ class SoknadService(
 
     private val ettersendelseFilnavn = "ettersendelse.pdf"
     private val soknadsliste: HashMap<String, DigisosSak> = HashMap()
-    private val fillager: FixedFileStorage = FixedFileStorage()
     private val ettersendelsePdfLager: FixedFileStorage = FixedFileStorage()
 
     fun hentSoknad(fiksDigisosId: String): DigisosSak? {
@@ -500,7 +499,7 @@ class SoknadService(
         bytes: ByteArray,
         vedleggsId: String = UUID.randomUUID().toString(),
     ): String {
-        fillager.add(vedleggsId, filnavn, bytes)
+        dokumentlagerService.lagreFil(vedleggsId, filnavn, bytes)
         return vedleggsId
     }
 
