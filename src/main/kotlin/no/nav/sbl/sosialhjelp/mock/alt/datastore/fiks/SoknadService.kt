@@ -247,7 +247,7 @@ class SoknadService(
                             null
                         } else {
                             OriginalSoknadNAV(
-                                navEksternRefId = "110000000",
+                                navEksternRefId = UUID.randomUUID().toString(),
                                 metadata = metadataId,
                                 vedleggMetadata = vedleggMetadataId,
                                 soknadDokument = soknadDokument ?: DokumentInfo("soknad.json", "4d93d259-e4bd-40de-99cf-7728b9274e93", 10L),
